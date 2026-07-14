@@ -1,0 +1,293 @@
+% !TeX root = ../thesis.tex
+\chapter{Literature Review}
+\label{ch:literature-review}
+
+\section{Introduction}
+
+\subsection{Scope and Structure of the Review}
+\topics{whole-pipeline coverage from radiotracer to clinic; the cost lens applied
+throughout; what is deliberately out of scope (e.g.\ SPECT, radiochemistry depth);
+how the sections build toward the research gap.}
+
+\subsection{Review Methodology}
+\topics{databases and search engines used (PubMed, IEEE Xplore, Scopus, Google Scholar);
+search terms and inclusion/exclusion criteria; citation snowballing from landmark
+reviews; date ranges; how grey literature (vendor white papers, conference records) is
+treated.}
+
+\section{Historical Development of Positron Emission Tomography}
+
+\subsection{Origins: Positron Imaging Before Tomography}
+\topics{positron discovery (Anderson, 1932); first medical use of positron emitters;
+early coincidence brain probes (Wrenn 1951, Brownell \& Sweet 1953); rectilinear
+scanners and the pre-tomographic era.}
+
+\subsection{The First Tomographic Scanners}
+\topics{PC-I and PETT series (Ter-Pogossian, Phelps, Hoffman, 1970s); analytical
+reconstruction imported from CT; FDG synthesis (1976) unlocking metabolic imaging;
+NaI(Tl) and early BGO systems.}
+
+\subsection{Key Milestones: Block Detectors, 3D Acquisition, Time-of-Flight}
+\topics{the block detector (Casey \& Nutt 1986) and its cost significance; septa removal
+and fully-3D acquisition; the first TOF wave (CsF/BaF\textsubscript{2}, 1980s) and why
+it stalled; the LSO-enabled TOF revival (mid-2000s); whole-body FDG PET entering
+routine oncology.}
+
+\subsection{The Modern Era: Digital PET and Total-Body Systems}
+\topics{SiPM-based ``digital'' PET (Philips Vereos, Siemens Vision, GE Discovery MI);
+long axial field-of-view and total-body systems (uEXPLORER 2018, Biograph Quadra);
+sensitivity gains and their price tags; current commercial landscape.}
+
+\section{Physical Principles and Radiotracers}
+
+\subsection{Positron Emission, Annihilation and Coincidence Detection}
+\topics{$\beta^+$ decay and positron thermalisation; annihilation and back-to-back
+511~keV photons; lines of response; coincidence timing windows; trues, randoms,
+scattered and multiple coincidences.}
+
+\subsection{Radionuclide Production: Cyclotrons and Generators}
+\topics{cyclotron-produced isotopes (\textsuperscript{18}F, \textsuperscript{11}C,
+\textsuperscript{15}O, \textsuperscript{13}N) and half-life logistics; generator systems
+(\textsuperscript{68}Ga, \textsuperscript{82}Rb); distribution networks and cost;
+implications for scanner siting.}
+
+\subsection{Common Radiotracers and Their Applications}
+\topics{\textsuperscript{18}F-FDG and glucose metabolism as the workhorse; PSMA ligands
+in prostate cancer; amyloid and tau tracers in neurodegeneration; hypoxia and
+proliferation tracers; theranostic pairs.}
+
+\subsection{Physical Limits on Spatial Resolution: Positron Range and Acollinearity}
+\topics{isotope-dependent positron range; $\sim$0.25\textdegree{} photon acollinearity
+and its ring-diameter dependence; detector pitch contribution; the resolution budget
+formula; why sub-mm whole-body PET is physics-limited.}
+
+\subsection{Interaction of 511~keV Photons with Matter}
+\topics{photoelectric absorption versus Compton scatter at 511~keV; linear attenuation
+coefficients and photofraction by material; inter-crystal scatter; implications for
+detector thickness and sensitivity.}
+
+\section{Scintillators for PET}
+
+\subsection{Scintillation Mechanisms and Key Performance Properties}
+\topics{inorganic scintillation mechanism (band structure, activator dopants); light
+yield, decay time, rise time; density and effective Z; emission spectrum matching to
+photodetectors; energy resolution; afterglow; hygroscopicity and machinability;
+figures of merit combining these.}
+
+\subsection{Established Inorganic Crystals: NaI(Tl), BGO, LSO/LYSO and Alternatives}
+\topics{property table across NaI(Tl), BGO, LSO:Ce, LYSO:Ce, GSO, BaF\textsubscript{2},
+LaBr\textsubscript{3}; \textsuperscript{176}Lu intrinsic radioactivity; cost per unit
+volume comparison; the BGO renaissance argument for non-TOF, high-sensitivity systems.}
+
+\subsection{Emerging Materials: Transparent Ceramics, Nanocomposites and Plastics}
+\topics{GAGG:Ce and garnet ceramics; transparent ceramic fabrication routes;
+composites of inorganic nanoparticles in polymer (e.g.\ LaF\textsubscript{3}:Ce in
+polystyrene) and their scatter and light-yield trade-offs; pure plastic scintillators
+and the J-PET approach; manufacturability, moulding to arbitrary shapes, and cost.}
+
+\subsection{Detector Segmentation: Pixellated Arrays versus Monolithic Slabs}
+\topics{dicing, polishing and reflector assembly costs of pixellated arrays; dead space
+and packing fraction; light sharing in monolithic slabs; flood-map calibration burden;
+edge effects; intrinsic DOI information in monoliths; resolution below the SiPM pitch.}
+
+\subsection{Depth-of-Interaction Encoding Approaches}
+\topics{parallax error and radial elongation; phoswich and staggered-layer designs;
+dual-ended readout; light-sharing-ratio methods in monoliths; cost and channel-count
+implications of each approach.}
+
+\section{Photodetectors and Readout Electronics}
+
+\subsection{Photomultiplier Tubes and the Anger Logic Legacy}
+\topics{PMT operation, gain and quantum efficiency; Anger centroid positioning; block
+multiplexing ratios; why PMTs dominated for decades; magnetic field incompatibility.}
+
+\subsection{Avalanche Photodiodes and Silicon Photomultipliers}
+\topics{APDs as the transitional technology; SiPM/SPAD microcell operation; photon
+detection efficiency, dark count rate, crosstalk, afterpulsing; temperature dependence
+and bias control; analog versus digital SiPMs; MR compatibility; cost per channel
+trends.}
+
+\subsection{Readout ASICs and Channel Multiplexing}
+\topics{TOFPET2/PETsys, Petiroc, STiC and similar ASICs; channel density and power;
+resistive/capacitive multiplexing schemes; row--column and position-sensitive readout;
+the channel count versus information trade-off.}
+
+\subsection{Digitisation, Triggering and Coincidence Processing}
+\topics{TDCs and time-over-threshold; FPGA-based coincidence engines; singles versus
+coincidence data flow; data rates and online processing; open readout platforms used by
+academic groups.}
+
+\subsection{Timing Performance and Time-of-Flight Readout}
+\topics{coincidence resolving time and its contributors (scintillator, SiPM,
+electronics); the TOF SNR gain relation; current state of the art
+($\sim$200--400~ps clinical); the 10~ps challenge; whether TOF is worth its cost in
+cheap systems.}
+
+\section{Scanner Architectures}
+
+\subsection{The Conventional Cylindrical Clinical Scanner}
+\topics{ring diameter and axial FOV conventions; crystal--block--module--ring
+hierarchy; representative NEMA NU-2 figures of flagship systems; why the cylinder
+became the default.}
+
+\subsection{Preclinical and Small-Animal Systems}
+\topics{NEMA NU-4 evaluation; sub-mm resolution requirements; small-bore geometry
+effects (parallax, solid angle); representative commercial and academic systems;
+preclinical as a proving ground for new detector technology.}
+
+\subsection{Organ-Specific Systems: Brain, Breast and Prostate}
+\topics{dedicated brain scanners (HRRT, NeuroEXPLORER, helmet/wearable concepts);
+positron emission mammography; prostate probes; the proximity argument: solid angle and
+resolution gains from conformal geometry; economic case for organ-specific systems.}
+
+\subsection{Total-Body PET}
+\topics{uEXPLORER and Biograph Quadra; order-of-magnitude sensitivity gains; dose
+reduction, dynamic whole-body imaging and throughput economics; the inverse lesson for
+low-cost design: sensitivity can be traded for crystal volume.}
+
+\subsection{Unconventional and Experimental Geometries: Flat-Panel, Box and Enclosing Systems}
+\topics{dual-panel coincidence benches as detector testbeds; box/enclosing geometries;
+partial and sparse rings; plant PET, in-beam and proton-therapy range verification PET;
+the monolithic annulus (AnnPET); reconstruction obstacles that non-cylindrical
+geometries face with standard tools.}
+
+\subsection{Case Studies of Research Scanner Development Programmes}
+\topics{J-PET (plastic strips, axial arrangement, explicitly cost-driven); OpenPET and
+open-source hardware efforts; MADPET and sparse-readout demonstrators; university-built
+brain/breast prototypes; what these programmes reveal about the cost floor of
+scanner construction and the path from bench to publishable system.}
+
+\section{Image Reconstruction}
+
+\subsection{Data Representations: Sinograms and List-Mode}
+\topics{sinogram binning and michelograms; spatial quantisation error introduced by
+binning; list-mode/event-by-event processing; compression versus information
+preservation; where continuous LOR endpoint representations fit.}
+
+\subsection{Analytical Reconstruction: Filtered Backprojection}
+\topics{2D FBP and the central slice theorem; 3D reprojection; rebinning approaches
+(SSRB, FORE); noise characteristics; why analytical methods persist (speed,
+linearity, standardisation).}
+
+\subsection{Iterative Reconstruction: MLEM, OSEM and Regularised Methods}
+\topics{the Poisson likelihood model; MLEM derivation and convergence behaviour; OSEM
+acceleration and subset artefacts; penalised/MAP methods (e.g.\ Q.Clear/BSREM);
+stopping criteria and noise--resolution trade-offs.}
+
+\subsection{System Matrix Modelling and Ray Tracing}
+\topics{Siddon and Joseph projectors; on-the-fly computation versus precomputed/factorised
+matrices; PSF/resolution modelling; GPU projector implementations; how the system
+matrix encodes (and hard-codes) scanner geometry.}
+
+\subsection{Data Corrections: Attenuation, Scatter, Randoms and Normalisation}
+\topics{CT-based and MR-based attenuation correction; single scatter simulation;
+delayed-window randoms estimation; component-based normalisation; dead time and decay
+correction; motion correction in brief.}
+
+\subsection{Time-of-Flight and Depth-of-Interaction in Reconstruction}
+\topics{TOF kernels localising events along the LOR; improved conditioning and
+convergence; incorporating DOI into the projector; joint benefit for unconventional
+geometries.}
+
+\subsection{Open-Source Reconstruction Packages}
+\topics{STIR, CASToR, PyTomography, parallelproj, NiftyPET; scanner description
+formats and their geometric assumptions; extensibility to novel geometries; the gap
+between vendor and open-source toolchains.}
+
+\subsection{Continuous-Coordinate and Geometry-Agnostic Reconstruction}
+\topics{list-mode reconstruction with continuous detector coordinates; on-the-fly
+Siddon on raw endpoint matrices; prior monolithic-annulus work that still binned to
+sinograms; what has and has not been demonstrated; this as the primary methodological
+gap the candidate's pilot work addresses.}
+
+\section{Machine Learning in Modern PET}
+
+\subsection{Neural Event Localisation in Monolithic Detectors}
+\topics{CNN/MLP regression on SiPM light distributions; planar and DOI accuracy
+reported in the literature; Compton-versus-photoelectric classification; timing
+regression; uncertainty estimation; comparison with maximum-likelihood and
+centre-of-gravity baselines.}
+
+\subsection{Learned Reconstruction, Denoising and Image Enhancement}
+\topics{direct DNN reconstruction (DeepPET); unrolled/model-based networks; U-Net and
+diffusion denoisers; low-dose and fast-scan enhancement; hallucination risk, validation
+standards and regulatory acceptance.}
+
+\subsection{Monte Carlo Simulation as a Training Data Source}
+\topics{Geant4/GATE and OpenGATE~10; optical photon transport fidelity; SiPM response
+modelling; dataset generation at scale on HPC; simulation cost versus measured
+calibration data.}
+
+\subsection{The Simulation-to-Real Transfer Problem}
+\topics{domain gap sources: surface finish, reflectors, SiPM non-uniformity, dark
+counts, electronics noise; transfer learning and fine-tuning on measured floods;
+calibration procedures; the sparse literature quantifying sim-to-real degradation ---
+a candidate gap.}
+
+\section{Contemporary Directions: How PET Is Being Improved}
+\topics{synthesis section: reads across the pipeline sections above to identify where
+the field is actively investing; each subsection cross-references the detailed
+treatment earlier in the chapter and asks what the trend implies for cost.}
+
+\subsection{Modern Approaches to Radiotracers}
+\topics{theranostic pairs and the PSMA/DOTATATE boom; novel targets (FAPI, immuno-PET);
+total-body PET enabling ultra-low-dose and dual-tracer protocols; decentralised/kit-based
+tracer production and generator isotopes reducing dependence on cyclotron proximity.}
+
+\subsection{Modern Approaches to Scintillators and Detectors}
+\topics{the 10~ps timing challenge and fast light mechanisms (Cherenkov,
+cross-luminescence, metascintillators and heterostructures); DOI-capable detector designs
+going mainstream; monolithic detectors maturing from lab to product; cost-driven
+material work: BGO revival for non-TOF systems, garnet ceramics, nanocomposites and
+plastics.}
+
+\subsection{Modern Approaches to Photodetectors and Readout}
+\topics{SiPM cost and performance trajectory; digital SiPMs and 3D-integrated
+photon-to-digital converters; high-density ASIC ecosystems; channel reduction via
+multiplexing and on-detector intelligence; FPGA/firmware coincidence processing and
+streaming readout.}
+
+\subsection{Modern Approaches to Scanner Architecture}
+\topics{long axial FOV / total-body as the headline trend and its cost countercurrent;
+organ-specific and wearable systems; sparse, modular and upgradeable ring designs;
+flat-panel and non-cylindrical concepts; PET/MR and multimodal integration.}
+
+\subsection{Modern Approaches to Reconstruction and Data Processing}
+\topics{TOF- and DOI-aware iterative reconstruction as standard; regularised methods in
+clinical products; deep-learning reconstruction, denoising and low-dose imaging;
+data-driven motion correction; geometry-agnostic and list-mode/continuous-coordinate
+frameworks as the research frontier.}
+
+\subsection{Implications for Low-Cost PET}
+\topics{which of the above trends raise the performance ceiling versus lower the cost
+floor; the recurring pattern of software substituting for hardware; where a
+PhD-scale project can realistically contribute.}
+
+\section{Clinical Relevance and Cost Drivers}
+
+\subsection{Clinical Applications: Oncology, Neurology and Cardiology}
+\topics{FDG staging, restaging and therapy response (Deauville criteria); dementia and
+epilepsy workups; myocardial viability and perfusion; inflammation/infection imaging;
+which applications tolerate lower performance and could be served by cheaper systems.}
+
+\subsection{Sensitivity, Dose and Throughput Trade-offs}
+\topics{NECR and count-rate behaviour; injected dose versus scan time versus image
+quality; patient throughput as the economic driver of scan cost; where extra
+sensitivity is best spent (dose, speed, or cheaper hardware).}
+
+\subsection{Scanner Cost Structure: Crystals, Photodetectors and Assembly}
+\topics{published bill-of-materials estimates; scintillator volume share of system
+cost; SiPM and ASIC channel costs; assembly labour and calibration; gantry, cooling and
+installation; service contracts and lifetime cost.}
+
+\subsection{Accessibility and the Case for Low-Cost Architectures}
+\topics{scanner density by region and the global access gap; PET in low- and
+middle-income settings; mobile and modular concepts; what performance floor a
+clinically useful cheap scanner must clear; how the candidate directions from
+Chapter~\ref{ch:introduction} respond to this need.}
+
+\section{Summary and Research Gap}
+\topics{synthesis of the cost levers across materials, detectors, electronics, geometry
+and algorithms; the specific under-explored combination this project targets;
+restatement of candidate directions with a literature-informed assessment; criteria and
+plan for converging on the PhD direction.}

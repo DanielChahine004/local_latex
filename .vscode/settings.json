@@ -1,0 +1,27 @@
+{
+    // Build with Tectonic from the pixi environment (Ctrl+Alt+B).
+    // Goes through tools/tectonic-biber.bat so tectonic can find biber
+    // (needed for biblatex) without the pixi environment being active.
+    // Run `pixi install` once after cloning so .pixi/ exists.
+    "latex-workshop.latex.tools": [
+        {
+            "name": "tectonic",
+            "command": "cmd",
+            "args": [
+                "/c",
+                "%WORKSPACE_FOLDER%/tools/tectonic-biber.bat",
+                "--synctex",
+                "--outdir=%OUTDIR%",
+                "%DOC_EXT%"
+            ]
+        }
+    ],
+    "latex-workshop.latex.recipes": [
+        {
+            "name": "tectonic",
+            "tools": ["tectonic"]
+        }
+    ],
+    // Put the PDF and other outputs in build/ next to src/
+    "latex-workshop.latex.outDir": "%DIR%/../build"
+}

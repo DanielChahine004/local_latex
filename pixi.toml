@@ -1,0 +1,15 @@
+[workspace]
+authors = ["DanielChahine004 <daniel.chahine004@gmail.com>"]
+channels = ["conda-forge"]
+name = "local_latex"
+platforms = ["win-64"]
+version = "0.1.0"
+
+[tasks]
+# biber (not on conda-forge for Windows) lives in tools/biber; tectonic
+# invokes it automatically for biblatex documents if it's on PATH
+[tasks.build]
+cmd = "python tools/count_sentences.py && tectonic --synctex --outdir build src/thesis.tex"
+env = { PATH = "$PIXI_PROJECT_ROOT/tools/biber;$PATH" }
+[dependencies]
+tectonic = ">=0.16.9,<0.17"

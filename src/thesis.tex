@@ -1,0 +1,76 @@
+\documentclass[11pt, a4paper, oneside]{report}
+
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{amsmath, amssymb}
+\usepackage{graphicx}
+\usepackage[backend=biber, style=numeric, sorting=none]{biblatex}
+\usepackage{xcolor}
+\usepackage[hidelinks]{hyperref}
+
+% Drafting scaffold: topics each section should at least touch on.
+% Replace these with real prose as sections are written.
+\newcommand{\topics}[1]{{\small\itshape\color{gray!120!black}\raggedright
+    Touch on: #1\par}}
+
+% Drafting scaffold: live sentence counts per heading. tools/count_sentences.py
+% runs before tectonic in the build and regenerates sentence-counts.tex; the
+% badges below read from it. Delete this block (and the script call) when the
+% draft is mature.
+\usepackage[explicit]{titlesec}
+\IfFileExists{sentence-counts.tex}{\input{sentence-counts.tex}}{}
+\newcommand{\sentbadge}[1]{%
+    \ifcsname sc@#1\endcsname
+        \space{\normalfont\small\color{gray}[\csname sc@#1\endcsname~sentences]}%
+    \fi}
+\titleformat{\chapter}[display]
+    {\normalfont\huge\bfseries}{\chaptertitlename\ \thechapter}{20pt}
+    {\Huge #1\sentbadge{ch\thechapter}}
+\titleformat{\section}
+    {\normalfont\Large\bfseries\raggedright}{\thesection}{1em}
+    {#1\sentbadge{\thesection}}
+\titleformat{\subsection}
+    {\normalfont\large\bfseries\raggedright}{\thesubsection}{1em}
+    {#1\sentbadge{\thesubsection}}
+
+\addbibresource{references.bib}
+
+% Figures live in figures/<chapter>/
+\graphicspath{
+    {figures/01-introduction/}
+    {figures/02-literature-review/}
+}
+
+\title{High-Resolution Monolithic PET:\\
+    Event Localisation, Continuous-Coordinate Reconstruction,\\
+    Experimental Validation}
+\author{Daniel Chahine\\[1ex]
+    School of Electrical and Data Engineering\\
+    University of Technology Sydney}
+\date{\today}
+
+\begin{document}
+
+\pagenumbering{roman}
+\maketitle
+\setcounter{page}{2} % title page is page i; \maketitle resets the counter
+
+\chapter*{Abstract}
+% Abstract goes here.
+
+\tableofcontents
+\listoffigures
+\listoftables
+
+\clearpage
+\pagenumbering{arabic}
+
+\input{chapters/01-introduction}
+\input{chapters/02-literature-review}
+
+% Include uncited entries so the dummy reference list shows up;
+% remove once chapters carry real \cite commands.
+\nocite{*}
+
+\printbibliography[heading=bibintoc]
+
+\end{document}

@@ -13,13 +13,19 @@ LaTeX project built with [Tectonic](https://tectonic-typesetting.github.io/) via
 
 ## Setup (fresh clone)
 
+Windows only: `pixi.toml` targets `win-64` and `tools/biber/biber.exe` is a
+Windows binary. Other platforms need a matching biber and platform added to
+`pixi.toml`.
+
 Install [pixi](https://pixi.sh), then in the repo root:
 
 ```
 pixi install
 ```
 
-`tools/biber.exe` is committed to the repo, so no further setup is needed.
+`tools/biber/biber.exe` and `build/` are committed, so no further setup is
+needed. In VS Code, open this folder (the one containing `.vscode/`) as the
+workspace.
 
 ## Build
 

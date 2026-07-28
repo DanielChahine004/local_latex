@@ -1,0 +1,69 @@
+% Signal chain, part 3 of 3: from optical photons arriving at the sensor to the
+% reconstructed image. Continues signal-chain-optical.tex.
+% \input by chapters/01-introduction.tex. Row semantics and the layout model
+% are documented in chain-style.tex.
+%
+% The split from part 2 falls at photon detection efficiency, which is the
+% actual optical-to-electrical interface: everything before it is measured in
+% optical photons, everything after in charge, timestamps and voxels. PDE is
+% the conversion factor between the two halves, which is why it heads the first
+% stage here rather than being buried in a list of sensor technologies.
+
+\input{figures/01-introduction/chain-style}
+
+\begin{tikzpicture}[x=1cm, y=1cm]
+
+\node[stage] (s1) at (0,0)
+    {Photodetection\\[1pt]\scriptsize\mdseries \S\ref{sec:photodetectors}};
+\node[bullets] (b1) at ([xshift=4mm]s1.north east) {\chainlist{
+    \govrow{photon detection efficiency, the product of geometric fill factor, quantum efficiency
+            and avalanche trigger probability, and the overlap of the sensor's spectral response
+            with the emission spectrum; then gain, dark count rate and crosstalk} \\[2pt]
+    \conrow{silicon photomultiplier: an array of Geiger-mode microcells, compact and
+            tolerant of a magnetic field} \\
+    \altrow{photomultiplier tube: vacuum dynode chain, high gain, the Anger-logic legacy} \\
+    \altrow{avalanche photodiode: solid state, but low gain and poor timing} \\
+    \altrow{digital SiPM: individual microcells time-stamped inside the sensor} \\
+}};
+
+\node[stage, anchor=north, yshift=-4mm] (s2) at (b1.south -| s1.south)
+    {Readout\\[1pt]\scriptsize\mdseries \S\ref{sec:readout-asics}};
+\node[bullets] (b2) at ([xshift=4mm]s2.north east) {\chainlist{
+    \govrow{channel count and multiplexing ratio, ASIC noise, power and timing jitter} \\[2pt]
+    \conrow{per-channel ASIC amplification, shaping and digitisation} \\
+    \altrow{Anger-logic resistive charge division, cutting channel count at the cost of information} \\
+    \altrow{row--column and cross-strip multiplexing} \\
+    \altrow{pulse-shape analysis, recovering depth and identifying pile-up} \\
+}};
+
+\node[stage, anchor=north, yshift=-4mm] (s3) at (b2.south -| s1.south)
+    {Event estimation\\[1pt]\scriptsize\mdseries \S\ref{sec:tof-readout}};
+\node[bullets] (b3) at ([xshift=4mm]s3.north east) {\chainlist{
+    \govrow{coincidence resolving time, timing window width, energy window width} \\[2pt]
+    \conrow{energy windowing on the summed signal} \\
+    \conrow{position from the light distribution: centroid, maximum likelihood or neural network} \\
+    \conrow{timestamping, then pairing into trues, scatters, randoms and multiples} \\
+    \altrow{depth-of-interaction estimation from light spread or from timing (\S\ref{sec:doi})} \\
+}};
+
+\node[stage, anchor=north, yshift=-4mm] (s4) at (b3.south -| s1.south)
+    {Reconstruction\\[1pt]\scriptsize\mdseries \S\ref{sec:reconstruction}};
+\node[bullets] (b4) at ([xshift=4mm]s4.north east) {\chainlist{
+    \govrow{fidelity of the system matrix, and of the attenuation, scatter, randoms and
+            normalisation corrections applied to the data} \\[2pt]
+    \conrow{iterative: MLEM, OSEM and regularised MAP variants} \\
+    \altrow{analytical: filtered backprojection, after rebinning} \\
+    \altrow{continuous-coordinate list-mode, with no sinogram and no voxel grid
+            (\S\ref{sec:continuous-recon})} \\
+    \altrow{learned: direct networks and unrolled model-based schemes (\S\ref{sec:learned-recon})} \\
+}};
+
+\foreach \a/\b in {s1/s2, s2/s3, s3/s4}
+    \draw[chainstep] (\a) -- (\b);
+
+\foreach \n in {1,...,4}{
+    \draw[tie] (s\n.east) -- (s\n.east -| b\n.west);
+    \draw[tie] (b\n.north west) -- (b\n.south west);
+}
+\chainfit
+\end{tikzpicture}

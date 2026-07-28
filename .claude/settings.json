@@ -1,0 +1,26 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell($env:Path = [System.Environment]::GetEnvironmentVariable\\(\"Path\",\"User\"\\) + \";\" + [System.Environment]::GetEnvironmentVariable\\(\"Path\",\"Machine\"\\); pixi --version)",
+      "PowerShell($env:Path = [System.Environment]::GetEnvironmentVariable\\(\"Path\",\"User\"\\) + \";\" + [System.Environment]::GetEnvironmentVariable\\(\"Path\",\"Machine\"\\); \"tectonic on PATH: \" + \\(\\(Get-Command tectonic -ErrorAction SilentlyContinue\\).Source\\); \"exists at danie: \" + \\(Test-Path \"$env:USERPROFILE\\\\.pixi\\\\bin\\\\tectonic.exe\"\\))",
+      "Bash(grep -n \"Users/h\\\\|tectonic\\\\|latex-workshop.latex.tools\\\\|latex-workshop.latex.recipes\" \"c:/Users/danie/AppData/Roaming/Code/User/settings.json\" 2>/dev/null || echo \"NO MATCH / file missing\")",
+      "Read(//c/Users/danie/AppData/Roaming/Code/User/**)",
+      "Bash(cmd /c \"..\\\\\\\\tools\\\\\\\\tectonic-biber.bat\" --synctex --outdir=../build thesis.tex)",
+      "PowerShell(Set-Location \"c:\\\\Users\\\\danie\\\\OneDrive\\\\Desktop\\\\local_latex\\\\local_latex\\\\src\"; & cmd /c \"..\\\\tools\\\\tectonic-biber.bat\" --synctex --outdir=../build thesis.tex; \"exit: $LASTEXITCODE\"; if \\(Test-Path ../build/thesis.pdf\\) { \"PDF BUILT: \" + \\(Get-Item ../build/thesis.pdf\\).Length + \" bytes\" } else { \"NO PDF\" })",
+      "PowerShell(Set-Location \"c:\\\\Users\\\\danie\\\\OneDrive\\\\Desktop\\\\local_latex\\\\local_latex\"; if \\(-not \\(Test-Path build\\)\\) { New-Item -ItemType Directory build | Out-Null }; Set-Location src; & cmd /c \"..\\\\tools\\\\tectonic-biber.bat\" --synctex --outdir=../build thesis.tex; \"exit: $LASTEXITCODE\"; if \\(Test-Path ../build/thesis.pdf\\) { \"PDF BUILT: \" + \\(Get-Item ../build/thesis.pdf\\).Length + \" bytes\" } else { \"NO PDF\" })",
+      "PowerShell(try { Get-Content \"c:\\\\Users\\\\danie\\\\AppData\\\\Roaming\\\\Code\\\\User\\\\settings.json\" -Raw | ConvertFrom-Json | Out-Null; \"JSON valid\" } catch { \"INVALID: $_\" })",
+      "Bash(rm -rf /tmp/tectest)",
+      "Bash(mkdir -p /tmp/tectest)",
+      "Bash(touch build/.gitkeep)",
+      "Bash(git add *)",
+      "Bash(git check-ignore *)",
+      "Bash(git push *)",
+      "Read(//c/Users/danie/.claude/**)",
+      "Bash(cd \"c:/Users/danie/OneDrive/Desktop/local_latex/build\" && rm -f thesis.aux thesis.bbl thesis.bcf thesis.lof thesis.lot thesis.out thesis.run.xml thesis.synctex.gz thesis.toc && ls)"
+    ],
+    "additionalDirectories": [
+      "C:\\Users\\danie\\.claude",
+      "c:\\Users\\danie\\OneDrive\\Desktop\\local_latex\\build"
+    ]
+  }
+}

@@ -1,0 +1,48 @@
+% Supervisor meeting log -- STANDALONE, not part of the thesis.
+% Compile on its own: tools/tectonic-biber.bat --outdir=build meetings.tex
+% (or just: tectonic meetings.tex). It is deliberately NOT \input by thesis.tex.
+% Newest entry at the top. Log future dates with things to mention there too.
+\documentclass[11pt, a4paper]{article}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{parskip}
+\usepackage[hidelinks]{hyperref}
+\usepackage{xurl} % let long URLs break anywhere instead of overrunning the margin
+
+\title{Supervisor Meetings}
+\author{Daniel Chahine}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\Large{NOTES, RESOURCES, AND IDEAS}
+
+\begin{itemize}
+\item \textbf{Paper 1:} Continuous-coordinate reconstruction vs discretised counterparts, characterising the trade-offs in terms of accuracy and computational cost. Sets the premise for continuous coordinate gamma localisation which underpins the rest of the thesis.
+\item \textbf{Using CRLB or otherwise to finding optimal sipm placement:} This has to do with establishing what is the most efficient way to position sipms around a scintillator volume to maximise the infomation content of the data. This intrinsically targets the reduction of readout channels and in turn the cost of the system, while preserving localisation accuracy. Paper 1 establishes the benefits of continuous coordinate reconstruction, and this asks how can we most efficiently afford continuous localisation capabilities? Ideally this explores scintillator types, size and geometry.
+\item \textbf{Localisation of multiple interactoin vertex's in a monolithic scintillator:} This seeks to investigate if compton scattering can be used to help paramaterise image reconstruction. Such a monolithic detector effectively serves as a dual PET-Compton camera, and compton kinematics could help quantify per-event uncertainty, and improve scanner sensitivity. This extends from the previous work by using multi-site localisation to inform image reconstruction.
+\item \textbf{Plastic scintillator camera localisation:} \url{https://www.youtube.com/watch?v=To6yDq3kYds} and \url{https://www.nature.com/articles/s41467-026-70918-x}
+\item \textbf{Good link, PET powerpoint from CERN:} \url{https://indico.cern.ch/event/54940/attachments/979499/1392131/Del_Guerra_Lecture_2.pdf}
+\end{itemize}
+
+\clearpage
+
+\subsection*{2026-07-27}
+\begin{itemize}
+  \item \emph{Mention the pre-existing literature which mentions the known information loss with discretisation; frame my paper as a demonstration with Ragys localisation network}
+  \item \emph{Mention the analytic pipeline I'm building; basically a comparison framework for scintillators to analytically estimate their performance on localiser-specific properties to model any given scintillators ability to function as a monolithic slab - is this what Franklins past research was tho?}
+  \item \emph{Test waters for the survey paper; Efforts to preserve information at every interface in PET. scintillators as the first interface, localisation the second, readout electronics, and image reconstruction}
+  \item \emph{Show scaffold for the thesis so far}
+  \item Basically keep doing what I'm doing, taxonomy idea is clean and good for a survey and the pipeline could be publishable --- you know what you're doing just keep it up. Just keep characterising the field broadly at the moment and noting potential ideas to pursue for papers layer.
+\end{itemize}
+
+\subsection*{2026-07-13 : First meeting as HDR}
+\begin{itemize}
+  \item High level chat, basically be creative and explore ideas atm
+  \item Starting on lit review, confident on resubmitting Ragys work and preparing for a continuous-coordinate vs binnned reconstructionn paper as my first paper
+  \item Adding Roumani as co-supervisor
+  \item Enrolled afterward
+  \item Come back with some lit review done and flexible ideas for project direction
+\end{itemize}
+
+\end{document}

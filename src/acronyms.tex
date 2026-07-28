@@ -1,0 +1,78 @@
+% List of Acronyms -- maintained BY HAND, sorted AUTOMATICALLY. In the body just
+% type the acronym as plain text (PET, CT, ...); nothing expands or links. To add
+% one, drop an \acr line anywhere below -- order does not matter, datatool sorts.
+\DTLnewdb{acronyms}
+\newcommand{\acr}[2]{\DTLnewrow{acronyms}%
+  \DTLnewdbentry{acronyms}{abbr}{#1}\DTLnewdbentry{acronyms}{full}{#2}}
+
+\acr{PET}{\textbf{positron emission tomography}---a functional imaging modality}
+\acr{CT}{\textbf{computed tomography}---an anatomical imaging modality}
+\acr{MRI}{\textbf{magnetic resonance imaging}---an anatomical imaging modality}
+\acr{FDG}{\textbf{fluorodeoxyglucose}---a glucose-analogue radiotracer}
+\acr{LOR}{\textbf{line of response}---the straight path along which a coincident pair of gamma photons are inferred to have originated. Can alternatively be used to refer to the straight path which connects two activated detectors of a PET scanner}
+\acr{TOF}{\textbf{time-of-flight}---a technique using high-speed timing to better localise the annihilation position along a LOR}
+\acr{SNR}{\textbf{signal-to-noise ratio}---a measure of data quality}
+\acr{LSO}{\textbf{lutetium oxyorthosilicate}---an inorganic scintillator crystal}
+\acr{LYSO}{\textbf{lutetium-yttrium oxyorthosilicate}---an inorganic scintillator crystal}
+\acr{BGO}{\textbf{bismuth germanate}---an inorganic scintillator crystal}
+\acr{NaI(Tl)}{\textbf{thallium-doped sodium iodide}---an inorganic scintillator crystal}
+\acr{GAGG}{\textbf{gadolinium aluminium gallium garnet}---an inorganic scintillator crystal}
+\acr{CZT}{\textbf{cadmium zinc telluride}---a semiconductor detector material, converting gamma photons to charge directly rather than via scintillation}
+
+% Photodetectors and readout
+\acr{PMT}{\textbf{photomultiplier tube}---a vacuum photodetector, the conventional readout for scintillators}
+\acr{SiPM}{\textbf{silicon photomultiplier}---a solid-state photodetector, an array of SPADs read out in parallel}
+\acr{SPAD}{\textbf{single-photon avalanche diode}---the individual sensing element of a SiPM}
+\acr{APD}{\textbf{avalanche photodiode}---a solid-state photodetector operated below breakdown}
+\acr{ASIC}{\textbf{application-specific integrated circuit}---custom readout electronics}
+\acr{ADC}{\textbf{analogue-to-digital converter}}
+\acr{TDC}{\textbf{time-to-digital converter}}
+\acr{DAQ}{\textbf{data acquisition}}
+
+% Performance metrics
+\acr{CTR}{\textbf{coincidence resolving time}---the timing resolution of a detector pair, which sets the achievable TOF localisation}
+\acr{NECR}{\textbf{noise-equivalent count rate}---a count rate corrected for the noise contributed by randoms and scatter, the standard scalar measure of a scanner's sensitivity}
+\acr{FWHM}{\textbf{full width at half maximum}---the conventional measure of spatial, energy and timing resolution}
+\acr{SUV}{\textbf{standardised uptake value}---a semi-quantitative measure of tracer uptake}
+\acr{NEMA}{\textbf{National Electrical Manufacturers Association}---publisher of the NU 2 standard by which PET scanner performance is measured}
+
+% Geometry and detector design
+\acr{DOI}{\textbf{depth of interaction}---the radial depth at which a photon interacts within a crystal, unresolved in conventional designs and a source of parallax error}
+\acr{FOV}{\textbf{field of view}---the region imaged by the scanner}
+\acr{AFOV}{\textbf{axial field of view}---the extent of the FOV along the patient axis}
+\acr{LAFOV}{\textbf{long axial field of view}---scanner designs extending the AFOV towards total-body coverage}
+
+% Reconstruction and modelling
+\acr{UBP}{\textbf{unfiltered backprojection}---primitive image reconstruction method which simply backprojects all LORs through a voxelwise volume, produces a distinctly blurred (by  $1/r$) image}
+\acr{FBP}{\textbf{filtered backprojection}---UBP preceded by a ramp filter that removes the $1/r$ blur, a standard simple analytical reconstruction algorithm}
+\acr{MLEM}{\textbf{maximum-likelihood expectation maximisation}---an iterative reconstruction algorithm}
+\acr{OSEM}{\textbf{ordered-subset expectation maximisation}---an accelerated variant of MLEM, standard in clinical practice}
+\acr{PSF}{\textbf{point spread function}---the imaged response to a point source, modelled within reconstruction to recover resolution}
+\acr{ROI}{\textbf{region of interest}}
+\acr{MC}{\textbf{Monte Carlo}---stochastic simulation of photon transport and detection}
+\acr{GATE}{\textbf{Geant4 Application for Tomographic Emission}---a Monte Carlo simulation toolkit for emission imaging}
+
+% Clinical and other modalities
+\acr{SPECT}{\textbf{single-photon emission computed tomography}---the single-photon counterpart to PET, in which tomographic reconstruction was first demonstrated}
+\acr{PSMA}{\textbf{prostate-specific membrane antigen}---the target of a widely used class of radioligands}
+
+\dtlsort{abbr}{acronyms}{\dtlicompare}
+
+\chapter*{List of Acronyms}
+\addcontentsline{toc}{chapter}{List of Acronyms}
+% xltabular = longtable (breaks across pages) + tabularx's X column (wraps the
+% meaning to the margin). Was a plain tabularx until the list outgrew one page.
+\begin{xltabular}{\textwidth}{@{}l @{\hspace{3em}} X@{}}
+\toprule
+\textbf{Acronym} & \textbf{Meaning}\\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Acronym} & \textbf{Meaning}\\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
+\DTLforeach*{acronyms}{\abbr=abbr,\full=full}{%
+  \DTLiffirstrow{}{\\}\textbf{\abbr} & \full}\\
+\end{xltabular}

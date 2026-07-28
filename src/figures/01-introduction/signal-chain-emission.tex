@@ -1,0 +1,92 @@
+﻿% Signal chain, part 1 of 2: from administration to energy deposited in the
+% detector. Part 2 (signal-chain-detection.tex) picks up from that deposit.
+% \input by chapters/01-introduction.tex. Layout model and bullet semantics
+% are documented in chain-style.tex.
+%
+% The split point is deliberate: everything here happens to the SIGNAL and is
+% largely outside the designer's control (isotope physics, patient anatomy,
+% solid angle). Everything in part 2 happens inside the DETECTOR and is a
+% design decision. That is the boundary the thesis argues about.
+
+\input{figures/01-introduction/chain-style}
+
+\begin{tikzpicture}[x=1cm, y=1cm]
+
+\node[stage] (s1) at (0,0)
+    {Administration\\[1pt]\scriptsize\mdseries \S\ref{sec:radiotracers}};
+\node[bullets] (b1) at ([xshift=4mm]s1.north east) {\chainlist{
+    \govrow{administered activity, isotope half-life, uptake period before scanning} \\[2pt]
+    \conrow{intravenous injection of a positron-labelled carrier molecule} \\
+    \altrow{inhalation of a labelled gas or vapour, as for \textsuperscript{15}O} \\
+    \altrow{elution from a bedside generator, as for \textsuperscript{82}Rb} \\
+}};
+
+\node[stage, anchor=north, yshift=-4mm] (s2) at (b1.south -| s1.south)
+    {Nuclear decay\\[1pt]\scriptsize\mdseries \S\ref{sec:annihilation}};
+\node[bullets] (b2) at ([xshift=4mm]s2.north east) {\chainlist{
+    \govrow{$\beta^{+}$ branching fraction, endpoint energy of the positron spectrum} \\[2pt]
+    \conrow{$\beta^{+}$ decay: a proton converts to a neutron, emitting a positron and a neutrino} \\
+    \altrow{electron capture, the competing branch, which yields no positron and so no signal} \\
+    \altrow{prompt gamma emission within picoseconds (\textsuperscript{68}Ga,
+            \textsuperscript{124}I, \textsuperscript{44}Sc), giving a third photon that turns
+            the event into a triple coincidence} \\
+}};
+
+\node[stage, anchor=north, yshift=-4mm] (s3) at (b2.south -| s1.south)
+    {Positron transport\\[1pt]\scriptsize\mdseries \S\ref{sec:resolution-limits}};
+\node[bullets] (b3) at ([xshift=4mm]s3.north east) {\chainlist{
+    \govrow{endpoint energy and tissue density, giving a positron range from sub-millimetre
+            (\textsuperscript{18}F) to several millimetres (\textsuperscript{82}Rb)} \\[2pt]
+    \conrow{Coulomb scattering down to thermal energies, displacing the positron by the positron range} \\
+    \altrow{annihilation in flight, before the positron has thermalised} \\
+    \altrow{capture into positronium: para (two photons, \ps{125}) or ortho (three photons, \ns{142})} \\
+}};
+
+\node[stage, anchor=north, yshift=-4mm] (s4) at (b3.south -| s1.south)
+    {Annihilation\\[1pt]\scriptsize\mdseries \S\ref{sec:resolution-limits}};
+\node[bullets] (b4) at ([xshift=4mm]s4.north east) {\chainlist{
+    \govrow{residual momentum of the pair, spreading the opening angle by $\approx\degs{0.5}$ FWHM
+            about \degs{180}; the resulting blur scales with ring diameter} \\[2pt]
+    \conrow{two \keV{511} photons emitted almost exactly back-to-back} \\
+    \altrow{three-photon decay of ortho-positronium, in roughly \qty{0.3}{\percent} of annihilations} \\
+}};
+
+\node[stage, anchor=north, yshift=-4mm] (s5) at (b4.south -| s1.south)
+    {Transport through the subject\\[1pt]\scriptsize\mdseries \S\ref{sec:resolution-limits}};
+\node[bullets] (b5) at ([xshift=4mm]s5.north east) {\chainlist{
+    \govrow{linear attenuation coefficient $\mu$ at \keV{511}, patient size and density} \\[2pt]
+    \conrow{escape without interacting, preserving a valid line of response} \\
+    \conrow{Compton scatter, which preserves the photon but destroys its LOR} \\
+    \altrow{recovery of the scatter angle from the Klein--Nishina relation, the basis of
+            Compton-camera imaging (\S\ref{sec:unconventional})} \\
+    \altrow{photoelectric absorption, negligible in tissue at \keV{511}} \\
+}};
+
+\node[stage, anchor=north, yshift=-4mm] (s6) at (b5.south -| s1.south)
+    {Interception by the detector\\[1pt]\scriptsize\mdseries \S\ref{sec:architectures}};
+\node[bullets] (b6) at ([xshift=4mm]s6.north east) {\chainlist{
+    \govrow{geometric solid angle, fixed by ring diameter and axial field of view} \\[2pt]
+    \conrow{a closed cylindrical ring in fully-3D acquisition, with the interplane septa removed} \\
+    \altrow{long axial field-of-view and total-body designs, raising coverage toward \qty{80}{\percent}} \\
+    \altrow{partial, sparse and dual-panel rings, trading coverage for cost} \\
+}};
+
+\node[stage, anchor=north, yshift=-4mm] (s7) at (b6.south -| s1.south)
+    {Energy deposition\\[1pt]\scriptsize\mdseries \S\ref{sec:scintillators}};
+\node[bullets] (b7) at ([xshift=4mm]s7.north east) {\chainlist{
+    \govrow{density, effective atomic number and crystal thickness, which set the interaction
+            probability and the photofraction} \\[2pt]
+    \conrow{photoelectric absorption, depositing the full \keV{511} in a single interaction} \\
+    \conrow{Compton scatter inside the crystal, depositing partially and often spreading across neighbours} \\
+    \altrow{pair production, energetically forbidden at \keV{511}} \\
+}};
+
+\foreach \a/\b in {s1/s2, s2/s3, s3/s4, s4/s5, s5/s6, s6/s7}
+    \draw[chainstep] (\a) -- (\b);
+
+\foreach \n in {1,...,7}{
+    \draw[tie] (s\n.east) -- (s\n.east -| b\n.west);
+    \draw[tie] (b\n.north west) -- (b\n.south west);
+}
+\chainfit
+\end{tikzpicture}

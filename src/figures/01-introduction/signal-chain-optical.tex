@@ -1,0 +1,79 @@
+﻿% Signal chain, part 2 of 3: the optical domain, from the energy deposited in
+% the crystal to optical photons arriving at the sensor face. Continues
+% signal-chain-emission.tex; signal-chain-readout.tex picks up at the sensor.
+% \input by chapters/01-introduction.tex. Row semantics and the layout model
+% are documented in chain-style.tex.
+%
+% Every stage here is a design decision, which is why the alternative channels
+% are denser than in part 1. The first stage is the important one: "conversion
+% of the deposit" is where PET's choice of optical scintillation is one option
+% among several, not a given -- and the three stages after it exist only to
+% serve that one decision, which is the argument for grouping them on one page.
+%
+% The part 2 / part 3 boundary is photon detection efficiency. Everything here
+% is counted in optical photons; everything in part 3 is counted in charge and
+% timestamps. PDE is the conversion factor between the two, and it heads part 3.
+
+\input{figures/01-introduction/chain-style}
+
+\begin{tikzpicture}[x=1cm, y=1cm]
+
+\node[stage] (s1) at (0,0)
+    {Conversion of the deposit\\[1pt]\scriptsize\mdseries \S\ref{sec:energy-conversion}};
+\node[bullets] (b1) at ([xshift=4mm]s1.north east) {\chainlist{
+    \govrow{the branching of the deposited energy between these channels, and which one the
+            detector is instrumented to read; for scintillation, the light yield in photons
+            per \unit{\mega\electronvolt} of deposit} \\[2pt]
+    \conrow{scintillation: the excitation decays radiatively into optical photons} \\
+    \altrow{Cherenkov emission: a few prompt photons from the recoil electron, carrying
+            picosecond timing but too few to position from} \\
+    \altrow{thermoacoustic heating: the deposit expands the material and launches a pressure
+            wave whose acoustic time of flight would give depth of interaction directly} \\
+    \altrow{direct ionisation to charge, as in CdZnTe, with no optical stage at all} \\
+    \altrow{phonon production, read out bolometrically at cryogenic temperatures} \\
+}};
+
+\node[stage, anchor=north, yshift=-4mm] (s2) at (b1.south -| s1.south)
+    {Scintillation mechanism\\[1pt]\scriptsize\mdseries \S\ref{sec:scintillation-mechanisms}};
+\node[bullets] (b2) at ([xshift=4mm]s2.north east) {\chainlist{
+    \govrow{light yield, rise and decay time, and the emission spectrum the mechanism produces} \\[2pt]
+    \conrow{inorganic crystal: electron--hole pairs relaxing through activator levels in the
+            band gap (LYSO, BGO, NaI:Tl)} \\
+    \altrow{organic: excitation and de-excitation of molecular $\pi$-electron singlet states
+            (plastic, liquid)} \\
+    \altrow{composite and nanostructured: perovskite, quantum-dot and metal-loaded plastic hybrids} \\
+}};
+
+\node[stage, anchor=north, yshift=-4mm] (s3) at (b2.south -| s1.south)
+    {Optical transport in the bulk\\[1pt]\scriptsize\mdseries \S\ref{sec:optical-transport}};
+\node[bullets] (b3) at ([xshift=4mm]s3.north east) {\chainlist{
+    \govrow{optical attenuation length against crystal dimensions, and the overlap between the
+            emission and self-absorption bands} \\[2pt]
+    \conrow{isotropic emission from the interaction point, so the light distribution encodes position} \\
+    \conrow{bulk attenuation and self-absorption, worsening with crystal length} \\
+    \altrow{Rayleigh scattering off refractive-index inhomogeneity} \\
+    \altrow{wavelength shifting, to move the emission into the photodetector's sensitive band} \\
+}};
+
+\node[stage, anchor=north, yshift=-4mm] (s4) at (b3.south -| s1.south)
+    {Optical interfaces\\[1pt]\scriptsize\mdseries \S\ref{sec:optical-transport}};
+\node[bullets] (b4) at ([xshift=4mm]s4.north east) {\chainlist{
+    \govrow{refractive-index contrast at each boundary, which fixes both the critical angle and
+            the Fresnel coefficients; surface roughness; reflector albedo} \\[2pt]
+    \conrow{refraction at each refractive-index step, following Snell's law} \\
+    \conrow{total internal reflection above the critical angle, trapping light inside the crystal} \\
+    \conrow{Fresnel reflection, partial at every surface and every angle} \\
+    \altrow{surface finish: polished for specular reflection, ground for near-Lambertian} \\
+    \altrow{reflector treatment: specular film such as ESR, or diffuse wrap such as PTFE} \\
+    \altrow{segmentation: inter-pixel reflectors confine the light, a monolithic slab lets it spread} \\
+}};
+
+\foreach \a/\b in {s1/s2, s2/s3, s3/s4}
+    \draw[chainstep] (\a) -- (\b);
+
+\foreach \n in {1,...,4}{
+    \draw[tie] (s\n.east) -- (s\n.east -| b\n.west);
+    \draw[tie] (b\n.north west) -- (b\n.south west);
+}
+\chainfit
+\end{tikzpicture}

@@ -69,17 +69,19 @@
 % 61.7 % band at 4.6 cm thick cannot satisfy in the space available.
 %
 % To change the numbers, edit and re-run the generator, then paste its output
-% over everything from \definecolor to \end{tikzpicture}:
+% over everything from \providecolor to \end{tikzpicture} -- and change the
+% generator's \definecolor lines back to \providecolor, or this figure stops
+% following the light/dark theme (see theme.tex):
 %     scratchpad/gen2.py + wrap2.py  (scaffolding, not a build step -- the
 %     thesis builds from this file alone, with no Python dependency)
 
-\definecolor{flowkeep}{HTML}{2A6F97}
-\definecolor{flownode}{HTML}{1F4E6B}
-\definecolor{flowloss1}{HTML}{CDD6DB}
-\definecolor{flowloss2}{HTML}{AAB8C0}
-\definecolor{flowloss3}{HTML}{8B9BA4}
-\definecolor{flowloss4}{HTML}{64757E}
-\definecolor{flowtext}{HTML}{3D4A52}
+\providecolor{flowkeep}{HTML}{2A6F97}
+\providecolor{flownode}{HTML}{1F4E6B}
+\providecolor{flowloss1}{HTML}{CDD6DB}
+\providecolor{flowloss2}{HTML}{AAB8C0}
+\providecolor{flowloss3}{HTML}{8B9BA4}
+\providecolor{flowloss4}{HTML}{64757E}
+\providecolor{flowtext}{HTML}{3D4A52}
 
 \begin{tikzpicture}[x=1cm, y=1cm, font=\footnotesize,
     ribbon/.style={fill opacity=0.75},

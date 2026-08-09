@@ -1,0 +1,114 @@
+% Colour theme for the whole thesis, including the TikZ figures.
+% \input by thesis.tex immediately after xcolor. Requires xcolor.
+%
+% ---------------------------------------------------------------------------
+% FLIP THIS ONE LINE:
+%   \darkmodefalse   white page  -- for printing, submission, sending to anyone
+%   \darkmodetrue    dark page   -- for reading on screen
+% ---------------------------------------------------------------------------
+%
+% Currently DARK. Flip to light before printing, submitting, or sending this to
+% anyone: \pagecolor is real geometry, not a viewer setting, so a dark PDF
+% prints as a full-page dark rectangle rather than as ink on white paper.
+%
+% WHY THE FIGURE COLOURS LIVE HERE AND NOT IN THE FIGURE FILES
+%
+% Each figure file declares its palette with \providecolor, which defines a
+% colour only if it is not already defined. The light branch below defines
+% nothing, so the figure files' own values win and light mode renders exactly
+% as it always has. The dark branch defines them all first, so the figure
+% files' \providecolor calls become no-ops and the dark values win. That keeps
+% the light palette documented where the figure that uses it lives, while
+% still allowing one central override.
+%
+% The consequence: a colour is only themeable if the figure declares it with
+% \providecolor and it is listed in the dark branch here. If you add a new
+% figure colour, add both, or it will not follow the theme.
+%
+% The two palettes are NOT computed from each other. A print palette inverted
+% arithmetically for a dark background gives muddy, over-saturated results --
+% mid-tones that read as "muted" on white read as "murky" on dark. Each dark
+% value is chosen for contrast against pagebg instead.
+
+\newif\ifdarkmode
+\darkmodetrue
+
+\ifdarkmode
+    % --- dark ---------------------------------------------------------------
+    \definecolor{pagebg}{HTML}{1E1E1E}
+    \definecolor{ink}{HTML}{E4E4E4}      % off-white, not pure -- less glare
+
+    % Drafting scaffold. These are deliberately quiet: they are notes to me,
+    % not content, and must not out-shout the prose they sit next to.
+    \definecolor{scaffoldnote}{HTML}{9AA6AD}
+    \definecolor{scaffolddim}{HTML}{7E888F}
+    \definecolor{scaffoldwarn}{HTML}{FF8A80}
+
+    % Signal-chain figures (figures/01-introduction/chain-style.tex).
+    % chainbox is the stage-box fill: on white it is a pale tint, so on dark it
+    % has to become a dark tint rather than a light one, or every stage box
+    % turns into a glowing slab.
+    \definecolor{chainbox}{HTML}{22303A}
+    \definecolor{chainline}{HTML}{6FB4E0}
+    \definecolor{chaintext}{HTML}{C3CBD1}
+    \definecolor{chainalt}{HTML}{E09B6E}
+
+    % Photon-flow Sankey (figures/01-introduction/photon-flow.tex).
+    % The loss ramp runs light-to-dark on white, i.e. each successive band gains
+    % contrast against the page. Here it runs dark-to-light for the same reason,
+    % so the ordering still reads. Ribbons draw at 75 % opacity over pagebg,
+    % which pulls every one of these toward the background -- they are picked
+    % brighter than they need to look, to survive that blend.
+    \definecolor{flowkeep}{HTML}{6FB4E0}
+    \definecolor{flownode}{HTML}{8CC5E8}
+    \definecolor{flowloss1}{HTML}{6B7A83}
+    \definecolor{flowloss2}{HTML}{83939C}
+    \definecolor{flowloss3}{HTML}{9BABB4}
+    \definecolor{flowloss4}{HTML}{B3C3CC}
+    \definecolor{flowtext}{HTML}{C3CBD1}
+
+    % PET timeline (figures/02-literature-review/pet-timeline.tex).
+    \definecolor{tlpositron}{HTML}{6FB4E0}
+    \definecolor{tlsingle}{HTML}{A8B6BE}
+    \definecolor{tltext}{HTML}{C3CBD1}
+\else
+    % --- light (print) ------------------------------------------------------
+    % Figure colours are intentionally absent: the figure files define their
+    % own, and those are the print values.
+    \definecolor{pagebg}{HTML}{FFFFFF}
+    \definecolor{ink}{HTML}{000000}
+
+    \colorlet{scaffoldnote}{gray!120!black}
+    \colorlet{scaffolddim}{gray}
+    \colorlet{scaffoldwarn}{red!70!black}
+\fi
+
+% Applied only in dark mode, so that light mode is a genuine no-op: setting
+% \pagecolor{white} would paint an opaque white rectangle on every page, and
+% \color{black} would emit explicit RGB operators where the default grayscale
+% ones were. Both are invisible, but they make the light PDF differ from what
+% this project produced before the theme existed, for no benefit.
+%
+% Verified against a pre-theme build: with this guard the light page content is
+% identical except for the timeline's label fill, which went from grayscale
+% white (1 g) to RGB white (1 1 1 rg). Same colour, different colour space --
+% the unavoidable cost of making that fill follow the theme at all.
+%
+% pagebg is still DEFINED in both branches -- pet-timeline.tex fills its labels
+% with it to mask the leader lines running underneath.
+\ifdarkmode
+    \pagecolor{pagebg}
+    % \color{ink} on its own is NOT enough, and the failure is silent.
+    %
+    % LaTeX's output routine calls \normalcolor on every shipout, and
+    % \normalcolor restores \default@color, which is still black. So everything
+    % the output routine emits -- page numbers, running heads -- came out
+    % black-on-black. Measured on a first attempt: 174 text-drawing operations
+    % were still being made in pure black while the page under them was #1E1E1E.
+    %
+    % Rebinding \default@color to the current colour is what actually makes ink
+    % the document default rather than a local override.
+    \makeatletter
+    \AtBeginDocument{\color{ink}\global\let\default@color\current@color}
+    \makeatother
+\fi

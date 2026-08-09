@@ -36,6 +36,7 @@
 \NewDocumentCommand\mins{m}{\unitvalue{#1}{\minute}} % not \minute -- that is siunitx's own unit macro
 \NewDocumentCommand\degs{m}{\unitvalue{#1}{\degree}}  % not \deg -- that is the LaTeX math operator
 \usepackage{xcolor}
+\input{theme} % light/dark palette for text, scaffold badges and figures
 \usepackage{tikz}
 \usetikzlibrary{calc} % \path let ...: chain-style.tex's \chainfit page-fit guard
 \usepackage[hidelinks]{hyperref}
@@ -49,7 +50,7 @@
 
 % Drafting scaffold: topics each section should at least touch on.
 % Replace these with real prose as sections are written.
-\newcommand{\topics}[1]{{\small\itshape\color{gray!120!black}\raggedright
+\newcommand{\topics}[1]{{\small\itshape\color{scaffoldnote}\raggedright
     Touch on: #1\par}}
 
 % Drafting scaffold: live sentence counts per heading. tools/count_sentences.py
@@ -60,13 +61,13 @@
 \IfFileExists{sentence-counts.tex}{\input{sentence-counts.tex}}{}
 \newcommand{\sentbadge}[1]{%
     \ifcsname sc@#1\endcsname
-        \space{\normalfont\small\color{gray}[\csname sc@#1\endcsname~sentences]}%
+        \space{\normalfont\small\color{scaffolddim}[\csname sc@#1\endcsname~sentences]}%
     \fi}
 
 % Drafting scaffold: a citation known to be needed but not yet in references.bib.
 % Deliberately not a \cite with a fake key -- that would make biber warn on every
 % build and bury the genuine missing-citation warnings. Delete with the rest.
-\newcommand{\needcite}[1]{{\normalfont\small\color{red!70!black}[cite: #1]}}
+\newcommand{\needcite}[1]{{\normalfont\small\color{scaffoldwarn}[cite: #1]}}
 
 % Drafting scaffold: units typed by hand where a macro exists.
 % tools/check_units.py regenerates unit-warnings.tex on every build and only
@@ -75,7 +76,7 @@
 \IfFileExists{unit-warnings.tex}{\input{unit-warnings.tex}}{}
 \newcommand{\unitbadge}[1]{%
     \ifcsname uw@#1\endcsname
-        \space{\normalfont\small\color{red!70!black}%
+        \space{\normalfont\small\color{scaffoldwarn}%
             [\csname uw@#1\endcsname~raw units]}%
     \fi}
 

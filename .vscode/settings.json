@@ -22,6 +22,9 @@
             "tools": ["tectonic"]
         }
     ],
-    // Put the PDF and other outputs in build/ next to src/
-    "latex-workshop.latex.outDir": "%DIR%/../build"
+    // Put the PDF and other outputs in build/ at the repo root. Anchored to
+    // %WORKSPACE_FOLDER%, not %DIR%/../build -- the latter is relative to the
+    // root .tex file, so it only landed correctly for src/thesis.tex and threw
+    // meetings.tex's output one level above the repo.
+    "latex-workshop.latex.outDir": "%WORKSPACE_FOLDER%/build"
 }

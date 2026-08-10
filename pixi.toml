@@ -11,5 +11,14 @@ version = "0.1.0"
 [tasks.build]
 cmd = "python tools/count_sentences.py && tectonic --synctex --outdir build src/thesis.tex"
 env = { PATH = "$PIXI_PROJECT_ROOT/tools/biber;$PATH" }
+
+[tasks.build-meetings]
+cmd = "tectonic --synctex --outdir build meetings.tex"
+env = { PATH = "$PIXI_PROJECT_ROOT/tools/biber;$PATH" }
+
+# commit + push source, then force-push the fresh PDFs to the `pdf` branch
+[tasks.publish]
+cmd = "powershell -NoProfile -ExecutionPolicy Bypass -File tools/publish_pdf.ps1"
+depends-on = ["build", "build-meetings"]
 [dependencies]
 tectonic = ">=0.16.9,<0.17"

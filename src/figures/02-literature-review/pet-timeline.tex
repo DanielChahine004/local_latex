@@ -90,32 +90,32 @@
 \pgfsetlayers{main,tllabels}
 
 \begin{tikzpicture}[x=1cm, y=1cm, font=\scriptsize,
-    tick/.style={line width=0.6pt},
-    lead/.style={line width=0.3pt},
-    lbl/.style={align=center, text width=2.3cm, text=tltext, inner sep=1.5pt,
-                fill=pagebg}]
+	tick/.style={line width=0.6pt},
+	lead/.style={line width=0.3pt},
+	lbl/.style={align=center, text width=2.3cm, text=tltext, inner sep=1.5pt,
+		fill=pagebg}]
 
 \draw[tltext, line width=0.8pt, -latex] (-0.45,0) -- (13.9,0);
 
 % --- positron line (above) --  year/row/label x/label ----------------------
 \foreach \year/\r/\lx/\text in {%
-    1932/1/0/{Anderson\\positron discovered},
-    1953/1/3.2/{Brownell \& Sweet\\rectilinear probes},
-    1975/2/5.4/{PETT\\ring scanners},
-    1976/1/6.9/{\textsuperscript{18}F-FDG\\synthesised},
-    1983/2/8.19/{first TOF PET\\BaF$_2$, abandoned},
-    1986/1/9.5/{Casey \& Nutt\\block detector},
-    2006/1/12.1/{commercial TOF PET\\on LSO/LYSO},
-    2018/2/13.4/{uEXPLORER\\total-body}}
+	1932/1/0/{Anderson\\positron discovered},
+	1953/1/3.2/{Brownell \& Sweet\\rectilinear probes},
+	1975/2/5.4/{PETT\\ring scanners},
+	1976/1/6.9/{\textsuperscript{18}F-FDG\\synthesised},
+	1983/2/8.19/{first TOF PET\\BaF$_2$, abandoned},
+	1986/1/9.5/{Casey \& Nutt\\block detector},
+	2006/1/12.1/{commercial TOF PET\\on LSO/LYSO},
+	2018/2/13.4/{uEXPLORER\\total-body}}
 {
-  \pgfmathsetmacro{\tx}{(\year-1932)*0.155}
-  \pgfmathsetmacro{\lead}{0.55 + 1.50*(\r-1)}
-  \draw[tlpositron, tick] (\tx,0) -- (\tx,0.25);
-  \fill[tlpositron] (\tx,0) circle (1.6pt);
-  \draw[tlpositron, lead] (\tx,0.25) -- (\tx,0.40) -- (\lx,0.40) -- (\lx,\lead);
-  \begin{pgfonlayer}{tllabels}
-    \node[lbl, anchor=south, name=n\year] at (\lx,\lead) {\textbf{\year}\\\text};
-  \end{pgfonlayer}
+	\pgfmathsetmacro{\tx}{(\year-1932)*0.155}
+	\pgfmathsetmacro{\lead}{0.55 + 1.50*(\r-1)}
+	\draw[tlpositron, tick] (\tx,0) -- (\tx,0.25);
+	\fill[tlpositron] (\tx,0) circle (1.6pt);
+	\draw[tlpositron, lead] (\tx,0.25) -- (\tx,0.40) -- (\lx,0.40) -- (\lx,\lead);
+	\begin{pgfonlayer}{tllabels}
+	\node[lbl, anchor=south, name=n\year] at (\lx,\lead) {\textbf{\year}\\\text};
+	\end{pgfonlayer}
 }
 
 % --- below the axis --  year/row/label x/colour/label ----------------------
@@ -127,21 +127,21 @@
 % membership is carried by colour here, not by which side of the axis a label
 % happens to sit on. Say so in the caption.
 \foreach \year/\r/\lx/\col/\text in {%
-    1951/2/2.3/tlpositron/{Wrenn \emph{et al.}\\coincidence proposed},
-    1958/1/3.9/tlsingle/{Anger\\scintillation camera},
-    1963/2/5.26/tlsingle/{Kuhl \& Edwards\\emission tomography},
-    1973/1/6.6/tlsingle/{Hounsfield\\X-ray CT},
-    1989/1/9.3/tlpositron/{LSO\\discovered},
-    2013/1/12.2/tlpositron/{SiPM\\digital PET}}
+	1951/2/2.3/tlpositron/{Wrenn \emph{et al.}\\coincidence proposed},
+	1958/1/3.9/tlsingle/{Anger\\scintillation camera},
+	1963/2/5.26/tlsingle/{Kuhl \& Edwards\\emission tomography},
+	1973/1/6.6/tlsingle/{Hounsfield\\X-ray CT},
+	1989/1/9.3/tlpositron/{LSO\\discovered},
+	2013/1/12.2/tlpositron/{SiPM\\digital PET}}
 {
-  \pgfmathsetmacro{\tx}{(\year-1932)*0.155}
-  \pgfmathsetmacro{\lead}{0.55 + 1.50*(\r-1)}
-  \draw[\col, tick] (\tx,0) -- (\tx,-0.25);
-  \fill[\col] (\tx,0) circle (1.6pt);
-  \draw[\col, lead] (\tx,-0.25) -- (\tx,-0.40) -- (\lx,-0.40) -- (\lx,-\lead);
-  \begin{pgfonlayer}{tllabels}
-    \node[lbl, anchor=north, name=n\year] at (\lx,-\lead) {\textbf{\year}\\\text};
-  \end{pgfonlayer}
+	\pgfmathsetmacro{\tx}{(\year-1932)*0.155}
+	\pgfmathsetmacro{\lead}{0.55 + 1.50*(\r-1)}
+	\draw[\col, tick] (\tx,0) -- (\tx,-0.25);
+	\fill[\col] (\tx,0) circle (1.6pt);
+	\draw[\col, lead] (\tx,-0.25) -- (\tx,-0.40) -- (\lx,-0.40) -- (\lx,-\lead);
+	\begin{pgfonlayer}{tllabels}
+	\node[lbl, anchor=north, name=n\year] at (\lx,-\lead) {\textbf{\year}\\\text};
+	\end{pgfonlayer}
 }
 
 % MEASUREMENT HOOK -- uncomment, then build with `tectonic --print` and grep

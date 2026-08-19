@@ -38,7 +38,7 @@
 % Bullet rows. Each expands to the first two cells of a tabular row, so a list
 % reads: \conrow{...} \\ \altrow{...} \\ ...
 \providecommand{\govrow}[1]{%
-    \multicolumn{2}{@{}p{10.9cm}@{}}{\textcolor{chainline}{\scshape governed by}~ #1}}
+	\multicolumn{2}{@{}p{10.9cm}@{}}{\textcolor{chainline}{\scshape governed by}~ #1}}
 \providecommand{\conrow}[1]{\textcolor{chainline}{\textbullet} & #1}
 \providecommand{\altrow}[1]{\textcolor{chainalt}{$\circ$} & \textcolor{chainalt}{#1}}
 
@@ -46,8 +46,8 @@
 % wrapped bullet a hanging indent, which is what keeps a three-line entry
 % legible without an extra package.
 \providecommand{\chainlist}[1]{%
-    \renewcommand{\arraystretch}{1.1}%
-    \begin{tabular}{@{}c@{~~}p{10.4cm}@{}}#1\end{tabular}}
+	\renewcommand{\arraystretch}{1.1}%
+	\begin{tabular}{@{}c@{~~}p{10.4cm}@{}}#1\end{tabular}}
 
 % Page-fit guard, called just before \end{tikzpicture} in each chain figure.
 %
@@ -63,26 +63,26 @@
 % raise \chaincapspace rather than ignoring the error.
 \providecommand{\chaincapspace}{150pt}
 \providecommand{\chainfit}{%
-    \path let \p1=(current bounding box.north), \p2=(current bounding box.south) in
-        \pgfextra{%
-            \ifdim\dimexpr\y1-\y2\relax>\dimexpr\textheight-\chaincapspace\relax
-                \PackageError{chain-style}{Chain figure is too tall for its page}%
-                    {It measures \the\dimexpr\y1-\y2\relax\space against a budget of
-                     \the\dimexpr\textheight-\chaincapspace\relax. Shorten a bullet,
-                     drop a stage, or split the figure again.}%
-            \fi};}
+	\path let \p1=(current bounding box.north), \p2=(current bounding box.south) in
+		\pgfextra{%
+			\ifdim\dimexpr\y1-\y2\relax>\dimexpr\textheight-\chaincapspace\relax
+				\PackageError{chain-style}{Chain figure is too tall for its page}%
+					{It measures \the\dimexpr\y1-\y2\relax\space against a budget of
+					\the\dimexpr\textheight-\chaincapspace\relax. Shorten a bullet,
+					drop a stage, or split the figure again.}%
+			\fi};}
 
 \tikzset{
-    % Stage box on the spine. Narrow on purpose: the taxonomy carries the
-    % detail, the box only names the interface and says where it is treated.
-    stage/.style={draw=chainline, line width=0.6pt, fill=chainbox,
-                  rounded corners=2pt, text width=3.4cm, align=center,
-                  inner sep=4pt, text=chainline, font=\small\bfseries},
-    % Bullet block. inner xsep leaves room for the vertical rule drawn at its
-    % west edge; inner ysep=0 keeps the reflow arithmetic honest.
-    bullets/.style={inner xsep=2mm, inner ysep=0pt, anchor=north west,
-                    font=\scriptsize, text=chaintext},
-    % Spine arrow. Not `step' -- /tikz/step is taken (grid spacing) and errors.
-    chainstep/.style={->, chainline, line width=0.7pt},
-    tie/.style={chainline, line width=0.5pt},
+	% Stage box on the spine. Narrow on purpose: the taxonomy carries the
+	% detail, the box only names the interface and says where it is treated.
+	stage/.style={draw=chainline, line width=0.6pt, fill=chainbox,
+		rounded corners=2pt, text width=3.4cm, align=center,
+			inner sep=4pt, text=chainline, font=\small\bfseries},
+	% Bullet block. inner xsep leaves room for the vertical rule drawn at its
+	% west edge; inner ysep=0 keeps the reflow arithmetic honest.
+	bullets/.style={inner xsep=2mm, inner ysep=0pt, anchor=north west,
+		font=\scriptsize, text=chaintext},
+	% Spine arrow. Not `step' -- /tikz/step is taken (grid spacing) and errors.
+	chainstep/.style={->, chainline, line width=0.7pt},
+	tie/.style={chainline, line width=0.5pt},
 }

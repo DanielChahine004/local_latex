@@ -43,54 +43,50 @@ Which is which, and why, is taken up in the chapters that follow.
 The division between the figures is itself the argument of this thesis in miniature: almost nothing in Figure~\ref{fig:chain-emission} is under the designer's control, since it is fixed by isotope physics and patient anatomy, whereas almost everything in Figures~\ref{fig:chain-optical} and~\ref{fig:chain-readout} is a decision, and therefore a place where money is either spent or saved.
 
 \begin{figure}[p]
-    \centering
-    \input{figures/01-introduction/signal-chain-emission}
-    \caption[The PET signal chain, part 1: emission and transport]{%
-        The PET signal chain, part~1: from administration to energy deposited in the detector.
-        Each box is one interface at which the signal changes hands.
-        Beside it, the \textsc{governed by} line gives the quantities that fix the conversion, and the bullets below it give the physical channels available: a filled blue bullet marks the channel a conventional scanner uses, a hollow rust bullet an alternative that could serve the same stage but conventionally does not.
-        Almost every entry in this part is fixed by the physics of the isotope or the anatomy of the patient, and so is outside the scanner designer's control; Figures~\ref{fig:chain-optical} and~\ref{fig:chain-readout} continue the chain into the detector, where the opposite is true.
-        Figure~\ref{fig:photon-flow} then quantifies the losses that stages~5 to~7 here represent.}
-    \label{fig:chain-emission}
+	\centering
+	\input{figures/01-introduction/signal-chain-emission}
+	\caption[The PET signal chain, part 1: emission and transport]{%
+		The PET signal chain, part~1: from administration to energy deposited in the detector.
+		Each box is one interface at which the signal changes hands.
+		Beside it, the \textsc{governed by} line gives the quantities that fix the conversion, and the bullets below it give the physical channels available: a filled blue bullet marks the channel a conventional scanner uses, a hollow rust bullet an alternative that could serve the same stage but conventionally does not.
+		Almost every entry in this part is fixed by the physics of the isotope or the anatomy of the patient, and so is outside the scanner designer's control; Figures~\ref{fig:chain-optical} and~\ref{fig:chain-readout} continue the chain into the detector, where the opposite is true.
+		Figure~\ref{fig:photon-flow} then takes stages~5 to~7 here and sets out what governs the losses at each of them.}
+	\label{fig:chain-emission}
 \end{figure}
 
 \begin{figure}[p]
-    \centering
-    \input{figures/01-introduction/signal-chain-optical}
-    \caption[The PET signal chain, part 2: the optical domain]{%
-        The PET signal chain, part~2: the optical domain, from the energy deposited in the crystal to optical photons arriving at the sensor face.
-        Continues Figure~\ref{fig:chain-emission} and uses the same row convention.
-        Alternatives are denser here than in part~1 because every stage is a design decision rather than a fact of physics.
-        The first stage is the one worth dwelling on: converting the deposited energy into optical photons is a choice among at least five channels, and the three stages after it exist only to serve that one decision.}
-    \label{fig:chain-optical}
+	\centering
+	\input{figures/01-introduction/signal-chain-optical}
+	\caption[The PET signal chain, part 2: the optical domain]{%
+		The PET signal chain, part~2: the optical domain, from the energy deposited in the crystal to optical photons arriving at the sensor face.
+		Continues Figure~\ref{fig:chain-emission} and uses the same row convention.
+		Alternatives are denser here than in part~1 because every stage is a design decision rather than a fact of physics.
+		The first stage is the one worth dwelling on: converting the deposited energy into optical photons is a choice among at least five channels, and the three stages after it exist only to serve that one decision.}
+	\label{fig:chain-optical}
 \end{figure}
 
 \begin{figure}[p]
-    \centering
-    \input{figures/01-introduction/signal-chain-readout}
-    \caption[The PET signal chain, part 3: readout and reconstruction]{%
-        The PET signal chain, part~3: from the sensor face to the reconstructed image, continuing Figure~\ref{fig:chain-optical}.
-        The division between parts~2 and~3 is photon detection efficiency, the factor that converts an arriving optical photon into a detected one.
-        It is the only genuine transduction in the detector---everything before it is counted in optical photons, everything after in charge, timestamps and voxels---and it is worth noting how little of the chain it occupies relative to how much of the design serves it.
-        A scintillator is chosen, shaped, polished and wrapped almost entirely to deliver photons into a sensor whose efficiency then decides how many of them count at all.}
-    \label{fig:chain-readout}
+	\centering
+	\input{figures/01-introduction/signal-chain-readout}
+	\caption[The PET signal chain, part 3: readout and reconstruction]{%
+		The PET signal chain, part~3: from the sensor face to the reconstructed image, continuing Figure~\ref{fig:chain-optical}.
+		The division between parts~2 and~3 is photon detection efficiency, the factor that converts an arriving optical photon into a detected one.
+		It is the only genuine transduction in the detector---everything before it is counted in optical photons, everything after in charge, timestamps and voxels---and it is worth noting how little of the chain it occupies relative to how much of the design serves it.
+		A scintillator is chosen, shaped, polished and wrapped almost entirely to deliver photons into a sensor whose efficiency then decides how many of them count at all.}
+	\label{fig:chain-readout}
 \end{figure}
 
-\begin{figure}[htbp]
-    \centering
-    \input{figures/01-introduction/photon-flow}
-    \caption[Probable fate of an annihilation photon in a clinical PET scanner]{%
-        The fate of a single \keV{511} annihilation photon, from emission to a recorded single carrying a valid LOR, for a representative clinical scanner.
-        Band widths are proportional to the fraction of emitted photons.
-        Compton scattering is drawn as a terminal loss, but the photon is not absorbed: at \keV{511} photoelectric absorption in tissue is negligible, so a scattered photon continues at reduced energy and may still be detected and pass the energy window, entering the data as a scattered coincidence rather than disappearing from it.
-        What scattering destroys is the LOR, not the photon, and the trunk here follows only those photons that retain one; recorded singles are correspondingly more numerous than the \qty{4.6}{\percent} shown.
-        Every branch away from the trunk costs money, though not all in the same currency: solid angle and crystal interaction are sensitivity that has to be bought back with detector material, whereas scattering is paid for in the energy resolution and correction machinery needed to subtract counts that are present but mispositioned.
-        Little of what is emitted survives as trustworthy signal, and paying to recover the rest is what makes PET expensive.
-        The two dominant losses are physical rather than technological: Compton scattering in the patient, and the solid angle that a ring of finite axial extent subtends.
-        Of the two, only the solid-angle term is a design choice rather than a fixed cost of imaging a human: coverage ranges from the order of \qty{20}{\percent} in a conventional ring such as the one assumed here, to as much as \qty{80}{\percent} in long axial field-of-view scanners \cite{Vandenberghe2020}.
-        A coincidence requires both photons, so the per-photon terms compound; the solid-angle term does not, since the photons are emitted back-to-back and a ring that accepts one largely accepts the other.
-        Figures are illustrative and require sourcing.}
-    \label{fig:photon-flow}
+\begin{figure}[p]
+	\centering
+	\input{figures/01-introduction/photon-flow}
+	\caption[What governs the fate of an annihilation photon]{%
+		The fate of a single \keV{511} annihilation photon, from emission to a recorded single carrying a valid LOR.
+		The figure is qualitative: no scanner is assumed, the trunk is drawn as halving at each interface rather than to scale, and the ledger beneath gives the properties that raise or lower each surviving fraction together with its rough range.
+		Scattering is drawn as a terminal loss, but what it destroys is the LOR, not the photon, which continues at reduced energy and may still be detected and recorded as a scattered coincidence; the trunk follows only those photons that retain a valid LOR.
+		Little of what is emitted survives as trustworthy signal, and paying to recover the rest is what makes PET expensive: solid angle and crystal interaction are sensitivity bought back with detector material, whereas scatter is paid for in the correction machinery needed to subtract counts that are present but mispositioned.
+		Of the two dominant losses only solid angle is a design choice rather than a fixed cost of imaging a human, coverage ranging from the order of \qty{20}{\percent} in a conventional ring to as much as \qty{80}{\percent} in long axial field-of-view scanners \cite{Vandenberghe2020}.
+		A coincidence requires both photons, so the per-photon terms compound while the solid-angle term does not, the photons being emitted back-to-back; axial length therefore pays once where crystal thickness and light yield pay twice.}
+	\label{fig:photon-flow}
 \end{figure}
 
 \section{Cost Drivers in PET Systems}

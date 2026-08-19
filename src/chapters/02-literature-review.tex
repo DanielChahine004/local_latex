@@ -61,14 +61,14 @@ Silicon photomultipliers, developed over the late 1990s and 2000s, had by the ea
 Most recently, long axial field-of-view systems such as the uEXPLORER and the Biograph Quadra have raised sensitivity by an order of magnitude by extending the axial length of the scanner to cover the whole body \cite{Vandenberghe2020, slhd2021quadra}.
 
 \begin{figure}[htbp]
-    \centering
-    \input{figures/02-literature-review/pet-timeline}
-    \caption[Broad milestones in the development of PET]{%
-        Milestones in the development of PET.
-        % Blue marks the positron line, grey the single-photon and transmission imaging from which tomographic reconstruction was inherited; labels sit above or below the axis for room, so colour rather than side denotes the line.
-        FDG bought clinical utility, the block detector bought affordable position decoding at the price of dicing and assembling crystals, and long axial field-of-view systems bought sensitivity with detector material.
-        Time-of-flight, demonstrated in 1983 and shelved until LSO offered the same timing without the loss of density and photofraction.}
-    \label{fig:pet-timeline}
+	\centering
+	\input{figures/02-literature-review/pet-timeline}
+	\caption[Broad milestones in the development of PET]{%
+		Milestones in the development of PET.
+		% Blue marks the positron line, grey the single-photon and transmission imaging from which tomographic reconstruction was inherited; labels sit above or below the axis for room, so colour rather than side denotes the line.
+		FDG bought clinical utility, the block detector bought affordable position decoding at the price of dicing and assembling crystals, and long axial field-of-view systems bought sensitivity with detector material.
+		Time-of-flight, demonstrated in 1983 and shelved until LSO offered the same timing without the loss of density and photofraction.}
+	\label{fig:pet-timeline}
 \end{figure}
 
 \section{Physical Principles and Radiotracers}
@@ -112,10 +112,10 @@ Widening the window recovers valid events lost to timing jitter but admits more 
 Not every accepted coincidence carries usable information about the source distribution, which is what reconstruction ultimately needs.
 
 \begin{itemize}
-    \item \textbf{True coincidences} are the idealised type of event; those in which both photons from a single annihilation reach the detectors unscattered. Only these produce an LOR that genuinely passes through the annihilation point.
-    \item \textbf{Scattered coincidences} occur when one or both photons undergo Compton interaction (in the patient or elsewhere) before detection, deflecting them so the assigned LOR no longer intersects the annihilation point.
-    \item \textbf{Random coincidences} arise when photons from two unrelated annihilations incidentally fall within the same timing window, producing an LOR unrelated to either event.
-    \item \textbf{Multiple coincidences} occur whenever three or more detections fall within the same coincidence timing window. These are conventionally discarded because the correct pairing is ambiguous.
+	\item \textbf{True coincidences} are the idealised type of event; those in which both photons from a single annihilation reach the detectors unscattered. Only these produce an LOR that genuinely passes through the annihilation point.
+	\item \textbf{Scattered coincidences} occur when one or both photons undergo Compton interaction (in the patient or elsewhere) before detection, deflecting them so the assigned LOR no longer intersects the annihilation point.
+	\item \textbf{Random coincidences} arise when photons from two unrelated annihilations incidentally fall within the same timing window, producing an LOR unrelated to either event.
+	\item \textbf{Multiple coincidences} occur whenever three or more detections fall within the same coincidence timing window. These are conventionally discarded because the correct pairing is ambiguous.
 \end{itemize}
 Scattered and random events both contribute a slowly varying background that reduces contrast and must be estimated and subtracted during reconstruction (\S\ref{sec:corrections}); their relative magnitude, and the cost of correcting for them, recurs throughout this thesis.
 
@@ -259,8 +259,8 @@ Most of the deposited energy is dissipated in ionisation and in vibrational mode
 Of the excitations that do form by charge recombination, spin statistics favour triplets over singlets three to one, and the triplet branch contributes nothing to the prompt light.
 Ionisation quenching removes more: where the local energy-loss rate is high, excited molecules are destroyed by damaged neighbours before they can fluoresce, an effect described empirically by Birks' law,
 \begin{equation}
-  \frac{\mathrm{d}L}{\mathrm{d}x} = \frac{S \, \mathrm{d}E/\mathrm{d}x}{1 + k_\mathrm{B} \, \mathrm{d}E/\mathrm{d}x},
-  \label{eq:birks}
+	\frac{\mathrm{d}L}{\mathrm{d}x} = \frac{S \, \mathrm{d}E/\mathrm{d}x}{1 + k_\mathrm{B} \, \mathrm{d}E/\mathrm{d}x},
+	\label{eq:birks}
 \end{equation}
 in which $L$ is the emitted light, $S$ the scintillation efficiency in the unquenched limit, and $k_\mathrm{B} \approx \qty{0.1}{\milli\metre\per\mega\electronvolt}$ in plastic sets the energy-loss rate above which the response ceases to be proportional.
 The consequence for PET is that plastics reach useful timing performance by way of speed rather than photon statistics, and pay for it in energy resolution---the subject of the low effective-$Z$ problem that follows.

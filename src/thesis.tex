@@ -13,15 +13,15 @@
 % quantities go negative; if one ever does, switch that macro back to \qty.
 \ExplSyntaxOn
 \NewDocumentCommand \unitvalue { mm }
-  {
-    \tl_if_in:nnTF {#1} {-}
-      { \unit_range:nn {#1} {#2} }
-      { \qty {#1} {#2} }
-  }
+	{
+	\tl_if_in:nnTF {#1} {-}
+		{ \unit_range:nn {#1} {#2} }
+		{ \qty {#1} {#2} }
+	}
 \cs_new_protected:Npn \unit_range:nn #1#2
-  { \unit_range_aux:w #1 \q_stop {#2} }
+	{ \unit_range_aux:w #1 \q_stop {#2} }
 \cs_new_protected:Npn \unit_range_aux:w #1 - #2 \q_stop #3
-  { \qtyrange {#1} {#2} {#3} }
+	{ \qtyrange {#1} {#2} {#3} }
 \ExplSyntaxOff
 
 % Unit shorthands. Write \keV{511}, not \qty{511}{\kilo\electronvolt}.
@@ -51,7 +51,7 @@
 % Drafting scaffold: topics each section should at least touch on.
 % Replace these with real prose as sections are written.
 \newcommand{\topics}[1]{{\small\itshape\color{scaffoldnote}\raggedright
-    Touch on: #1\par}}
+	Touch on: #1\par}}
 
 % Drafting scaffold: live sentence counts per heading. tools/count_sentences.py
 % runs before tectonic in the build and regenerates sentence-counts.tex; the
@@ -60,9 +60,9 @@
 \usepackage[explicit]{titlesec}
 \IfFileExists{sentence-counts.tex}{\input{sentence-counts.tex}}{}
 \newcommand{\sentbadge}[1]{%
-    \ifcsname sc@#1\endcsname
-        \space{\normalfont\small\color{scaffolddim}[\csname sc@#1\endcsname~sentences]}%
-    \fi}
+	\ifcsname sc@#1\endcsname
+		\space{\normalfont\small\color{scaffolddim}[\csname sc@#1\endcsname~sentences]}%
+	\fi}
 
 % Drafting scaffold: a citation known to be needed but not yet in references.bib.
 % Deliberately not a \cite with a fake key -- that would make biber warn on every
@@ -75,42 +75,42 @@
 % The build also prints file:line for each. Delete this block with the above.
 \IfFileExists{unit-warnings.tex}{\input{unit-warnings.tex}}{}
 \newcommand{\unitbadge}[1]{%
-    \ifcsname uw@#1\endcsname
-        \space{\normalfont\small\color{scaffoldwarn}%
-            [\csname uw@#1\endcsname~raw units]}%
-    \fi}
+	\ifcsname uw@#1\endcsname
+		\space{\normalfont\small\color{scaffoldwarn}%
+			[\csname uw@#1\endcsname~raw units]}%
+	\fi}
 
 \titleformat{\chapter}[display]
-    {\normalfont\huge\bfseries}{\chaptertitlename\ \thechapter}{20pt}
-    {\Huge #1\sentbadge{ch\thechapter}\unitbadge{ch\thechapter}}
+	{\normalfont\huge\bfseries}{\chaptertitlename\ \thechapter}{20pt}
+	{\Huge #1\sentbadge{ch\thechapter}\unitbadge{ch\thechapter}}
 \titleformat{\section}
-    {\normalfont\Large\bfseries\raggedright}{\thesection}{1em}
-    {#1\sentbadge{\thesection}\unitbadge{\thesection}}
+	{\normalfont\Large\bfseries\raggedright}{\thesection}{1em}
+	{#1\sentbadge{\thesection}\unitbadge{\thesection}}
 \titleformat{\subsection}
-    {\normalfont\large\bfseries\raggedright}{\thesubsection}{1em}
-    {#1\sentbadge{\thesubsection}\unitbadge{\thesubsection}}
+	{\normalfont\large\bfseries\raggedright}{\thesubsection}{1em}
+	{#1\sentbadge{\thesubsection}\unitbadge{\thesubsection}}
 % \paragraph is run-in by default, which puts the body text on the same line as
 % the heading. [block] stands it on its own line instead. Unnumbered and absent
 % from the TOC, as \paragraph already is at the default secnumdepth/tocdepth.
 \titleformat{\paragraph}[block]
-    {\normalfont\bfseries\raggedright}{}{0pt}
-    {#1}
+	{\normalfont\bfseries\raggedright}{}{0pt}
+	{#1}
 \titlespacing*{\paragraph}{0pt}{1.5ex plus 1ex minus .2ex}{0.5ex}
 
 \addbibresource{references.bib}
 
 % Figures live in figures/<chapter>/
 \graphicspath{
-    {figures/01-introduction/}
-    {figures/02-literature-review/}
+	{figures/01-introduction/}
+	{figures/02-literature-review/}
 }
 
 \title{High-Resolution Monolithic PET:\\
-    Event Localisation, Continuous-Coordinate Reconstruction,\\
-    Experimental Validation}
+	Event Localisation, Continuous-Coordinate Reconstruction,\\
+	Experimental Validation}
 \author{Daniel Chahine\\[1ex]
-    School of Electrical, Mechanical, and Biomedical Engineering\\
-    University of Technology Sydney}
+	School of Electrical, Mechanical, and Biomedical Engineering\\
+	University of Technology Sydney}
 \date{\today}
 
 \begin{document}

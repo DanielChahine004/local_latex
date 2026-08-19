@@ -3,7 +3,7 @@
 % one, drop an \acr line anywhere below -- order does not matter, datatool sorts.
 \DTLnewdb{acronyms}
 \newcommand{\acr}[2]{\DTLnewrow{acronyms}%
-  \DTLnewdbentry{acronyms}{abbr}{#1}\DTLnewdbentry{acronyms}{full}{#2}}
+	\DTLnewdbentry{acronyms}{abbr}{#1}\DTLnewdbentry{acronyms}{full}{#2}}
 
 \acr{PET}{\textbf{positron emission tomography}---a functional imaging modality}
 \acr{CT}{\textbf{computed tomography}---an anatomical imaging modality}
@@ -74,5 +74,5 @@
 \bottomrule
 \endlastfoot
 \DTLforeach*{acronyms}{\abbr=abbr,\full=full}{%
-  \DTLiffirstrow{}{\\}\textbf{\abbr} & \full}\\
+	\DTLiffirstrow{}{\\}\textbf{\abbr} & \full}\\
 \end{xltabular}

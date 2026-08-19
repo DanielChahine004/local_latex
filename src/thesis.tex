@@ -35,6 +35,8 @@
 \NewDocumentCommand\cm{m}{\unitvalue{#1}{\centi\metre}}
 \NewDocumentCommand\mins{m}{\unitvalue{#1}{\minute}} % not \minute -- that is siunitx's own unit macro
 \NewDocumentCommand\degs{m}{\unitvalue{#1}{\degree}}  % not \deg -- that is the LaTeX math operator
+\NewDocumentCommand\um{m}{\unitvalue{#1}{\micro\metre}}
+\NewDocumentCommand\MBq{m}{\unitvalue{#1}{\mega\becquerel}}
 \usepackage{xcolor}
 \input{theme} % light/dark palette for text, scaffold badges and figures
 \usepackage{tikz}
@@ -132,6 +134,10 @@
 
 \input{chapters/01-introduction}
 \input{chapters/02-literature-review}
+
+% Drafting scaffold: staging chapter for per-paper analysis notes.
+% Comment out (and eventually delete) before submission.
+\input{chapters/99-paper-notes}
 
 
 % The bibliography heading is a \chapter*, so it inherits \titleformat{\chapter}

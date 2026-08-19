@@ -1,0 +1,193 @@
+% !TeX root = ../thesis.tex
+%
+% Drafting scaffold: working notes on individual papers, one \section each.
+% This is a staging area, not a thesis chapter. Analyse a paper here as soon as
+% it is read -- summary, findings, numbers worth quoting -- without deciding
+% where it belongs. When a home is found, mine the note into real prose (or
+% \ref{note:<key>} it from a \topics block as a reminder) and delete the note.
+% Before submission, delete this file and its \input in thesis.tex.
+%
+% Template -- copy for each paper (use the references.bib key in the label):
+%
+%   \section{Author Year -- short descriptive title}
+%   \label{note:BibKey}
+%   \paragraph{Summary}
+%   \paragraph{Key Findings}
+%   \paragraph{Methods Worth Noting}
+%   \paragraph{Relevance to This Thesis}
+%   \paragraph{Where It Might Go}
+
+\chapter{Working Paper Notes}
+\label{ch:paper-notes}
+
+\topics{one section per paper analysed; drop the template fields that do not
+    apply; keep concrete numbers (resolution, timing, cost figures) verbatim
+    with units, since these are what the real chapters will want to cite.}
+
+\section{Thull et al.\ 2026 -- Uncertainty-aware gamma interaction localisation and reconstruction}
+\label{note:T}
+
+\paragraph{Capsule}
+Thull et al.\ \cite{Thull2026} train per-detector, per-axis localisation networks on a
+24-block semi-monolithic LYSO preclinical scanner that predict a positional variance
+alongside each position estimate, then use that variance to filter and weight LORs in
+TOF-OSEM reconstruction --- entirely on measured data. Headline result: the median
+LOR-to-point-source distance falls from \mm{20.7} unfiltered to \mm{0.983} under combined
+energy and variance filtering at 50\% retention, with variance the stronger and
+complementary criterion because energy is a non-monotonic proxy for localisation quality
+while predicted variance is monotonic. The work demonstrates rather than characterises:
+$\sigma$ is rank-ordered but never calibrated, timing information is discarded, the
+detector is fixed, and calibration cost is severe (weeks per scanner, 55 networks).
+For this thesis it is the standing evidence that localisation confidence is a
+first-class quantity, and it marks the light-distribution route as taken --- leaving the
+temporal axis and information-theoretic bounds open.
+
+\paragraph{Summary}
+Aachen (Schulz group, RWTH; two authors from Hyperion Hybrid Imaging Systems GmbH)
+train localisation networks that emit a per-event positional variance alongside the
+position estimate, then use that variance to filter and weight LORs during TOF-OSEM
+reconstruction. Fully experimental: no simulation anywhere in the paper. The system is a
+proof-of-concept preclinical scanner of 24 semi-monolithic LYSO blocks at \mm{62.5} inner
+radius on the Hyperion III platform. Each block is
+\qtyproduct{48.4 x 48.3 x 10}{\milli\metre} (planar-segmented,
+planar-monolithic, DOI), built from two arrays of 44 polished LYSO slabs of
+\qtyproduct{1 x 24 x 10}{\milli\metre} separated by \mm{0.1} BaSO$_4$, with a \mm{0.3}
+light guide onto a 12 x 12
+channel SiPM array formed from a 6 x 6 grid of Philips DPC3200-22 digital SiPMs.
+Baseline detector performance is 12.7\% energy resolution and approximately \ps{500} CTR.
+
+\paragraph{Key Findings}
+\begin{itemize}
+    \item \textbf{Unfiltered localisation error dominates rather than dilutes.} Median
+        distance from reconstructed LOR to a known point-source location is
+        \textbf{\mm{20.7}} with no filtering. Energy windowing at 50\% retention brings this
+        to \mm{2.4}; variance filtering at 50\% retention to \mm{1.12}; combined energy and
+        variance filtering to \textbf{\mm{0.983}}. This is the single most quotable number
+        in the paper.
+    \item \textbf{Variance outperforms energy as a filtering criterion, and the two are
+        complementary.} Mean absolute error at 50\% singles retention (segmented /
+        monolithic / DOI, in mm): energy filtering 0.49 / 0.72 / 1.03; variance filtering
+        0.25 / 0.53 / 0.90; variance after energy (49\% effective retention)
+        0.17 / 0.47 / 0.83. Unfiltered CNN classifier is approximately \mm{1.1} in all three
+        dimensions.
+    \item \textbf{Energy is a non-monotonic proxy for localisation quality; predicted
+        variance is monotonic.} MAE versus deposited energy shows a minimum at \keV{511}, a
+        second minimum near \keV{340} (Compton backscatter, \degs{180}, producing a single
+        light cluster), and elevated error between them --- a single Compton interaction
+        cannot deposit intermediate energy, so that band is necessarily multi-scatter.
+        Above \keV{511}, error rises again from pile-up and $^{176}$Lu background. MAE versus
+        predicted $\sigma$ is monotonic with growing dispersion, i.e.\ a heavy-tailed error
+        distribution.
+    \item \textbf{A low-energy, low-variance population exists} (most visible in the
+        monolithic and DOI dimensions) that energy windowing discards but variance
+        filtering retains; the authors speculate these are geometrically well-constrained
+        events occurring directly above a SiPM.
+    \item \textbf{Image quality improves, at a noise cost.} With statistics restored to
+        250 M coincidences, 50\% singles filtering gives PSNR 14.603 $\to$ 14.899,
+        SSIM 0.405 $\to$ 0.462, COV 4.90\% $\to$ 4.66\%. Without restoring counts
+        (62.5 M coincidences) COV degrades to 7.49\%. Peak-to-valley ratio on the \mm{0.8}
+        rods rises from 1.0985 to 1.1840 under filtering and to 1.2171 under LOR weighting
+        at $p = 4$, but COV at $p = 4$ blows out to 10.19\%. Filtering dominated weighting
+        at matched effort; recovery coefficients improved at every rod diameter under both.
+    \item \textbf{CNN classifiers beat regressors in-plane; CNN regressors win DOI.}
+        Classifiers show systematically lower bias, and flood maps show regressors
+        producing regions of near-zero prediction density where the continuous output
+        collapses.
+\end{itemize}
+
+\paragraph{Methods Worth Noting}
+\begin{itemize}
+    \item \textbf{Heteroscedastic training.} Regressors train with a Gaussian
+        negative log-likelihood,
+        \[\mathrm{NLL} = \sum_n \bigl[\tfrac{1}{2}\log \sigma_n^2
+            + (y_n - \hat{y}_n)^2 / 2\sigma_n^2\bigr],\]
+        jointly predicting position and variance. Classifiers use ordinary
+        cross-entropy over position bins, with uncertainty taken as the \emph{variance of
+        the predicted softmax distribution} --- no special loss required.
+    \item \textbf{Per-axis decomposition.} One independent network per detector per spatial
+        dimension; 55 networks in total (7 central detectors x 3, 1 central x 2, 16 outer
+        x 2). Optuna HPO over 12 configurations, approximately 377 trials each.
+    \item \textbf{Fan-beam calibration.} Physical collimated fan of \mm{0.5} width on a
+        motorised stage with \um{2} repeatability. Segmented axis: 44 positions at \mm{1.1}
+        pitch, 20{,}000 samples each. Monolithic: 96 positions at \mm{0.5} pitch, 9{,}166
+        each. DOI: 40 positions at \mm{0.25} pitch, 22{,}000 each. Roughly 880{,}000 events
+        per detector per dimension, split 60/20/20. \textbf{Acquisition for the full
+        scanner took several weeks.} DOI calibration fires \emph{parallel} to the
+        photosensor face, so the lateral coordinate is deliberately unconstrained and
+        marginalised over --- the per-axis decomposition is what makes this admissible.
+        Only the 8 central-ring detectors could be labelled in all three dimensions; the 16
+        outer detectors have monolithic and DOI labels only and borrow a segmented model.
+    \item \textbf{Triggering is inherited, not designed.} The paper does not describe a
+        trigger scheme; it uses the DPC die-level two-stage trigger and validation (Frach
+        2009). The only stated acquisition-time selection is retention of readouts with
+        more than 500 detected photons; no energy window is applied until evaluation.
+    \item \textbf{Normalisation is recomputed under each filter and weight condition}
+        (fan-sum method), which is what keeps the result quantitative rather than
+        cosmetically sharper. Uncertainty is combined as
+        $\sigma_{3D} = \sqrt{\sigma^2_{\mathrm{seg}} + \sigma^2_{\mathrm{mono}} +
+        \sigma^2_{\mathrm{doi}}}$, and LOR weights as
+        $w_{\mathrm{LOR}} = 1 / (\sigma_{3D,I_1} \cdot \sigma_{3D,I_2})^p$.
+    \item \textbf{Reconstruction:} list-mode TOF-OSEM, 20 iterations, 10 subsets,
+        \mm{0.2} isotropic voxels, 250 M coincidences,
+        \qty[separate-uncertainty=true]{511 \pm 80}{\kilo\electronvolt} window,
+        20 LORs sampled per coincidence. Phantoms: cylindrical shell (normalisation),
+        HotRod with 2.0/1.5/1.2/1.0/0.9/\mm{0.8} rods at approximately \MBq{5} initial
+        $^{18}$F-FDG, and a \MBq{1.5} $^{22}$Na point source at \mm{25} and \mm{35} radii.
+    \item \textbf{Interpretation ceiling.} Label precision is \mm{0.5} (monolithic) and
+        \mm{0.25} (DOI) with a \mm{0.5} fan width, so sub-\mm{0.5} MAE figures are not
+        interpretable --- the authors say so, and introduce the LOR-to-point-source metric
+        specifically to sidestep this.
+\end{itemize}
+
+\paragraph{Relevance to This Thesis}
+This is the strongest published evidence for the premise that poorly localised
+interactions actively damage reconstruction rather than weakly informing it, and it
+forecloses the naive form of that idea: per-event uncertainty propagated into
+reconstruction via filtering and weighting is done, on real hardware, with normalisation
+handled correctly. Cite the \mm{20.7} unfiltered median LOR distance and the non-monotonic
+energy--MAE curve as motivation; do not re-derive them.
+
+What the paper does \emph{not} do:
+\begin{itemize}
+    \item \textbf{It demonstrates rather than characterises.} No Fisher information, no
+        CRLB, no bound of any kind. One detector topology, one activity, an empirical
+        threshold sweep. There is no crossover analysis for when rejecting a fraction $f$
+        buys back more in bias than it costs at $1/\sqrt{1-f}$ in variance.
+    \item \textbf{$\sigma$ is rank-ordered, never calibrated.} That $p = 4$ outperforms
+        $p = 2$ is a direct tell: if $\sigma$ were a calibrated standard deviation,
+        inverse-variance weighting would be optimal by construction. The authors do not
+        remark on this. A rank-correct $\sigma$ does not transfer between detectors and
+        does not compose across the two singles of a coincidence in any principled way.
+    \item \textbf{Timing is entirely unused.} Network inputs are the 144 SiPM photon counts
+        and nothing else. The 36 dies supply up to 36 independent timestamps per event at
+        approximately \ps{500} CTR, all discarded, along with the pattern of \emph{which}
+        dies triggered. The authors state that Compton interaction \emph{sequence} cannot
+        be inferred from the light pattern because scintillation emission is isotropic ---
+        true of photon counts, but not of arrival times.
+    \item \textbf{The detector is fixed.} No design feedback; $\sigma$ is a measurement
+        outcome, never an objective.
+    \item \textbf{Aleatoric and epistemic uncertainty are not disentangled}, which the
+        authors acknowledge: a deterministic network emitting a variance is nominally
+        claiming aleatoric uncertainty but is contaminated by finite training data and
+        model capacity.
+\end{itemize}
+
+\paragraph{Where It Might Go}
+Motivation for any chapter arguing that localisation confidence is a first-class quantity;
+the \mm{20.7} figure belongs in an introduction. Also the reference point for calibration
+burden (several weeks per scanner, 55 networks, outer-ring detectors physically
+unlabellable in the segmented direction) --- though note the group's own in-system
+calibration work (Kuhl et al.\ 2025) claims to reduce this to hours via virtual
+collimation, so ``calibrate faster'' is taken and ``design so that calibration is cheap''
+is not.
+
+\emph{Competitive note:} the discussion explicitly announces future work analysing
+multi-cluster events, relating light-spread structure to predicted uncertainty, and
+characterising the impact of inter-crystal Compton scatter on positioning uncertainty.
+Aachen has the built scanner, the fan-beam rig, four RTX 6000 Ada GPUs and a commercial
+arm. The light-distribution version of ICS characterisation should be treated as theirs.
+The temporal axis --- cardinality and interaction ordering inferred from the joint
+distribution of per-channel arrival times rather than from photon counts --- and the
+information-theoretic bound on separability are the surviving directions. Note that
+Carra et al.\ 2022 runs light-informs-timing and must be distinguished carefully; nobody
+appears to run it in reverse.

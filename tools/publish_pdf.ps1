@@ -1,11 +1,8 @@
 # End-of-day publish: commit and push the source, then refresh the PDF branch.
-#
-# Run via `pixi run publish [message]`, which builds first (see pixi.toml), so a
-# document that does not compile stops before anything is committed or pushed.
-#
-# Source goes to the current branch as a normal commit. The PDFs go to `pdf` as
-# a single parentless commit that is force-pushed, so that branch never grows
-# and no PDF ever enters the source history.
+# `pixi run publish [message]` builds first (pixi.toml), so a broken document
+# stops before anything is committed. PDFs go to `pdf` as a single parentless
+# force-pushed commit, so that branch never grows and no PDF enters source
+# history.
 
 param(
 	[Parameter(ValueFromRemainingArguments = $true)]

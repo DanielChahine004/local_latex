@@ -1,20 +1,11 @@
 """Warn about units typed by hand where a shorthand macro exists.
 
-The macro table is derived from thesis.tex itself: every
-\\NewDocumentCommand\\keV{m}{\\unitvalue{#1}{\\kilo\\electronvolt}} teaches this
-script two things at once -- that "keV" is a unit with a macro, and that
-"\\kilo\\electronvolt" is its siunitx spelling. Add a macro to the preamble and
-this checker picks it up with no edit here.
-
-Flags two things in the chapter files:
-  511 keV / 511~keV / 511keV      -> \\keV{511}
-  \\qty{511}{\\kilo\\electronvolt}  -> \\keV{511}
-
-Prints file:line for each, and writes src/unit-warnings.tex so the document can
-badge the offending headings (see \\unitbadge in thesis.tex). Headings with
-nothing to fix get no entry, and so no badge.
-
-Warns only; never fails the build. Run by tools/tectonic-biber.bat.
+The macro table is read from thesis.tex's \\NewDocumentCommand...\\unitvalue
+lines, so a macro added there is picked up with no edit here. Flags
+"511 keV" (also ~, no-space and range forms) and long-form \\qty with a
+known unit; prints file:line and writes src/unit-warnings.tex for the
+heading badges (no entry where clean). Warns only; never fails the build.
+Run by tools/tectonic-biber.bat.
 """
 
 import re

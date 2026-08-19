@@ -6,37 +6,7 @@
 \usepackage[backend=biber, style=numeric, sorting=none]{biblatex}
 \usepackage{siunitx}
 
-% Shared by the unit shorthands below. An argument containing a hyphen is a
-% range and goes to \qtyrange (\ns{4-12} -> "4 to 12 ns"); anything else is a
-% plain \qty. expl3 is part of the LaTeX kernel, so this costs no package.
-% ponytail: a leading minus reads as a range, so no \keV{-5}. None of these
-% quantities go negative; if one ever does, switch that macro back to \qty.
-\ExplSyntaxOn
-\NewDocumentCommand \unitvalue { mm }
-	{
-	\tl_if_in:nnTF {#1} {-}
-		{ \unit_range:nn {#1} {#2} }
-		{ \qty {#1} {#2} }
-	}
-\cs_new_protected:Npn \unit_range:nn #1#2
-	{ \unit_range_aux:w #1 \q_stop {#2} }
-\cs_new_protected:Npn \unit_range_aux:w #1 - #2 \q_stop #3
-	{ \qtyrange {#1} {#2} {#3} }
-\ExplSyntaxOff
-
-% Unit shorthands. Write \keV{511}, not \qty{511}{\kilo\electronvolt}.
-% siunitx handles the non-breaking thin space and upright unit text.
-% Add a line here the first time you need a new unit.
-\NewDocumentCommand\keV{m}{\unitvalue{#1}{\kilo\electronvolt}}
-\NewDocumentCommand\MeV{m}{\unitvalue{#1}{\mega\electronvolt}}
-\NewDocumentCommand\ps{m}{\unitvalue{#1}{\pico\second}}
-\NewDocumentCommand\ns{m}{\unitvalue{#1}{\nano\second}}
-\NewDocumentCommand\mm{m}{\unitvalue{#1}{\milli\metre}}
-\NewDocumentCommand\cm{m}{\unitvalue{#1}{\centi\metre}}
-\NewDocumentCommand\mins{m}{\unitvalue{#1}{\minute}} % not \minute -- that is siunitx's own unit macro
-\NewDocumentCommand\degs{m}{\unitvalue{#1}{\degree}}  % not \deg -- that is the LaTeX math operator
-\NewDocumentCommand\um{m}{\unitvalue{#1}{\micro\metre}}
-\NewDocumentCommand\MBq{m}{\unitvalue{#1}{\mega\becquerel}}
+\input{units} % \keV{511} etc. -- shared with paper-notes.tex
 \usepackage{xcolor}
 \input{theme} % light/dark palette for text, scaffold badges and figures
 \usepackage{tikz}
@@ -51,14 +21,11 @@
 \usepackage{xltabular} % longtable + X column, for the acronym list once it ran past one page
 
 % Drafting scaffold: topics each section should at least touch on.
-% Replace these with real prose as sections are written.
 \newcommand{\topics}[1]{{\small\itshape\color{scaffoldnote}\raggedright
 	Touch on: #1\par}}
 
-% Drafting scaffold: live sentence counts per heading. tools/count_sentences.py
-% runs before tectonic in the build and regenerates sentence-counts.tex; the
-% badges below read from it. Delete this block (and the script call) when the
-% draft is mature.
+% Drafting scaffold: live sentence-count badges per heading, read from
+% sentence-counts.tex (regenerated each build by tools/count_sentences.py).
 \usepackage[explicit]{titlesec}
 \IfFileExists{sentence-counts.tex}{\input{sentence-counts.tex}}{}
 \newcommand{\sentbadge}[1]{%
@@ -66,15 +33,12 @@
 		\space{\normalfont\small\color{scaffolddim}[\csname sc@#1\endcsname~sentences]}%
 	\fi}
 
-% Drafting scaffold: a citation known to be needed but not yet in references.bib.
-% Deliberately not a \cite with a fake key -- that would make biber warn on every
-% build and bury the genuine missing-citation warnings. Delete with the rest.
+% Drafting scaffold: a needed citation not yet in references.bib. Not a fake
+% \cite key -- that would bury biber's genuine missing-citation warnings.
 \newcommand{\needcite}[1]{{\normalfont\small\color{scaffoldwarn}[cite: #1]}}
 
-% Drafting scaffold: units typed by hand where a macro exists.
-% tools/check_units.py regenerates unit-warnings.tex on every build and only
-% emits an entry for headings with something to fix, so no badge means clean.
-% The build also prints file:line for each. Delete this block with the above.
+% Drafting scaffold: hand-typed-unit badges, read from unit-warnings.tex
+% (regenerated each build by tools/check_units.py). No badge means clean.
 \IfFileExists{unit-warnings.tex}{\input{unit-warnings.tex}}{}
 \newcommand{\unitbadge}[1]{%
 	\ifcsname uw@#1\endcsname
@@ -91,9 +55,8 @@
 \titleformat{\subsection}
 	{\normalfont\large\bfseries\raggedright}{\thesubsection}{1em}
 	{#1\sentbadge{\thesubsection}\unitbadge{\thesubsection}}
-% \paragraph is run-in by default, which puts the body text on the same line as
-% the heading. [block] stands it on its own line instead. Unnumbered and absent
-% from the TOC, as \paragraph already is at the default secnumdepth/tocdepth.
+% [block]: \paragraph is run-in by default; this stands the heading on its own
+% line. Still unnumbered and absent from the TOC.
 \titleformat{\paragraph}[block]
 	{\normalfont\bfseries\raggedright}{}{0pt}
 	{#1}
@@ -135,15 +98,10 @@
 \input{chapters/01-introduction}
 \input{chapters/02-literature-review}
 
-% Drafting scaffold: staging chapter for per-paper analysis notes.
-% Comment out (and eventually delete) before submission.
-\input{chapters/99-paper-notes}
 
-
-% The bibliography heading is a \chapter*, so it inherits \titleformat{\chapter}
-% and its \sentbadge{ch\thechapter} -- with \thechapter still on the last real
-% chapter, it displayed that chapter's sentence count. Renaming the counter for
-% the duration makes both badge lookups miss, which is what prints nothing.
+% The bibliography's \chapter* inherits \titleformat{\chapter}, whose badges
+% would show the last chapter's counts; renaming \thechapter makes both
+% lookups miss, so nothing prints.
 \begingroup
 \renewcommand{\thechapter}{-bib}
 \printbibliography[heading=bibintoc]

@@ -1,12 +1,8 @@
-"""Count sentences per section in the thesis chapters.
+"""Count sentences per heading in the thesis chapters.
 
-Reads the chapter files referenced by src/thesis.tex, counts sentences in the
-body text under each \\chapter, \\section and \\subsection, and writes
-src/sentence-counts.tex, which the document reads to show a per-heading badge.
-
-Sentence heuristic: a '.' not part of a number or a common abbreviation.
-\\topics{...} scaffold blocks, comments, math and command arguments that are
-not prose (labels, citations, refs) are excluded before counting.
+Writes src/sentence-counts.tex, read by the document's heading badges.
+Sentence heuristic: a '.' not part of a number or a common abbreviation,
+after stripping comments, math, \\topics blocks and non-prose arguments.
 """
 
 import re

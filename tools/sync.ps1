@@ -1,8 +1,6 @@
-# Sync with GitHub: commit local work, pull the other machine's commits, push.
-#
-# Run via `pixi run sync [message]`. Local changes are committed first so a
-# rebase can never touch uncommitted work; the pull rebases so history stays
-# linear across desktop and laptop. Safe to run when there is nothing to do.
+# Sync with GitHub: commit local work, pull --rebase, push.
+# `pixi run sync [message]`. Committing first keeps uncommitted work out of
+# the rebase; safe to run when there is nothing to do.
 
 param(
 	[Parameter(ValueFromRemainingArguments = $true)]
@@ -57,9 +55,7 @@ if ($staged) {
 
 # --- 2. pull, rebasing local commits on top ------------------------------
 
-# plain `git pull --rebase` so a conflict stops here with git's own
-# instructions; after resolving, `git rebase --continue` then `pixi run sync`
-# again to finish the push
+# plain call so a conflict stops here with git's own instructions
 git -C $root pull --rebase
 if ($LASTEXITCODE -ne 0) {
 	throw 'pull --rebase failed - resolve the conflict, run `git rebase --continue`, then `pixi run sync` again'

@@ -1,0 +1,31 @@
+% Unit shorthands, \input by thesis.tex and paper-notes.tex. Requires siunitx.
+% tools/check_units.py reads its macro table from this file.
+
+% Shared by the shorthands below: a hyphenated argument is a range
+% (\ns{4-12} -> "4 to 12 ns"), anything else a plain \qty.
+% ponytail: a leading minus reads as a range, so no \keV{-5}.
+\ExplSyntaxOn
+\NewDocumentCommand \unitvalue { mm }
+	{
+	\tl_if_in:nnTF {#1} {-}
+		{ \unit_range:nn {#1} {#2} }
+		{ \qty {#1} {#2} }
+	}
+\cs_new_protected:Npn \unit_range:nn #1#2
+	{ \unit_range_aux:w #1 \q_stop {#2} }
+\cs_new_protected:Npn \unit_range_aux:w #1 - #2 \q_stop #3
+	{ \qtyrange {#1} {#2} {#3} }
+\ExplSyntaxOff
+
+% \keV{511}, not \qty{511}{\kilo\electronvolt}.
+% Add a line here the first time you need a new unit.
+\NewDocumentCommand\keV{m}{\unitvalue{#1}{\kilo\electronvolt}}
+\NewDocumentCommand\MeV{m}{\unitvalue{#1}{\mega\electronvolt}}
+\NewDocumentCommand\ps{m}{\unitvalue{#1}{\pico\second}}
+\NewDocumentCommand\ns{m}{\unitvalue{#1}{\nano\second}}
+\NewDocumentCommand\mm{m}{\unitvalue{#1}{\milli\metre}}
+\NewDocumentCommand\cm{m}{\unitvalue{#1}{\centi\metre}}
+\NewDocumentCommand\mins{m}{\unitvalue{#1}{\minute}} % not \minute -- that is siunitx's own unit macro
+\NewDocumentCommand\degs{m}{\unitvalue{#1}{\degree}}  % not \deg -- that is the LaTeX math operator
+\NewDocumentCommand\um{m}{\unitvalue{#1}{\micro\metre}}
+\NewDocumentCommand\MBq{m}{\unitvalue{#1}{\mega\becquerel}}

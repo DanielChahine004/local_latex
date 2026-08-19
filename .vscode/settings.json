@@ -1,8 +1,6 @@
 {
-    // Build with Tectonic from the pixi environment (Ctrl+Alt+B).
-    // Goes through tools/tectonic-biber.bat so tectonic can find biber
-    // (needed for biblatex) without the pixi environment being active.
-    // Run `pixi install` once after cloning so .pixi/ exists.
+    // Build (Ctrl+Alt+B) via tools/tectonic-biber.bat so tectonic finds biber
+    // without the pixi environment active. Run `pixi install` once after cloning.
     "latex-workshop.latex.tools": [
         {
             "name": "tectonic",
@@ -22,9 +20,7 @@
             "tools": ["tectonic"]
         }
     ],
-    // Put the PDF and other outputs in build/ at the repo root. Anchored to
-    // %WORKSPACE_FOLDER%, not %DIR%/../build -- the latter is relative to the
-    // root .tex file, so it only landed correctly for src/thesis.tex and threw
-    // meetings.tex's output one level above the repo.
+    // Outputs go to build/ at the repo root. Anchored to %WORKSPACE_FOLDER%:
+    // %DIR%-relative paths threw meetings.tex's output above the repo.
     "latex-workshop.latex.outDir": "%WORKSPACE_FOLDER%/build"
 }

@@ -1,34 +1,19 @@
-% Shared styles for the two signal-chain figures (signal-chain-emission.tex and
-% signal-chain-detection.tex). \input by both, so the two halves cannot drift
-% apart visually. Not a figure in itself -- it draws nothing.
+% Shared styles for the signal-chain figures; \input by each so they cannot
+% drift apart visually. Draws nothing itself.
 %
-% LAYOUT MODEL: a vertical spine of stage boxes, each with a bracketed list of
-% the physical channels available at that stage to its right. Nothing is
-% positioned by hand: each stage is placed below the PREVIOUS STAGE'S BULLET
-% BLOCK, which is always the taller of the two columns, so the rows cannot
-% collide no matter how the wording changes. Add or reword a bullet and the
-% figure reflows. (An earlier draft hand-set the row pitches and silently
-% overlapped; do not go back to that.)
+% LAYOUT MODEL: a vertical spine of stage boxes, each with a list of physical
+% channels to its right. Nothing is hand-positioned: each stage sits below the
+% previous stage's bullet block, so the figure reflows and rows cannot collide.
+% Do not go back to hand-set row pitches (an earlier draft silently overlapped).
+% Page fit is the one thing this cannot self-correct -- see \chainfit below.
 %
-% Whether the whole thing still fits its page is the one thing this cannot
-% self-correct -- LaTeX reports that itself as "Float too large for page".
-%
-% ROW SEMANTICS, which the captions restate for the reader:
-%   \govrow  header line  -- the QUANTITIES that fix this conversion. Not a
-%                            channel and not a choice of technology: these are
-%                            the parameters a designer trades against.
-%   \conrow  filled, blue -- the channel a conventional PET scanner uses
-%   \altrow  hollow, rust -- an alternative physical channel that could serve
-%                            the same stage but is not conventionally used
-%
-% Keep the two kinds strictly apart. An earlier draft let governing quantities
-% sit in the bullet lists as if they were channels, which read fine at some
-% stages (solid angle, acollinearity) and then silently omitted them at others
-% -- photon detection efficiency, light yield and attenuation length all went
-% missing, because those stages' lists had drifted into being pure technology
-% catalogues. If a line names a number you could measure or trade, it is a
-% \govrow; if it names a mechanism the signal could travel through, it is a
-% \conrow or an \altrow.
+% ROW SEMANTICS (the captions restate these):
+%   \govrow  header line  -- the QUANTITIES that fix this conversion; anything
+%                            you could measure or trade, never a technology
+%   \conrow  filled, blue -- the channel conventional PET uses
+%   \altrow  hollow, rust -- an alternative channel not conventionally used
+% Keep the kinds strictly apart: an earlier draft let governing quantities
+% drift into the bullet lists, and several stages silently lost them.
 
 \providecolor{chainbox}{HTML}{E8EFF3}
 \providecolor{chainline}{HTML}{2A6F97}
@@ -42,25 +27,17 @@
 \providecommand{\conrow}[1]{\textcolor{chainline}{\textbullet} & #1}
 \providecommand{\altrow}[1]{\textcolor{chainalt}{$\circ$} & \textcolor{chainalt}{#1}}
 
-% The bullet list itself. Fixed 10.4 cm measure; the p-column gives every
-% wrapped bullet a hanging indent, which is what keeps a three-line entry
-% legible without an extra package.
+% The bullet list. Fixed 10.4 cm measure; the p-column gives wrapped bullets
+% a hanging indent.
 \providecommand{\chainlist}[1]{%
 	\renewcommand{\arraystretch}{1.1}%
 	\begin{tabular}{@{}c@{~~}p{10.4cm}@{}}#1\end{tabular}}
 
 % Page-fit guard, called just before \end{tikzpicture} in each chain figure.
-%
-% These figures reflow, so rows can never collide -- but they can quietly grow
-% past the page. Add three bullets and the float silently stops fitting: LaTeX
-% emits "Float too large for page" only through a channel tectonic does not
-% surface (verified -- a deliberately 6 cm-oversized figure produced no output
-% at all), so nothing warns you. Hence an error, which tectonic does surface.
-%
-% Budget: \textheight less \chaincapspace, the room left for the caption plus
-% \abovecaptionskip. 150pt is about eight caption lines at 11pt. If a caption
-% is shorter than that the guard is merely conservative; if one is longer,
-% raise \chaincapspace rather than ignoring the error.
+% "Float too large for page" reaches no channel tectonic surfaces (verified),
+% so an overgrown figure fails silently; this raises a hard error instead.
+% Budget: \textheight minus \chaincapspace (caption room, ~8 lines at 11pt).
+% If a caption outgrows it, raise \chaincapspace rather than ignore the error.
 \providecommand{\chaincapspace}{150pt}
 \providecommand{\chainfit}{%
 	\path let \p1=(current bounding box.north), \p2=(current bounding box.south) in
@@ -73,8 +50,7 @@
 			\fi};}
 
 \tikzset{
-	% Stage box on the spine. Narrow on purpose: the taxonomy carries the
-	% detail, the box only names the interface and says where it is treated.
+	% Stage box. Narrow on purpose: the bullet list carries the detail.
 	stage/.style={draw=chainline, line width=0.6pt, fill=chainbox,
 		rounded corners=2pt, text width=3.4cm, align=center,
 			inner sep=4pt, text=chainline, font=\small\bfseries},

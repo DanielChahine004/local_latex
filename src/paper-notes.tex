@@ -1,31 +1,33 @@
 % !TeX root = ../thesis.tex
 %
-% Drafting scaffold: working notes on individual papers, one \section each.
-% This is a staging area, not a thesis chapter. Analyse a paper here as soon as
-% it is read -- summary, findings, numbers worth quoting -- without deciding
-% where it belongs. When a home is found, mine the note into real prose (or
-% \ref{note:<key>} it from a \topics block as a reminder) and delete the note.
-% Before submission, delete this file and its \input in thesis.tex.
+% Drafting scaffold: a staging area for per-paper analysis, not a thesis
+% chapter. Write a note as soon as a paper is read; when it finds a home,
+% mine it into real prose and delete it. Before submission delete this file
+% and its \input in thesis.tex.
 %
-% Template -- copy for each paper (use the references.bib key in the label):
+% One entry per paper, free-form inside (\paragraph headings suit dense
+% papers; plain paragraphs are fine too):
 %
-%   \section{Author Year -- short descriptive title}
-%   \label{note:BibKey}
-%   \paragraph{Summary}
-%   \paragraph{Key Findings}
-%   \paragraph{Methods Worth Noting}
-%   \paragraph{Relevance to This Thesis}
-%   \paragraph{Where It Might Go}
+%   \begin{papernote}{Author Year -- short descriptive title}{BibKey}
+%   ...
+%   \end{papernote}
+%
+% BibKey (the references.bib key) becomes \label{note:BibKey}, so any entry
+% can be pointed at with \ref{note:BibKey}.
+
+% Defined here, not in thesis.tex, so the scaffold deletes as one file.
+\NewDocumentEnvironment{papernote}{mm}
+	{\section{#1}\label{note:#2}}
+	{}
 
 \chapter{Working Paper Notes}
 \label{ch:paper-notes}
 
-\topics{one section per paper analysed; drop the template fields that do not
-    apply; keep concrete numbers (resolution, timing, cost figures) verbatim
+\topics{one papernote per paper analysed, structured however the paper calls
+    for; keep concrete numbers (resolution, timing, cost figures) verbatim
     with units, since these are what the real chapters will want to cite.}
 
-\section{Thull et al.\ 2026 -- Uncertainty-aware gamma interaction localisation and reconstruction}
-\label{note:T}
+\begin{papernote}{Thull et al.\ 2026 -- Uncertainty-aware gamma interaction localisation and reconstruction}{Thull2026}
 
 \paragraph{Capsule}
 Thull et al.\ \cite{Thull2026} train per-detector, per-axis localisation networks on a
@@ -191,3 +193,4 @@ distribution of per-channel arrival times rather than from photon counts --- and
 information-theoretic bound on separability are the surviving directions. Note that
 Carra et al.\ 2022 runs light-informs-timing and must be distinguished carefully; nobody
 appears to run it in reverse.
+\end{papernote}

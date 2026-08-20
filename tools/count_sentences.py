@@ -9,7 +9,7 @@ import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-SRC = ROOT / "src"
+SRC = ROOT / "src" / "thesis"
 
 ABBREVIATIONS = [
     "e.g.", "i.e.", "et al.", "vs.", "cf.", "etc.", "ca.", "approx.",
@@ -75,8 +75,8 @@ def count_sentences(body):
 
 
 def chapter_paths():
-    """The chapter files, in the order thesis.tex \\inputs them."""
-    thesis = strip_comments((SRC / "thesis.tex").read_text(encoding="utf-8"))
+    """The chapter files, in the order main.tex \\inputs them."""
+    thesis = strip_comments((SRC / "main.tex").read_text(encoding="utf-8"))
     rels = re.findall(r"\\input\{(chapters/[^}]+)\}", thesis)
     return [SRC / (r if r.endswith(".tex") else r + ".tex") for r in rels]
 

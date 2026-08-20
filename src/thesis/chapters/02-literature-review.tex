@@ -1,22 +1,12 @@
-% !TeX root = ../thesis.tex
+% !TeX root = ../main.tex
 \chapter{Literature Review}
 \label{ch:literature-review}
 
 \section{Introduction}
-\topics{whole-pipeline coverage from radiotracer to clinic; the cost lens applied throughout; what is deliberately out of scope (e.g.\ SPECT, radiochemistry depth) and why; how the sections build toward the research gap; a short note on how the literature was identified (PubMed, IEEE Xplore, Scopus; snowballing from landmark reviews; vendor white papers used only for specifications), written as prose rather than as a formal search protocol, since this is a narrative rather than a systematic review.}
-
-\paragraph{Scope of the Review}
-
-\paragraph{The Cost Lens}
-
-\paragraph{What Is Deliberately Out of Scope}
-
-\paragraph{How the Sections Build Toward the Research Gap}
-
-\paragraph{How the Literature Was Identified}
+\topics{whole-pipeline coverage from radiotracer to clinic under the cost lens; what is out of scope (e.g.\ SPECT, radiochemistry depth) and why; how the sections build toward the research gap; a short prose note on how the literature was identified (PubMed, IEEE Xplore, Scopus; snowballing from landmark reviews; vendor white papers for specifications only) -- narrative, not systematic.}
 
 \section{Historical Development of Positron Emission Tomography}
-\topics{one compact narrative, not a chronicle -- this section should be over quickly and keep only the milestones that set up the cost argument this thesis makes. Origins in a sentence or two (Anderson 1932; Wrenn 1951; Brownell \& Sweet 1953 rectilinear probes -- compress, do not expand). The move to tomographic rings (PC-I, PETT series; Ter-Pogossian, Phelps, Hoffman, 1970s) and analytical reconstruction imported from CT; FDG synthesis (1976) unlocking metabolic imaging. The block detector (Casey \& Nutt 1986) as the cost-defining innovation -- dicing pixellated crystals into blocks -- that this thesis's monolithic approach displaces; septa removal and fully-3D acquisition. The BGO$\rightarrow$LSO$\rightarrow$SiPM/TOF lineage as a cost-versus-timing arc (first TOF wave and why it stalled; LSO-enabled revival mid-2000s). Digital PET and long axial field-of-view/total-body systems (uEXPLORER 2018, Biograph Quadra) and the sensitivity-for-price trade they embody.}
+\topics{one compact narrative, not a chronicle, keeping only the milestones that set up the cost argument: origins (Anderson 1932; Wrenn 1951; Brownell \& Sweet 1953); tomographic rings and reconstruction imported from CT (PETT series, 1970s); FDG (1976); the block detector (Casey \& Nutt 1986) as the cost-defining innovation this thesis's monolithic approach displaces; septa removal and fully-3D; the BGO$\rightarrow$LSO$\rightarrow$SiPM/TOF lineage as a cost-versus-timing arc; long axial field-of-view systems (uEXPLORER, Biograph Quadra) and the sensitivity-for-price trade they embody.}
 
 \paragraph{Origins}
 Positrons were discovered in 1932 by Carl Anderson, who observed the tracks of seemingly positively-charged electrons in a cloud chamber and interpreted them as the electron's antimatter counterpart \cite{Anderson1933}.
@@ -29,11 +19,9 @@ Anger's scintillation camera of 1958 replaced mechanical scanning with a single 
 Kuhl and Edwards then demonstrated emission tomography itself in 1963, rotating a scanner about the patient and reconstructing transverse sections from the resulting projections \cite{Kuhl1963}, several years before the equivalent was achieved with transmission X-rays \cite{Hounsfield1973}.
 Tomography thus reached PET second-hand: the ring scanners of the 1970s combined coincidence detection, already established, with reconstruction mathematics developed for single-photon and X-ray imaging.
 
-\paragraph{The First Positron Rings}
+\paragraph{The Move to Tomographic Rings}
 In 1961, a group at Brookhaven National Laboratory developed a ring of 32 sodium iodide-based coincidence detectors surrounding the head \cite{Rankowitz2008}.
 By the late 1960s Brownell and the group at Massachusetts General Hospital had developed a so-called `hybrid scanner' comprised of two stationary planar 2D arrays of detectors, and by the early 1970s the group had developed a device of similar architecture known as the ``multi-crystal positron camera'', which had a field of view of $\cm{27}\times\cm{30}$ \cite{Burnham2008}.
-
-\paragraph{The PETT Series and Imported Reconstruction}
 In the mid-1970s, Ter-Pogossian, Phelps and Hoffman built the PETT series: rings of scintillation detectors in which every crystal was in coincidence with those opposite it, so that a single acquisition sampled the object along lines of response at many angles at once \cite{Ter-Pogossian1975}.
 The projections this produced were of exactly the form that filtered backprojection had been developed to invert, and the reconstruction was imported essentially intact from the single-photon and X-ray tomography described above \cite{Phelps1975}.
 
@@ -49,10 +37,7 @@ The difficulty it addressed was economic: spatial resolution requires many small
 Casey and Nutt cut a shallow grid of saw-slots into a single block of BGO, dividing it into an array of quasi-independent elements whose light was shared among only four photomultipliers, and identified the element of interaction from the ratios of the four signals---Anger's centroid logic applied at the scale of a few centimetres rather than a whole camera head.
 The channel count was decoupled from the crystal count, and with it the dominant term in the cost of resolution.
 Virtually every clinical PET scanner built since has used some variant of this arrangement.
-
-\paragraph{Septa Removal and Fully-3D Acquisition}
-The decades since have continued development in all aspects of PET technology from scanner and detector geometry, to advanced scintillators, materials science, readout and electronics optimisations, and the use of time-of-flight for improving reconstruction quality.
-Removing septa between axially stacked detector rings and acquiring in fully-3D raised sensitivity several-fold at the cost of a much larger scattered fraction, and increasingly necessitated corrective algorithms to resolve it.
+In the decades that followed, removing the septa between axially stacked detector rings and acquiring in fully-3D raised sensitivity several-fold at the cost of a much larger scattered fraction, and increasingly necessitated corrective algorithms to resolve it.
 
 \paragraph{Scintillators, Timing and Scale}
 In the 1980s, available fast-response scintillators such as BaF2 and CsF successfully demonstrated the advantages of TOF-PET, but they had drawbacks: notably low density and low photofraction, which compromised performance enough for BGO to continue as the dominant PET scintillator \cite{Moses2007}.
@@ -71,21 +56,15 @@ Most recently, long axial field-of-view systems such as the uEXPLORER and the Bi
 	\label{fig:pet-timeline}
 \end{figure}
 
-\section{Physical Principles and Radiotracers}
+\section{Annihilation-Photon Generation: Physics and Radiotracers}
 
 \subsection{Positron Emission, Annihilation and Coincidence Detection}
 \label{sec:annihilation}
-\topics{$\beta^+$ decay and positron thermalisation; annihilation and back-to-back 511~keV photons; lines of response; coincidence timing windows; trues, randoms, scattered and multiple coincidences. Two branches the conventional account omits and Figure~\ref{fig:chain-emission} names: positronium formation, para versus ortho, their lifetimes and the three-photon channel, with positronium lifetime imaging as a live research direction; and prompt-gamma emitters (\textsuperscript{68}Ga, \textsuperscript{124}I, \textsuperscript{44}Sc), where a third photon within picoseconds makes the event a triple coincidence and localises it along the LOR without time-of-flight. Both are alternatives to the standard two-photon measurement, and both belong here rather than in a footnote.}
-
-\paragraph{Radioactive Decay}
-As a nuclear imaging modality, PET employs radioactive materials to achieve functional imaging. Radioactive materials are atomically unstable and undergo decay in order to resolve to more stable configurations.
-The principal modes are alpha and beta decay, the latter often leaving the daughter nucleus excited and so followed by gamma emission.
-Beta decay itself occurs in two modes.
-In beta-minus ($\beta^-$) decay, an unstable nucleus with excess neutrons converts a neutron into a proton, emitting an electron and an antineutrino, which increases the atomic number by one.
-In beta-plus ($\beta^+$) decay---the mode that PET exploits---a nucleus with excess protons converts a proton into a neutron, emitting a positron and a neutrino, decreasing the atomic number by one.
-Proton-rich nuclei may also reach the same daughter by electron capture, which emits no positron and so contributes nothing to the PET signal; the two routes compete, and the fraction of decays taking the $\beta^+$ branch varies by isotope.
+\topics{$\beta^+$ decay, thermalisation, annihilation, LORs, timing windows, event types. Two branches the conventional account omits, per Figure~\ref{fig:chain-emission}: positronium (para versus ortho lifetimes, the three-photon channel, lifetime imaging as a live direction) and prompt-gamma emitters (\textsuperscript{68}Ga, \textsuperscript{124}I, \textsuperscript{44}Sc), whose third photon makes a triple coincidence that localises along the LOR without TOF. Both belong here, not in a footnote.}
 
 \paragraph{Positron Emission}
+As a nuclear imaging modality, PET employs radioactive materials to achieve functional imaging, and the decay mode it exploits is beta-plus ($\beta^+$) decay: a nucleus with excess protons converts a proton into a neutron, emitting a positron and a neutrino and decreasing the atomic number by one.
+Proton-rich nuclei may also reach the same daughter by electron capture, which emits no positron and so contributes nothing to the PET signal; the two routes compete, and the fraction of decays taking the $\beta^+$ branch varies by isotope.
 \emph{Positron emission} is what distinguishes PET: the detected photons are not directly emitted by the nucleus of the radioactive source, but are a consequence of the emitted positron subsequently annihilating with an atomic electron.
 A positron leaves the nucleus with a continuous spectrum of kinetic energies and does not annihilate immediately.
 It first \emph{thermalises}, losing energy through Coulomb scattering with the surrounding medium over a path of length that typically ranges from a fraction of a millimetre to several millimetres (depending on the isotope) before combining with an electron at near-rest.\needcite{Levin \& Hoffman 1999, Phys Med Biol -- positron range by isotope and its limit on PET resolution}
@@ -97,8 +76,7 @@ The displacement between the point of emission and the point of annihilation is 
 Because the annihilating pair is very nearly at rest, conservation of momentum requires that the two photons be emitted almost exactly back-to-back.
 The pair is not quite at rest, however, and its residual momentum spreads the opening angle about \degs{180} with a full width at half maximum of roughly \degs{0.5}.\needcite{Colombino et al.\ 1965 for the measurement; or Cherry, Sorenson \& Phelps, Physics in Nuclear Medicine, for the textbook figure}
 Detecting both annihilation photons in opposite detector elements therefore constrains the annihilation to have occurred somewhere along the straight line joining them, termed the \emph{line of response} (LOR).
-Without TOF, nothing localises the annihilation along that particular coincidence event's LOR; the image reconstruction methods in PET accumulate information from the intersection of many LORs, recovering the radioactive source distribution with tomographic reconstruction.
-With TOF-PET, high precision timing can improve estimates as to where along each LOR the annihilation likely took place by resolving the difference in the arrival time of both photons.
+Nothing localises the annihilation along that particular coincidence event's LOR---tomographic reconstruction recovers the source distribution from the intersection of many LORs---though TOF-PET, by resolving the difference in the two photons' arrival times, can additionally estimate where along each LOR the annihilation likely took place.
 This coincidence localisation principle differentiates PET from single-photon emission imaging such as gamma cameras and SPECT, where a physical collimator must constrain the direction of photon incidence and discards the vast majority of emitted photons to do so.
 PET's coincidence requirement is often described as \emph{electronic collimation} for this reason.
 
@@ -123,15 +101,11 @@ Scattered and random events both contribute a slowly varying background that red
 \label{sec:radionuclide-production}
 \topics{cyclotron-produced isotopes (\textsuperscript{18}F, \textsuperscript{11}C, \textsuperscript{15}O, \textsuperscript{13}N) and half-life logistics; generator systems (\textsuperscript{68}Ga, \textsuperscript{82}Rb); distribution networks and cost; implications for scanner siting; where this is heading: decentralised and kit-based tracer production, and generator isotopes reducing dependence on cyclotron proximity, as a cost lever independent of the scanner itself.}
 
-\paragraph{Cyclotron-Produced Isotopes}
-
-\paragraph{Half-Life Logistics}
+\paragraph{Cyclotron-Produced Isotopes and Half-Life Logistics}
 
 \paragraph{Generator Systems}
 
-\paragraph{Distribution Networks and Cost}
-
-\paragraph{Implications for Scanner Siting}
+\paragraph{Distribution, Cost and Implications for Scanner Siting}
 
 \paragraph{Where This Is Heading}
 
@@ -141,23 +115,13 @@ Scattered and random events both contribute a slowly varying background that red
 
 \paragraph{FDG and Glucose Metabolism}
 
-\paragraph{PSMA Ligands in Prostate Cancer}
+\paragraph{Beyond FDG: PSMA, Amyloid and Tau, and Other Targeted Tracers}
 
-\paragraph{Amyloid and Tau Tracers}
-
-\paragraph{Hypoxia and Proliferation Tracers}
-
-\paragraph{Theranostic Pairs}
-
-\paragraph{Where This Is Heading}
+\paragraph{Theranostic Pairs and Where This Is Heading}
 
 \subsection{Physical Principles: Resolution Limits and Photon Interactions}
 \label{sec:resolution-limits}
-\topics{state the governing laws with the equations this thesis later computes with, not textbook derivations -- cite Knoll and Cherry/Sorenson for the full treatment and give one PET consequence per law.
-
-\emph{Resolution-limit physics:} isotope-dependent positron range; $\sim$0.25\textdegree{} photon acollinearity and its ring-diameter dependence; detector pitch contribution; the resolution-budget formula in quadrature; why sub-mm whole-body PET is physics-limited irrespective of detector quality.
-
-\emph{Photon-interaction physics (the equations used in later chapters):} the Beer--Lambert law $I = I_0 e^{-\mu x}$ and linear attenuation coefficients -- the basis of attenuation correction and of the Siddon path integrals in the system matrix (\S\ref{sec:system-matrix}); photoelectric absorption and its steep effective-$Z$ dependence, giving photofraction by material -- the crux of the plastic-versus-inorganic argument (\S\ref{sec:organic}); Compton scatter, the Compton energy--angle relation $E' = E/[1 + (E/m_ec^2)(1-\cos\theta)]$ and the Klein--Nishina differential cross-section $d\sigma/d\Omega$ -- treated here as a working tool, since the multi-vertex/Compton-camera direction reconstructs the scatter angle from it, not as background; the dominance of Compton over photoelectric interaction at \keV{511} and its implications for detector thickness, inter-crystal scatter, and sensitivity.}
+\topics{the governing laws with the equations later chapters compute with, not textbook derivations (cite Knoll and Cherry/Sorenson); one PET consequence per law. Resolution limits: positron range; $\sim$0.25\textdegree{} acollinearity and its ring-diameter dependence; detector pitch; the resolution budget in quadrature; why sub-mm whole-body PET is physics-limited. Photon interactions: Beer--Lambert $I = I_0 e^{-\mu x}$, the basis of attenuation correction and the Siddon path integrals (\S\ref{sec:system-matrix}); photoelectric absorption and its steep effective-$Z$ dependence, the crux of plastic versus inorganic (\S\ref{sec:organic}); Compton scatter, $E' = E/[1 + (E/m_ec^2)(1-\cos\theta)]$ and the Klein--Nishina cross-section as working tools for the multi-vertex/Compton-camera direction; Compton dominance at \keV{511} and its implications for detector thickness, inter-crystal scatter and sensitivity.}
 
 \paragraph{Positron Range}
 
@@ -177,15 +141,15 @@ Scattered and random events both contribute a slowly varying background that red
 
 \paragraph{Interaction Dominance at \keV{511} and Its Consequences}
 
-\section{Scintillators for PET}
+\section{Annihilation-Photon Detection: Scintillators and Alternatives}
 \label{sec:scintillators}
 
 \subsection{Scintillation Mechanisms and Figures of Merit}
 \label{sec:scintillation-mechanisms}
-\topics{two distinct mechanisms, not one: inorganic scintillation via band structure and activator dopants, and organic scintillation via molecular $\pi$-electron singlet states, which is why the two material families behave so differently at \keV{511}. Within the inorganic family, the specific luminescence transition is the axis that predicts timing: self-activated (BGO, PWO, CdWO\textsubscript{4}), activator-doped 5d$\rightarrow$4f (Ce\textsuperscript{3+}, Pr\textsuperscript{3+}), activator-doped s\textsuperscript{2}-ion (Tl\textsuperscript{+}, Eu\textsuperscript{2+}), and core--valence luminescence (BaF\textsubscript{2}); the 5d$\rightarrow$4f transition is dipole-allowed and therefore fast, while charge-transfer and s\textsuperscript{2} transitions are not, which explains the decay-time ordering better than any bulk property does. Then the figures of merit: light yield, decay time, rise time; density and effective Z; emission spectrum matching to photodetectors; energy resolution, and non-proportionality as distinct from light yield -- the dominant limit on achievable energy resolution in most high-yield materials, and the reason SrI\textsubscript{2}:Eu outperforms NaI(Tl) at comparable yield; afterglow; hygroscopicity and machinability; figures of merit combining these, and which of them actually matter for a cost-driven design. Close by naming the trade-offs that give the material space its shape rather than leaving them implicit across the family subsections: density versus yield versus proportionality (high-$Z$ self-activated materials are dense and dim, high-yield materials are light and non-proportional), yield versus speed (the mechanisms that give high yield are the ones that give slow decay), and density versus formability (loading for stopping power fights glass formation and crystal quality).}
+\topics{two distinct mechanisms: inorganic scintillation via band structure and activator dopants, organic via molecular $\pi$-electron singlets -- why the families behave so differently at \keV{511}. Within the inorganics the luminescence transition predicts timing: self-activated (BGO, PWO, CdWO\textsubscript{4}), 5d$\rightarrow$4f (Ce\textsuperscript{3+}, Pr\textsuperscript{3+}), s\textsuperscript{2}-ion (Tl\textsuperscript{+}, Eu\textsuperscript{2+}), core--valence (BaF\textsubscript{2}); only 5d$\rightarrow$4f is dipole-allowed and fast, which explains the decay-time ordering better than any bulk property. Then the figures of merit -- light yield, decay and rise time, density and effective Z, emission matching, energy resolution with non-proportionality as its dominant limit (why SrI\textsubscript{2}:Eu beats NaI(Tl) at comparable yield), afterglow, hygroscopicity, machinability -- and which actually matter for a cost-driven design. Close with the trade-offs that shape the material space: density versus yield versus proportionality, yield versus speed, density versus formability.}
 
 \paragraph{The Role of the Scintillator}
-Scintillators serve a dual-function for gamma detection; they primarily incite interactions from gamma photons passing through them such that gamma detection is at all possible, furthermore their scintillation property convieniently happens to produce optical photons in (material-specific) quantities that relate to the amount of energy deposited by those gamma interactions, enabling energy discrimination.
+The scintillator serves a dual-function for gamma detection; inciting interactions from gamma photons, generally by virtue of a high density and high atomic number; and amplification, converting the interaction of a single photon into a shower of lower-energy photons, in quantities that relate to the amount of energy deposited in the gamma interaction, enabling electronic detection and energy discrimination.
 Scintillator properties directly impact any given scanner's sensitivity, timing performance, event discrimination, and ultimately spatial resolution.
 The ideal scintillator for PET has a high light yield to maximise the SNR, a fast rise time to suppourt accurate timing resolution, fast decay time to support high activity count rates and TOF measurements, a high density to increase the probability of photon interaction, high effective atomic number to maximise the occurance of photoelectric interactions, optical transparency and homogeneity, and an emission spectrum that matches the photodetector's sensitivity.
 Additional practical considerations for scintillators relate to their manufacturability, cost, material availability and sustainability, required support infastructure (such as cryogenics or moisture control) and long-term stability, which are crucial for large-scale deployment in clinical systems.
@@ -211,35 +175,25 @@ A competing path exists: intersystem crossing populates $T_1$, from which radiat
 Practical plastics are ternary systems in which a polymer base such as polyvinyltoluene absorbs most of the deposited energy and transfers it non-radiatively by F\"orster dipole--dipole coupling to a primary fluor at around one per cent by weight, with a wavelength shifter at a far lower concentration moving the emission to longer wavelengths to match the photodetector and limit self-absorption.
 Since the emitting species is the bulk itself rather than a dilute dopant, composition is locked to carbon and hydrogen, and the light yield and effective atomic number cannot be raised by doping as they can in an inorganic host.
 
-\paragraph{Light Yield, Decay Time and Rise Time}
+\paragraph{Light Output and Timing}
 
 \paragraph{Density and Effective Atomic Number}
 
-\paragraph{Emission Spectrum Matching}
+\paragraph{Energy Resolution and Non-Proportionality}
 
-\paragraph{Energy Resolution}
-
-\paragraph{Non-Proportionality}
-
-\paragraph{Afterglow, Hygroscopicity and Machinability}
-
-\paragraph{Which Figures of Merit Matter for a Cost-Driven Design}
+\paragraph{Practical Properties: Afterglow, Hygroscopicity and Machinability}
 
 \paragraph{The Trade-Offs That Shape the Material Space}
 
 \subsection{Inorganic Crystals and Ceramics}
 \label{sec:inorganic}
-\topics{property table across NaI(Tl), BGO, LSO:Ce, LYSO:Ce, GSO, BaF\textsubscript{2}, LaBr\textsubscript{3}. Practical liabilities as a group, since they disqualify materials that look good on the property table: \textsuperscript{176}Lu and \textsuperscript{138}La intrinsic radioactivity, hygroscopicity, thermal quenching (light yield falling with temperature, which sets the cooling requirement and so a system cost), radiation damage, and mechanical fragility or cleavage. Single-crystal growth (Czochralski) as the cost floor, with the growth constraints that set it -- melting point, crucible requirement (Ir versus Pt), achievable monolithic block size -- since a material that cannot be grown as a large monolith is excluded from this thesis's architecture regardless of its scintillation properties; GAGG:Ce and garnet transparent ceramics as the sintered alternative to crystal growth, and their fabrication routes. Cost per unit volume across the family, separating raw-material scarcity (Lu, Ge, La, Ga) from process cost and growth yield, because the two respond to different market shocks and only the first is what the germanium argument of Chapter~\ref{ch:introduction} turns on. The BGO renaissance argument for non-TOF, high-sensitivity systems; fast light mechanisms beyond ordinary scintillation, Cherenkov emission and cross-luminescence (BaF\textsubscript{2}), as the materials-side response to the \ps{10} timing challenge.}
+\topics{property table across NaI(Tl), BGO, LSO:Ce, LYSO:Ce, GSO, BaF\textsubscript{2}, LaBr\textsubscript{3}. Practical liabilities that disqualify materials the table flatters: \textsuperscript{176}Lu/\textsuperscript{138}La intrinsic radioactivity, hygroscopicity, thermal quenching (a cooling requirement, so a system cost), radiation damage, fragility. Czochralski growth as the cost floor -- melting point, crucible (Ir versus Pt), achievable monolith size, since a material that cannot be grown large is excluded from this architecture regardless of properties; GAGG:Ce and garnet transparent ceramics as the sintered alternative. Cost per unit volume, separating raw-material scarcity (Lu, Ge, La, Ga) from process cost and growth yield -- only the first is what the germanium argument of Chapter~\ref{ch:introduction} turns on. The BGO renaissance for non-TOF high-sensitivity systems; Cherenkov and cross-luminescence (BaF\textsubscript{2}) as the materials-side response to the \ps{10} challenge.}
 
 \paragraph{The Material Family}
 
-\paragraph{Intrinsic Radioactivity}
-
-\paragraph{Thermal Quenching, Radiation Damage and Fragility}
+\paragraph{Practical Liabilities: Radioactivity, Quenching, Radiation Damage and Fragility}
 
 \paragraph{Single-Crystal Growth as the Cost Floor}
-
-\paragraph{Growth Constraints and Achievable Block Size}
 
 \paragraph{Garnets and Transparent Ceramics}
 
@@ -251,7 +205,7 @@ Since the emitting species is the bulk itself rather than a dilute dopant, compo
 
 \subsection{Organic Scintillators: Plastics and Liquids}
 \label{sec:organic}
-\topics{molecular scintillation mechanism and why it is fast but low-yield; the low effective Z problem: photofraction at \keV{511} collapses, so interactions are overwhelmingly Compton rather than photoelectric; J-PET's response, using Compton kinematics and axial plastic strips rather than fighting for photopeaks; manufacturability as the headline advantage: no crystal growth, no dicing, castable and mouldable to arbitrary shapes, cost per unit volume orders below LYSO; where this leaves energy resolution and scatter rejection; the honest verdict on whether the cost win survives the sensitivity loss.}
+\topics{why the molecular mechanism is fast but low-yield; the low effective-Z problem: photofraction collapses at \keV{511}, so interactions are overwhelmingly Compton; J-PET's response (Compton kinematics, axial plastic strips); manufacturability as the headline advantage -- no growth, no dicing, castable, cost per volume orders below LYSO; consequences for energy resolution and scatter rejection; the honest verdict on whether the cost win survives the sensitivity loss; a closing line on nanoparticle-loaded composites and metascintillators as the attempted middle ground (inorganic effective Z, organic manufacturability), still a promise rather than a result.}
 
 \paragraph{Why the Molecular Mechanism Is Low-Yield}
 The mechanism of Section~\ref{sec:scintillation-mechanisms} is fast, but it is also intrinsically dim: a polyvinyltoluene-based plastic yields around \num{10000} photons per \unit{\mega\electronvolt} against roughly \num{38000} for NaI(Tl), and the deficit has several independent causes.
@@ -275,39 +229,15 @@ The consequence for PET is that plastics reach useful timing performance by way 
 
 \paragraph{Verdict}
 
-\subsection{Composite and Nanostructured Scintillators}
-\label{sec:composite-scintillators}
-\topics{the central idea: buy inorganic effective Z while keeping organic manufacturability; inorganic nanoparticles loaded into polymer (e.g.\ LaF\textsubscript{3}:Ce in polystyrene); optical scattering as the limiting trade-off, and the particle-size regime that avoids it; achievable loading fractions and the resulting Z; light-yield penalty; whether any composite yet beats plain plastic on a cost-per-sensitivity basis, or whether the category is still a promise; metascintillators and heterostructures as the same combine-two-materials idea aimed at timing rather than cost; halide perovskite nanocrystals in a sentence, as the solution-processed loading route that would sidestep crystal growth entirely if stability and self-absorption were solved.}
-
-\paragraph{The Central Idea}
-
-\paragraph{Loading Inorganic Nanoparticles into Polymer}
-
-\paragraph{Optical Scattering as the Limiting Trade-Off}
-
-\paragraph{Achievable Loading Fraction and Light-Yield Penalty}
-
-\paragraph{Metascintillators and Heterostructures}
-
-\paragraph{Verdict}
-
 \subsection{Optical Transport and Interfaces in the Scintillator}
 \label{sec:optical-transport}
-\topics{the stage between scintillation and photodetection, which a pixellated design suppresses and a monolithic design depends on. Isotropic emission from the interaction point, so that the light distribution arriving at the photodetector plane is the only carrier of position information; bulk attenuation and self-absorption, and why they scale with crystal length; Rayleigh scattering off refractive-index inhomogeneity. Then the interfaces: refraction at each index step; total internal reflection above the critical angle, and the fraction of emitted light it traps; Fresnel reflection, partial at every surface and angle; optical grease and coupling-medium index matching. Surface treatment as a design variable, polished (specular) versus ground (near-Lambertian), and reflector choice, specular film (ESR) versus diffuse wrap (PTFE), with the effect of each on the width and shape of the light distribution. Why this matters here: for a monolithic slab the light distribution \emph{is} the measurement, so surface finish and reflector are not assembly details but the thing that determines whether event localisation is possible at all, and they are the largest single source of simulation-to-measurement disagreement (\S\ref{sec:sim-to-real}).}
+\topics{the stage a pixellated design suppresses and a monolithic design depends on. Isotropic emission makes the light distribution at the photodetector plane the only carrier of position information; bulk attenuation, self-absorption and Rayleigh scattering, scaling with crystal length. Interfaces: refraction, total internal reflection and the fraction it traps, Fresnel losses, coupling-medium index matching. Surface finish (polished versus ground) and reflector (ESR versus PTFE) as design variables shaping the light distribution. Why it matters: for a monolith the light distribution \emph{is} the measurement, and these choices are the largest single source of simulation-to-measurement disagreement (\S\ref{sec:sim-to-real}).}
 
-\paragraph{Isotropic Emission from the Interaction Point}
+\paragraph{Isotropic Emission and Bulk Transport}
 
-\paragraph{Bulk Attenuation and Self-Absorption}
+\paragraph{Interfaces: Refraction, Total Internal Reflection and Fresnel Losses}
 
-\paragraph{Rayleigh Scattering}
-
-\paragraph{Refraction and Total Internal Reflection}
-
-\paragraph{Fresnel Reflection and Optical Coupling}
-
-\paragraph{Surface Finish}
-
-\paragraph{Reflector Treatment}
+\paragraph{Surface Finish and Reflector Treatment}
 
 \paragraph{Why This Matters for Monolithic Detectors}
 
@@ -315,9 +245,7 @@ The consequence for PET is that plastics reach useful timing performance by way 
 \label{sec:segmentation}
 \topics{dicing, polishing and reflector assembly costs of pixellated arrays; dead space and packing fraction; light sharing in monolithic slabs; flood-map calibration burden; edge effects; intrinsic DOI information in monoliths; resolution below the SiPM pitch.}
 
-\paragraph{Fabrication Cost of Pixellated Arrays}
-
-\paragraph{Dead Space and Packing Fraction}
+\paragraph{Fabrication Cost, Dead Space and Packing Fraction of Pixellated Arrays}
 
 \paragraph{Light Sharing in Monolithic Slabs}
 
@@ -325,9 +253,7 @@ The consequence for PET is that plastics reach useful timing performance by way 
 
 \paragraph{Edge Effects}
 
-\paragraph{Intrinsic Depth Information in Monoliths}
-
-\paragraph{Resolution Below the SiPM Pitch}
+\paragraph{Intrinsic Depth Information and Resolution Below the SiPM Pitch}
 
 \subsection{Depth-of-Interaction Encoding Approaches}
 \label{sec:doi}
@@ -345,7 +271,7 @@ The consequence for PET is that plastics reach useful timing performance by way 
 
 \subsection{Non-Scintillation Energy Conversion}
 \label{sec:energy-conversion}
-\topics{scintillation is one way to convert the deposited \keV{511} into a measurable signal, not the only one -- this subsection covers the alternatives, briefly and with a verdict on each, so that the conventional choice is visibly a choice. Cherenkov emission by the recoil electron: prompt and effectively instantaneous, hence the interest for \ps{10} timing, but only tens of photons, far too few to position from, and with a strongly directional emission cone (cross-reference the fast-timing materials discussion in \S\ref{sec:inorganic}). Direct conversion to charge in a semiconductor, CdZnTe and TlBr, skipping the optical stage entirely: excellent energy resolution and intrinsic 3D positioning, against poor timing, charge trapping, and a cost per unit volume that presently rules it out at whole-body scale. Thermoacoustic (ionoacoustic) detection: the deposit heats the material locally and launches a pressure wave whose acoustic time of flight would give depth of interaction directly and cheaply; the reason it is not used is quantitative, not conceptual, and the honest treatment is to state the pressure amplitude from a single \keV{511} deposit against the noise floor of a realistic transducer, and the count rate over which any averaging would have to be done. Cryogenic phonon and bolometric readout, for completeness and for the same reason. Verdict this section must reach: which of these are genuinely inapplicable at clinical rates, and which are merely immature.}
+\topics{the alternatives to scintillation, briefly and with a verdict on each, so the conventional choice is visibly a choice. Cherenkov: prompt, hence the \ps{10} interest, but tens of photons and a directional cone (cross-reference \S\ref{sec:inorganic}). Direct conversion (CdZnTe, TlBr): excellent energy resolution and intrinsic 3D positioning, against poor timing, charge trapping, and prohibitive cost at whole-body scale. Thermoacoustic: acoustic time of flight would give DOI directly and cheaply; the objection is quantitative, so state the single-deposit pressure amplitude against a realistic transducer noise floor. Cryogenic and bolometric readout for completeness. Verdict: which are genuinely inapplicable at clinical rates, and which merely immature.}
 
 \paragraph{Cherenkov Emission}
 
@@ -363,13 +289,11 @@ The consequence for PET is that plastics reach useful timing performance by way 
 \subsection{Photomultiplier Tubes and the Anger Logic Legacy}
 \topics{PMT operation, gain and quantum efficiency; Anger centroid positioning; block multiplexing ratios; why PMTs dominated for decades; magnetic field incompatibility.}
 
-\paragraph{Operation, Gain and Quantum Efficiency}
+\paragraph{Operation, Gain and Why PMTs Dominated for Decades}
 
 \paragraph{Anger Centroid Positioning}
 
 \paragraph{Block Multiplexing Ratios}
-
-\paragraph{Why PMTs Dominated for Decades}
 
 \paragraph{Magnetic Field Incompatibility}
 
@@ -381,9 +305,7 @@ The consequence for PET is that plastics reach useful timing performance by way 
 
 \paragraph{SiPM and SPAD Microcell Operation}
 
-\paragraph{Photon Detection Efficiency}
-
-\paragraph{Dark Counts, Crosstalk and Afterpulsing}
+\paragraph{Performance Parameters: PDE, Dark Counts, Crosstalk and Afterpulsing}
 
 \paragraph{Temperature Dependence and Bias Control}
 
@@ -421,6 +343,7 @@ The consequence for PET is that plastics reach useful timing performance by way 
 \paragraph{Open Readout Platforms}
 
 \subsection{Timing Performance and Time-of-Flight Readout}
+\label{sec:tof-readout}
 \topics{coincidence resolving time and its contributors (scintillator, SiPM, electronics); the TOF SNR gain relation; current state of the art ($\sim$200--400~ps clinical); the 10~ps challenge; whether TOF is worth its cost in cheap systems.}
 
 \paragraph{Coincidence Resolving Time and Its Contributors}
@@ -484,17 +407,11 @@ The consequence for PET is that plastics reach useful timing performance by way 
 
 \paragraph{The Inverse Lesson for Low-Cost Design}
 
-\subsection{Unconventional Geometries and Experimental Systems}
+\subsection{Unconventional Geometries and Research Programmes}
 \label{sec:unconventional}
-\topics{dual-panel coincidence benches as detector testbeds; box/enclosing geometries; partial and sparse rings; plant PET, in-beam and proton-therapy range verification PET; the monolithic annulus (AnnPET); Compton cameras and Compton-PET hybrids, which treat the scatter angle recovered from the Klein--Nishina relation as a measurement rather than a loss, and so relax the need for a full ring; reconstruction obstacles that non-cylindrical geometries face with standard tools.}
+\topics{dual-panel benches, box/enclosing geometries, partial and sparse rings, in-beam and plant PET; the monolithic annulus (AnnPET); Compton cameras and Compton-PET hybrids, treating the Klein--Nishina scatter angle as a measurement and relaxing the need for a full ring; reconstruction obstacles non-cylindrical geometries face with standard tools; the research programmes -- J-PET (plastic strips, explicitly cost-driven), OpenPET and open-source hardware, MADPET and sparse readout, university-built prototypes -- and what they reveal about the cost floor of scanner construction.}
 
-\paragraph{Dual-Panel Coincidence Benches}
-
-\paragraph{Box and Enclosing Geometries}
-
-\paragraph{Partial and Sparse Rings}
-
-\paragraph{In-Beam, Range-Verification and Plant PET}
+\paragraph{Dual-Panel Benches, Partial Rings and Special-Purpose Systems}
 
 \paragraph{The Monolithic Annulus}
 
@@ -502,16 +419,7 @@ The consequence for PET is that plastics reach useful timing performance by way 
 
 \paragraph{Reconstruction Obstacles for Non-Cylindrical Geometries}
 
-\subsection{Research Scanner Development Programmes}
-\topics{J-PET (plastic strips, axial arrangement, explicitly cost-driven); OpenPET and open-source hardware efforts; MADPET and sparse-readout demonstrators; university-built brain/breast prototypes; what these programmes reveal about the cost floor of scanner construction and the path from bench to publishable system.}
-
-\paragraph{J-PET}
-
-\paragraph{OpenPET and Open-Source Hardware}
-
-\paragraph{MADPET and Sparse-Readout Demonstrators}
-
-\paragraph{University-Built Prototypes}
+\paragraph{Research Programmes: J-PET, OpenPET, MADPET and University Prototypes}
 
 \paragraph{What These Programmes Reveal About the Cost Floor}
 
@@ -559,7 +467,7 @@ The consequence for PET is that plastics reach useful timing performance by way 
 
 \subsection{System Matrix Modelling and Ray Tracing}
 \label{sec:system-matrix}
-\topics{Siddon and Joseph projectors; on-the-fly computation versus precomputed/factorised matrices; PSF/resolution modelling; GPU projector implementations; how the system matrix encodes (and hard-codes) scanner geometry.}
+\topics{Siddon and Joseph projectors; on-the-fly computation versus precomputed/factorised matrices; PSF/resolution modelling; GPU projector implementations; how the system matrix encodes (and hard-codes) scanner geometry; TOF kernels and DOI in the projector, the conditioning and convergence they buy, and their joint benefit for unconventional geometries.}
 
 \paragraph{Siddon and Joseph Projectors}
 
@@ -570,6 +478,8 @@ The consequence for PET is that plastics reach useful timing performance by way 
 \paragraph{GPU Projector Implementations}
 
 \paragraph{How the System Matrix Hard-Codes Scanner Geometry}
+
+\paragraph{TOF Kernels and DOI in the Projector}
 
 \subsection{Data Corrections: Attenuation, Scatter, Randoms and Normalisation}
 \label{sec:corrections}
@@ -586,17 +496,6 @@ The consequence for PET is that plastics reach useful timing performance by way 
 \paragraph{Dead Time and Decay Correction}
 
 \paragraph{Motion Correction}
-
-\subsection{Time-of-Flight and Depth-of-Interaction in Reconstruction}
-\topics{TOF kernels localising events along the LOR; improved conditioning and convergence; incorporating DOI into the projector; joint benefit for unconventional geometries.}
-
-\paragraph{TOF Kernels Localising Events Along the LOR}
-
-\paragraph{Improved Conditioning and Convergence}
-
-\paragraph{Incorporating DOI into the Projector}
-
-\paragraph{Joint Benefit for Unconventional Geometries}
 
 \subsection{Open-Source Reconstruction Packages}
 \topics{STIR, CASToR, PyTomography, NiftyPET, OMEGA, QETIR, parallelproj; scanner description formats, LOR description formats, and their geometric assumptions; extensibility to novel geometries; the gap between vendor and open-source toolchains.}
@@ -686,11 +585,7 @@ The consequence for PET is that plastics reach useful timing performance by way 
 
 \paragraph{Oncology: Staging, Restaging and Therapy Response}
 
-\paragraph{Neurology: Dementia and Epilepsy}
-
-\paragraph{Cardiology: Viability and Perfusion}
-
-\paragraph{Inflammation and Infection Imaging}
+\paragraph{Neurology, Cardiology and Inflammation Imaging}
 
 \paragraph{Which Applications Tolerate Lower Performance}
 
@@ -737,16 +632,3 @@ The consequence for PET is that plastics reach useful timing performance by way 
 \section{Summary and Research Gap}
 \topics{synthesis of the cost levers across materials, detectors, electronics, geometry and algorithms; which of the trends identified in the sections above raise the performance ceiling versus lower the cost floor, and the recurring pattern of software substituting for hardware; the specific under-explored combination this project targets; restatement of candidate directions with a literature-informed assessment; where a PhD-scale project can realistically contribute; criteria and plan for converging on the PhD direction.}
 
-\paragraph{Cost Levers Across the Pipeline}
-
-\paragraph{Raising the Performance Ceiling versus Lowering the Cost Floor}
-
-\paragraph{Software Substituting for Hardware}
-
-\paragraph{The Under-Explored Combination}
-
-\paragraph{Reassessment of the Candidate Directions}
-
-\paragraph{Where a PhD-Scale Project Can Contribute}
-
-\paragraph{Criteria and Plan for Converging on a Direction}

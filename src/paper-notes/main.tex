@@ -1,0 +1,1057 @@
+% Working notes on papers -- standalone, NOT part of the thesis. Analyse a
+% paper here as soon as it is read; copy anything the thesis needs by hand.
+% Build: pixi run build-notes.
+%
+% One entry per paper, free-form inside (\paragraph headings suit dense
+% papers; plain paragraphs are fine too):
+%
+%   \begin{papernote}{Author Year -- short descriptive title}{BibKey}
+%   ...
+%   \end{papernote}
+%
+% BibKey is the references.bib key (shared with the thesis).
+%
+% Structure: a paper that belongs to a programme (J-PET, AnnPET, ...) sits
+% inside that programme's programnote -- overview first (actor-level facts:
+% membership, detector lineage, IP, scope boundary), then its papers in the
+% programme's reading order, nested in the TOC. Any other paper is a
+% top-level papernote. The TOC is the index.
+
+\documentclass[11pt, a4paper]{article}
+
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{amsmath, amssymb}
+\usepackage[backend=biber, style=numeric, sorting=none]{biblatex}
+\usepackage{siunitx}
+\input{units} % \keV{511} etc. -- copied from src/thesis by build-notes; edit the canonical copy there
+\usepackage{xcolor}
+\input{theme} % same light/dark switch as the thesis
+\usepackage[hidelinks]{hyperref}
+\usepackage{xurl}
+
+\addbibresource{references.bib}
+
+% As in main.tex: block (not run-in) \paragraph.
+\usepackage{titlesec}
+\titleformat{\paragraph}[block]{\normalfont\bfseries\raggedright}{}{0pt}{}
+\titlespacing*{\paragraph}{0pt}{1.5ex plus 1ex minus .2ex}{0.5ex}
+
+% A papernote is a \section, except inside a programnote, where it drops to
+% \subsection so the programme's papers nest under it in the TOC.
+% Top-level TOC entries carry their kind (Paper: / Programme:), TOC-only;
+% nested papers need no tag -- the indentation already says it.
+\newcommand{\papernoteheading}{\section}
+\newcommand{\papernotetag}{Paper: }
+\NewDocumentEnvironment{papernote}{mm}
+	{\papernoteheading[\papernotetag#1]{#1}\label{note:#2}}
+	{}
+\NewDocumentEnvironment{programnote}{mm}
+	{\section[Programme: #1]{#1}\label{prog:#2}%
+	 \renewcommand{\papernoteheading}{\subsection}%
+	 \renewcommand{\papernotetag}{}}
+	{}
+
+% Something not yet verified against the source PDF.
+% breakable space after the tag, or long gaps overflow narrow lines
+\newcommand{\gap}[1]{\textcolor{red}{\textbf{[gap:} #1\textbf{]}}}
+
+\begin{document}
+
+\tableofcontents
+
+\clearpage
+
+\begin{papernote}{Thull et al.\ 2026 -- Uncertainty-aware gamma interaction localisation and reconstruction}{Thull2026}
+
+\paragraph{Capsule}
+Thull et al.\ \cite{Thull2026} train per-detector, per-axis localisation networks on a
+24-block semi-monolithic LYSO preclinical scanner that predict a positional variance
+alongside each position estimate, then use that variance to filter and weight LORs in
+TOF-OSEM reconstruction --- entirely on measured data. Headline result: the median
+LOR-to-point-source distance falls from \mm{20.7} unfiltered to \mm{0.983} under combined
+energy and variance filtering at 50\% retention, with variance the stronger and
+complementary criterion because energy is a non-monotonic proxy for localisation quality
+while predicted variance is monotonic. The work demonstrates rather than characterises:
+$\sigma$ is rank-ordered but never calibrated, timing information is discarded, the
+detector is fixed, and calibration cost is severe (weeks per scanner, 55 networks).
+For this thesis it is the standing evidence that localisation confidence is a
+first-class quantity, and it marks the light-distribution route as taken --- leaving the
+temporal axis and information-theoretic bounds open.
+
+\paragraph{Summary}
+Aachen (Schulz group, RWTH; two authors from Hyperion Hybrid Imaging Systems GmbH)
+train localisation networks that emit a per-event positional variance alongside the
+position estimate, then use that variance to filter and weight LORs during TOF-OSEM
+reconstruction. Fully experimental: no simulation anywhere in the paper. The system is a
+proof-of-concept preclinical scanner of 24 semi-monolithic LYSO blocks at \mm{62.5} inner
+radius on the Hyperion III platform. Each block is
+\qtyproduct{48.4 x 48.3 x 10}{\milli\metre} (planar-segmented,
+planar-monolithic, DOI), built from two arrays of 44 polished LYSO slabs of
+\qtyproduct{1 x 24 x 10}{\milli\metre} separated by \mm{0.1} BaSO$_4$, with a \mm{0.3}
+light guide onto a 12 x 12
+channel SiPM array formed from a 6 x 6 grid of Philips DPC3200-22 digital SiPMs.
+Baseline detector performance is 12.7\% energy resolution and approximately \ps{500} CTR.
+
+\paragraph{Key Findings}
+\begin{itemize}
+    \item \textbf{Unfiltered localisation error dominates rather than dilutes.} Median
+        distance from reconstructed LOR to a known point-source location is
+        \textbf{\mm{20.7}} with no filtering. Energy windowing at 50\% retention brings this
+        to \mm{2.4}; variance filtering at 50\% retention to \mm{1.12}; combined energy and
+        variance filtering to \textbf{\mm{0.983}}. This is the single most quotable number
+        in the paper.
+    \item \textbf{Variance outperforms energy as a filtering criterion, and the two are
+        complementary.} Mean absolute error at 50\% singles retention (segmented /
+        monolithic / DOI, in mm): energy filtering 0.49 / 0.72 / 1.03; variance filtering
+        0.25 / 0.53 / 0.90; variance after energy (49\% effective retention)
+        0.17 / 0.47 / 0.83. Unfiltered CNN classifier is approximately \mm{1.1} in all three
+        dimensions.
+    \item \textbf{Energy is a non-monotonic proxy for localisation quality; predicted
+        variance is monotonic.} MAE versus deposited energy shows a minimum at \keV{511}, a
+        second minimum near \keV{340} (Compton backscatter, \degs{180}, producing a single
+        light cluster), and elevated error between them --- a single Compton interaction
+        cannot deposit intermediate energy, so that band is necessarily multi-scatter.
+        Above \keV{511}, error rises again from pile-up and $^{176}$Lu background. MAE versus
+        predicted $\sigma$ is monotonic with growing dispersion, i.e.\ a heavy-tailed error
+        distribution.
+    \item \textbf{A low-energy, low-variance population exists} (most visible in the
+        monolithic and DOI dimensions) that energy windowing discards but variance
+        filtering retains; the authors speculate these are geometrically well-constrained
+        events occurring directly above a SiPM.
+    \item \textbf{Image quality improves, at a noise cost.} With statistics restored to
+        250 M coincidences, 50\% singles filtering gives PSNR 14.603 $\to$ 14.899,
+        SSIM 0.405 $\to$ 0.462, COV 4.90\% $\to$ 4.66\%. Without restoring counts
+        (62.5 M coincidences) COV degrades to 7.49\%. Peak-to-valley ratio on the \mm{0.8}
+        rods rises from 1.0985 to 1.1840 under filtering and to 1.2171 under LOR weighting
+        at $p = 4$, but COV at $p = 4$ blows out to 10.19\%. Filtering dominated weighting
+        at matched effort; recovery coefficients improved at every rod diameter under both.
+    \item \textbf{CNN classifiers beat regressors in-plane; CNN regressors win DOI.}
+        Classifiers show systematically lower bias, and flood maps show regressors
+        producing regions of near-zero prediction density where the continuous output
+        collapses.
+\end{itemize}
+
+\paragraph{Methods Worth Noting}
+\begin{itemize}
+    \item \textbf{Heteroscedastic training.} Regressors train with a Gaussian
+        negative log-likelihood,
+        \[\mathrm{NLL} = \sum_n \bigl[\tfrac{1}{2}\log \sigma_n^2
+            + (y_n - \hat{y}_n)^2 / 2\sigma_n^2\bigr],\]
+        jointly predicting position and variance. Classifiers use ordinary
+        cross-entropy over position bins, with uncertainty taken as the \emph{variance of
+        the predicted softmax distribution} --- no special loss required.
+    \item \textbf{Per-axis decomposition.} One independent network per detector per spatial
+        dimension; 55 networks in total (7 central detectors x 3, 1 central x 2, 16 outer
+        x 2). Optuna HPO over 12 configurations, approximately 377 trials each.
+    \item \textbf{Fan-beam calibration.} Physical collimated fan of \mm{0.5} width on a
+        motorised stage with \um{2} repeatability. Segmented axis: 44 positions at \mm{1.1}
+        pitch, 20{,}000 samples each. Monolithic: 96 positions at \mm{0.5} pitch, 9{,}166
+        each. DOI: 40 positions at \mm{0.25} pitch, 22{,}000 each. Roughly 880{,}000 events
+        per detector per dimension, split 60/20/20. \textbf{Acquisition for the full
+        scanner took several weeks.} DOI calibration fires \emph{parallel} to the
+        photosensor face, so the lateral coordinate is deliberately unconstrained and
+        marginalised over --- the per-axis decomposition is what makes this admissible.
+        Only the 8 central-ring detectors could be labelled in all three dimensions; the 16
+        outer detectors have monolithic and DOI labels only and borrow a segmented model.
+    \item \textbf{Triggering is inherited, not designed.} The paper does not describe a
+        trigger scheme; it uses the DPC die-level two-stage trigger and validation (Frach
+        2009). The only stated acquisition-time selection is retention of readouts with
+        more than 500 detected photons; no energy window is applied until evaluation.
+    \item \textbf{Normalisation is recomputed under each filter and weight condition}
+        (fan-sum method), which is what keeps the result quantitative rather than
+        cosmetically sharper. Uncertainty is combined as
+        $\sigma_{3D} = \sqrt{\sigma^2_{\mathrm{seg}} + \sigma^2_{\mathrm{mono}} +
+        \sigma^2_{\mathrm{doi}}}$, and LOR weights as
+        $w_{\mathrm{LOR}} = 1 / (\sigma_{3D,I_1} \cdot \sigma_{3D,I_2})^p$.
+    \item \textbf{Reconstruction:} list-mode TOF-OSEM, 20 iterations, 10 subsets,
+        \mm{0.2} isotropic voxels, 250 M coincidences,
+        \qty[separate-uncertainty=true]{511 \pm 80}{\kilo\electronvolt} window,
+        20 LORs sampled per coincidence. Phantoms: cylindrical shell (normalisation),
+        HotRod with 2.0/1.5/1.2/1.0/0.9/\mm{0.8} rods at approximately \MBq{5} initial
+        $^{18}$F-FDG, and a \MBq{1.5} $^{22}$Na point source at \mm{25} and \mm{35} radii.
+    \item \textbf{Interpretation ceiling.} Label precision is \mm{0.5} (monolithic) and
+        \mm{0.25} (DOI) with a \mm{0.5} fan width, so sub-\mm{0.5} MAE figures are not
+        interpretable --- the authors say so, and introduce the LOR-to-point-source metric
+        specifically to sidestep this.
+\end{itemize}
+
+\paragraph{Relevance to This Thesis}
+This is the strongest published evidence for the premise that poorly localised
+interactions actively damage reconstruction rather than weakly informing it, and it
+forecloses the naive form of that idea: per-event uncertainty propagated into
+reconstruction via filtering and weighting is done, on real hardware, with normalisation
+handled correctly. Cite the \mm{20.7} unfiltered median LOR distance and the non-monotonic
+energy--MAE curve as motivation; do not re-derive them.
+
+What the paper does \emph{not} do:
+\begin{itemize}
+    \item \textbf{It demonstrates rather than characterises.} No Fisher information, no
+        CRLB, no bound of any kind. One detector topology, one activity, an empirical
+        threshold sweep. There is no crossover analysis for when rejecting a fraction $f$
+        buys back more in bias than it costs at $1/\sqrt{1-f}$ in variance.
+    \item \textbf{$\sigma$ is rank-ordered, never calibrated.} That $p = 4$ outperforms
+        $p = 2$ is a direct tell: if $\sigma$ were a calibrated standard deviation,
+        inverse-variance weighting would be optimal by construction. The authors do not
+        remark on this. A rank-correct $\sigma$ does not transfer between detectors and
+        does not compose across the two singles of a coincidence in any principled way.
+    \item \textbf{Timing is entirely unused.} Network inputs are the 144 SiPM photon counts
+        and nothing else. The 36 dies supply up to 36 independent timestamps per event at
+        approximately \ps{500} CTR, all discarded, along with the pattern of \emph{which}
+        dies triggered. The authors state that Compton interaction \emph{sequence} cannot
+        be inferred from the light pattern because scintillation emission is isotropic ---
+        true of photon counts, but not of arrival times.
+    \item \textbf{The detector is fixed.} No design feedback; $\sigma$ is a measurement
+        outcome, never an objective.
+    \item \textbf{Aleatoric and epistemic uncertainty are not disentangled}, which the
+        authors acknowledge: a deterministic network emitting a variance is nominally
+        claiming aleatoric uncertainty but is contaminated by finite training data and
+        model capacity.
+\end{itemize}
+
+\paragraph{Where It Might Go}
+Motivation for any chapter arguing that localisation confidence is a first-class quantity;
+the \mm{20.7} figure belongs in an introduction. Also the reference point for calibration
+burden (several weeks per scanner, 55 networks, outer-ring detectors physically
+unlabellable in the segmented direction) --- though note the group's own in-system
+calibration work (Kuhl et al.\ 2025) claims to reduce this to hours via virtual
+collimation, so ``calibrate faster'' is taken and ``design so that calibration is cheap''
+is not.
+
+\emph{Competitive note:} the discussion explicitly announces future work analysing
+multi-cluster events, relating light-spread structure to predicted uncertainty, and
+characterising the impact of inter-crystal Compton scatter on positioning uncertainty.
+Aachen has the built scanner, the fan-beam rig, four RTX 6000 Ada GPUs and a commercial
+arm. The light-distribution version of ICS characterisation should be treated as theirs.
+The temporal axis --- cardinality and interaction ordering inferred from the joint
+distribution of per-channel arrival times rather than from photon counts --- and the
+information-theoretic bound on separability are the surviving directions. Note that
+Carra et al.\ 2022 runs light-informs-timing and must be distinguished carefully; nobody
+appears to run it in reverse.
+\end{papernote}
+
+\begin{programnote}{UTOFPET -- Pisa + Ghent monolithic TOF-PET}{UTOFPET}
+
+\paragraph{What it is}
+A joint project of the University of Pisa (Dipartimento di Fisica E.\ Fermi /
+INFN Pisa) and Ghent University (MEDISIP), named explicitly in the WT-PET design
+paper as the origin of the WT-PET detector. EPFL (Bruschini, Charbon, Gramuglia)
+appears on the consortium's flagship instrumentation paper.
+\gap{Funding source, grant number, start and end dates. Determines whether the
+follow-up agenda is live or concluded --- materially changes how much of the
+surrounding space should be treated as spoken for.}
+
+\paragraph{Why it matters here}
+Three separate entries on the prior-art kill list resolve to this single actor.
+Carra et al.\ 2022 (\ref{note:Carra2022}) and the Ghent monolithic lineage
+(Stockhoff 2021, Decuyper 2021, Maebe 2022) are not independent groups arriving
+at similar results; they are one programme with a shared detector. Treat the
+consolidated entity as the wall, and its scope boundary as the map.
+
+\paragraph{Detector lineage}
+The scaling is exact and worth stating plainly:
+
+\begin{itemize}
+	\item \textbf{Preclinical / Pisa:} \qtyproduct{25 x 25 x 8}{\milli\metre}
+		LYSO monolith, 64 x \qtyproduct{3 x 3}{\milli\metre} Hamamatsu SiPMs.
+		\mm{0.78} 2D FWHM, \mm{1.2} DOI FWHM, \ps{156} CTR
+		(\ref{note:Carra2022}).
+	\item \textbf{Ghent parallel:} Stockhoff et al.\ 2021 PMB,
+		high-resolution monolithic LYSO with 6-layer DOI for clinical PET.
+		\gap{Block dimensions --- confirm whether this or the Pisa block is
+		reference [18] in the WT-PET paper.}
+	\item \textbf{Clinical / WT-PET:} \qtyproduct{50 x 50 x 16}{\milli\metre}
+		BGO or LYSO, 8 x 8 array of \qtyproduct{6 x 6}{\milli\metre} SiPMs,
+		6-layer DOI. The WT-PET paper states the detector was developed in
+		UTOFPET and that thickness and transverse size were taken from existing
+		preclinical monolithic detectors ``scaled up by a factor of 2''.
+\end{itemize}
+
+Every dimension doubles, and the SiPM pitch doubles with it (\mm{3}
+$\rightarrow$ \mm{6}), preserving the 8 x 8 channel count. \textbf{The clinical
+block geometry was set by doubling a prototype, not by optimisation} --- stated
+in their own words. Note this: it is a clean, citable instance of design-by-scaling
+in exactly the place a co-design argument wants one.
+
+\paragraph{WT-PET system context (Vandenberghe et al.\ 2023, EJNMMI 50(12):3558--3571)}
+Two flat panels, each \qtyproduct{70 x 106}{\centi\metre}, \cm{50} apart, patient
+standing upright between them. 14 x 20 = 280 monolithic blocks per panel.
+Detector surface reduced 1.9x and scintillator volume 2.2x versus LAFOV systems
+at comparable sensitivity. Later simulation work reports spatial resolution below
+\mm{2} across the whole imaging volume and sensitivity \qty{154.0}{cps\per\kilo\becquerel}
+against \qty{175.4}{cps\per\kilo\becquerel} for a Quadra-like system. Ghent-led;
+Sportelli and Belcari (Pisa) are co-authors. Carra is not on this paper.
+
+These system numbers are context only --- they do not belong in any chapter of
+this thesis. The detector spec above does.
+
+\paragraph{Intellectual property}
+Italian patent application \textbf{102021000026609}, ``Method and device for the
+acquisition of gamma photons through neural networks'', deposited at UIBM,
+cited alongside the consortium's 2021 NSS/MIC paper.
+
+\textbf{Action:} pull the claim text from Espacenet or the UIBM register.
+Published papers show what has been \emph{done}; claims show what has been
+\emph{fenced}, and a broadly drafted claim on NN-based gamma acquisition could
+reach arrival-time-based cardinality inference even though no paper runs it.
+This should be checked before committing the temporal axis as a surviving
+direction.
+
+\paragraph{Scope boundary --- what they have \emph{not} claimed}
+Useful precisely because it is narrow and legible:
+\begin{itemize}
+	\item Monocrystalline LYSO and BGO. Nothing on nanocomposite or ceramic
+		scintillators, or Rayleigh-dominated media.
+	\item Flat-panel and cylindrical clinical geometry. Nothing annular at
+		preclinical scale.
+	\item Single-vertex estimation. No cardinality, no interaction ordering,
+		no multi-vertex separability. \gap{Verify against the most recent
+		consortium output, not just the 2022 paper.}
+	\item Demonstration, not characterisation. No Fisher information, no CRLB,
+		no bound of any kind anywhere in the lineage.
+	\item Detector geometry as a fixed input. The WT-PET block was sized by
+		doubling; nothing in the programme treats detector parameters as
+		optimisation variables.
+\end{itemize}
+
+\paragraph{People}
+Pisa: Belcari (senior), Bisogni, Sportelli, Carra, Ciarrocchi, Morrocchi, Rosso.
+Ghent: Vandenberghe (PI, WT-PET), Van Holen, Stockhoff, Decuyper, Maebe.
+EPFL: Charbon, Bruschini, Gramuglia.
+Carra co-authors directly with Vandenberghe, Van Holen and Stockhoff on the 2021
+NSS/MIC paper ``Towards the ideal PET detector: a scalable architecture with high
+intrinsic spatial resolution, DOI and sub-\ps{200} TOF capability'' --- the
+personal link, not merely an institutional one.
+
+\begin{papernote}{Carra et al.\ 2022 -- Simultaneous NN event positioning and timestamping in monolithic scintillators}{Carra2022}
+
+\paragraph{Capsule}
+Carra et al.\ \cite{Carra2022} train a neural network that estimates event position
+\emph{and} timestamp jointly from a monolithic LYSO block, and --- the actual
+contribution --- run it on a low-cost FPGA inside the detector at more than
+$10^{6}$ events per second. Reported on experimental data:
+\mm{0.78} 2D FWHM in $(x,y)$, \mm{1.2} DOI FWHM, \ps{156} CTR, on a
+\qtyproduct{25 x 25 x 8}{\milli\metre} LYSO monolith read out by 64
+\qtyproduct{3 x 3}{\milli\metre} Hamamatsu SiPMs. The paper's stated framing is
+that monolithic crystals plus light networks can rival pixellated performance for
+TOF-PET while retaining better spatial and DOI resolution, with on-line
+characterisation solving the scalability and computational-complexity objection
+that had kept monolithics out of clinical scanners.
+
+Two things matter here beyond the numbers. First, the block is the
+\textbf{half-scale progenitor of the WT-PET clinical detector} --- see
+\ref{prog:UTOFPET}; \qtyproduct{25 x 25 x 8}{\milli\metre} doubled in every
+dimension is the \qtyproduct{50 x 50 x 16}{\milli\metre} WT-PET block. Second,
+this is the paper that closes the naive form of ``use a network for position and
+time together,'' and it does so at the \emph{deployment} level, not just the
+algorithm level.
+
+\paragraph{Summary}
+Pisa (Dipartimento di Fisica E.\ Fermi, Università di Pisa; INFN Sezione di
+Pisa). All seven authors --- Carra, Bisogni, Ciarrocchi, Morrocchi, Sportelli,
+Rosso, Belcari --- share those two affiliations; no Ghent affiliation appears on
+this paper despite the consortium relationship (\ref{prog:UTOFPET}).
+
+Method proceeds in two stages: an event timestamping algorithm based on neural
+networks, which is then integrated into a second network performing simultaneous
+position and timestamp estimation. Validated first in simulation, then on
+experimentally acquired data. Both algorithms are implemented in a low-cost FPGA
+suitable for integration into the detector.
+
+\gap{Which simulation framework --- GATE, or in-house? The abstract says only
+``a simulation framework''. Determines whether the sim-to-real story here
+overlaps Decuyper/van der Laan.}
+
+\paragraph{Key Findings}
+\begin{itemize}
+	\item \textbf{Performance:} \mm{0.78} 2D FWHM in the $(x,y)$ plane,
+		\mm{1.2} FWHM in DOI, \ps{156} coincidence time resolution.
+		\textbf{Caveat: the crystal is \mm{8} thick.} These figures do not
+		transfer to the thicknesses relevant to this thesis, and \mm{1.2} DOI
+		FWHM on an \mm{8} block is a large fraction of the available depth.
+	\item \textbf{Readout:} 64 Hamamatsu SiPMs of
+		\qtyproduct{3 x 3}{\milli\metre} --- an 8 x 8 grid,
+		\mm{24} across, under a \mm{25} block.
+	\item \textbf{Real-time on-detector inference at $>10^{6}$ events/s in a
+		low-cost FPGA.} This is the load-bearing claim. The stated motivation is
+		that the best monolithic positioning algorithms could not run in
+		real-time in a detector; the networks are deliberately ``very light'' to
+		fit. \gap{Which FPGA, what resource utilisation, what latency, and what
+		the network actually is --- layer count, width, quantisation. This is
+		the whole contribution and none of it is in the abstract.}
+	\item \textbf{Ordering of the two networks.} Timestamping is solved first,
+		\emph{then} folded into the joint estimator. \gap{Verify the direction
+		of information flow. If the position network consumes the timestamp
+		estimate, the joint model is time-informs-light, not light-informs-time,
+		and the claim in \ref{note:Thull2026} that ``nobody runs it in reverse''
+		needs rewording. This is the single most important thing to check in
+		this paper.}
+\end{itemize}
+
+\paragraph{Methods Worth Noting}
+\begin{itemize}
+	\item \textbf{Engineered features.} Secondary sources (e.g.\ the discussion
+		in later BGO monolithic work) credit this paper, alongside Kuhl et al.\
+		2024, with showing that engineered input features rather than raw
+		channel counts improve positioning accuracy. \gap{Which features.
+		Relevant because it bears directly on what the network is actually
+		given, and therefore on what is and is not foreclosed on the temporal
+		axis.}
+	\item \gap{Training data volume, calibration procedure, and whether
+		labelling was collimator-based. Compare against the several-weeks
+		fan-beam burden in \ref{note:Thull2026}.}
+	\item \gap{Whether per-event uncertainty is produced. Thull's
+		contribution is heteroscedastic $\sigma$; if Carra emits point
+		estimates only, the two are separable on that axis.}
+\end{itemize}
+
+\paragraph{Relevance to This Thesis}
+This is the prior art behind the ``joint NN position + timestamp estimation''
+kill. It is stronger than a typical novelty kill because it is not only
+published but \emph{deployed} --- FPGA, real-time, inside the detector --- and
+patented at the consortium level (\ref{prog:UTOFPET}). Any proposal in this space
+has to clear both the algorithm and the deployment claim.
+
+What it does \emph{not} do, pending PDF verification:
+\begin{itemize}
+	\item \textbf{No bound.} Performance is demonstrated, not characterised. No
+		Fisher information, no CRLB, no statement of what is achievable versus
+		what this network achieved. Same gap as \ref{note:Thull2026}, and it is
+		the gap this thesis is aimed at.
+	\item \textbf{Single-vertex only.} Nothing on cardinality, multi-cluster
+		events, or interaction ordering. The temporal-axis question --- can the
+		joint distribution of per-channel arrival times resolve \emph{how many}
+		interactions occurred and in what order --- is not addressed.
+		\gap{Confirm; the abstract does not exclude it.}
+	\item \textbf{Thin crystal.} \mm{8}. The regime where DOI is hard and
+		multi-vertex events are common is not sampled.
+	\item \textbf{Detector fixed.} Geometry, pitch and thickness are inputs, not
+		variables. No design feedback.
+\end{itemize}
+
+\paragraph{Where It Might Go}
+Introduction, as the counterpoint to \ref{note:Thull2026}: Aachen owns
+light-distribution uncertainty on real hardware, Pisa owns joint position-timing
+inference in deployable form, and neither states a bound. Together they define
+the perimeter this thesis has to get outside of.
+
+\emph{Competitive note:} do not treat Carra and Maebe as independent
+confirmations --- they are one programme (\ref{prog:UTOFPET}) with an IP
+position. Consolidating them changes the prior-art picture from ``several groups
+converging'' to ``one funded consortium with a bounded scope,'' which is the more
+useful reading.
+
+\end{papernote}
+
+\end{programnote}
+
+
+\begin{programnote}{J-PET -- Jagiellonian, Poland}{J-PET}
+
+\end{programnote}
+
+
+\begin{programnote}{AnnPET -- West virginia, USA}{AnnPET}
+
+\end{programnote}
+
+% ===========================================================================
+% 1. XIE 2026 -- top-level papernote. Full density; PDF read.
+% ===========================================================================
+ 
+\begin{papernote}{Xie et al.\ 2026 -- Dual-ended readout PET detector on continuous resistive layer PS-SiPMs}{Xie2026}
+ 
+\paragraph{Capsule}
+Xie, Wang and Du \cite{Xie2026} characterise a dual-ended readout detector built
+from two NDL continuous-resistive-layer position-sensitive SiPMs (CRL PS-SiPMs)
+sandwiching a 10 x 10 array of \qtyproduct{0.44 x 0.44 x 20}{\milli\metre}
+polished LYSO at \mm{0.5} pitch, sweeping bias (\qtyrange{30.0}{33.0}{\volt} in
+\qty{0.5}{\volt} steps) and temperature (3, 14, \qty{24}{\degreeCelsius}). All
+100 crystals resolve; flood quality \textbf{4.32} at the best operating point
+against \textbf{2.82} for the same group's LG-SiPM detector on a nominally
+identical array. Temperature effect is negligible. The cost is timing:
+\ps{1152} CTR, and --- unremarked in the discussion --- a position-dependent
+timing offset spanning roughly \textbf{$\pm$\ps{2000}} across the array,
+\emph{larger than the CTR itself}.
+ 
+For this thesis the paper is not about SiPMs. It is the cleanest published
+instance of \textbf{scalar-objective detector tuning with an admitted,
+uncompensated multi-objective conflict}: bias is optimised for flood histogram
+quality alone, CTR is then \emph{reported} at that operating point, and their own
+Figure 11 shows the CTR optimum lies at a different bias. Cite it as the
+motivating example for co-design, not as a strawman --- it comes from the group
+that defines this benchmark.
+ 
+\paragraph{Summary}
+UC Davis, Department of Biomedical Engineering (Jiahao Xie, Haibo Wang, Junwei
+Du). NIH R01 EB031961. Devices supplied by Prof.\ Dejun Han, Novel Device
+Laboratory (NDL); the CRL PS-SiPM itself is Shao et al.\ 2024/2025.
+ 
+Each CRL PS-SiPM: \qtyproduct{6.24 x 6.24}{\milli\metre} active area,
+\um{20} microcells (97{,}344 of them), epitaxial quenching resistor technology,
+four anodes ($Q_1$--$Q_4$) for position and energy plus one cathode for bias and
+timing. Breakdown \qty{27.0}{\volt} at \qty{25}{\degreeCelsius}. Fill factor
+64\%, gain $\sim$$10^5$.
+\gap{PDE is \qty{47}{\percent} in Table I but ``approximately \qty{40}{\percent}
+at \qty{5}{\volt} overvoltage'' in \S2.1. Also Table II gives the active area as
+\qtyproduct{6.64 x 6.64}{\milli\metre} where everywhere else says 6.24, and
+Figure 2 labels a DT5730D where the text says DT5740D (the text is right for
+32~ch / 62.5~MSPS). Three internal inconsistencies; check the Version of Record
+before quoting any of them.}
+ 
+LYSO from BOYA Advance Materials, all surfaces mechanically polished,
+\um{50} Toray E60 inter-crystal reflectors glued with \um{5} optical glue,
+lateral sides also wrapped. Coupled with BC-630 grease ($n = 1.41$).
+ 
+\paragraph{Key Findings}
+\begin{itemize}
+	\item \textbf{Crystal resolvability is the win.} Flood quality
+		4.23 $\pm$ 0.38 / 4.30 $\pm$ 0.39 / 4.32 $\pm$ 0.37 at 3 / 14 /
+		\qty{24}{\degreeCelsius}, at optimal bias 31.5 / 32.0 /
+		\qty{32.5}{\volt}. PVR 9.7 / 9.1 / 9.1. Against LG-SiPM at
+		\textbf{2.82} on the same crystal geometry (Xie et al.\ 2025a). They
+		argue this implies sub-\mm{0.5} pitch is reachable.
+	\item \textbf{Temperature is near-irrelevant.} Optimal bias tracks
+		breakdown voltage, but peak performance is flat: energy resolution
+		22.2 / 21.9 / 22.7\%, CTR 1101 / 1122 / \ps{1152}, DOI
+		1.75 / 1.77 / \mm{1.78}. Their inference --- CRL noise is not the
+		limiting term --- is sound but weak: nothing here is near a
+		noise-limited regime.
+	\item \textbf{Timing is the price.} \ps{\sim1150} CTR. Attributed to
+		PS-SiPM capacitance, low light collection from fine-pitch crystals, and
+		unoptimised readout electronics. No TOF benefit at small-animal scale;
+		they concede as much and argue TOF matters less in mice.
+	\item \textbf{Position-dependent timing offsets of order
+		$\pm$\ps{2000}} (Figure 13), from the RC constant between fired
+		microcells and the four anodes varying with position. Stated to be
+		\emph{worse} than LG-SiPM --- the intrinsic cost of continuous versus
+		circuit-based encoding. Per-crystal offset calibration is mandatory.
+		\textbf{Under-sold: the spread exceeds the resolution it perturbs.}
+	\item \textbf{Energy and timing maps are spatially anti-correlated.}
+		Edge crystals lose light through the lateral faces, so photopeak and
+		energy resolution degrade; but an edge crystal sits close to one anode,
+		which produces a fast leading edge that dominates the summed timing
+		signal, so CTR \emph{improves}. Two performance maps with opposite
+		spatial structure from one geometry. This is the physically interesting
+		result and the one worth citing.
+	\item \textbf{DOI \mm{\sim1.78}}, slightly better than comparable
+		dual-ended detectors in their Table II. Left-right asymmetry from beam
+		divergence acknowledged but uncorrected.
+\end{itemize}
+ 
+\paragraph{Methods Worth Noting}
+\begin{itemize}
+	\item Anger centroid on the four anodes per face (eqs.\ 1--2), energy as the
+		sum of all eight anodes, DOI from the energy ratio
+		$(E_1 - E_2)/(E_1 + E_2)$ (eq.\ 7), timing from the summed cathodes
+		through an ORTEC 584 CFD into a TAC.
+	\item \textbf{Channel count is 4 + 1 per device}, i.e.\ 10 channels for 100
+		crystals dual-ended. Note this is \emph{not} a channel saving:
+		\qty{0.13}{\per\milli\metre\squared} against
+		\qty{0.11}{\per\milli\metre\squared} for a \mm{3} pixelated array. The
+		advantage is that division is \emph{electrical} rather than optical, so
+		a single fired microcell still yields a continuous position estimate.
+	\item Reference detector for CTR: Broadcom AFBR-S4N44P164M 4 x 4 SiPM array
+		on \qtyproduct{15 x 15 x 5}{\milli\metre} LYSO. For DOI: a
+		\qtyproduct{20 x 50 x 0.5}{\milli\metre} LYSO slab on a 1 x 16
+		MicroFJ-30035, lateral, on a linear stage; 9 depths from
+		\qtyrange{2}{18}{\milli\metre} in \mm{2} steps.
+	\item \qty{100}{\micro\curie} $^{22}$Na, \mm{0.25} active diameter.
+		Energy window \qtyrange{200}{1000}{\kilo\electronvolt} per crystal via
+		LUT from the flood histogram.
+	\item \textbf{All ICS events retained}, justified on sensitivity grounds
+		given \mm{0.44} crystals. No ICS fraction is reported. This contaminates
+		positioning, energy and DOI simultaneously and is not bounded anywhere.
+	\item \textbf{No SiPM saturation correction}, argued away (small microcells,
+		\mm{0.2} protective windows, small crystals) rather than quantified.
+\end{itemize}
+ 
+\paragraph{Arithmetic to Check}
+Equation (6) reads
+$\mathrm{CTR}_{\text{dual}} = 1.414\sqrt{\mathrm{CTR}_{\text{measured}}^2
+- \mathrm{CTR}_{\text{reference}}^2}$
+with $\mathrm{CTR}_{\text{reference}} = \ps{370}$ defined as the CTR of
+\emph{two identical reference detectors} --- then subtracted un-halved. Under the
+conventional derivation (singles variances adding in quadrature, so
+$\sigma^2_{\text{ref,single}} = \ps{370}^2/2$), their measured \ps{\sim895} at
+\qty{24}{\degreeCelsius} gives \ps{\sim1210}, not \ps{1152}. About 5\%
+optimistic. Changes no conclusion, but check the convention before quoting.
+ 
+\paragraph{Relevance to This Thesis}
+\begin{itemize}
+	\item \textbf{The co-design motivating example.} Two knobs, one scalar
+		objective, a conflict visible in their own figures and resolved by
+		fiat. Crystal pitch, reflector thickness, anode geometry and overvoltage
+		all push flood quality, DOI and CTR in different directions, and nobody
+		here can compute the trade-off surface. Quote the bias-selection
+		procedure and Figure 11 together.
+	\item \textbf{The rank-deficiency argument, concretely.} One vertex needs
+		$(x, y, z, E, t)$; two need ten parameters. A CRL PS-SiPM emits five
+		numbers. Multi-vertex separability is a property of \emph{readout rank},
+		bounded above by channel count before any CRLB argument begins. Useful
+		framing for paper two, and this paper is the clean illustration.
+	\item \textbf{Pixelated and monolithic optimise over different observable
+		spaces.} Charge division computes the Anger centroid in silicon ---
+		exactly the statistic monolithic NN localisation exists to improve on.
+		The photodetector choice fixes the observable space before any
+		reconstruction question arises. That is a co-design boundary, not a
+		component-selection question.
+\end{itemize}
+ 
+\paragraph{Claims That Do Not Survive Their Own Table}
+\begin{itemize}
+	\item ``Energy resolution is dominated by the LYSO array rather than the
+		SiPM'' --- but Table II gives LG-SiPM at 17.5\% on a nominally identical
+		\qtyproduct{0.44 x 0.44 x 20}{\milli\metre} array against 22.7\% here.
+		Reflector treatment differs between the two studies, but as stated the
+		claim contradicts their own comparison.
+	\item Timing is extracted from the \textbf{cathodes}, yet the
+		crystal-dependent CTR is explained entirely via \textbf{anode} rise
+		times and light sharing among anodes. Either loose shorthand for the
+		whole RC network, or the explanation does not match the measurement.
+		\gap{Resolve; it matters for whether the timing-offset structure is
+		predictable from geometry.}
+	\item Flood quality (F.Q.) is a metric defined by this group and compared
+		across labs, temperatures and reference detectors in Table II.
+		Cross-study comparison on it is soft.
+\end{itemize}
+ 
+\end{papernote}
+ 
+ 
+% ===========================================================================
+% 2. AnnPET -- body for the existing empty programnote.
+%    Full density; verified.
+% ===========================================================================
+ 
+\paragraph{What it is}
+West Virginia University, Center for Advanced Imaging, Department of Radiology,
+School of Medicine, Morgantown WV. PI Raymond R.\ Raylman; group is Raylman,
+Alexander V.\ Stolin, Gangadhar Jaliparthi, Peter F.\ Martone.
+ 
+A preclinical PET scanner built from a \emph{single continuous faceted annulus}
+of scintillator rather than rings of discrete detectors. Concept introduced by
+Stolin et al.\ in 2016.
+ 
+\paragraph{Why it matters here}
+This is the primary prior-art contrast for the capstone geometry, and the only
+other group building annular monolithic PET. Note the connection to Valencia
+(\ref{prog:i3M}): A.\ J.\ González states strong collaboration with Stan
+Majewski at WVU, and i3M is separately building a single-toroid PET. AnnPET and
+i3M are not fully independent actors.
+ 
+\paragraph{Detector}
+Tetradecagonal (14-faceted) LYSO annulus, \qty{6}{\centi\metre} inner diameter,
+\qty{7.2}{\centi\metre} axial length. Each facet carries four
+\qtyproduct{4 x 4}{} arrays of \qtyproduct{4 x 4}{\milli\metre} MPPCs. The whole
+gantry is immersed in a tank of dielectric fluid for cooling and temperature
+stabilisation.
+ 
+Positioning: the 12 x 16 photon distributions are processed by a ten-layer
+deep-residual CNN (DR-CNN), PyTorch 1.4 / CUDA 10.1 on an RTX 2080Ti, trained on
+$\sim$16 million events from a GEANT4 simulation of the scanner.
+ 
+\paragraph{The number to take}
+Two papers, one scanner, and a factor of two that nobody names as a loss:
+\begin{itemize}
+	\item \textbf{Detector level} (Jaliparthi et al.\ 2021): single-dimension
+		MAE \qtyrange{0.42}{0.54}{\milli\metre}; reconstruction FWHM
+		\qtyrange{0.71}{0.80}{\milli\metre}, about \mm{0.4} better than
+		centre-of-mass.
+	\item \textbf{Image level} (Raylman et al.\ 2025, Phys Med Biol 70(8)
+		085001, NU4-2008): point-source FWHM at \mm{5} off-centre of
+		\mm{1.40} radial, \mm{1.38} tangential, \mm{1.40} axial ---
+		reconstructed with \textbf{single-slice-rebinned filtered
+		backprojection}.
+\end{itemize}
+ 
+SSRB-FBP is more aggressive than sinogram-domain OSEM: obliques are rebinned
+into direct planes \emph{and} discretised. So the field's leading monolithic
+annular scanner leaves roughly a factor of two between estimator and image, in
+its own published numbers, never framed as a discretisation loss.
+ 
+\textbf{This reframes the capstone result.} Not ``my pipeline degrades'' but
+``the discretisation step costs a factor of two even in the best case, and more
+in annular geometry where parallax and DOI collapse compound it.'' Same finding,
+different sentence, and now with an external corroborating pair of numbers.
+ 
+\paragraph{Reading order}
+Stolin 2016 (concept) $\rightarrow$ Stolin 2017 $\rightarrow$ Jaliparthi 2021
+(DR-CNN positioning) $\rightarrow$ Raylman 2025 (construction + NU4-2008).
+\gap{Read Jaliparthi 2021 and Raylman 2025 properly and give each a nested
+papernote. Jaliparthi first --- it is the direct methodological contrast.}
+ 
+ 
+% ===========================================================================
+% 3. J-PET -- body for the existing empty programnote.
+%    Full density; verified. Note the recategorisation.
+% ===========================================================================
+ 
+\paragraph{What it is --- and what it is not}
+Jagiellonian University, Kraków. PI Paweł Moskal. \textbf{Not a monolithic
+crystal programme.} J-PET is 192 strips of EJ-230 \emph{plastic} scintillator,
+each \qty{50}{\centi\metre} long with a \qtyproduct{7 x 19}{\milli\metre}
+rectangular cross-section, arranged axially in three concentric layers at radii
+\qtyrange{42.5}{57.5}{\centi\metre}, with a photomultiplier at each end of every
+strip.
+ 
+Different material class, different geometry, different positioning physics. It
+does not belong in a monolithic-crystal survey on its own terms.
+ 
+\paragraph{Why it stays in the file anyway}
+\textbf{J-PET derives position from timing.} Position along the strip is computed
+from the timestamps at the left and right ends, $t_L$ and $t_R$. That is
+time-informing-position, running in production since the 2009 patent.
+ 
+This is the counterexample to the claim in \ref{note:Thull2026} that ``nobody
+appears to run it in reverse''. \textbf{That sentence as written is false and
+must be narrowed.} The defensible version:
+ 
+\begin{quote}
+	Position-from-timing is established in 1D along a strip with two-ended
+	readout (J-PET). What is unaddressed is inference of interaction
+	\emph{cardinality and ordering} from the joint distribution of per-channel
+	arrival times in a 3D monolith with many readout channels.
+\end{quote}
+ 
+That distinction is real --- Moskal does two-timestamp triangulation on a
+one-dimensional light path; the proposed direction is a multi-channel
+identifiability question --- but it has to be stated, not assumed. Anyone in a
+confirmation seminar who knows J-PET will raise it.
+ 
+\paragraph{Timeline and scale}
+Patent 2009. First prototype 2014 (``small barrel'', 24 strips). Full three-layer
+prototype 2016. Modular portable scanner 2021, in hospital use. Total-body J-PET
+under construction on the modular concept. Construction rests on 17
+patent-protected solutions.
+ 
+Readout: Hamamatsu R9800 PMTs, signals sampled in the voltage domain at four
+thresholds with \ps{30} timing accuracy, triggerless DAQ. A fourth layer uses
+SiPMs.
+ 
+\paragraph{Scope}
+Cost-driven total-body PET from plastic; also multi-photon PET enabling
+positronium imaging, quantum entanglement imaging and discrete-symmetry studies.
+Positronium lifetime as a biomarker (Moskal \& Stępień). Nothing on monolithic
+crystal light-distribution positioning, and nothing on NN localisation ---
+the physics does not call for it.
+ 
+\gap{Check whether any J-PET work does multi-interaction disentangling within a
+strip. If it does, the narrowed claim above needs narrowing again.}
+ 
+ 
+% ===========================================================================
+% 4. NEW -- Valencia i3M. Verified this session.
+% ===========================================================================
+ 
+\begin{programnote}{i3M Valencia -- Detectors for Molecular Imaging Lab}{i3M}
+ 
+\paragraph{What it is}
+Instituto de Instrumentación para Imagen Molecular (I3M), Centro Mixto
+CSIC--Universitat Politècnica de València, Camino de Vera s/n, 46022 Valencia.
+Antonio J.\ González (CSIC research staff, Ramón y Cajal 2015, permanent 2017)
+leads the Detectors for Molecular Imaging Lab (DMIL); José M.\ Benlloch is
+institute director and a CSIC full professor.
+ 
+\textbf{Probably the largest continuous monolithic-PET effort anywhere.}
+González states the lab has worked with monolithic scintillation crystals for
+more than a decade. Signature technique: black-painting the entrance and lateral
+faces to preserve the light distribution rather than reflect it.
+ 
+\paragraph{Why it matters here}
+Two reasons, and the second is the urgent one.
+ 
+First, they own the largest share of the monolithic positioning literature ---
+González-Montoro, Freire, Barrio, Cucarella, Valladares, Sánchez --- including
+semi-monolithic NN positioning (Freire et al.\ 2022 PMB) and monolithic BGO.
+ 
+Second: \textbf{i3M is building a PET system based on a single toroidal
+crystal}, five-year US-funded project led by González, announced 2020. González
+is quoted saying the design will reach the physical limits of annihilation
+localisation. That is the annular monolithic concept, funded and building, by a
+group with a decade of monolithic experience and a commercial pipeline.
+ 
+\gap{Find the funded output. Is there a published toroid detector or scanner
+paper yet? This determines whether the annular monolithic geometry is open
+space or occupied. It is the single highest-value unknown in this file.}
+ 
+\paragraph{Commercial and funding}
+Spin-off Oncovision (Benlloch); preclinical line acquired by Bruker.
+Benlloch holds an ERC Advanced Grant (4D-PET) with an OPEN-IMAGING proof of
+concept for in-beam flat-panel PET in protontherapy. González is co-PI on an NIH
+R01. He also coordinated the EU projects MAMMI (FP6) and MINDView (FP7).
+ 
+Note this is a group with an ERC AdG, an NIH R01, a spin-off, and a decade of
+priority. Treat its stated scope as authoritative.
+ 
+\paragraph{External links}
+González reports strong collaboration with Stan Majewski at West Virginia
+University --- so i3M and AnnPET (\ref{prog:AnnPET}) share a collaborator.
+González-Montoro co-authored the ``Advances in Detector Instrumentation for PET''
+review in \emph{J Nucl Med} 2022 cited by \ref{note:Xie2026}.
+ 
+\paragraph{People}
+Antonio J.\ González (lead, DMIL), José M.\ Benlloch (director), Andrea
+González-Montoro, Marta Freire, Filomeno Sánchez, J.\ Barrio, N.\ Cucarella,
+C.\ Valladares, Pablo Conde.
+ 
+\gap{Scope boundary --- what have they NOT claimed? Cannot be filled without
+reading the recent output. Until then this node is a warning, not a map.}
+ 
+\end{programnote}
+ 
+ 
+% ===========================================================================
+% 5. NEW -- Aachen. Verified this session. MOVE Thull2026 INSIDE THIS.
+% ===========================================================================
+ 
+\begin{programnote}{RWTH Aachen -- Schulz group / Hyperion}{Aachen}
+ 
+\paragraph{What it is}
+Two RWTH units, which matters for reading the author lists: the Department of
+Physics of Molecular Imaging Systems (PMI, within Experimental Molecular
+Imaging) and the Chair of Imaging and Computer Vision (LfB). Volkmar Schulz
+holds posts in both, plus Hyperion Hybrid Imaging Systems GmbH and the
+Fraunhofer Institute for Digital Medicine MEVIS, Bremen.
+ 
+Thull's own address is LfB --- he came into PET from hematopoietic cell
+classification, which is visible in the paper's shape: a computer-vision
+treatment of a detector-physics problem.
+ 
+\paragraph{Platform}
+Hyperion III preclinical PET/MRI; also the Hypmed scanner. Semi-monolithic LYSO
+blocks with Philips DPC digital SiPMs. \textbf{Commercial arm} --- Hyperion is a
+spin-off, not a paper affiliation of convenience.
+ 
+\paragraph{Why it matters here}
+They own light-distribution localisation uncertainty on real hardware, and they
+have announced the follow-ups: multi-cluster event analysis, relating
+light-spread structure to predicted uncertainty, and characterising inter-crystal
+Compton scatter impact on positioning uncertainty. With a built scanner, a
+fan-beam rig, four RTX 6000 Ada GPUs and a commercial arm, the
+light-distribution version of ICS characterisation should be treated as theirs.
+ 
+\paragraph{People}
+Volkmar Schulz (chair), Julian Thull, Jan Remennik, David Schug, Björn Weissler,
+Yannick Kuhl. Also Stefan Gundacker, Vanessa Nadig (TOF/DOI detector units,
+TRPMS 2024) --- relevant separately for the BGO and Cherenkov work.
+ 
+\paragraph{Adjacent outputs}
+\begin{itemize}
+	\item Kuhl, Mueller, Thull, Naunheim, Schug, Schulz --- 3D in-system
+		calibration method for PET detectors, \emph{Medical Physics}.
+		\gap{Year and volume. This is the ``calibration in hours not weeks''
+		claim that closes ``calibrate faster'' as a contribution.}
+	\item Kuhl, Thull, Gegenmantel, Weissler, Schug, Schulz --- In-system
+		calibration demonstrated on Hypmed, 2025 IEEE NSS/MIC/RTSD, Yokohama.
+	\item Thull, Remennik, Kuhl, Schulz --- ML-based uncertainty estimation for
+		PET gamma interaction localisation, 2025 NSS/MIC. The conference
+		precursor to \ref{note:Thull2026}.
+	\item Thull, Mueller, Schulz --- Sinogram-based alignment estimation of PET
+		detector blocks, 2024 NSS/MIC.
+\end{itemize}
+ 
+\gap{paste the existing Thull2026 papernote here, unchanged, so it nests as a
+subsection under this programme.}
+ 
+\end{programnote}
+ 
+ 
+% ===========================================================================
+% 6. NEW -- Ghent, disentangled from UTOFPET. Partially verified.
+% ===========================================================================
+ 
+\begin{programnote}{Ghent MEDISIP -- monolithic lineage and WT-PET}{Ghent}
+ 
+\paragraph{Why separate from UTOFPET}
+Ghent has a monolithic lineage that predates and runs parallel to the
+consortium. Nesting Stockhoff 2021 and Decuyper 2021 under \ref{prog:UTOFPET}
+implies more coordination than the evidence supports. Keep the nodes distinct
+and cross-reference; UTOFPET is the joint detector project, not the whole of
+either group.
+ 
+\paragraph{What it is}
+Medical Image and Signal Processing (MEDISIP), Department of Electronics and
+Information Systems, Ghent University. PI Stefaan Vandenberghe.
+ 
+\paragraph{People}
+Vandenberghe (PI), Roel Van Holen, Mariele Stockhoff, Milan Decuyper, Jens
+Maebe, Florence Muller, Meysam Dadgar, Maya Abi Akl, Boris Vervenne, Christian
+Vanhove.
+ 
+\paragraph{Key outputs}
+\begin{itemize}
+	\item Stockhoff, Decuyper, Van Holen, Vandenberghe 2021 PMB ---
+		high-resolution monolithic LYSO with 6-layer DOI for clinical PET.
+		\gap{Block dimensions. Determines whether this or the Pisa block is the
+		``existing preclinical monolithic detector'' scaled 2x in WT-PET.}
+	\item Decuyper 2021 --- sim-to-real transfer for NN localisation.
+		\gap{Full citation. This is kill (g) and needs its own papernote.}
+	\item Maebe \& Vandenberghe 2022 PMB --- joint position/timestamp.
+		\gap{Full citation; distinguish carefully from \ref{note:Carra2022}.}
+	\item Maebe PhD thesis, Ghent 2024 --- ``Timing capabilities and image
+		reconstruction for the walk-through PET''.
+	\item Vandenberghe et al.\ 2023 EJNMMI 50(12):3558--3571 --- WT-PET system
+		design. Detail held in \ref{prog:UTOFPET}.
+\end{itemize}
+ 
+\end{programnote}
+ 
+ 
+% ===========================================================================
+% 7. STUB -- Delft. Names and years from memory; verify everything.
+% ===========================================================================
+ 
+\begin{programnote}{TU Delft -- Schaart group}{Delft}
+ 
+\gap{Entire node unverified. Everything below is memory-level.}
+ 
+\paragraph{Why it matters}
+The canonical baselines. k-nearest-neighbour and categorical average pattern
+positioning (van Dam et al.\ 2011) are what every monolithic positioning paper
+benchmarks against, and van der Laan's GATE optical-transport validation is
+already load-bearing in kill (g) --- it is also cited by \ref{prog:AnnPET} as
+the basis for trusting GEANT4 optical output in monolithic LYSO.
+ 
+\paragraph{People}
+Dennis Schaart (PI). \gap{van Dam, Seifert, van der Laan, Borghi --- confirm
+initials, years, and who is still active.}
+ 
+\paragraph{To read}
+\gap{van Dam 2011 (kNN/CAP); van der Laan 2010 (GATE optical validation);
+Schaart 2021 PMB 66 09TR01 (TOF review --- cited by \ref{note:Xie2026}, so the
+citation at least is confirmed).}
+ 
+\end{programnote}
+ 
+ 
+% ===========================================================================
+% 8. STUB -- MODE. The pivot rests on this and it is entirely unverified.
+% ===========================================================================
+ 
+\begin{programnote}{MODE Collaboration -- differentiable detector design}{MODE}
+ 
+\gap{\textbf{Entire node unverified.} This is the load-bearing claim of the
+thesis pivot and currently has no grounding in this file at all. Fill before
+writing any proposal text.}
+ 
+\paragraph{The claim to be substantiated}
+Three propositions, each of which needs a citation:
+\begin{enumerate}
+	\item HEP built end-to-end differentiable / surrogate-based detector design
+		machinery between roughly 2022 and 2026. \gap{Which papers, which
+		toolchains, which experiments.}
+	\item GATE 10 (2025) made the equivalent feasible in medical imaging.
+		\gap{See \ref{prog:OpenGATE}.}
+	\item The 5th MODE workshop contained zero PET, SPECT or Compton camera
+		work. \gap{Verify against the actual programme. A time-bounded absence
+		claim is checkable and will be checked --- get the workshop date,
+		location, and the full session list, and record where you looked.}
+\end{enumerate}
+ 
+\paragraph{Why the third point is the fragile one}
+An absence claim is only as good as its search. If a reviewer finds one
+PET-adjacent contribution, the framing collapses. Either verify exhaustively and
+cite the programme, or reframe as ``substantially absent'' with the evidence
+shown.
+ 
+\end{programnote}
+ 
+ 
+% ===========================================================================
+% 9. STUB -- OpenGATE.
+% ===========================================================================
+ 
+\begin{programnote}{OpenGATE -- GATE 10}{OpenGATE}
+ 
+\gap{Entire node unverified.}
+ 
+\paragraph{Why it matters}
+The stated enabling condition for doing differentiable co-design in medical
+imaging rather than HEP. If the argument is ``this became possible in 2025'',
+the release, its capabilities, and specifically what it exposes that GATE 9 did
+not, all need to be on the record.
+ 
+\gap{Sarrut et al.\ GATE 10 release paper --- full citation, release date, and
+the specific feature that enables gradient flow or surrogate training. Also:
+does it actually support what the pivot needs, or does it need extending? That
+question is the difference between a feasible thesis and an infeasible one.}
+ 
+\end{programnote}
+ 
+ 
+% ===========================================================================
+% 10. STUB -- own group. Uncomfortable but necessary.
+% ===========================================================================
+ 
+\begin{programnote}{UTS -- Franklin group}{UTS}
+ 
+\gap{Entire node to be filled. This is the actor whose scope boundary matters
+most and the one least likely to get written down.}
+ 
+\paragraph{Why it needs to exist}
+Two of the seven kills are internal. Writing the external landscape carefully
+while leaving the internal one implicit is the failure mode this file exists to
+prevent.
+
+\paragraph{To record}
+\begin{itemize}
+	\item \gap{Franklin, Sci Rep 2020 --- the paper that set up the monolithic
+		+ NN line.}
+	\item \gap{Abraham et al., Sci Rep 2025 --- deep learning localisation
+		\emph{and classification} of gamma interactions in thick nanocomposite
+		and ceramic monolithic scintillators. Note ``classification'' in the
+		title: this bears directly on whether the multiplicity classifier is
+		already designated as a follow-up project. \textbf{Ask Franklin
+		directly.} The answer determines whether paper two is a proposal or an
+		inheritance.}
+	\item \gap{Alabd et al., EMBC 2019 --- cylindrical shell PET localisation.
+		Co-supervisor's own prior art on the capstone geometry.}
+	\item \gap{Scope boundary: what is Abraham's lane, explicitly, and where
+		does it end?}
+\end{itemize}
+ 
+\end{programnote}
+ 
+ 
+% ===========================================================================
+% 11. STUBS -- machinery. Top-level papernotes, not programme-affiliated.
+%     These are what turn "nobody states a bound" into a contribution.
+% ===========================================================================
+ 
+\begin{papernote}{Ram, Ward \& Ober 2006 -- Fisher information limits on resolving two point sources}{RamWardOber2006}
+\gap{PNAS. Unread. The closest existing analogue to the two-vertex separation
+limit: an information-theoretic treatment of when two point sources become
+unresolvable, from single-molecule localisation microscopy. Read for the
+structure of the argument, not the optics --- the transfer is
+photons-on-a-detector to photons-on-a-detector.}
+\end{papernote}
+ 
+\begin{papernote}{Barankin and Ziv-Zakai bounds -- threshold-region estimation}{ThresholdBounds}
+\gap{Unread; no single canonical citation chosen yet. The point: CRLB is
+uninformative in the threshold region, which is precisely the regime where two
+vertices become marginally separable. If the thesis claims a bound where CRLB
+fails, this is the machinery. Find a treatment aimed at estimation practice
+rather than pure statistics.}
+\end{papernote}
+ 
+\begin{papernote}{Barrett \& Myers -- Foundations of Image Science / ideal observer}{BarrettMyers}
+\gap{Reference work, not a paper. Also track down the 2012 application of
+Cramér-Rao bounds to monolithic PET that killed the four-interface taxonomy ---
+full citation needed, and it should be read properly rather than remembered as
+a kill.}
+\end{papernote}
+ 
+\begin{papernote}{Array processing -- source resolution limits in DOA estimation}{DOAResolution}
+\gap{Unread; citation not chosen. The rank-deficiency argument in
+\ref{note:Xie2026} --- $N$ observables cannot resolve $M$ sources beyond a
+certain point --- is standard here and is imported wholesale. Stoica \& Nehorai
+or an equivalent treatment of resolution thresholds. This is the machinery that
+makes the readout-rank claim rigorous rather than intuitive.}
+\end{papernote}
+
+
+
+
+\printbibliography
+
+\end{document}

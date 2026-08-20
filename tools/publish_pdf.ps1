@@ -23,8 +23,8 @@ $pdfBranch = 'pdf'
 
 # files to publish: <path in build/> -> <path on the pdf branch>
 $files = [ordered]@{
-	'thesis.pdf'   = 'thesis.pdf'
-	'meetings.pdf' = 'meetings.pdf'
+	'thesis\main.pdf'   = 'thesis.pdf'
+	'meetings\main.pdf' = 'meetings.pdf'
 }
 
 function Invoke-Git {

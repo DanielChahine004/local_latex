@@ -9,11 +9,17 @@ version = "0.1.0"
 # biber (not on conda-forge for Windows) lives in tools/biber; tectonic
 # invokes it automatically for biblatex documents if it's on PATH
 [tasks.build]
-cmd = "python tools/count_sentences.py && tectonic --synctex --outdir build src/thesis.tex"
+cmd = "python tools/count_sentences.py && mkdir -p build/thesis && tectonic --synctex --outdir build/thesis src/thesis/main.tex"
 env = { PATH = "$PIXI_PROJECT_ROOT/tools/biber;$PATH" }
 
 [tasks.build-meetings]
-cmd = "tectonic --synctex --outdir build meetings.tex"
+cmd = "mkdir -p build/meetings && tectonic --synctex --outdir build/meetings src/meetings/main.tex"
+env = { PATH = "$PIXI_PROJECT_ROOT/tools/biber;$PATH" }
+
+# units/theme/references are canonical in src/thesis; copied here so the
+# paper-notes folder stays self-contained for its own Overleaf project
+[tasks.build-notes]
+cmd = "cp src/thesis/units.tex src/thesis/theme.tex src/thesis/references.bib src/paper-notes/ && mkdir -p build/paper-notes && tectonic --synctex --outdir build/paper-notes src/paper-notes/main.tex"
 env = { PATH = "$PIXI_PROJECT_ROOT/tools/biber;$PATH" }
 
 # commit local work, pull --rebase the other machine's commits, push

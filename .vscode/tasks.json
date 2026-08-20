@@ -8,8 +8,8 @@
             "label": "Build thesis (tectonic)",
             "type": "process",
             "command": "${workspaceFolder}/tools/tectonic-biber.bat",
-            "args": ["--synctex", "--outdir=../build", "thesis.tex"],
-            "options": { "cwd": "${workspaceFolder}/src" },
+            "args": ["--synctex", "--outdir=../../build/thesis", "main.tex"],
+            "options": { "cwd": "${workspaceFolder}/src/thesis" },
             "group": { "kind": "build", "isDefault": true },
             "problemMatcher": []
         }

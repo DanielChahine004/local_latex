@@ -1,9 +1,49 @@
 % List of Acronyms -- maintained BY HAND, sorted AUTOMATICALLY. In the body just
 % type the acronym as plain text (PET, CT, ...); nothing expands or links. To add
-% one, drop an \acr line anywhere below -- order does not matter, datatool sorts.
-\DTLnewdb{acronyms}
-\newcommand{\acr}[2]{\DTLnewrow{acronyms}%
-	\DTLnewdbentry{acronyms}{abbr}{#1}\DTLnewdbentry{acronyms}{full}{#2}}
+% one, drop an \acr line anywhere below -- order does not matter, the list is
+% sorted case-insensitively when printed (expl3, no packages -- datatool was cut
+% because its load-and-sort cost helped push Overleaf past its compile timeout).
+% Expandable engine string compare: \pdfstrcmp on pdfTeX (Overleaf),
+% \strcmp on XeTeX (tectonic).
+\ifdefined\pdfstrcmp\let\acrstrcmp\pdfstrcmp\else\let\acrstrcmp\strcmp\fi
+\ExplSyntaxOn
+\seq_new:N \g__acr_seq
+\bool_new:N \g__acr_first_bool
+% Case fold for the sort key; renamed across expl3 releases, so take
+% whichever this kernel has (fall back to raw compare on neither).
+\cs_if_exist:NTF \str_casefold:n
+	{ \cs_new_eq:NN \__acr_fold:n \str_casefold:n }
+	{
+	\cs_if_exist:NTF \str_foldcase:n
+		{ \cs_new_eq:NN \__acr_fold:n \str_foldcase:n }
+		{ \cs_new_eq:NN \__acr_fold:n \tl_to_str:n }
+	}
+\cs_new_protected:Npn \acr #1#2
+	{ \seq_gput_right:Nn \g__acr_seq { {#1} {#2} } }
+\cs_new_protected:Npn \__acr_row:nn #1#2
+	{ \textbf{#1} & #2 }
+\cs_new_protected:Npn \printacronyms
+	{
+	\seq_sort:Nn \g__acr_seq
+		{
+		\int_compare:nNnTF
+			{ \acrstrcmp
+				{ \exp_args:Ne \__acr_fold:n { \use_i:nn ##1 } }
+				{ \exp_args:Ne \__acr_fold:n { \use_i:nn ##2 } } }
+			> { 0 }
+			{ \sort_return_swapped: }
+			{ \sort_return_same: }
+		}
+	\bool_gset_true:N \g__acr_first_bool
+	\seq_map_inline:Nn \g__acr_seq
+		{
+		\bool_if:NTF \g__acr_first_bool
+			{ \bool_gset_false:N \g__acr_first_bool }
+			{ \\ }
+		\__acr_row:nn ##1
+		}
+	}
+\ExplSyntaxOff
 
 \acr{PET}{\textbf{positron emission tomography}---a functional imaging modality}
 \acr{CT}{\textbf{computed tomography}---an anatomical imaging modality}
@@ -56,8 +96,6 @@
 \acr{SPECT}{\textbf{single-photon emission computed tomography}---the single-photon counterpart to PET, in which tomographic reconstruction was first demonstrated}
 \acr{PSMA}{\textbf{prostate-specific membrane antigen}---the target of a widely used class of radioligands}
 
-\dtlsort{abbr}{acronyms}{\dtlicompare}
-
 \chapter*{List of Acronyms}
 \addcontentsline{toc}{chapter}{List of Acronyms}
 % xltabular = longtable (breaks across pages) + tabularx's X column (wraps the
@@ -73,6 +111,5 @@
 \endhead
 \bottomrule
 \endlastfoot
-\DTLforeach*{acronyms}{\abbr=abbr,\full=full}{%
-	\DTLiffirstrow{}{\\}\textbf{\abbr} & \full}\\
+\printacronyms\\
 \end{xltabular}

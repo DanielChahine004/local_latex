@@ -4,10 +4,18 @@ LaTeX project built with [Tectonic](https://tectonic-typesetting.github.io/) via
 
 ## Layout
 
-- `src/thesis.tex` — thesis master document; inputs one `.tex` per chapter
-- `src/chapters/` — one `.tex` per chapter
-- `src/figures/<NN-name>/` — figures, one subfolder per chapter
-- `src/references.bib` — bibliography (biblatex + biber)
+Three standalone documents, one folder each. Every folder is self-contained so
+its *contents* can be uploaded as an Overleaf project, and every root is named
+`main.tex` so Overleaf auto-detects it.
+
+- `src/thesis/` — the thesis: `main.tex`, `chapters/` (one `.tex` per chapter),
+  `figures/<NN-name>/` (one subfolder per chapter), `references.bib`
+  (biblatex + biber), `acronyms.tex`, and the shared `units.tex` / `theme.tex`
+- `src/paper-notes/` — standalone paper-notes document (`pixi run build-notes`).
+  Its `units.tex`, `theme.tex` and `references.bib` are **copies made by the
+  build task** — edit the canonical ones in `src/thesis/`
+- `src/meetings/` — standalone supervisor-meeting log (`pixi run build-meetings`),
+  fully self-contained
 - `build/` — compiled output, not committed
 - `tools/` — standalone `biber.exe` 2.17 (matches biblatex 3.17 in Tectonic's bundle; not available via conda-forge on Windows) and a wrapper batch file used by the VS Code build
 
@@ -30,11 +38,13 @@ workspace.
 ## Build
 
 ```
-pixi run build      # thesis -> build/thesis.pdf
+pixi run build            # thesis      -> build/thesis/main.pdf
+pixi run build-notes      # paper notes -> build/paper-notes/main.pdf
+pixi run build-meetings   # meeting log -> build/meetings/main.pdf
 ```
 
 In VS Code, Ctrl+Alt+B (LaTeX Workshop) builds the document the open file belongs to
-(chapter files declare `% !TeX root = ../../thesis.tex`).
+(chapter files declare `% !TeX root = ../main.tex`).
 
 ## Publish
 
@@ -45,7 +55,7 @@ pixi run publish                    # message defaults to "wip: <today's date>"
 pixi run publish "drafted 3.2"      # or give your own commit message
 ```
 
-It builds `thesis.pdf` and `meetings.pdf`, commits every source change (`git add
+It builds `main.pdf` (published as `thesis.pdf`) and `meetings.pdf`, commits every source change (`git add
 -A`) and pushes the current branch, then force-pushes the two PDFs to the `pdf`
 branch. If either document fails to compile, nothing is committed or pushed.
 

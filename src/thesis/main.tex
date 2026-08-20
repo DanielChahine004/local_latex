@@ -12,12 +12,13 @@
 \usepackage{tikz}
 \usetikzlibrary{calc} % \path let ...: chain-style.tex's \chainfit page-fit guard
 \usepackage[hidelinks]{hyperref}
+\usepackage{bookmark} % writes PDF outlines directly: saves a whole rerun pass
 \usepackage{xurl} % let long DOIs/URLs in the bibliography break instead of overrunning the margin
 
 % Acronyms are a hand-maintained list (src/acronyms.tex, printed in the front
-% matter). Type acronyms as plain text in the body -- no markup. datatool sorts
-% the list alphabetically; booktabs formats it.
-\usepackage{booktabs, tabularx, datatool}
+% matter). Type acronyms as plain text in the body -- no markup. acronyms.tex
+% sorts the list alphabetically with expl3; booktabs formats it.
+\usepackage{booktabs, tabularx}
 \usepackage{xltabular} % longtable + X column, for the acronym list once it ran past one page
 
 % Drafting scaffold: topics each section should at least touch on.

@@ -1,4 +1,4 @@
-% Unit shorthands, \input by thesis.tex and paper-notes.tex. Requires siunitx.
+% Unit shorthands, \input by main.tex and paper-notes.tex. Requires siunitx.
 % tools/check_units.py reads its macro table from this file.
 
 % Shared by the shorthands below: a hyphenated argument is a range
@@ -29,3 +29,5 @@
 \NewDocumentCommand\degs{m}{\unitvalue{#1}{\degree}}  % not \deg -- that is the LaTeX math operator
 \NewDocumentCommand\um{m}{\unitvalue{#1}{\micro\metre}}
 \NewDocumentCommand\MBq{m}{\unitvalue{#1}{\mega\becquerel}}
+
+\DeclareSIUnit\curie{Ci} % non-SI, so siunitx does not predefine it

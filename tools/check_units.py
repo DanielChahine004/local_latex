@@ -1,6 +1,6 @@
 """Warn about units typed by hand where a shorthand macro exists.
 
-The macro table is read from thesis.tex's \\NewDocumentCommand...\\unitvalue
+The macro table is read from units.tex's \\NewDocumentCommand...\\unitvalue
 lines, so a macro added there is picked up with no edit here. Flags
 "511 keV" (also ~, no-space and range forms) and long-form \\qty with a
 known unit; prints file:line and writes src/unit-warnings.tex for the
@@ -20,7 +20,7 @@ from count_sentences import (
 )
 
 ROOT = Path(__file__).resolve().parent.parent
-SRC = ROOT / "src"
+SRC = ROOT / "src" / "thesis"
 
 MACRO_RE = re.compile(
     r"\\NewDocumentCommand\\(\w+)\{m\}\{\\unitvalue\{#1\}\{([^}]*)\}\}"
@@ -70,10 +70,14 @@ def scan(text, units, expansions):
 
 
 def main():
-    thesis = (SRC / "thesis.tex").read_text(encoding="utf-8")
-    table = macro_table(thesis)
+    # macros live in units.tex; the main.tex fallback predates the split
+    preamble = ""
+    for name in ("units.tex", "main.tex"):
+        if (SRC / name).exists():
+            preamble += (SRC / name).read_text(encoding="utf-8")
+    table = macro_table(preamble)
     if not table:
-        print("check_units: no unit macros found in thesis.tex, nothing to check")
+        print("check_units: no unit macros found in units.tex, nothing to check")
         return
 
     units = unit_patterns(table)

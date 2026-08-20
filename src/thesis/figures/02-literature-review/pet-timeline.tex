@@ -96,7 +96,7 @@
 \foreach \yr/\row/\lx/\lbltxt in \tlabove {
 	\pgfmathsetmacro{\ly}{0.55 + 1.50*(\row-1)}
 	\node[lbl, anchor=south, name=n\yr] at (\lx,\ly) {\textbf{\yr}\\\lbltxt};
-}
+};
 \foreach \yr/\row/\lx/\col/\lbltxt in \tlbelow {
 	\pgfmathsetmacro{\ly}{0.55 + 1.50*(\row-1)}
 	\node[lbl, anchor=north, name=n\yr] at (\lx,-\ly) {\textbf{\yr}\\\lbltxt};

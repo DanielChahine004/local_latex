@@ -1,0 +1,189 @@
+% !TeX root = ../../main.tex
+% The three stages of scintillation in an activated inorganic crystal.
+% \input by chapters/02-literature-review.tex.
+%
+% The two bands and the dividers at x = 5.2 and 10.4 are the frame; everything
+% else hangs off a node inside one stage, so an edit moves a group rather than
+% orphaning a label from what it describes.
+%
+% THREE INVARIANTS KEEP THE LABELS APART. Hold them and nothing can collide;
+% break one and TeX will not say so.
+%   1. Band labels are pinned to the east end of each band, so the middle of
+%      both bands belongs to the carriers and no dot can land on the text.
+%   2. Every prose block has a text width, so its box is fixed rather than set
+%      by however long the string happens to be. Stage 1 starts at x = 2.25 and
+%      is 2.8 cm wide, which is what holds it between track and divider.
+%   3. In stage 3 the label column's LEFT EDGE IS THE ACTIVATOR'S west edge and
+%      both carrier arrows terminate on that same edge, so every arrow is
+%      always left of every label. Anchor the labels anywhere else and that
+%      guarantee is gone.
+% \scintfit checks the one thing the invariants cannot: total width.
+%
+% Needs arrows.meta and decorations.pathmorphing, both loaded in main.tex.
+
+\providecolor{scintcbfill}{HTML}{E6F1FB}
+\providecolor{scintcbline}{HTML}{378ADD}
+\providecolor{scintvbfill}{HTML}{FBEAF0}
+\providecolor{scintvbline}{HTML}{D4537E}
+\providecolor{scintactfill}{HTML}{FAEEDA}
+\providecolor{scintactline}{HTML}{EF9F27}
+\providecolor{scinthot}{HTML}{BA7517}
+\providecolor{scintgamma}{HTML}{E24B4A}
+\providecolor{scintinert}{HTML}{888780}
+
+% Width guard, called just before \end{tikzpicture}. The figure is drawn at the
+% full measure, so a label added at either end overruns the text block in
+% silence; this raises a hard error instead.
+\providecommand{\scintfit}{%
+	\path let \p1=(current bounding box.east), \p2=(current bounding box.west) in
+		\pgfextra{%
+			\ifdim\dimexpr\x1-\x2\relax>\textwidth
+				\PackageError{scintillation-process}{Figure is wider than the text block}%
+					{It measures \the\dimexpr\x1-\x2\relax\space against a measure of
+					\the\textwidth. Shorten a label or move it inside the diagram.}%
+			\fi};}
+
+\begin{tikzpicture}[
+	x=1cm, y=1cm,
+	ann/.style    = {font=\footnotesize, align=center},
+	block/.style  = {ann, align=left, text width=2.8cm},
+	% 3.8 cm: the widest single line in the stack measures 3.67 cm, and below
+	% that it wraps and the stack grows into the valence band
+	stack/.style  = {ann, text width=3.8cm, inner ysep=1pt},
+	title/.style  = {font=\small},
+	e/.style      = {circle, fill=scintcbline, inner sep=0pt, minimum size=2.4pt},
+	h/.style      = {circle, fill=scintvbline, inner sep=0pt, minimum size=2.4pt},
+	hot/.style    = {circle, fill=scintactline, inner sep=0pt, minimum size=2.4pt},
+	flow/.style   = {-{Stealth[length=4pt]}, line width=0.4pt},
+	actbox/.style = {draw=scintactline, fill=scintactfill, line width=0.4pt,
+		rounded corners=1pt, minimum width=2cm, minimum height=0.5cm,
+		inner sep=0pt, font=\footnotesize, text=scintactline!55!black},
+	wavy/.style   = {-{Stealth[length=4pt]}, line width=0.5pt, decorate,
+		decoration={snake, amplitude=0.5mm, segment length=2mm,
+			post length=1.6mm}},
+	]
+
+% ---------- frame: bands and stage dividers --------------------
+\def\scintR{15.4}
+
+\draw[dashed, scintinert, line width=0.3pt] (5.2,0.1) -- (5.2,7.8);
+\draw[dashed, scintinert, line width=0.3pt] (10.4,0.1) -- (10.4,7.8);
+
+\fill[scintcbfill, draw=scintcbline, line width=0.4pt, rounded corners=1pt]
+	(0.6,6.0) rectangle (\scintR,6.4);
+\fill[scintvbfill, draw=scintvbline, line width=0.4pt, rounded corners=1pt]
+	(0.6,1.6) rectangle (\scintR,2.0);
+
+% invariant 1: pinned east, leaving the middle of both bands to the carriers
+\node[font=\footnotesize, scintcbline!60!black, anchor=east]
+	at ([xshift=-2mm]\scintR,6.2) {Conduction band};
+\node[font=\footnotesize, scintvbline!60!black, anchor=east]
+	at ([xshift=-2mm]\scintR,1.8) {Valence band};
+
+\draw[{Stealth[length=4pt]}-, line width=0.3pt] (0.28,2.0) -- (0.28,3.55);
+\draw[-{Stealth[length=4pt]}, line width=0.3pt] (0.28,4.45) -- (0.28,6.0);
+\node[font=\footnotesize] at (0.28,4.0) {$E_\mathrm{g}$};
+
+% ---------- stage headings -------------------------------------
+\node[title]	at (2.9,8.65)  {1.\ Conversion};
+\node[ann]		at (2.9,8.15)  {$\sim\!10^{-15}\,$s};
+\node[title]	at (7.8,8.65)  {2.\ Transport};
+\node[ann]		at (7.8,8.15)  {$10^{-12}$--$10^{-10}\,$s};
+\node[title]	at (12.9,8.65) {3.\ Luminescence};
+% Ce:LSO decays in ~40 ns and NaI(Tl) in ~230 ns, so the range has to cover
+% both activators named below, not just the fast one.
+\node[ann]		at (12.9,8.15) {$10^{-8}$--$10^{-7}\,$s decay};
+
+% ================ STAGE 1: conversion ==========================
+\draw[wavy, scintgamma] (0.75,0.55) -- (1.88,1.53);
+\node[ann, anchor=west] at (0.6,0.2) {\keV{511} photon};
+\draw[-{Stealth[length=4pt]}, scinthot, line width=0.4pt] (1.95,1.60) -- (2.05,7.40);
+
+% cascade: {parent}/{child} coordinate pairs -- edit branch geometry here
+\foreach \a/\b in {
+	{2.05,7.40}/{2.40,7.05},
+	{2.40,7.05}/{2.25,6.55},
+	{2.40,7.05}/{2.75,6.85},
+	{2.75,6.85}/{2.65,6.48},
+	{2.75,6.85}/{3.10,7.10},
+	{3.10,7.10}/{3.30,6.62},
+	{3.10,7.10}/{3.45,7.30},
+	{3.45,7.30}/{3.75,6.90},
+	{3.75,6.90}/{4.00,6.50}}
+	\draw[scintactline, line width=0.4pt] (\a) -- (\b);
+
+\foreach \p in {{2.25,6.55},{2.65,6.48},{3.30,6.62},{4.00,6.50},{3.45,7.30}}
+	\node[hot] at (\p) {};
+\foreach \x in {2.25,4.00}
+	\draw[flow, scintinert] (\x,6.44) -- (\x,6.30);
+
+\foreach \x in {2.0,2.6,3.2} \node[h] at (\x,1.80) {};
+
+% invariant 2: a fixed 2.8 cm measure from x = 2.25 clears the track on the
+% left and the divider on the right, whatever the wording becomes
+\node[block, anchor=west] (s1cascade) at (2.25,4.95)
+	{Impact ionisation and Auger cascade};
+\node[block, anchor=north west] (s1thermal)
+	at ([yshift=-4mm]s1cascade.south west)
+	{Carriers thermalise to the band edges};
+
+% ================ STAGE 2: transport ===========================
+\foreach \x in {5.8,7.0,8.2} \node[e] at (\x,6.20) {};
+\foreach \x in {5.8,7.0,8.2} \node[h] at (\x,1.80) {};
+\draw[flow, scintcbline] (5.8,5.60) -- (9.70,5.60);
+\draw[flow, scintvbline] (5.8,2.50) -- (9.70,2.50);
+
+\draw[dashed, scintinert, line width=0.4pt] (5.80,4.50) -- (7.00,4.50);
+\node[e] at (6.40,4.62) {};
+\draw[flow, scintinert] (6.00,5.35) -- (6.30,4.72);
+\node[ann] at (6.40,4.05) {Trapping};
+
+\node[e] at (8.90,4.50) {};
+\node[h] at (9.15,4.50) {};
+\draw[dashed, scintinert, line width=0.3pt] (9.02,4.50) ellipse (0.45 and 0.30);
+\node[ann] at (9.02,4.05) {Exciton};
+
+\node[ann, text width=4.0cm] at (7.8,3.05)
+	{Diffusion down the\\[-1pt] concentration gradient ---\\[-1pt]
+		no applied field};
+
+% ================ STAGE 3: luminescence ========================
+% invariant 3: the label column starts at activator.west, and both arrows
+% terminate on that same edge, so no arrow can reach a label
+\node[actbox] (activator) at (12.90,4.45) {Activator};
+
+\draw[flow, scintcbline] (11.00,6.00) -- (activator.north west);
+\draw[flow, scintvbline] (11.00,2.00) -- (activator.south west);
+
+\node[stack, anchor=south west] (recomb)
+	at ([yshift=4mm]activator.north west) {Radiative recombination};
+\node[stack, anchor=north west] (dopants)
+	at ([yshift=-3mm]activator.south west)
+	{Ce$^{3+}$ (LSO, LYSO)\\[-1pt] or Tl$^{+}$ (NaI)};
+\node[stack, anchor=north west] (emitted)
+	at ([yshift=-2mm]dopants.south west) {Optical photons, $h\nu < E_\mathrm{g}$};
+
+% fanned into the gap the stack leaves between recomb and dopants
+\draw[wavy, scinthot] ([yshift=1.2mm]activator.east) -- ++(1.25,0.35);
+\draw[wavy, scinthot] (activator.east) -- ++(1.35,0);
+\draw[wavy, scinthot] ([yshift=-1.2mm]activator.east) -- ++(1.25,-0.25);
+
+% ---------- inset: track confinement ---------------------------
+\fill[scintinert!12, draw=scintinert, line width=0.3pt, rounded corners=1pt]
+	(0.6,-1.35) rectangle (2.4,-0.35);
+\draw[scintactline, line width=1.4pt, opacity=0.75, line cap=round]
+	(1.40,-1.25) -- (1.55,-0.45);
+\node[ann, anchor=west, align=left] at (2.7,-0.85)
+	{Free carriers exist only inside a $\sim$\um{1} ionisation track,\\[-1pt]
+		for picoseconds --- the surrounding bulk stays insulating};
+
+% ---------- legend ---------------------------------------------
+\node[e] at (0.75,-1.95) {};
+\node[ann, anchor=west] at (0.95,-1.95) {Electron};
+\node[h] at (3.00,-1.95) {};
+\node[ann, anchor=west] at (3.20,-1.95) {Hole};
+\node[hot] at (4.85,-1.95) {};
+\node[ann, anchor=west] at (5.05,-1.95) {Hot carrier};
+
+\scintfit
+\end{tikzpicture}

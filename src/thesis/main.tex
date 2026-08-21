@@ -20,8 +20,7 @@
 \usepackage{booktabs, tabularx}
 \usepackage{xltabular} % longtable + X column, for the acronym list once it ran past one page
 
-% Drafting scaffolds. Both print visibly, so an unfinished spot cannot pass for
-% finished prose; delete the call as you resolve it.
+% Drafting scaffolds. Both print visibly, so an unfinished spot cannot pass for finished prose; delete the call as you resolve it.
 \colorlet{scaffoldnote}{gray!120!black}
 \colorlet{scaffoldwarn}{red!70!black}
 
@@ -33,8 +32,7 @@
 % would bury biber's genuine missing-citation warnings.
 \newcommand{\needcite}[1]{{\normalfont\small\color{scaffoldwarn}[cite: #1]}}
 
-% [block]: \paragraph is run-in by default; this stands the heading on its own
-% line. Still unnumbered and absent from the TOC.
+% [block]: \paragraph is run-in by default; this stands the heading on its ownline. Still unnumbered and absent from the TOC.
 \usepackage{titlesec}
 \titleformat{\paragraph}[block]
 	{\normalfont\bfseries\raggedright}{}{0pt}

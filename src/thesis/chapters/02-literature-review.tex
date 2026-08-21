@@ -161,12 +161,23 @@ Additional practical considerations relate to the scintillators manufacturabilit
 
 \paragraph{Inorganic Scintillation}
 What characterises an inorganic scintillator is that the light-emitting process belongs to the bulk solid rather than to any individual molecule: energy is converted through the delocalised band structure of a wide-band-gap insulator, and the charge carriers must travel through the material before they can emit.
-Conversion proceeds in three stages.
+Conversion proceeds in three stages, set out in Figure~\ref{fig:scintillation-process}.
 A \keV{511} photon interacting photoelectrically or by Compton scatter liberates an energetic electron, which cascades by impact ionisation and Auger decay until the resulting carriers fall below the ionisation threshold and thermalise to the band edges, leaving a dense track of electron--hole pairs.
 These carriers then migrate, some binding into excitons and some lost to trapping or non-radiative quenching, until they are captured at luminescence centres -- typically an activator dopant such as Ce\textsuperscript{3+} (as in LSO, LYSO) or Tl\textsuperscript{+} (as in NaI) -- where they recombine radiatively and emit many lower-energy optical photons (visible or near-visible light).
 Because the activator levels lie within the band gap, the emitted photons are too low in energy to re-excite the host, and the crystal remains transparent to its own light.
 The number of electron--hole pairs created by a deposit of energy $E$ scales as $E/\beta E_\mathrm{g}$, where $E_\mathrm{g}$ is the band gap of the host and $\beta \approx 2$--$3$ is the factor by which the average energy cost of one thermalised pair exceeds that gap, the excess being lost to the phonons emitted during thermalisation.
-The band gap therefore sets a hard ceiling on light yield before any transport or quantum-efficiency losses are counted.
+The band gap therefore sets a hard ceiling on light yield before any transport or quantum-efficiency losses are counted \cite{Lempicki1993}.
+
+\begin{figure}[tbp]
+	\centering
+	\input{figures/02-literature-review/scintillation-process}
+	\caption[The three stages of inorganic scintillation]{%
+		Scintillation in an activated inorganic crystal, in three stages \cite{Rodnyi1997}.
+		The times are orders of magnitude rather than measurements, and the decay of the third stage is the activator's rather than the host's.
+		The stages are worth separating because each caps the light yield independently: the first by how much of the deposit becomes electron--hole pairs at all, the second by the defects the growth process leaves behind, and the third by the activator, which also fixes the decay time and with it the timing performance.
+		A candidate material can therefore be lost at any one of the three, whatever its other properties recommend.}
+	\label{fig:scintillation-process}
+\end{figure}
 
 \paragraph{Luminescence Transitions and Why They Set the Decay Time}
 
@@ -193,19 +204,6 @@ Since the emitting species is the bulk itself rather than a dilute dopant, compo
 \subsection{Inorganic Crystals and Ceramics}
 \label{sec:inorganic}
 \topics{property table across NaI(Tl), BGO, LSO:Ce, LYSO:Ce, GSO, BaF\textsubscript{2}, LaBr\textsubscript{3}. Practical liabilities that disqualify materials the table flatters: \textsuperscript{176}Lu/\textsuperscript{138}La intrinsic radioactivity, hygroscopicity, thermal quenching (a cooling requirement, so a system cost), radiation damage, fragility. Czochralski growth as the cost floor -- melting point, crucible (Ir versus Pt), achievable monolith size, since a material that cannot be grown large is excluded from this architecture regardless of properties; GAGG:Ce and garnet transparent ceramics as the sintered alternative. Cost per unit volume, separating raw-material scarcity (Lu, Ge, La, Ga) from process cost and growth yield -- only the first is what the germanium argument of Chapter~\ref{ch:introduction} turns on. The BGO renaissance for non-TOF high-sensitivity systems; Cherenkov and cross-luminescence (BaF\textsubscript{2}) as the materials-side response to the \ps{10} challenge.}
-
-\begin{figure}[tbp]
-	\centering
-	\input{figures/02-literature-review/scintillation-process}
-	\caption[The three stages of inorganic scintillation]{%
-		Scintillation in an activated inorganic crystal, in three stages \cite{Rodnyi1997}.
-		Conversion: the photoelectron released by a \keV{511} interaction sheds its energy by impact ionisation and Auger decay, leaving a dense track of hot electrons and holes that thermalise to the band edges.
-		Transport: those carriers migrate by diffusion alone, there being no applied field, and on the way may be trapped at defects or bind into excitons.
-		Luminescence: an activator captures an electron and a hole in turn and de-excites radiatively, emitting below the band-gap energy so that the host remains transparent to its own light.
-		The division matters for what each stage costs: the light yield a material can reach is fixed in stage~1 by how much of the deposit becomes electron--hole pairs at all, how much of that yield survives is decided in stage~2 by the defects the growth process leaves behind, and the decay time---and with it the timing performance---belongs to stage~3 and to the activator.
-		The three combine multiplicatively, so each caps the yield independently of the others \cite{Lempicki1993}.}
-	\label{fig:scintillation-process}
-\end{figure}
 
 \paragraph{The Material Family}
 

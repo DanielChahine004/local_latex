@@ -1,3 +1,4 @@
+% !TeX root = ../../main.tex
 % Milestone timeline for the historical development section.
 % \input by chapters/02-literature-review.tex.
 %
@@ -10,17 +11,14 @@
 %
 % LAYOUT: the axis clusters too tightly for labels to sit over their ticks,
 % so each entry carries year / row / label x, with a leader from tick to
-% label. Rows step outward in 1.50 cm increments, two per side.
+% label. Rows step outward in 1.50 cm increments, two per side; total extent
+% 15.7 cm, inside the 16 cm text block.
 %
-% CLEARANCES, VERIFIED BY MEASUREMENT (hook at the foot of the file) -- TeX
-% is silent about overlapping labels and early attempts shipped with some:
-%   Horizontal -- labels are 2.3 cm wide, so same-row label x must be
-%   >= 2.6 cm apart. Tightest pairs: 1976/1986 and 1986/2006, 5.1 pt.
-%   Vertical -- the 1.50 cm row gap must clear the TALLEST label (1953,
-%   four lines, 47 pt); tightest pair 2006 vs row 2, 3.5 pt.
-%   Leaders crossing labels is a third failure mode -- see elbow routing
-%   below, which fixes label x for every row-2 entry.
-% Total extent 15.7 cm, inside the 16 cm text block.
+% CLEARANCES ARE TIGHT -- 2 to 5 pt at the worst pairs, and TeX is silent
+% about overlapping labels, so early attempts shipped with some. Labels are
+% 2.3 cm wide and the tallest runs four lines. Move any label and re-measure
+% with the hook at the foot of this file; a leader crossing a label is the
+% third failure mode, hence the elbow routing below.
 
 \providecolor{tlpositron}{HTML}{2A6F97}
 \providecolor{tlsingle}{HTML}{8B9BA4}
@@ -31,22 +29,16 @@
 % row 2 cuts through the row-1 band and gets visibly broken by the labels'
 % page-colour fill. Each leader instead runs up to y = 0.40 (below every
 % label, which start at 0.55), across to its label x, then up -- with the
-% vertical run threading a GAP between row-1 labels. Measured row-1 spans and
-% the gaps threaded (pt):
-%   above  1932 [-34,34]  1953 [57,125]  1976 [162,231]  1986 [236,305]  2006 [310,379]
-%          1975 lx 153 (gap 125-162)   1983 lx 233 (gap 231-236)   2018 lx 381
-%   below  1958 [77,145]  1973 [153,222]  1989 [230,299]  2013 [313,382]
-%          1951 lx 65 (before 77)      1963 lx 150 (gap 145-153)
-% Several clearances are only 2-4 pt: move ANY row-1 label and the row-2
-% leader threading past it must move too. Labels are drawn in a SECOND PASS
-% after every leader, filled with pagebg (the page colour) as a backstop
-% mask -- draw order gives the z-order. (This used to be a pgfonlayer layer,
-% which TeX Live 2026's PGF 3.1.11 rejects inside a \foreach body.)
+% vertical run threading a GAP between row-1 labels. Those gaps are only a few
+% pt wide, so move ANY row-1 label and the row-2 leader passing it must move
+% too. Labels are drawn in a SECOND PASS after every leader, filled with
+% pagebg as a backstop mask -- draw order gives the z-order. (This used to be
+% a pgfonlayer layer, which TeX Live 2026's PGF 3.1.11 rejects inside a
+% \foreach body.)
 %
-% The entry lists live in macros so the leader pass and the label pass iterate
-% the SAME data -- edit an entry in one place only.
-% Loop variables deliberately avoid \year (TeX primitive), \r (accent) and
-% \text (amsmath): shadowing those is version-fragile.
+% The entry lists live in macros so both passes iterate the SAME data -- edit
+% an entry in one place only. Loop variables deliberately avoid \year (TeX
+% primitive), \r (accent) and \text (amsmath): shadowing those is fragile.
 %
 % Above the axis --  year/row/label x/label:
 \def\tlabove{%
@@ -58,9 +50,8 @@
 	1986/1/9.5/{Casey \& Nutt\\block detector},
 	2006/1/12.1/{commercial TOF PET\\on LSO/LYSO},
 	2018/2/13.4/{uEXPLORER\\total-body}}
-% Below the axis --  year/row/label x/colour/label. Mostly the borrowed
-% lineage (tlsingle); 1951, 1989 and 2013 are positron entries below purely
-% for room and keep tlpositron. Say so in the caption.
+% Below the axis -- year/row/label x/colour/label. Mostly the borrowed lineage
+% (tlsingle); the tlpositron entries here are below purely for room.
 \def\tlbelow{%
 	1951/2/2.3/tlpositron/{Wrenn \emph{et al.}\\coincidence proposed},
 	1958/1/3.9/tlsingle/{Anger\\scintillation camera},
@@ -103,10 +94,10 @@
 	\node[lbl, anchor=north, name=n\yr] at (\lx,-\ly) {\textbf{\yr}\\\lbltxt};
 }
 
-% MEASUREMENT HOOK -- uncomment, build with `tectonic --print`, grep for
-% TLBOX: each label's true box in pt as (x0 y0 x1 y1). Two labels overlap iff
-% their x AND y ranges both intersect. Real heights depend on line wrapping,
-% so no arithmetic predicts them -- this is the only reliable check.
+% MEASUREMENT HOOK -- uncomment, build with `tectonic --print`, grep for TLBOX:
+% each label's true box in pt as (x0 y0 x1 y1); two overlap iff their x AND y
+% ranges both intersect. Heights depend on line wrapping, so no arithmetic
+% predicts them -- this is the only reliable check.
 %
 % \foreach \yr in {1932,1951,1953,1958,1963,1973,1975,1976,1983,1986,1989,2006,2013,2018}{
 %   \path (n\yr.south west); \pgfgetlastxy{\xa}{\ya}

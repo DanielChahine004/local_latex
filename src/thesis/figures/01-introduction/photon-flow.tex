@@ -1,15 +1,13 @@
+% !TeX root = ../../main.tex
 % Alluvial/Sankey: the fate of one 511 keV annihilation photon.
 % \input by chapters/01-introduction.tex.
 %
-% QUALITATIVE: band widths are schematic (trunk halves at each interface;
-% 0.06 cm per unit of a 100-unit trunk). The claims live in the ledger, whose
-% ranges are order-of-magnitude and still want a source, and which must keep
-% body scatter and solid angle dominant -- of those, only solid angle is a
-% design choice.
-%
-% SCATTER: scattering destroys the LOR, not the photon (a 435-650 keV window
-% accepts scatter up to ~35 deg, E' = 511/(2-cos theta)); the trunk tracks
-% photons that keep a valid LOR.
+% QUALITATIVE: band widths are schematic (the trunk halves at each interface).
+% The claims live in the ledger, whose ranges are order-of-magnitude and still
+% want a source, and which must keep body scatter and solid angle dominant --
+% of those, only solid angle is a design choice.
+% SCATTER destroys the LOR, not the photon, so the trunk tracks only photons
+% that keep a valid LOR.
 % PAIRS: this tracks ONE photon, so per-photon terms square for a coincidence
 % -- EXCEPT solid angle, since back-to-back photons largely clear the ring
 % together. Axial length pays once where crystal thickness pays twice.
@@ -66,8 +64,8 @@
 
 %% Stage labels. Cues collide without warning once two neighbours sum past
 %% 125 pt -- keep each near 45 pt. Every \\ must sit at the top level of the
-%% node text; nested in a {\scriptsize ...} group it breaks TikZ's line
-%% breaker, hence the bare font switch.
+%% node text: nested in a group it breaks TikZ's line breaker, hence the bare
+%% font switch.
 \node[anchor=south, align=center, text=flowtext] at (1.10,0.30)
 	{Body\\transport\\[2pt]\scriptsize\itshape patient size\\and density};
 \node[anchor=south, align=center, text=flowtext] at (3.30,0.30)
@@ -80,16 +78,15 @@
 \node[anchor=east, align=right, text=flowtext] at (-0.18,-3.000)
 	{\keV{511}\\photons\\emitted};
 
-%% Terminal losses, named beside their node -- the ribbons are too narrow to
-%% hold text.
+%% Terminal losses, named beside their node: the ribbons are too narrow.
 \node[anchor=west, align=left, text=flowtext] at (2.35,-4.900)
 	{Compton scattered in the body,\\so the line of response is lost};
 \node[anchor=west, align=left, text=flowtext] at (4.55,-2.650)
 	{Emitted outside the\\detector's solid angle};
 
-%% Tightest spacing in the figure: three two-line labels sharing the top
-%% 2.6 cm with 0.2 cm of white between blocks. The crystal leader must stay
-%% above the solid-angle label (leader y -1.63 vs label top -2.27 near x 7.05).
+%% Tightest spacing in the figure: three two-line labels sharing the top 2.6 cm
+%% with 0.2 cm of white between. The crystal leader must stay above the
+%% solid-angle label (leader y -1.63 vs label top -2.27 near x 7.05).
 \draw[flowtext, line width=0.3pt] (8.88,-0.960) -- (8.94,-1.150);
 \node[anchor=west, align=left, text=flowtext] at (9.00,-1.150)
 	{Rejected by the\\energy window};
@@ -100,8 +97,7 @@
 	{\textbf{Recorded single}\\\textbf{with a valid LOR}};
 
 %% The ledger. 2.35+0.3+1.55+0.3+5.35+0.3+5.35 = 15.5 cm, centred. The closing
-%% note is a separate node: a p-cell that opens or closes with its own \\
-%% halts TeX ("Missing \endgroup inserted") -- keep prose out of the tabular.
+%% note is a separate node: prose in a p-cell halts TeX ("Missing \endgroup").
 \node[anchor=north, text=flowtext, font=\scriptsize] (ledger) at (5.25,-6.80) {%
 	\begin{tabular}{@{}p{2.35cm} @{\hspace{0.3cm}} p{1.55cm} @{\hspace{0.3cm}} p{5.35cm} @{\hspace{0.3cm}} p{5.35cm}@{}}
 		\toprule

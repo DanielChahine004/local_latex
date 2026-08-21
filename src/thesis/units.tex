@@ -1,8 +1,7 @@
-% Unit shorthands, \input by the thesis and by paper-notes. Requires siunitx.
-%
-% \keV{511}, not \qty{511}{\kilo\electronvolt}. Add a line here the first time
-% you need a new unit. For a range, use siunitx's \qtyrange directly --
-% \qtyrange{4}{12}{\nano\second}.
+% !TeX root = ./main.tex
+% Unit shorthands (siunitx), \input by the thesis and by paper-notes.
+% Write \keV{511}, not \qty{511}{\kilo\electronvolt}; add a line here for each
+% new unit. Ranges use \qtyrange{4}{12}{\nano\second} directly.
 
 \NewDocumentCommand\keV{m}{\qty{#1}{\kilo\electronvolt}}
 \NewDocumentCommand\MeV{m}{\qty{#1}{\mega\electronvolt}}

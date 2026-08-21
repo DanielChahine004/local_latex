@@ -1,2 +1,9 @@
 # SCM syntax highlighting & preventing 3-way merges
 pixi.lock merge=binary linguist-language=YAML linguist-generated=true -diff
+
+# Line endings. Blobs stay LF, working trees get CRLF whatever a machine's
+# core.autocrlf happens to be -- so the local/Overleaf round-trip cannot rewrite
+# a whole file and bury the one sentence that actually changed.
+*.tex text eol=crlf
+*.bib text eol=crlf
+*.md  text eol=crlf

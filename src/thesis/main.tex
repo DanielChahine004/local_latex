@@ -12,15 +12,15 @@
 \usetikzlibrary{calc} % \path let ...: chain-style.tex's \chainfit page-fit guard
 \usepackage[hidelinks]{hyperref}
 \usepackage{bookmark} % writes PDF outlines directly: saves a whole rerun pass
-\usepackage{xurl} % let long DOIs/URLs in the bibliography break instead of overrunning the margin
+\usepackage{xurl} % break long DOIs/URLs rather than overrun the margin
 
-% Acronyms are a hand-maintained list (acronyms.tex, printed in the front
-% matter). Type acronyms as plain text in the body -- no markup. acronyms.tex
-% sorts the list alphabetically with expl3; booktabs formats it.
+% Acronyms: a hand-maintained list in acronyms.tex, printed in the front
+% matter. Plain text in the body -- no markup.
 \usepackage{booktabs, tabularx}
 \usepackage{xltabular} % longtable + X column, for the acronym list once it ran past one page
 
-% Drafting scaffolds. Both print visibly, so an unfinished spot cannot pass for finished prose; delete the call as you resolve it.
+% Drafting scaffolds. Both print visibly, so an unfinished spot cannot pass
+% for finished prose; delete the call as you resolve it.
 \colorlet{scaffoldnote}{gray!120!black}
 \colorlet{scaffoldwarn}{red!70!black}
 
@@ -28,16 +28,22 @@
 \newcommand{\topics}[1]{{\small\itshape\color{scaffoldnote}\raggedright
 	Touch on: #1\par}}
 
-% A needed citation not yet in references.bib. Not a fake \cite key -- that
-% would bury biber's genuine missing-citation warnings.
+% A needed citation, not a fake \cite key -- that would bury biber's own
+% missing-citation warnings.
 \newcommand{\needcite}[1]{{\normalfont\small\color{scaffoldwarn}[cite: #1]}}
 
-% [block]: \paragraph is run-in by default; this stands the heading on its ownline. Still unnumbered and absent from the TOC.
+% [block]: \paragraph is run-in by default; this stands its heading on its own
+% line. Still unnumbered and absent from the TOC.
 \usepackage{titlesec}
 \titleformat{\paragraph}[block]
 	{\normalfont\bfseries\raggedright}{}{0pt}
 	{}
 \titlespacing*{\paragraph}{0pt}{1.5ex plus 1ex minus .2ex}{0.5ex}
+
+% Every section opens a fresh page. The guard spares a chapter's first section,
+% which \chapter has just given a page (titlesec runs this before the counter
+% steps, so 0 is that one). Drop it for title-only chapter openings.
+\newcommand{\sectionbreak}{\ifnum\value{section}>0\clearpage\fi}
 
 \addbibresource{references.bib}
 
@@ -47,8 +53,7 @@
 	{figures/02-literature-review/}
 }
 
-% Title page fields. Kept as macros so the title page below stays readable and
-% the PDF metadata cannot drift from what is printed.
+% Title page fields as macros, so the PDF metadata cannot drift from the page.
 \newcommand{\thesistitle}{High-Resolution Monolithic PET}
 \newcommand{\thesissubtitle}{Event Localisation, Continuous-Coordinate Reconstruction and Experimental Validation}
 \newcommand{\thesisauthor}{Daniel Chahine}
@@ -67,8 +72,8 @@
 
 \pagenumbering{roman}
 
-% Title page. \stretch glue rather than fixed skips, so the blocks stay
-% balanced if a field grows a line; the two rules bracket the title.
+% \stretch glue rather than fixed skips, so the blocks rebalance if a field
+% grows a line.
 \begin{titlepage}
 	\centering
 	\vspace*{\stretch{2}}

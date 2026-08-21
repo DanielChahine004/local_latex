@@ -1,23 +1,21 @@
-% Acronyms and Terms -- maintained BY HAND, sorted AUTOMATICALLY. In the body
-% just type the acronym or term as plain text (PET, CT, ...); nothing expands or
-% links. Two entry types, both sorting into the same alphabetical list:
+% !TeX root = ./main.tex
+% Acronyms and terms -- maintained BY HAND, sorted AUTOMATICALLY when printed.
+% Type them as plain text in the body; nothing expands or links. Two entry
+% types, rendered alike and sorted case-insensitively into one list, so the
+% order here does not matter:
 %
 %   \acr{PET}{\textbf{positron emission tomography}---a functional modality}
 %   \term{positron range}{the displacement between emission and annihilation}
 %
-% An acronym bolds its expansion inside the meaning column, then glosses it
-% after an em-dash; a term has nothing to expand, so its meaning column is the
-% gloss alone. Order does not matter -- the list is sorted case-insensitively
-% when printed (expl3, no packages -- datatool was cut because its load-and-sort
-% cost helped push Overleaf past its compile timeout).
-% Expandable engine string compare: \pdfstrcmp on pdfTeX (Overleaf),
-% \strcmp on XeTeX (tectonic).
+% Sorted with expl3, not datatool: its load-and-sort cost helped push Overleaf
+% past its compile timeout. Expandable string compare is \pdfstrcmp on pdfTeX
+% (Overleaf), \strcmp on XeTeX (tectonic).
 \ifdefined\pdfstrcmp\let\acrstrcmp\pdfstrcmp\else\let\acrstrcmp\strcmp\fi
 \ExplSyntaxOn
 \seq_new:N \g__acr_seq
 \bool_new:N \g__acr_first_bool
-% Case fold for the sort key; renamed across expl3 releases, so take
-% whichever this kernel has (fall back to raw compare on neither).
+% Case fold for the sort key. Renamed across expl3 releases, so take whichever
+% this kernel has.
 \cs_if_exist:NTF \str_casefold:n
 	{ \cs_new_eq:NN \__acr_fold:n \str_casefold:n }
 	{
@@ -27,8 +25,7 @@
 	}
 \cs_new_protected:Npn \acr #1#2
 	{ \seq_gput_right:Nn \g__acr_seq { {#1} {#2} } }
-% A term renders identically -- bold key, meaning beside it -- so it is the same
-% mechanism. Separate name purely so the source says which kind an entry is.
+% Same mechanism; the separate name only records which kind an entry is.
 \cs_new_eq:NN \term \acr
 \cs_new_protected:Npn \__acr_row:nn #1#2
 	{ \textbf{#1} & #2 }
@@ -108,10 +105,9 @@
 
 \chapter*{Acronyms and Terms}
 \addcontentsline{toc}{chapter}{Acronyms and Terms}
-% xltabular = longtable (breaks across pages) + tabularx's X column (wraps the
-% meaning to the margin). Was a plain tabularx until the list outgrew one page.
-% Column 1 is a fixed-width p, not an l: an acronym is always short, but a
-% multi-word \term would stretch an l column and crush the meaning beside it.
+% xltabular = longtable (breaks across pages) + tabularx's X column, needed
+% once the list outgrew one page. Column 1 is a fixed p, not an l: a multi-word
+% \term would stretch an l column and crush the meaning beside it.
 \begin{xltabular}{\textwidth}{@{}>{\raggedright\arraybackslash}p{0.23\textwidth} @{\hspace{1.5em}} X@{}}
 \toprule
 \textbf{Term} & \textbf{Meaning}\\

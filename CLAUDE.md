@@ -30,8 +30,19 @@ the search-path flag, so it builds locally, not on Overleaf.
   continuation line with runs of spaces; give it one level more than its parent.
 - **One sentence per line, no hard wrap.** A newline only after a sentence-ending
   full stop.
+- **UTF-8 without a BOM, CRLF endings.** `.editorconfig` and `.gitattributes`
+  both enforce it. A BOM on an `\input` file reaches the page as a character.
+- **`% !TeX root = <path>/main.tex` heads every file that is not a root**, so a
+  build triggered from a chapter or a figure finds the right document.
 
-Neither affects the PDF. Both keep diffs to the sentence that actually changed.
+None of this affects the PDF. All of it keeps diffs to the line that changed.
+
+### Comments
+
+Keep a file header near a dozen lines. Record the constraint and the trap, not
+the derivation that found them, and never restate what a guard already enforces:
+`\chainfit` and the `TLBOX` hook in `pet-timeline.tex` re-derive their numbers on
+demand, and measurements copied into a comment go stale the moment a label moves.
 
 ## Writing
 
@@ -43,13 +54,30 @@ Neither affects the PDF. Both keep diffs to the sentence that actually changed.
 - **Missing citation:** `\needcite{what would satisfy this}` — prints a visible
   scaffold badge rather than passing silently as sourced fact.
 - **Unwritten section:** `\topics{...}` holds its plan.
+- **Labels:** every `\section` and `\subsection` carries `\label{sec:<slug>}` on
+  the line directly below it, whether or not anything points there yet. Prefixes
+  are `ch:`, `sec:`, `fig:`, `eq:`. Retrofitting labels across a finished thesis
+  costs far more than writing them as you go.
+- **House style:** British spelling (-ise, -isation), `---` unspaced for an
+  em-dash, ``` ``…'' ``` for quotes, and a `~` before every cross-reference
+  (`Figure~\ref{...}`, `part~1`).
+- **Bibliography keys are `AuthorYear`** — `Casey1986`, `Moskal2014`. The style
+  is `numeric`, so keys never reach the page; normalise what a publisher export
+  dumps in rather than live with it.
 
 ## Figures
 
 - One directory per chapter, `src/thesis/figures/<NN-name>/`, `\input` from the chapter.
-- Declare every colour with `\providecolor` at the top of the figure. The
-  document is single-palette (white page, print colours) — there is no theme to
-  track.
+- Declare every colour with `\providecolor` at the top of the figure, and prefix
+  the names with the figure (`chain*`, `flow*`, `tl*`). The prefix is
+  load-bearing: `\providecolor` is a silent no-op when the name is already taken,
+  so two figures sharing a name on one page render the second in the first's
+  palette. The document is single-palette (white page, print colours) — there is
+  no theme to track.
+- **Float placement:** `[p]` for a full-page TikZ figure, `[tbp]` otherwise.
+  Never `h` — it strands the figure mid-paragraph.
+- Every `\caption` takes a short form for the list of figures, with `\label` on
+  the line after it.
 - Chain figures call `\chainfit` just before `\end{tikzpicture}`; it errors if the
   figure has outgrown its page.
 

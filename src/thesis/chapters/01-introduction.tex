@@ -6,7 +6,7 @@
 % \topics{physics-first framing: emission versus transmission imaging and the fixed photon budget that follows; annihilation coincidence detection in one paragraph; the resolution limits set by positron range and acollinearity; PET as functional/molecular imaging versus the anatomical modalities (CT, MRI); hybrid PET/CT and PET/MRI, and the anatomical scan's role in attenuation correction; the basic scanner anatomy: scintillator, photodetector, electronics, reconstruction. Clinical roles are deliberately kept out of this section -- they belong in the cost argument and in the review chapter.}
 
 \paragraph{Radiotracers and What PET Measures}
-Positron emission tomography (PET) is an emission imaging modality; what is imaged is the spatial distribution of a positron-emitting radionuclide inside the subject, reconstructed from the annihilation photons that radioactive distribution emits.
+Positron emission tomography (PET) is an emission imaging modality, as it captures the spatial distribution of a positron-emitting radionuclide inside the subject, reconstructed from the annihilation photons that radioactive distribution emits.
 This distinguishes PET from transmission imaging modalities, in which an external source is projected through the subject and the flux is measured on the far side.
 The consequence is that the signal available to a PET scanner is fixed by the amount of activity the subject can safely be given and by the fraction of the emitted photons the instrument can intercept, hence every design decision in the chapters that follow is ultimately an attempt to recover more of that fixed information budget that is the source distribution.
 The radionuclide is bound to a biologically active carrier molecule to form a radiotracer, which is administered to the subject, generally via injection into the bloodstream, and progressively accumulates according to the biological process that the carrier targets.
@@ -27,21 +27,20 @@ Where the radiotracer appears to accumulate, by proxy we infer that the correspo
 This makes PET a functional or molecular imaging modality, as opposed to an anatomical imaging modality such as computed tomography (CT) or magnetic resonance imaging (MRI), which image the structure of the subject.
 Many modern clinical workflows employ PET in combination with CT or MRI, often in hybrid scanner systems, so that functional and anatomical information are acquired in a single session and spatially co-registered.
 Beyond informing clinical interpretation, the anatomical scan also supports reconstruction itself.
-CT measures attenuation directly, and so can replace the radionuclide transmission scan that earlier PET systems required \cite{Kinahan1998}; it does so, however, at the effective energy of the polychromatic X-ray beam ($\sim$\keV{70} at 120\,kVp) rather than at \keV{511}.
+CT measures attenuation directly, and so can replace the radionuclide transmission scan that earlier PET systems required \cite{Kinahan1998}; however,  it does so at the effective energy of the polychromatic X-ray beam ($\sim$\keV{70} at 120\,kVp) rather than at \keV{511}.
 The two energies are not related by a single scale factor: the photoelectric contribution is non-negligible in higher-Z materials such as bone and iodinated contrast agents, and scales steeply with atomic number, whereas at \keV{511} it is negligible and attenuation is governed almost entirely by electron density.
 Two materials sharing a Hounsfield value may therefore differ in their attenuation at \keV{511}.
-A piecewise-linear rescaling of Hounsfield units is consequently applied, interpolating between air and water below the breakpoint and between water and cortical bone above it, to convert the CT image into a 511\,keV attenuation map \cite{burger2002,carney2006}.
+A piecewise-linear rescaling of Hounsfield units (unit of radiodensity) is consequently applied, interpolating between air and water below the breakpoint and between water and cortical bone above it, to convert the CT image into a \keV{511} attenuation map \cite{Burger2003,Carney2006}.
 
 \paragraph{Scanner Anatomy}
-A PET measurement is best understood as a chain of successive transductions, in which the signal is repeatedly converted from one physical carrier into another and something is paid at every conversion.
-The scanner's detectors are built around this chain: a scintillator converts an incoming annihilation photon into some thousands of optical photons, a photodetector converts those into a charge pulse, and readout electronics amplify, digitise and timestamp that pulse so that pairs of them can be sorted into coincidences and passed to a computer for reconstruction.
-Each conversion has both a multiplicity, which determines how much signal survives, and a resolution cost, which determines how well the event can be localised; the design of a scanner is largely the business of choosing where in that chain to spend money.
-Figures~\ref{fig:chain-emission} to~\ref{fig:chain-readout} set out that chain in full, from administration to reconstructed image, one stage at a time.
-Each stage names first the quantities that govern the conversion---the numbers a designer actually trades against---and then the physical channels available to it: the one a conventional scanner uses, and the alternatives that could in principle serve the same purpose and are not used.
-Most of the alternatives are not pursued in this thesis.
-They are given because a chain drawn with only its conventional path reads as a description of what PET is, when what it actually records is a long series of choices: localisation, for instance, need not be optical at all, since the energy deposited in a detector also launches a pressure wave whose acoustic time of flight would encode the interaction depth directly, and the scattered photons that conventional PET discards carry, in their scattering angle, the information needed to place the event without a second detector at all.
-Some of these alternatives are the basis of active research programmes; others are real effects that are simply too weak to build an instrument on, the thermoacoustic signal from a single \keV{511} deposition being far below the noise floor of any practical transducer at clinical count rates.
-Which is which, and why, is taken up in the chapters that follow.
+A PET scanner can be understood as being comprised of a chain of successive transductions, in which the signal is repeatedly converted from one carrier into another, with some information interface at every conversion.
+The scanner's detectors are built around this chain: a scintillator converts an incoming annihilation photon into some thousands of optical photons, then a photodetector converts those into a charge pulse, and readout electronics amplify, digitise, and timestamp that pulse so that pairs of them can be sorted into coincidences and passed to a computer for reconstruction.
+Each conversion has both a multiplicity, which determines how much signal survives, and a resolution cost, which determines how well the event can be localised in time, space, and energy.
+The design of a scanner can be understood as optimising where in that chain to allocate more or less resources.
+Figures~\ref{fig:chain-emission} to~\ref{fig:chain-readout} outline that chain in full, from administration to the reconstructed image.
+Each stage names first the quantities that govern the conversion and then the physical channels available to it: those a conventional scanner may use, and alternatives that could in principle serve the same purpose.
+They are given because a chain drawn with only its conventional path reads as a description of what PET canonically is, when what it actually records is a series of choices: localisation, for instance, need not be optical at all, since the energy deposited in a detector also launches a pressure wave whose acoustic time of flight would encode the interaction depth directly, and the scattered photons that conventional PET discards carry, in their scattering angle, the information needed to place the event without a second detector at all.
+Some of these alternatives are the basis of active research programmes whereas others are real effects that are simply too weak to build an instrument on; the thermoacoustic signal from a single \keV{511} deposition for example is far below the noise floor of any practical transducer at clinical count rates.
 The division between the figures is itself the argument of this thesis in miniature: almost nothing in Figure~\ref{fig:chain-emission} is under the designer's control, since it is fixed by isotope physics and patient anatomy, whereas almost everything in Figures~\ref{fig:chain-optical} and~\ref{fig:chain-readout} is a decision, and therefore a place where money is either spent or saved.
 
 \begin{figure}[p]
@@ -115,22 +114,22 @@ The division between the figures is itself the argument of this thesis in miniat
 
 % \paragraph{From System Cost to Scan Price and Scanner Availability}
 
-\section{Opportunities for Low-Cost PET}
-\topics{cheaper scintillator materials (BGO revival, plastics, nanocomposites, ceramics); monolithic slabs eliminating dicing and dead space; reduced or sparse detector coverage and partial-ring/flat-panel geometries; multiplexed or low-channel-count readout; software and ML compensating for cheaper hardware; sensitivity-cost trade-offs highlighted by total-body PET; open hardware and academic scanner efforts.}
+% \section{Opportunities for Low-Cost PET}
+% \topics{cheaper scintillator materials (BGO revival, plastics, nanocomposites, ceramics); monolithic slabs eliminating dicing and dead space; reduced or sparse detector coverage and partial-ring/flat-panel geometries; multiplexed or low-channel-count readout; software and ML compensating for cheaper hardware; sensitivity-cost trade-offs highlighted by total-body PET; open hardware and academic scanner efforts.}
 
-\paragraph{Cheaper Scintillator Materials}
+% \paragraph{Cheaper Scintillator Materials}
 
-\paragraph{Monolithic Slabs}
+% \paragraph{Monolithic Slabs}
 
-\paragraph{Reduced and Sparse Detector Coverage}
+% \paragraph{Reduced and Sparse Detector Coverage}
 
-\paragraph{Multiplexed and Low-Channel-Count Readout}
+% \paragraph{Multiplexed and Low-Channel-Count Readout}
 
-\paragraph{Software and Machine Learning as Substitutes for Hardware}
+% \paragraph{Software and Machine Learning as Substitutes for Hardware}
 
-\paragraph{The Sensitivity--Cost Lesson of Total-Body PET}
+% \paragraph{The Sensitivity--Cost Lesson of Total-Body PET}
 
-\paragraph{Open Hardware and Academic Scanner Efforts}
+% \paragraph{Open Hardware and Academic Scanner Efforts}
 
 % \section{Aims of This Review}
 % \topics{map the whole PET pipeline with a cost lens; identify which cost--performance trade-off levers are under-explored; establish evaluation criteria for candidate directions (cost impact, novelty, publishability, feasibility of an experimental demonstrator within a PhD); converge on a defensible project direction.}

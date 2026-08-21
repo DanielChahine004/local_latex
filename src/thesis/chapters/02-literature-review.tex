@@ -67,14 +67,15 @@ As a nuclear imaging modality, PET employs radioactive materials to achieve func
 Proton-rich nuclei may also reach the same daughter by electron capture, which emits no positron and so contributes nothing to the PET signal; the two routes compete, and the fraction of decays taking the $\beta^+$ branch varies by isotope.
 \emph{Positron emission} is what distinguishes PET: the detected photons are not directly emitted by the nucleus of the radioactive source, but are a consequence of the emitted positron subsequently annihilating with an atomic electron.
 A positron leaves the nucleus with a continuous spectrum of kinetic energies and does not annihilate immediately.
-It first \emph{thermalises}, losing energy through Coulomb scattering with the surrounding medium over a path of length that typically ranges from a fraction of a millimetre to several millimetres (depending on the isotope) before combining with an electron at near-rest.\needcite{Levin \& Hoffman 1999, Phys Med Biol -- positron range by isotope and its limit on PET resolution}
+It first \emph{thermalises}, losing energy through Coulomb scattering with the surrounding medium over a path of length that typically ranges from a fraction of a millimetre to several millimetres (depending on the isotope) before combining with an electron at near-rest \cite{Levin2002}.
 That annihilation converts the rest mass of the particle and anti-particle into two high-energy photons, each of \keV{511} in accordance with the energy--mass equivalence defined by $E=mc^2$.
-These are termed \emph{annihilation photons} rather than gamma rays, since they originate outside the nucleus; they are the photons PET detects, and are referred to as such throughout this thesis.
-The displacement between the point of emission and the point of annihilation is known as the \emph{positron range}, and because PET reconstructs the latter while the tracer chemistry occurs at the former, it introduces a hard resolution limit that no detector design can recover from (\S\ref{sec:resolution-limits}).
+These are generally termed \emph{annihilation photons} rather than gamma rays, as they originate from outside the nucleus; they are the photons PET detects.
+The displacement between the point of emission and the point of annihilation is known as the \emph{positron range}, and because PET reconstructs the latter while the tracer chemistry occurs at the former, it constitutes a hard resolution limit that no detector design can recover from (\S\ref{sec:resolution-limits}).
+Projected onto the detector ring, this angular spread contributes a positional blur that grows linearly with ring diameter, approximately $0.0022D$ FWHM, so acollinearity is a modest penalty in preclinical systems but a leading resolution term in large-bore clinical scanners.
 
 \paragraph{LOR Formation}
 Because the annihilating pair is very nearly at rest, conservation of momentum requires that the two photons be emitted almost exactly back-to-back.
-The pair is not quite at rest, however, and its residual momentum spreads the opening angle about \degs{180} with a full width at half maximum of roughly \degs{0.5}.\needcite{Colombino et al.\ 1965 for the measurement; or Cherry, Sorenson \& Phelps, Physics in Nuclear Medicine, for the textbook figure}
+The pair is not quite at rest, however, and its residual momentum spreads the opening angle about \degs{180} with a full width at half maximum of roughly \degs{0.5} \cite{Colombino2007}.
 Detecting both annihilation photons in opposite detector elements therefore constrains the annihilation to have occurred somewhere along the straight line joining them, termed the \emph{line of response} (LOR).
 Nothing localises the annihilation along that particular coincidence event's LOR---tomographic reconstruction recovers the source distribution from the intersection of many LORs---though TOF-PET, by resolving the difference in the two photons' arrival times, can additionally estimate where along each LOR the annihilation likely took place.
 This coincidence localisation principle differentiates PET from single-photon emission imaging such as gamma cameras and SPECT, where a physical collimator must constrain the direction of photon incidence and discards the vast majority of emitted photons to do so.
@@ -83,7 +84,8 @@ PET's coincidence requirement is often described as \emph{electronic collimation
 \paragraph{Coincidence Timing}
 In practice, the two annihilation photons from a single event are rarely detected at the exact same time.
 They travel different distances to the detector ring, penetrate to different depths into the scintillator material, and the readout electronics themselves have finite timing resolution.
-A \emph{coincidence timing window} on the order of \qtyrange{4}{12}{\nano\second} is therefore permitted: two photons detected within that timespan of each other are assumed to originate from the same annihilation event, and are paired to form an LOR.\needcite{Bailey et al., Positron Emission Tomography: Basic Sciences; or Cherry, Sorenson \& Phelps -- typical clinical window widths}
+A coincidence timing window is therefore permitted: two photons detected within that timespan of each other are assumed to originate from the same annihilation event, and are paired to form an LOR.
+Contemporary clinical systems use windows on the scale of 4-6ns, as on the Biograph Vision Quadra \cite{Prenosil2021} and Biograph mMR \cite{Karlberg2016} - while earlier BGO-based scanners, with substantially poorer intrinsic timing, required slightly larger windows on the order of 10-12ns.
 Widening the window recovers valid events lost to timing jitter but admits more spurious events, so its width is a direct trade against the event classification that follows.
 
 \paragraph{Event Types}

@@ -6,9 +6,9 @@
 % \topics{physics-first framing: emission versus transmission imaging and the fixed photon budget that follows; annihilation coincidence detection in one paragraph; the resolution limits set by positron range and acollinearity; PET as functional/molecular imaging versus the anatomical modalities (CT, MRI); hybrid PET/CT and PET/MRI, and the anatomical scan's role in attenuation correction; the basic scanner anatomy: scintillator, photodetector, electronics, reconstruction. Clinical roles are deliberately kept out of this section -- they belong in the cost argument and in the review chapter.}
 
 \paragraph{Radiotracers and What PET Measures}
-Positron emission tomography (PET) is an emission imaging modality: the quantity it measures is the spatial distribution of a positron-emitting radionuclide inside the subject, reconstructed from the annihilation photons that distribution emits.
-This distinguishes PET from transmission modalities, in which an external source is driven through the subject and the flux is measured on the far side.
-The consequence is that the signal available to a PET scanner is fixed by the amount of activity the subject can safely be given and by the fraction of the emitted photons the instrument can intercept, rather than by the strength of a source the operator controls; every design decision in the chapters that follow is ultimately an attempt to recover more of that fixed budget of photons.
+Positron emission tomography (PET) is an emission imaging modality; what is imaged is the spatial distribution of a positron-emitting radionuclide inside the subject, reconstructed from the annihilation photons that radioactive distribution emits.
+This distinguishes PET from transmission imaging modalities, in which an external source is projected through the subject and the flux is measured on the far side.
+The consequence is that the signal available to a PET scanner is fixed by the amount of activity the subject can safely be given and by the fraction of the emitted photons the instrument can intercept, hence every design decision in the chapters that follow is ultimately an attempt to recover more of that fixed information budget that is the source distribution.
 The radionuclide is bound to a biologically active carrier molecule to form a radiotracer, which is administered to the subject, generally via injection into the bloodstream, and progressively accumulates according to the biological process that the carrier targets.
 The most widely used tracer, fluorodeoxyglucose (FDG), is a glucose analogue that is taken up by glucose transporters and trapped after phosphorylation, and therefore accumulates in tissues with high glycolytic activity; other tracers instead target receptor expression, perfusion, or protein deposition.
 The choice of carrier determines what the image means but not how it is formed: whatever the tracer, the measurement is the same, since all positron emitters are observed through the identical \keV{511} annihilation signature.
@@ -24,11 +24,13 @@ In principle, where more LORs intersect in the volume, more annihilation events 
 Where the radiotracer appears to accumulate, by proxy we infer that the corresponding biological process targeted by the tracer is occurring.
 
 \paragraph{Functional Imaging and Hybrid Systems}
-This makes PET a functional or molecular imaging modality as opposed to an anatomical imaging modality such as computed tomography (CT) or magnetic resonance imaging (MRI), which image the anatomical structure of the subject.
-However, many modern clinical workflows employ PET in combination with CT or MRI, often in hybrid scanner systems, so that functional and anatomical information are acquired in a single session and spatially co-registered.
-In PET/CT the two acquisitions are sequential, whereas PET/MRI permits genuinely simultaneous acquisition.
-Beyond informing clinical interpretation, the anatomical scan also supports reconstruction itself: CT measures attenuation directly, but at the effective energy of the X-ray beam rather than at \keV{511}, where the photoelectric contribution is negligible and attenuation is governed almost entirely by electron density; a bilinear rescaling of Hounsfield units is therefore applied to convert the CT image into a \keV{511} attenuation map\needcite{standard reference for bilinear CT-to-511\,keV conversion, e.g. Kinahan or Carney}.
-Deriving an equivalent map from MRI data is harder still, since the MRI signal bears no direct relation to attenuation and cortical bone is invisible at conventional echo times; the segmentation-, atlas- and learning-based methods now in clinical use are workable but remain least accurate in exactly the tissues that matter most, bone and lung.
+This makes PET a functional or molecular imaging modality, as opposed to an anatomical imaging modality such as computed tomography (CT) or magnetic resonance imaging (MRI), which image the structure of the subject.
+Many modern clinical workflows employ PET in combination with CT or MRI, often in hybrid scanner systems, so that functional and anatomical information are acquired in a single session and spatially co-registered.
+Beyond informing clinical interpretation, the anatomical scan also supports reconstruction itself.
+CT measures attenuation directly, and so can replace the radionuclide transmission scan that earlier PET systems required \cite{Kinahan1998}; it does so, however, at the effective energy of the polychromatic X-ray beam ($\sim$\keV{70}at 120\,kVp ) rather than at \keV{511}.
+The two energies are not related by a single scale factor: the photoelectric contribution is non-negligible in higher-Z materials such as bone and iodinated contrast agents, and scales steeply with atomic number, whereas at \kev{511} it is negligible and attenuation is governed almost entirely by electron density.
+Two materials sharing a Hounsfield value may therefore differ in their attenuation at \keV{511}.
+A piecewise-linear rescaling of Hounsfield units is consequently applied, interpolating between air and water below the breakpoint and between water and cortical bone above it, to convert the CT image into a 511\,keV attenuation map \cite{burger2002,carney2006}.
 
 \paragraph{Scanner Anatomy}
 A PET measurement is best understood as a chain of successive transductions, in which the signal is repeatedly converted from one physical carrier into another and something is paid at every conversion.
@@ -114,7 +116,7 @@ The division between the figures is itself the argument of this thesis in miniat
 % \paragraph{From System Cost to Scan Price and Scanner Availability}
 
 \section{Opportunities for Low-Cost PET}
-\topics{cheaper scintillator materials (BGO revival, plastics, nanocomposites, ceramics); monolithic slabs eliminating dicing and dead space; reduced or sparse detector coverage and partial-ring/flat-panel geometries; multiplexed or low-channel-count readout; software and ML compensating for cheaper hardware; sensitivity--cost trade-offs highlighted by total-body PET; open hardware and academic scanner efforts.}
+\topics{cheaper scintillator materials (BGO revival, plastics, nanocomposites, ceramics); monolithic slabs eliminating dicing and dead space; reduced or sparse detector coverage and partial-ring/flat-panel geometries; multiplexed or low-channel-count readout; software and ML compensating for cheaper hardware; sensitivity-cost trade-offs highlighted by total-body PET; open hardware and academic scanner efforts.}
 
 \paragraph{Cheaper Scintillator Materials}
 
@@ -130,35 +132,35 @@ The division between the figures is itself the argument of this thesis in miniat
 
 \paragraph{Open Hardware and Academic Scanner Efforts}
 
-\section{Aims of This Review}
-\topics{map the whole PET pipeline with a cost lens; identify which cost--performance trade-off levers are under-explored; establish evaluation criteria for candidate directions (cost impact, novelty, publishability, feasibility of an experimental demonstrator within a PhD); converge on a defensible project direction.}
+% \section{Aims of This Review}
+% \topics{map the whole PET pipeline with a cost lens; identify which cost--performance trade-off levers are under-explored; establish evaluation criteria for candidate directions (cost impact, novelty, publishability, feasibility of an experimental demonstrator within a PhD); converge on a defensible project direction.}
 
-\paragraph{Mapping the Pipeline with a Cost Lens}
+% \paragraph{Mapping the Pipeline with a Cost Lens}
 
-\paragraph{Identifying Under-Explored Levers}
+% \paragraph{Identifying Under-Explored Levers}
 
-\paragraph{Criteria for Evaluating Candidate Directions}
+% \paragraph{Criteria for Evaluating Candidate Directions}
 
-\paragraph{Converging on a Direction}
+% \paragraph{Converging on a Direction}
 
-\section{Candidate Research Directions}
-\topics{continuous-coordinate / geometry-agnostic reconstruction (prior pilot work); flat-panel and box geometries from monolithic slabs; nanocomposite or ceramic scintillator characterisation; neural event localisation and the simulation-to-real transfer problem; low-channel-count readout schemes; how each scores against the supervisor's constraints: cheaper PET, personal interest, publishable, extensible to a real-world experimental model.}
+% \section{Candidate Research Directions}
+% \topics{continuous-coordinate / geometry-agnostic reconstruction (prior pilot work); flat-panel and box geometries from monolithic slabs; nanocomposite or ceramic scintillator characterisation; neural event localisation and the simulation-to-real transfer problem; low-channel-count readout schemes; how each scores against the supervisor's constraints: cheaper PET, personal interest, publishable, extensible to a real-world experimental model.}
 
-\paragraph{Continuous-Coordinate and Geometry-Agnostic Reconstruction}
+% \paragraph{Continuous-Coordinate and Geometry-Agnostic Reconstruction}
 
-\paragraph{Flat-Panel and Box Geometries from Monolithic Slabs}
+% \paragraph{Flat-Panel and Box Geometries from Monolithic Slabs}
 
-\paragraph{Nanocomposite and Ceramic Scintillator Characterisation}
+% \paragraph{Nanocomposite and Ceramic Scintillator Characterisation}
 
-\paragraph{Neural Event Localisation and Simulation-to-Real Transfer}
+% \paragraph{Neural Event Localisation and Simulation-to-Real Transfer}
 
-\paragraph{Low-Channel-Count Readout Schemes}
+% \paragraph{Low-Channel-Count Readout Schemes}
 
-\paragraph{Assessment Against the Project Constraints}
+% \paragraph{Assessment Against the Project Constraints}
 
-\section{Thesis Outline}
-\topics{one sentence per chapter; note that the document currently comprises the introduction and literature review, with experimental chapters to follow once the direction is fixed.}
+% \section{Thesis Outline}
+% \topics{one sentence per chapter; note that the document currently comprises the introduction and literature review, with experimental chapters to follow once the direction is fixed.}
 
-\paragraph{Chapter Summaries}
+% \paragraph{Chapter Summaries}
 
-\paragraph{Current State of the Document}
+% \paragraph{Current State of the Document}

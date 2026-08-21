@@ -1,8 +1,15 @@
-% List of Acronyms -- maintained BY HAND, sorted AUTOMATICALLY. In the body just
-% type the acronym as plain text (PET, CT, ...); nothing expands or links. To add
-% one, drop an \acr line anywhere below -- order does not matter, the list is
-% sorted case-insensitively when printed (expl3, no packages -- datatool was cut
-% because its load-and-sort cost helped push Overleaf past its compile timeout).
+% Acronyms and Terms -- maintained BY HAND, sorted AUTOMATICALLY. In the body
+% just type the acronym or term as plain text (PET, CT, ...); nothing expands or
+% links. Two entry types, both sorting into the same alphabetical list:
+%
+%   \acr{PET}{\textbf{positron emission tomography}---a functional modality}
+%   \term{positron range}{the displacement between emission and annihilation}
+%
+% An acronym bolds its expansion inside the meaning column, then glosses it
+% after an em-dash; a term has nothing to expand, so its meaning column is the
+% gloss alone. Order does not matter -- the list is sorted case-insensitively
+% when printed (expl3, no packages -- datatool was cut because its load-and-sort
+% cost helped push Overleaf past its compile timeout).
 % Expandable engine string compare: \pdfstrcmp on pdfTeX (Overleaf),
 % \strcmp on XeTeX (tectonic).
 \ifdefined\pdfstrcmp\let\acrstrcmp\pdfstrcmp\else\let\acrstrcmp\strcmp\fi
@@ -20,6 +27,9 @@
 	}
 \cs_new_protected:Npn \acr #1#2
 	{ \seq_gput_right:Nn \g__acr_seq { {#1} {#2} } }
+% A term renders identically -- bold key, meaning beside it -- so it is the same
+% mechanism. Separate name purely so the source says which kind an entry is.
+\cs_new_eq:NN \term \acr
 \cs_new_protected:Npn \__acr_row:nn #1#2
 	{ \textbf{#1} & #2 }
 \cs_new_protected:Npn \printacronyms
@@ -99,17 +109,23 @@
 \acr{SPECT}{\textbf{single-photon emission computed tomography}---the single-photon counterpart to PET, in which tomographic reconstruction was first demonstrated}
 \acr{PSMA}{\textbf{prostate-specific membrane antigen}---the target of a widely used class of radioligands}
 
-\chapter*{List of Acronyms}
-\addcontentsline{toc}{chapter}{List of Acronyms}
+% Terms with no acronym. Same list, same sort -- see the header comment.
+\term{annihilation photons}{the two \keV{511} photons produced when a positron annihilates with an atomic electron. Named to distinguish them from gamma rays, which originate inside the nucleus}
+\term{positron range}{the displacement between the point of emission and the point of annihilation. PET reconstructs the latter while the tracer chemistry occurs at the former, so it sets a hard resolution limit no detector design can recover}
+
+\chapter*{Acronyms and Terms}
+\addcontentsline{toc}{chapter}{Acronyms and Terms}
 % xltabular = longtable (breaks across pages) + tabularx's X column (wraps the
 % meaning to the margin). Was a plain tabularx until the list outgrew one page.
-\begin{xltabular}{\textwidth}{@{}l @{\hspace{3em}} X@{}}
+% Column 1 is a fixed-width p, not an l: an acronym is always short, but a
+% multi-word \term would stretch an l column and crush the meaning beside it.
+\begin{xltabular}{\textwidth}{@{}>{\raggedright\arraybackslash}p{0.23\textwidth} @{\hspace{1.5em}} X@{}}
 \toprule
-\textbf{Acronym} & \textbf{Meaning}\\
+\textbf{Term} & \textbf{Meaning}\\
 \midrule
 \endfirsthead
 \toprule
-\textbf{Acronym} & \textbf{Meaning}\\
+\textbf{Term} & \textbf{Meaning}\\
 \midrule
 \endhead
 \bottomrule

@@ -6,61 +6,39 @@
 \usepackage[backend=biber, style=numeric, sorting=none]{biblatex}
 \usepackage{siunitx}
 
-\input{units} % \keV{511} etc. -- shared with paper-notes.tex
+\input{units} % \keV{511} etc. -- paper-notes reads this same file
 \usepackage{xcolor}
-\input{theme} % light/dark palette for text, scaffold badges and figures
 \usepackage{tikz}
 \usetikzlibrary{calc} % \path let ...: chain-style.tex's \chainfit page-fit guard
 \usepackage[hidelinks]{hyperref}
 \usepackage{bookmark} % writes PDF outlines directly: saves a whole rerun pass
 \usepackage{xurl} % let long DOIs/URLs in the bibliography break instead of overrunning the margin
 
-% Acronyms are a hand-maintained list (src/acronyms.tex, printed in the front
+% Acronyms are a hand-maintained list (acronyms.tex, printed in the front
 % matter). Type acronyms as plain text in the body -- no markup. acronyms.tex
 % sorts the list alphabetically with expl3; booktabs formats it.
 \usepackage{booktabs, tabularx}
 \usepackage{xltabular} % longtable + X column, for the acronym list once it ran past one page
 
-% Drafting scaffold: topics each section should at least touch on.
+% Drafting scaffolds. Both print visibly, so an unfinished spot cannot pass for
+% finished prose; delete the call as you resolve it.
+\colorlet{scaffoldnote}{gray!120!black}
+\colorlet{scaffoldwarn}{red!70!black}
+
+% Topics a section should at least touch on.
 \newcommand{\topics}[1]{{\small\itshape\color{scaffoldnote}\raggedright
 	Touch on: #1\par}}
 
-% Drafting scaffold: live sentence-count badges per heading, read from
-% sentence-counts.tex (regenerated each build by tools/count_sentences.py).
-\usepackage[explicit]{titlesec}
-\IfFileExists{sentence-counts.tex}{\input{sentence-counts.tex}}{}
-\newcommand{\sentbadge}[1]{%
-	\ifcsname sc@#1\endcsname
-		\space{\normalfont\small\color{scaffolddim}[\csname sc@#1\endcsname~sentences]}%
-	\fi}
-
-% Drafting scaffold: a needed citation not yet in references.bib. Not a fake
-% \cite key -- that would bury biber's genuine missing-citation warnings.
+% A needed citation not yet in references.bib. Not a fake \cite key -- that
+% would bury biber's genuine missing-citation warnings.
 \newcommand{\needcite}[1]{{\normalfont\small\color{scaffoldwarn}[cite: #1]}}
 
-% Drafting scaffold: hand-typed-unit badges, read from unit-warnings.tex
-% (regenerated each build by tools/check_units.py). No badge means clean.
-\IfFileExists{unit-warnings.tex}{\input{unit-warnings.tex}}{}
-\newcommand{\unitbadge}[1]{%
-	\ifcsname uw@#1\endcsname
-		\space{\normalfont\small\color{scaffoldwarn}%
-			[\csname uw@#1\endcsname~raw units]}%
-	\fi}
-
-\titleformat{\chapter}[display]
-	{\normalfont\huge\bfseries}{\chaptertitlename\ \thechapter}{20pt}
-	{\Huge #1\sentbadge{ch\thechapter}\unitbadge{ch\thechapter}}
-\titleformat{\section}
-	{\normalfont\Large\bfseries\raggedright}{\thesection}{1em}
-	{#1\sentbadge{\thesection}\unitbadge{\thesection}}
-\titleformat{\subsection}
-	{\normalfont\large\bfseries\raggedright}{\thesubsection}{1em}
-	{#1\sentbadge{\thesubsection}\unitbadge{\thesubsection}}
 % [block]: \paragraph is run-in by default; this stands the heading on its own
 % line. Still unnumbered and absent from the TOC.
+\usepackage{titlesec}
 \titleformat{\paragraph}[block]
 	{\normalfont\bfseries\raggedright}{}{0pt}
-	{#1}
+	{}
 \titlespacing*{\paragraph}{0pt}{1.5ex plus 1ex minus .2ex}{0.5ex}
 
 \addbibresource{references.bib}
@@ -100,12 +78,6 @@
 \input{chapters/02-literature-review}
 
 
-% The bibliography's \chapter* inherits \titleformat{\chapter}, whose badges
-% would show the last chapter's counts; renaming \thechapter makes both
-% lookups miss, so nothing prints.
-\begingroup
-\renewcommand{\thechapter}{-bib}
 \printbibliography[heading=bibintoc]
-\endgroup
 
 \end{document}

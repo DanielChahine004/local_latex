@@ -27,8 +27,8 @@ Where the radiotracer appears to accumulate, by proxy we infer that the correspo
 This makes PET a functional or molecular imaging modality, as opposed to an anatomical imaging modality such as computed tomography (CT) or magnetic resonance imaging (MRI), which image the structure of the subject.
 Many modern clinical workflows employ PET in combination with CT or MRI, often in hybrid scanner systems, so that functional and anatomical information are acquired in a single session and spatially co-registered.
 Beyond informing clinical interpretation, the anatomical scan also supports reconstruction itself.
-CT measures attenuation directly, and so can replace the radionuclide transmission scan that earlier PET systems required \cite{Kinahan1998}; it does so, however, at the effective energy of the polychromatic X-ray beam ($\sim$\keV{70}at 120\,kVp ) rather than at \keV{511}.
-The two energies are not related by a single scale factor: the photoelectric contribution is non-negligible in higher-Z materials such as bone and iodinated contrast agents, and scales steeply with atomic number, whereas at \kev{511} it is negligible and attenuation is governed almost entirely by electron density.
+CT measures attenuation directly, and so can replace the radionuclide transmission scan that earlier PET systems required \cite{Kinahan1998}; it does so, however, at the effective energy of the polychromatic X-ray beam ($\sim$\keV{70} at 120\,kVp) rather than at \keV{511}.
+The two energies are not related by a single scale factor: the photoelectric contribution is non-negligible in higher-Z materials such as bone and iodinated contrast agents, and scales steeply with atomic number, whereas at \keV{511} it is negligible and attenuation is governed almost entirely by electron density.
 Two materials sharing a Hounsfield value may therefore differ in their attenuation at \keV{511}.
 A piecewise-linear rescaling of Hounsfield units is consequently applied, interpolating between air and water below the breakpoint and between water and cortical bone above it, to convert the CT image into a 511\,keV attenuation map \cite{burger2002,carney2006}.
 

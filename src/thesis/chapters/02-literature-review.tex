@@ -83,7 +83,7 @@ PET's coincidence requirement is often described as \emph{electronic collimation
 \paragraph{Coincidence Timing}
 In practice, the two annihilation photons from a single event are rarely detected at the exact same time.
 They travel different distances to the detector ring, penetrate to different depths into the scintillator material, and the readout electronics themselves have finite timing resolution.
-A \emph{coincidence timing window} on the order of \ns{4-12} is therefore permitted: two photons detected within that timespan of each other are assumed to originate from the same annihilation event, and are paired to form an LOR.\needcite{Bailey et al., Positron Emission Tomography: Basic Sciences; or Cherry, Sorenson \& Phelps -- typical clinical window widths}
+A \emph{coincidence timing window} on the order of \qtyrange{4}{12}{\nano\second} is therefore permitted: two photons detected within that timespan of each other are assumed to originate from the same annihilation event, and are paired to form an LOR.\needcite{Bailey et al., Positron Emission Tomography: Basic Sciences; or Cherry, Sorenson \& Phelps -- typical clinical window widths}
 Widening the window recovers valid events lost to timing jitter but admits more spurious events, so its width is a direct trade against the event classification that follows.
 
 \paragraph{Event Types}
@@ -168,7 +168,7 @@ The band gap therefore sets a hard ceiling on light yield before any transport o
 \paragraph{Organic Scintillation}
 Organic scintillators emit by a mechanism belonging to the individual molecule rather than to the bulk solid, which is the property that divides the two families.
 The scintillating species is an aromatic hydrocarbon whose delocalised $\pi$-electron system supports a ladder of singlet ($S_0$, $S_1$, $S_2$, \dots) and triplet ($T_1$, \dots) states, each subdivided into vibrational sublevels.
-An ionising particle excites $\pi$ electrons into the upper singlets, which relax non-radiatively to $S_1$ by internal conversion within picoseconds; the $S_1 \rightarrow S_0$ transition then fluoresces in \ns{1-3}.
+An ionising particle excites $\pi$ electrons into the upper singlets, which relax non-radiatively to $S_1$ by internal conversion within picoseconds; the $S_1 \rightarrow S_0$ transition then fluoresces in \qtyrange{1}{3}{\nano\second}.
 That speed is a direct consequence of the mechanism: the transition is both spin- and dipole-allowed, and no charge-transport stage intervenes between excitation and emission.
 Because fluorescence terminates on vibrationally excited sublevels of $S_0$, the emitted photon is lower in energy than the $S_0 \rightarrow S_1$ absorption and the material is transparent to its own light, the molecular counterpart of the activator level lying inside the band gap.
 A competing path exists: intersystem crossing populates $T_1$, from which radiative decay is spin-forbidden and therefore slow, while bimolecular annihilation of two $T_1$ excitations regenerates $S_1$ and produces delayed fluorescence---the origin of the slow component that pulse-shape discrimination exploits.

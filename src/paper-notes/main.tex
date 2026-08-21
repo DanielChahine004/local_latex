@@ -23,9 +23,10 @@
 \usepackage{amsmath, amssymb}
 \usepackage[backend=biber, style=numeric, sorting=none]{biblatex}
 \usepackage{siunitx}
-\input{units} % \keV{511} etc. -- copied from src/thesis by build-notes; edit the canonical copy there
+% units.tex and references.bib are the thesis's own, found via the
+% -Z search-path=src/thesis that build-notes passes. No copies to keep in sync.
+\input{units} % \keV{511} etc.
 \usepackage{xcolor}
-\input{theme} % same light/dark switch as the thesis
 \usepackage[hidelinks]{hyperref}
 \usepackage{xurl}
 

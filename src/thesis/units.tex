@@ -1,33 +1,18 @@
-% Unit shorthands, \input by main.tex and paper-notes.tex. Requires siunitx.
-% tools/check_units.py reads its macro table from this file.
+% Unit shorthands, \input by the thesis and by paper-notes. Requires siunitx.
+%
+% \keV{511}, not \qty{511}{\kilo\electronvolt}. Add a line here the first time
+% you need a new unit. For a range, use siunitx's \qtyrange directly --
+% \qtyrange{4}{12}{\nano\second}.
 
-% Shared by the shorthands below: a hyphenated argument is a range
-% (\ns{4-12} -> "4 to 12 ns"), anything else a plain \qty.
-% ponytail: a leading minus reads as a range, so no \keV{-5}.
-\ExplSyntaxOn
-\NewDocumentCommand \unitvalue { mm }
-	{
-	\tl_if_in:nnTF {#1} {-}
-		{ \unit_range:nn {#1} {#2} }
-		{ \qty {#1} {#2} }
-	}
-\cs_new_protected:Npn \unit_range:nn #1#2
-	{ \unit_range_aux:w #1 \q_stop {#2} }
-\cs_new_protected:Npn \unit_range_aux:w #1 - #2 \q_stop #3
-	{ \qtyrange {#1} {#2} {#3} }
-\ExplSyntaxOff
-
-% \keV{511}, not \qty{511}{\kilo\electronvolt}.
-% Add a line here the first time you need a new unit.
-\NewDocumentCommand\keV{m}{\unitvalue{#1}{\kilo\electronvolt}}
-\NewDocumentCommand\MeV{m}{\unitvalue{#1}{\mega\electronvolt}}
-\NewDocumentCommand\ps{m}{\unitvalue{#1}{\pico\second}}
-\NewDocumentCommand\ns{m}{\unitvalue{#1}{\nano\second}}
-\NewDocumentCommand\mm{m}{\unitvalue{#1}{\milli\metre}}
-\NewDocumentCommand\cm{m}{\unitvalue{#1}{\centi\metre}}
-\NewDocumentCommand\mins{m}{\unitvalue{#1}{\minute}} % not \minute -- that is siunitx's own unit macro
-\NewDocumentCommand\degs{m}{\unitvalue{#1}{\degree}}  % not \deg -- that is the LaTeX math operator
-\NewDocumentCommand\um{m}{\unitvalue{#1}{\micro\metre}}
-\NewDocumentCommand\MBq{m}{\unitvalue{#1}{\mega\becquerel}}
+\NewDocumentCommand\keV{m}{\qty{#1}{\kilo\electronvolt}}
+\NewDocumentCommand\MeV{m}{\qty{#1}{\mega\electronvolt}}
+\NewDocumentCommand\ps{m}{\qty{#1}{\pico\second}}
+\NewDocumentCommand\ns{m}{\qty{#1}{\nano\second}}
+\NewDocumentCommand\mm{m}{\qty{#1}{\milli\metre}}
+\NewDocumentCommand\cm{m}{\qty{#1}{\centi\metre}}
+\NewDocumentCommand\um{m}{\qty{#1}{\micro\metre}}
+\NewDocumentCommand\mins{m}{\qty{#1}{\minute}} % not \minute -- that is siunitx's own unit macro
+\NewDocumentCommand\degs{m}{\qty{#1}{\degree}} % not \deg -- that is the LaTeX math operator
+\NewDocumentCommand\MBq{m}{\qty{#1}{\mega\becquerel}}
 
 \DeclareSIUnit\curie{Ci} % non-SI, so siunitx does not predefine it

@@ -9,35 +9,14 @@
 \usepackage[hidelinks]{hyperref}
 \usepackage{xurl} % let long URLs break anywhere instead of overrunning the margin
 
-% Theme: \darkmodetrue for screen, \darkmodefalse for printing.
-% The two tag palettes are separate -- print colours go muddy on a dark page.
-\newif\ifdarkmode
-\darkmodetrue
-
-\ifdarkmode
-	\definecolor{pagebg}{HTML}{1E1E1E}
-	\definecolor{ink}{HTML}{E4E4E4}    % off-white, not pure -- less glare
-	\definecolor{askc}{HTML}{6FA8FF}   % question to put to him
-	\definecolor{raisec}{HTML}{C08CF0} % point I intend to make
-	\definecolor{outc}{HTML}{5FD08A}   % what came back
-	\definecolor{actc}{HTML}{F0A254}   % action on me
-	\definecolor{ansc}{HTML}{5FD08A}   % the answer slot under a question
-	\definecolor{answerc}{HTML}{8FA3B0}% the unanswered placeholder
-	\definecolor{rulec}{HTML}{5A6069}
-\else
-	\definecolor{pagebg}{HTML}{FFFFFF}
-	\definecolor{ink}{HTML}{000000}
-	\definecolor{askc}{HTML}{1F4E9C}
-	\definecolor{raisec}{HTML}{6B3FA0}
-	\definecolor{outc}{HTML}{1B6B3A}
-	\definecolor{actc}{HTML}{B4530A}
-	\definecolor{ansc}{HTML}{1B6B3A}
-	\definecolor{answerc}{HTML}{6B7A85}
-	\definecolor{rulec}{HTML}{9AA3AE}
-\fi
-
-\pagecolor{pagebg}
-\AtBeginDocument{\color{ink}}
+% Tag palette, picked for a white page.
+\definecolor{askc}{HTML}{1F4E9C}    % question to put to him
+\definecolor{raisec}{HTML}{6B3FA0}  % point I intend to make
+\definecolor{outc}{HTML}{1B6B3A}    % what came back
+\definecolor{actc}{HTML}{B4530A}    % action on me
+\definecolor{ansc}{HTML}{1B6B3A}    % the answer slot under a question
+\definecolor{answerc}{HTML}{6B7A85} % the unanswered placeholder
+\definecolor{rulec}{HTML}{9AA3AE}
 
 % Narrow measure plus unbreakable tokens (Lu-177, Safavi-Naeini) overflow the
 % margin. Only applied to paragraphs that would otherwise be overfull.

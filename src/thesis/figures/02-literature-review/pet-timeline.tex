@@ -25,6 +25,7 @@
 \providecolor{tlpositron}{HTML}{2A6F97}
 \providecolor{tlsingle}{HTML}{8B9BA4}
 \providecolor{tltext}{HTML}{3D4A52}
+\providecolor{pagebg}{HTML}{FFFFFF} % labels fill with it to mask the leaders beneath
 
 % LEADERS ARE ELBOWS, AND THE ROUTE IS LOAD-BEARING. A straight leader to
 % row 2 cuts through the row-1 band and gets visibly broken by the labels'
@@ -38,7 +39,7 @@
 %          1951 lx 65 (before 77)      1963 lx 150 (gap 145-153)
 % Several clearances are only 2-4 pt: move ANY row-1 label and the row-2
 % leader threading past it must move too. Labels are drawn in a SECOND PASS
-% after every leader, filled with pagebg (must track the theme) as a backstop
+% after every leader, filled with pagebg (the page colour) as a backstop
 % mask -- draw order gives the z-order. (This used to be a pgfonlayer layer,
 % which TeX Live 2026's PGF 3.1.11 rejects inside a \foreach body.)
 %

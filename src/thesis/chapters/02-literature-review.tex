@@ -151,7 +151,7 @@ Scattered and random events both contribute a slowly varying background that red
 
 \subsection{Scintillation Mechanisms and Figures of Merit}
 \label{sec:scintillation-mechanisms}
-\topics{two distinct mechanisms: inorganic scintillation via band structure and activator dopants, organic via molecular $\pi$-electron singlets -- why the families behave so differently at \keV{511}. Within the inorganics the luminescence transition predicts timing: self-activated (BGO, PWO, CdWO\textsubscript{4}), 5d$\rightarrow$4f (Ce\textsuperscript{3+}, Pr\textsuperscript{3+}), s\textsuperscript{2}-ion (Tl\textsuperscript{+}, Eu\textsuperscript{2+}), core--valence (BaF\textsubscript{2}); only 5d$\rightarrow$4f is dipole-allowed and fast, which explains the decay-time ordering better than any bulk property. Then the figures of merit -- light yield, decay and rise time, density and effective Z, emission matching, energy resolution with non-proportionality as its dominant limit (why SrI\textsubscript{2}:Eu beats NaI(Tl) at comparable yield), afterglow, hygroscopicity, machinability -- and which actually matter for a cost-driven design. Close with the trade-offs that shape the material space: density versus yield versus proportionality, yield versus speed, density versus formability.}
+\topics{three distinct mechanisms: inorganic scintillation via band structure and activator dopants, organic via molecular $\pi$-electron singlets, noble-element excimers as the third -- why the families behave so differently at \keV{511}. Within the inorganics the luminescence transition predicts timing: self-activated (BGO, PWO, CdWO\textsubscript{4}), 5d$\rightarrow$4f (Ce\textsuperscript{3+}, Pr\textsuperscript{3+}), s\textsuperscript{2}-ion (Tl\textsuperscript{+}, Eu\textsuperscript{2+}), core--valence (BaF\textsubscript{2}); only 5d$\rightarrow$4f is dipole-allowed and fast, which explains the decay-time ordering better than any bulk property. Then the figures of merit -- light yield, decay and rise time, density and effective Z, emission matching, energy resolution with non-proportionality as its dominant limit (why SrI\textsubscript{2}:Eu beats NaI(Tl) at comparable yield), afterglow, hygroscopicity, machinability -- and which actually matter for a cost-driven design. Close with the trade-offs that shape the material space: density versus yield versus proportionality, yield versus speed, density versus formability.}
 
 \paragraph{The Role of the Scintillator}
 The scintillator serves a dual-function for gamma detection; inciting interactions from gamma photons, generally by virtue of a high density and high atomic number; and amplification, converting the interaction of a single photon into a shower of lower-energy photons, in quantities that relate to the amount of energy deposited in the gamma interaction, enabling downstream electronic detection and energy discrimination.
@@ -162,11 +162,21 @@ Additional practical considerations relate to the scintillators manufacturabilit
 \paragraph{Inorganic Scintillation}
 What characterises an inorganic scintillator is that the light-emitting process belongs to the bulk solid rather than to any individual molecule: energy is converted through the delocalised band structure of a wide-band-gap insulator, and the charge carriers must travel through the material before they can emit.
 Conversion proceeds in three stages, set out in Figure~\ref{fig:scintillation-process}.
-A \keV{511} photon interacting photoelectrically or by Compton scatter liberates an energetic electron, which cascades by impact ionisation and Auger decay until the resulting carriers fall below the ionisation threshold and thermalise to the band edges, leaving a dense track of electron--hole pairs.
+The premise is the one every scintillator shares: the \keV{511} photon makes no light itself but, by photoelectric absorption or Compton scatter, liberates one energetic electron, and everything that follows---the light, its yield and its timing---is the material's response to that electron.
+That electron cascades by impact ionisation and Auger decay until the resulting carriers fall below the ionisation threshold and thermalise to the band edges, leaving a dense track of electron--hole pairs.
 These carriers then migrate, some binding into excitons and some lost to trapping or non-radiative quenching, until they are captured at luminescence centres -- typically an activator dopant such as Ce\textsuperscript{3+} (as in LSO, LYSO) or Tl\textsuperscript{+} (as in NaI) -- where they recombine radiatively and emit many lower-energy optical photons (visible or near-visible light).
 Because the activator levels lie within the band gap, the emitted photons are too low in energy to re-excite the host, and the crystal remains transparent to its own light.
+That is the second thing every scintillator must arrange: the emitted photon has to carry less energy than the material's own excitation gap, or the bulk would reabsorb it before it reached a photodetector, and what distinguishes the three mechanisms below is the device by which the emission is brought under the gap---here an activator level inside it.
+
 The number of electron--hole pairs created by a deposit of energy $E$ scales as $E/\beta E_\mathrm{g}$, where $E_\mathrm{g}$ is the band gap of the host and $\beta \approx 2$--$3$ is the factor by which the average energy cost of one thermalised pair exceeds that gap, the excess being lost to the phonons emitted during thermalisation.
 The band gap therefore sets a hard ceiling on light yield before any transport or quantum-efficiency losses are counted \cite{Lempicki1993}.
+
+The activator of the third stage is the most common luminescence centre but not the only one, and the figure draws that case alone; what every alternative shares is some other way of getting the emission under the gap.
+A bare host would not do: band-to-band recombination would emit at close to $E_\mathrm{g}$, which the next atom along can absorb, and in a wide-gap insulator it is in any case slow and mostly non-radiative at room temperature, which is why pure NaI scintillates only when cooled and Tl\textsuperscript{+} is added.
+The intrinsic alternatives are a self-trapped exciton, where the pair distorts the lattice around itself and that relaxation takes energy out before emission (undoped CsI, the slow component of BaF\textsubscript{2}); a self-activated host, where a constituent ion of the lattice acts as its own centre with a large Stokes shift (Bi\textsuperscript{3+} in BGO, the tungstate group in PWO and CdWO\textsubscript{4}); core--valence luminescence, where a valence electron fills a core hole and the photon carries the core--valence spacing, smaller than the gap in the few crystals that show it, with no thermalised carriers involved at all (the sub-nanosecond fast component of BaF\textsubscript{2}, CsF); and, in direct-gap semiconductors and perovskites, a free or confined exciton, whose emission sits only just below the gap, so that self-absorption is a real limit and these are used thin or as nanocrystals.
+The first two stages are common to all of these; only the third changes, and with it the decay time; Table~\ref{tab:scintillator-taxonomy} places the material classes by that centre.
+
+By mechanism, then, the inorganic family takes in the halides (NaI:Tl, CsI:Tl, LaBr\textsubscript{3}:Ce, CeBr\textsubscript{3}, SrI\textsubscript{2}:Eu, BaF\textsubscript{2}), the oxides and garnets (BGO, LSO, LYSO, GAGG) whether grown as crystals or sintered as transparent ceramics, Ce-doped glasses, and the semiconductor and perovskite scintillators, the hybrid organic--inorganic perovskites included, since their light comes from the inorganic lead-halide framework and not from the organic cation.
 
 \begin{figure}[tbp]
 	\centering
@@ -181,17 +191,110 @@ The band gap therefore sets a hard ceiling on light yield before any transport o
 
 \clearpage
 
-\paragraph{Luminescence Transitions and Why They Set the Decay Time}
-
 \paragraph{Organic Scintillation}
 Organic scintillators emit by a mechanism belonging to the individual molecule rather than to the bulk solid, which is the property that divides the two families.
 The scintillating species is an aromatic hydrocarbon whose delocalised $\pi$-electron system supports a ladder of singlet ($S_0$, $S_1$, $S_2$, \dots) and triplet ($T_1$, \dots) states, each subdivided into vibrational sublevels.
-An ionising particle excites $\pi$ electrons into the upper singlets, which relax non-radiatively to $S_1$ by internal conversion within picoseconds; the $S_1 \rightarrow S_0$ transition then fluoresces in \qtyrange{1}{3}{\nano\second}.
+The same fast electron, liberated by the \keV{511} photon as before, excites $\pi$ electrons into the upper singlets, which relax non-radiatively to $S_1$ by internal conversion within picoseconds; the $S_1 \rightarrow S_0$ transition then fluoresces in \qtyrange{1}{3}{\nano\second}.
 That speed is a direct consequence of the mechanism: the transition is both spin- and dipole-allowed, and no charge-transport stage intervenes between excitation and emission.
-Because fluorescence terminates on vibrationally excited sublevels of $S_0$, the emitted photon is lower in energy than the $S_0 \rightarrow S_1$ absorption and the material is transparent to its own light, the molecular counterpart of the activator level lying inside the band gap.
-A competing path exists: intersystem crossing populates $T_1$, from which radiative decay is spin-forbidden and therefore slow, while bimolecular annihilation of two $T_1$ excitations regenerates $S_1$ and produces delayed fluorescence---the origin of the slow component that pulse-shape discrimination exploits.
-Practical plastics are ternary systems in which a polymer base such as polyvinyltoluene absorbs most of the deposited energy and transfers it non-radiatively by F\"orster dipole--dipole coupling to a primary fluor at around one per cent by weight, with a wavelength shifter at a far lower concentration moving the emission to longer wavelengths to match the photodetector and limit self-absorption.
+Because fluorescence terminates on vibrationally excited sublevels of $S_0$, the emitted photon is lower in energy than the $S_0 \rightarrow S_1$ absorption and the material is transparent to its own light: the same requirement as before, met by a vibrational offset where the inorganic uses an activator level inside the gap.
+
+A second, slower route feeds the same emission: intersystem crossing diverts some excitations to $T_1$, from which direct radiative decay (phosphorescence) is spin-forbidden, slow and dim, and what returns that energy as light is the bimolecular annihilation of two $T_1$ excitations, $T_1 + T_1 \rightarrow S_1 + S_0$, which regenerates $S_1$ so that the ordinary $S_1 \rightarrow S_0$ fluorescence occurs hundreds of nanoseconds late.
+There is therefore one emitting transition fed by two paths, one fast and one slow, and because densely ionising particles produce more triplets the slow fraction depends on particle type---the origin of the slow component that pulse-shape discrimination exploits.
+
+Practical plastics are ternary systems in which a polymer base such as polyvinyltoluene absorbs most of the deposited energy and transfers it non-radiatively by F\"orster dipole--dipole coupling to a primary fluor present at a few per cent by mass (typically around one), which is the molecule whose levels the diagram describes, with a wavelength shifter at a far lower concentration moving the emission to longer wavelengths to match the photodetector and limit self-absorption.
 Since the emitting species is the bulk itself rather than a dilute dopant, composition is locked to carbon and hydrogen, and the light yield and effective atomic number cannot be raised by doping as they can in an inorganic host.
+The organic family therefore comprises the aromatic crystals (anthracene, stilbene), the liquid scintillators, the plastics, the newer organic glasses and the scintillating fibres drawn from them; metal-loaded plastics (Pb, Sn, Bi, Gd) and nanoparticle-loaded composites remain organic by mechanism, the heavy atoms being there for stopping power rather than emission, except where the nanoparticle itself scintillates, in which case one slab carries both mechanisms.
+
+\begin{figure}[tbp]
+	\centering
+	\input{figures/02-literature-review/organic-scintillation}
+	\caption[Organic scintillation: the molecular energy levels]{%
+		Scintillation in an organic molecule, as a Jablonski diagram \cite{Knoll2010}.
+		Every level is a state of one molecule, and the whole sequence runs without a charge-transport stage, which is why the prompt fluorescence is an order of magnitude faster than any activator emission in Figure~\ref{fig:scintillation-process}.
+		The triplet detour is the second route to the same $S_1 \rightarrow S_0$ emission: phosphorescence direct from $T_1$ is spin-forbidden and contributes little light, while annihilation of two triplets refills $S_1$ and the ordinary fluorescence then comes late, which is what pulse-shape discrimination reads.
+		The inset places the levels: in a plastic they belong to the dilute fluor, not to the polymer that absorbs the energy.
+		The grey dashed arrows are non-radiative.
+	}
+	\label{fig:organic-scintillation}
+\end{figure}
+
+\clearpage
+
+\paragraph{Noble-Element Excimer Scintillation}
+A third mechanism belongs to neither family: the noble elements, used as liquids (xenon, argon) and occasionally as gases or liquid helium, scintillate through excited dimers.
+As in any scintillator the \keV{511} photon itself makes no light: it liberates one fast electron, which spends its energy along a track of a few millimetres ionising atoms (Xe $\rightarrow$ Xe\textsuperscript{+} + e\textsuperscript{$-$}, at about \qty{15.6}{\electronvolt} a pair) and exciting others (Xe $\rightarrow$ Xe\textsuperscript{*}).
+An isolated excited atom would emit at \qty{147}{\nano\metre}, a resonance line that every neighbouring atom reabsorbs, so that light would never leave the liquid; what happens instead is that Xe\textsuperscript{*}, unlike a ground-state atom, binds a neighbour within picoseconds into the excimer Xe\textsubscript{2}\textsuperscript{*} (Ar\textsubscript{2}\textsuperscript{*} in argon), a two-atom molecule that exists only while it is excited, and the ions reach the same state by a longer route, Xe\textsuperscript{+} capturing first a neighbour and then an electron.
+The excimer emits a vacuum-ultraviolet photon, at \qty{178}{\nano\metre} in xenon and \qty{128}{\nano\metre} in argon, and lands on a ground state that is unbound, so the pair falls apart; with no ground-state dimer left to absorb at that wavelength, and the photon well below the \qty{147}{\nano\metre} atomic resonance in energy, the liquid is transparent to its own light: the emission again lies under the material's own excitation, the device this time being a ground state that is not bound at all, where the inorganic uses an activator level and the organic a vibrational offset.
+There is no band structure and no $\pi$ system, and the contrast is sharper than that: the inorganic carries its energy to a luminescence centre installed in the bulk and the organic to a fluor dissolved in it, whereas the noble liquid builds the centre on the spot out of the excitation itself, uses it once and lets it dissociate, so there is no activator to tune.
+As in the organic case the excimer has a singlet and a triplet state, and the two give a prompt and a slow component, a few nanoseconds against roughly \qty{27}{\nano\second} in xenon and against microseconds in argon, the ratio again depending on ionisation density.\needcite{Aprile and Doke 2010 review for excimer timing, yields and the recombination component}
+
+The light yield is high, comparable to NaI(Tl) in liquid xenon, and liquid xenon's density and atomic number ($\qty{2.95}{\gram\per\centi\metre\cubed}$, $Z=54$) make it a respectable absorber at \keV{511}, so the mechanism is not dismissed on physics.
+What keeps it out of clinical scanners is engineering: cryogenic operation, photodetectors that see the vacuum ultraviolet or a wavelength shifter in front of them, and a liquid rather than a machinable solid.
+Its compensation is that the same volume can also collect the ionisation charge---an applied field drifts the electrons away before they recombine, trading the recombination share of the light for a charge signal---so a liquid-xenon time-projection chamber localises each interaction in three dimensions and measures its energy twice; that is what the liquid-xenon Compton-PET prototypes exploit, and they are treated as a research architecture in Section~\ref{sec:unconventional} rather than as a material option here.
+
+Table~\ref{tab:scintillator-taxonomy} gathers the three mechanisms into one taxonomy, placing each material class by the centre that emits.
+
+\begin{figure}[p] % own page after the paragraph, as the two mechanism figures above; [tbp] would take the top of the paragraph's page
+	\centering
+	\input{figures/02-literature-review/excimer-scintillation}
+	\caption[Noble-element excimer scintillation]{%
+		Excimer scintillation in a noble liquid, as potential energy against the separation of two atoms.
+		An excited atom, made directly or by recombination, binds a neighbour into the excimer Xe$_2^*$, which sits in a bound well; its emission lands on the ground-state curve, which has no well at all, so the two atoms separate and there is no bound molecule to reabsorb the photon---the third way of being transparent to one's own light, after the activator level of Figure~\ref{fig:scintillation-process} and the vibrational offset of Figure~\ref{fig:organic-scintillation}.
+		The singlet and triplet excimer states give the prompt and slow components, as the singlet and triplet molecular states do in the organic case.
+		The curves are illustrative shapes, not measured potentials.
+	}
+	\label{fig:excimer-scintillation}
+\end{figure}
+
+\clearpage
+
+\begin{table}[tbp]
+	\centering
+	\footnotesize
+	% rowsep between rows keeps a wrapped cell visibly with its own row
+	\begin{tabularx}{\textwidth}{@{} >{\raggedright\arraybackslash}p{4.9cm} >{\raggedright\arraybackslash}p{4.0cm} >{\raggedright\arraybackslash}X @{}}
+		\toprule
+		Luminescence centre & Class & Examples \\
+		\midrule
+		\multicolumn{3}{@{}l@{}}{\textbf{Inorganic} --- band structure of the solid; emission from a level inside the gap} \\
+		\addlinespace[3pt]
+		Activator, 5d$\rightarrow$4f (Ce\textsuperscript{3+}, Pr\textsuperscript{3+}) & halide, oxide, garnet crystals; ceramics; glasses & LaBr\textsubscript{3}:Ce, LSO:Ce, LYSO:Ce, GAGG:Ce \\
+		\addlinespace[3pt]
+		Activator, s\textsuperscript{2} ion (Tl\textsuperscript{+}, Eu\textsuperscript{2+}) & halide crystals & NaI:Tl, CsI:Tl, SrI\textsubscript{2}:Eu \\
+		\addlinespace[3pt]
+		Self-activated host & oxide crystals & BGO, PWO, CdWO\textsubscript{4} \\
+		\addlinespace[3pt]
+		Self-trapped exciton & undoped halides & CsI, BaF\textsubscript{2} (slow component) \\
+		\addlinespace[3pt]
+		Core--valence & fluorides & BaF\textsubscript{2} (fast component), CsF \\
+		\addlinespace[3pt]
+		Direct-gap exciton & semiconductors, perovskites & ZnO:Ga, CsPbBr\textsubscript{3}, hybrid lead halides \\
+		\midrule
+		\multicolumn{3}{@{}l@{}}{\textbf{Organic} --- $\pi$ electrons of one molecule; emission offset by vibrational sublevels} \\
+		\addlinespace[3pt]
+		Fluorescence of the crystal & aromatic crystals & anthracene, stilbene \\
+		\addlinespace[3pt]
+		Fluorescence of a dissolved fluor & liquids\newline plastics, glasses, fibres\newline loaded composites & toluene or PXE with PPO, POPOP\newline PVT with fluor and shifter (EJ-200)\newline metal- or nanoparticle-loaded plastics \\
+		\midrule
+		\multicolumn{3}{@{}l@{}}{\textbf{Noble-element excimer} --- a dimer made by the excitation; ground state unbound} \\
+		\addlinespace[3pt]
+		Xe\textsubscript{2}\textsuperscript{*} & liquid & xenon \\
+		\addlinespace[3pt]
+		Ar\textsubscript{2}\textsuperscript{*} & liquid, gas & argon, helium \\
+		\midrule
+		\multicolumn{3}{@{}l@{}}{\textbf{Not scintillation} --- for contrast} \\
+		\addlinespace[3pt]
+		Cherenkov: no excited state & radiators & PbF\textsubscript{2}, PWO in Cherenkov mode \\
+		\addlinespace[3pt]
+		Direct conversion: charge, no light & semiconductors & CdZnTe, TlBr \\
+		\bottomrule
+	\end{tabularx}
+	\caption[A taxonomy of scintillators by mechanism]{%
+		A taxonomy of scintillators by mechanism.
+		Each group is a family of Figures~\ref{fig:scintillation-process} to~\ref{fig:excimer-scintillation}, named with the device that brings its emission under the host's own excitation; the last group is not scintillation and is there for the contrast with Section~\ref{sec:energy-conversion}.
+	}
+	\label{tab:scintillator-taxonomy}
+\end{table}
 
 \paragraph{Light Output and Timing}
 

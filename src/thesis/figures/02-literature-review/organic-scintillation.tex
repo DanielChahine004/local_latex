@@ -1,0 +1,128 @@
+% !TeX root = ../../main.tex
+% Jablonski diagram of organic scintillation: singlet ladder on the left,
+% triplet on the right, one arrow per process; legend and a ternary-plastic
+% inset below. \input by chapters/02-literature-review.tex. Companion to
+% scintillation-process.tex and drawn to its palette and weights.
+%
+% Labels sit beside their own arrow, never across the gap between the singlet
+% and triplet columns: that gap (x = 6.6 to 8.6) belongs to the intersystem
+% crossing. The delayed-fluorescence return goes over the top at y = 5.0 so it
+% cannot run along the S1 line that intersystem crossing leaves from. Every
+% prose block has a text width, so its box is fixed rather than set by the
+% wording. \orgfit guards the total width, which the right-hand labels set.
+%
+% Needs arrows.meta and decorations.pathmorphing, both loaded in main.tex.
+
+\providecolor{orgflu}{HTML}{378ADD}
+\providecolor{orgphos}{HTML}{D4537E}
+\providecolor{orgdelay}{HTML}{EF9F27}
+\providecolor{orgexcite}{HTML}{E24B4A}
+\providecolor{orghot}{HTML}{BA7517}
+\providecolor{orginert}{HTML}{888780}
+\providecolor{orgboxfill}{HTML}{FAEEDA}
+
+\providecommand{\orgfit}{%
+	\path let \p1=(current bounding box.east), \p2=(current bounding box.west) in
+		\pgfextra{%
+			\ifdim\dimexpr\x1-\x2\relax>\textwidth
+				\PackageError{organic-scintillation}{Figure is wider than the text block}%
+					{It measures \the\dimexpr\x1-\x2\relax\space against a measure of
+					\the\textwidth. Shorten a label or move it inside the diagram.}%
+			\fi};}
+
+\begin{tikzpicture}[
+	x=1cm, y=1cm,
+	ann/.style   = {font=\footnotesize, align=center},
+	side/.style  = {ann, align=left},
+	title/.style = {font=\small},
+	lvl/.style   = {line width=0.8pt},
+	vib/.style   = {orginert!50, line width=0.3pt},
+	flow/.style  = {-{Stealth[length=4pt]}, line width=0.5pt},
+	relax/.style = {-{Stealth[length=3pt]}, orginert, line width=0.4pt, decorate,
+		decoration={snake, amplitude=0.35mm, segment length=1.4mm, post length=1.2mm}},
+	wavy/.style  = {-{Stealth[length=4pt]}, line width=0.5pt, decorate,
+		decoration={snake, amplitude=0.5mm, segment length=2mm, post length=1.6mm}},
+	box/.style   = {draw=orgdelay, fill=orgboxfill, line width=0.4pt, rounded corners=1pt,
+		minimum height=0.8cm, inner xsep=3pt, font=\footnotesize, align=center,
+		text=orgdelay!55!black, text width=2.8cm},
+	]
+
+% ---------- levels: S0, S1, S2 at left, T1 at right ----------------
+% {y}/{label}: a thick line with three vibrational sublevels above it
+\foreach \y/\l in {0.4/$S_0$, 4.2/$S_1$, 6.6/$S_2$} {
+	\draw[lvl] (1.2,\y) -- (6.6,\y);
+	\foreach \d in {0.22,0.44,0.66} \draw[vib] (1.2,\y+\d) -- (6.6,\y+\d);
+	\node[ann, anchor=east] at (0.95,\y) {\l};
+}
+\draw[lvl] (8.6,3.0) -- (12.0,3.0);
+\foreach \d in {0.22,0.44,0.66} \draw[vib] (8.6,3.0+\d) -- (12.0,3.0+\d);
+\node[ann, anchor=east] at (8.35,3.0) {$T_1$};
+\draw[lvl] (8.6,0.4) -- (12.0,0.4);
+
+\draw[flow, line width=0.3pt] (0.4,0.4) -- (0.4,7.3);
+\node[ann] at (0.4,7.55) {$E$};
+
+\node[title] at (3.9,8.2)  {Singlet states};
+\node[ann]   at (3.9,7.75) {spins paired: emission allowed};
+\node[title] at (10.3,8.2) {Triplet state};
+\node[ann]   at (10.3,7.75) {spins parallel: emission forbidden};
+
+% ---------- excitation and the two singlet relaxations -------------
+\draw[flow, orgexcite, line width=0.6pt] (1.8,0.4) -- (1.8,7.26);
+\node[side, anchor=west, text width=3.1cm] at (2.0,1.7)
+	{Ionising particle\\[-1pt] excites $\pi$ electrons,\\[-1pt] $\sim$\qty{e-15}{\second}};
+
+\draw[relax] (2.6,7.26) -- (2.6,6.64);
+\draw[flow, orginert, dashed] (3.6,6.6) -- (3.6,4.88);
+\draw[relax] (3.6,4.86) -- (3.6,4.24);
+\node[side, anchor=west, text width=3.3cm] at (3.8,5.75)
+	{Internal conversion\\[-1pt] non-radiative, $\sim$\qty{e-12}{\second}};
+
+\draw[flow, orgflu] (5.4,4.2) -- (5.4,0.86);
+\draw[relax] (5.4,0.84) -- (5.4,0.44);
+\node[side, anchor=east, text width=3.1cm, align=right] at (5.2,2.95)
+	{Fluorescence\\[-1pt] \qtyrange[range-phrase=--, range-units=single]{1}{3}{\nano\second}, prompt\\[-1pt] $\sim$\qty{420}{\nano\metre} in plastics};
+\draw[wavy, orghot] (5.55,1.55) -- (6.5,1.2);
+
+% ---------- the triplet detour --------------------------------------
+\draw[flow, orginert, dashed] (6.6,4.2) -- (8.6,3.68);
+\draw[relax] (8.9,3.66) -- (8.9,3.04);
+\node[ann, text width=2.2cm] at (7.4,2.05) {Intersystem crossing};
+
+\draw[flow, orgphos, dotted, line width=0.6pt] (10.3,3.0) -- (10.3,0.86);
+\draw[relax] (10.3,0.84) -- (10.3,0.44);
+\node[side, anchor=west, text width=3.2cm] at (10.5,1.6)
+	{Phosphorescence\\[-1pt] spin-forbidden, $\sim$ms,\\[-1pt] little light};
+
+% over the top: the return to S1 must not share the S1 line with the
+% intersystem-crossing arrow
+\draw[flow, orgdelay] (12.0,3.0) -- (12.6,3.0) -- (12.6,5.0) -- (6.0,5.0) -- (6.0,4.3);
+\node[side, anchor=west, text width=2.85cm] at (12.7,4.0)
+	{Delayed\\[-1pt] fluorescence:\\[-1pt] $T_1 + T_1 \rightarrow S_1 + S_0$\\[-1pt] refills $S_1$, so the\\[-1pt] same photon comes\\[-1pt] hundreds of ns late};
+
+% ---------- footnote ------------------------------------------------
+\node[ann, anchor=north west, text width=14.6cm, align=left] at (0.5,-0.45)
+	{Both emissions terminate above the $S_0$ ground vibrational level, so the emitted photon is red-shifted from the absorption and the material is transparent to its own light.};
+
+% ---------- legend ---------------------------------------------------
+\draw[flow, orgflu] (0.6,-1.7) -- (1.3,-1.7);
+\node[ann, anchor=west] at (1.4,-1.7) {Radiative, spin-allowed};
+\draw[flow, orgphos, dotted, line width=0.6pt] (5.4,-1.7) -- (6.1,-1.7);
+\node[ann, anchor=west] at (6.2,-1.7) {Radiative, spin-forbidden};
+\draw[flow, orginert, dashed] (10.3,-1.7) -- (11.0,-1.7);
+\node[ann, anchor=west] at (11.1,-1.7) {Non-radiative};
+\draw[relax] (13.6,-1.7) -- (14.3,-1.7);
+\node[ann, anchor=west] at (14.4,-1.7) {Heat};
+
+% ---------- inset: the ternary plastic ------------------------------
+\node[ann, anchor=west, align=left] at (0.5,-2.35) {In a plastic the levels above belong to the fluor, not the bulk:};
+\node[box] (base) at (2.0,-3.4)  {Polymer base (PVT)\\[-1pt] absorbs the deposit};
+\node[box] (fluor) at (7.6,-3.4) {Primary fluor,\\[-1pt] $\sim$1\,\% by mass:\\[-1pt] fluoresces as above};
+\node[box] (wls) at (13.2,-3.4)  {Wavelength shifter\\[-1pt] re-emits to match the sensor};
+\draw[flow, orginert, dashed] (base.east) -- (fluor.west)
+	node[ann, midway, above=3pt] {F\"orster transfer};
+\draw[wavy, orghot] (fluor.east) -- (wls.west)
+	node[ann, midway, above=3pt] {UV photon};
+
+\orgfit
+\end{tikzpicture}

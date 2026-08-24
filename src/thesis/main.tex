@@ -12,6 +12,11 @@
 \usetikzlibrary{calc} % \path let ...: chain-style.tex's \chainfit page-fit guard
 \usetikzlibrary{arrows.meta} % Stealth arrow tips
 \usetikzlibrary{decorations.pathmorphing} % snake, for photon squiggles
+\usetikzlibrary{external} % each tikzpicture compiled once to <jobname>-figureN.pdf beside the output, redone on change
+\tikzexternalize
+\ifdefined\XeTeXversion % tectonic has no -jobname; tools/tikz-external.bat fakes one (pdflatex default elsewhere)
+	\tikzset{external/system call={tikz-external \image}}
+\fi
 \usepackage[hidelinks]{hyperref}
 \usepackage{bookmark} % writes PDF outlines directly: saves a whole rerun pass
 \usepackage{xurl} % break long DOIs/URLs rather than overrun the margin

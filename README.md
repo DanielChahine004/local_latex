@@ -19,7 +19,8 @@ Three standalone documents, one folder each, every root named `main.tex`.
 - `build/` — compiled output, not committed
 - `tools/` — standalone `biber.exe` 2.17 (matches biblatex 3.17 in Tectonic's
   bundle; not on conda-forge for Windows) and a wrapper batch file for the
-  VS Code build
+  VS Code build, plus `tikz-external.bat`, the per-figure compile behind TikZ
+  externalisation
 
 ## Setup (fresh clone)
 
@@ -46,6 +47,12 @@ pixi run build-meetings   # meeting log -> build/meetings/main.pdf
 
 In VS Code, Ctrl+Alt+B (LaTeX Workshop) builds the document the open file
 belongs to (chapter files declare `% !TeX root = ../main.tex`).
+
+TikZ figures are externalised: each `tikzpicture` is compiled once to
+`build/thesis/main-figureN.pdf` and only recompiled when its source changes, so
+the first build after a clone or a `build/` wipe is slow (one full pass per
+figure) and the rest are not. Delete `build/thesis/main-figure*` to force a
+redo.
 
 ## Sync
 

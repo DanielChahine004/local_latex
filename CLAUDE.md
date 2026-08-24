@@ -14,6 +14,15 @@ and `pixi run build-meetings` build the other two.
 `build-notes` passes `-Z search-path=src/thesis` so paper-notes reads them in
 place.
 
+TikZ is externalised (`\tikzexternalize` in `main.tex`): each `tikzpicture`
+becomes `build/thesis/main-figureN.pdf`, remade only when its source changes.
+Tectonic has no `-jobname`, so `tools/tikz-external.bat` writes a same-named
+driver and compiles that; Overleaf uses pgf's stock `pdflatex` call. The build
+needs `-k` (the `.md5` stamps are intermediates) and `-Z shell-escape-cwd=` at
+the outdir. A figure that reads `\ref` is remade on the next pass after its
+labels settle; that is pgf, not a bug. Delete `build/thesis/main-figure*` to
+force a redo.
+
 ## Overleaf
 
 The thesis lives on a paid Overleaf plan linked to the GitHub repo via
@@ -77,7 +86,8 @@ demand, and measurements copied into a comment go stale the moment a label moves
 - **Float placement:** `[p]` for a full-page TikZ figure, `[tbp]` otherwise.
   Never `h` — it strands the figure mid-paragraph.
 - Every `\caption` takes a short form for the list of figures, with `\label` on
-  the line after it.
+  the line after it. Captions go **below** the content for tables as well as
+  figures: `\caption` after `\end{tabularx}`, never before it.
 - Chain figures call `\chainfit` just before `\end{tikzpicture}`; it errors if the
   figure has outgrown its page.
 

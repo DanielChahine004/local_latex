@@ -9,8 +9,10 @@ version = "0.1.0"
 # biber (not on conda-forge for Windows) lives in tools/biber; tectonic
 # invokes it automatically for biblatex documents if it's on PATH
 [tasks.build]
-cmd = "mkdir -p build/thesis && tectonic --synctex --outdir build/thesis src/thesis/main.tex"
-env = { PATH = "$PIXI_PROJECT_ROOT/tools/biber;$PATH" }
+# -k keeps the TikZ externalisation stamps (*.md5); shell-escape-cwd lands the
+# figure sub-compiles (tools/tikz-external.bat) in the same outdir
+cmd = "mkdir -p build/thesis && tectonic --synctex -k -Z shell-escape-cwd=build/thesis --outdir build/thesis src/thesis/main.tex"
+env = { PATH = "$PIXI_PROJECT_ROOT/tools;$PIXI_PROJECT_ROOT/tools/biber;$PATH" }
 
 [tasks.build-meetings]
 cmd = "mkdir -p build/meetings && tectonic --synctex --outdir build/meetings src/meetings/main.tex"

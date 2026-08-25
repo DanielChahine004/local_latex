@@ -133,32 +133,15 @@
 
 \legend
 
-\section*{Notes, resources, and ideas}
-
-\begin{itemize}[leftmargin=1.2em, itemsep=1.0ex, parsep=0pt]
-	\item \textbf{Paper 1 --- continuous vs discretised reconstruction.}
-		Continuous-coordinate reconstruction vs discretised counterparts, characterising the trade-offs in terms of accuracy and computational cost.
-		Sets the premise for continuous coordinate gamma localisation which underpins the rest of the thesis.
-	\item \textbf{CRLB (or otherwise) for optimal SiPM placement.}
-		Readout gains happen when a SiPM is able to service a larger volume of scintillator; as JPET and light sharing modules fundamentally trade.
-		Establishing the most efficient way to position SiPMs around a scintillator volume to maximise the information content of the data - an information and sampling theory question.
-		This intrinsically targets the reduction of readout channels and in turn the cost of the system, while preserving localisation accuracy.
-		Paper~1 establishes the benefits of continuous coordinate reconstruction, and this asks how can we most efficiently afford continuous localisation capabilities?
-		Ideally this explores scintillator types, size and geometry.
-	\item \textbf{Multiple interaction vertices in a monolithic scintillator.}
-		Investigate whether Compton scattering can be used to help parameterise image reconstruction.
-		Such a monolithic detector effectively serves as a dual PET--Compton camera, and Compton kinematics could help quantify per-event uncertainty and improve scanner sensitivity.
-		Extends the previous work by using multi-site localisation to inform image reconstruction.
-	\item \textbf{Plastic scintillator camera localisation.}
-		\url{https://www.youtube.com/watch?v=To6yDq3kYds} and \url{https://www.nature.com/articles/s41467-026-70918-x}
-	\item \textbf{PET lecture slides from CERN.}
-		\url{https://indico.cern.ch/event/54940/attachments/979499/1392131/Del_Guerra_Lecture_2.pdf}
-\end{itemize}
-
 \meeting{2026-08-24}
 
-\begin{agenda}{Go over new literature encountered.}
-	\raisept{}
+\begin{agenda}{Go over new literature encountered. CRLB for nanocomposites seems additive to the program and historically underexplored. }
+	\raisept{Casual Academic stuff ready, card access works, overleaf is accessible}
+	\raisept{Did more scintillator research, went down a nanocomposite rabbit hole, and found a couple more monolithic programs around the world}
+	\raisept{All the CRLB work is monocrystalline: Delft on LYSO, Miyaoka's group on LSO, Korevaar on CsI.}
+    \outcome{CRLB work seems like a winner;} {continue validating and learning about it; how it hasn't been applied really to composites (macro, nano, quantum dots, and otherwise) where photon transport differs from the ubiquitous monocrystalline CRLB monolithic research since the transport is much less ballistic and more diffusive - some rules of thumb may not hold in the diffusive regime. The CRLB tooling could be powerful for downstream research like interaction seperability, in time and space, contextualising empirical estimation methods (knn, cauchy fits, neural localisation), and energy, direction of travel estimation and so on.}
+    \action{Share Dan Frank into this overleaf, write up a paper-style premise-method-results for the CRLB, and }
+    
 \end{agenda}
 
 
@@ -228,5 +211,28 @@
 	\action{Next time.}
 		Come back with some lit review done and flexible ideas for project direction.
 \end{agenda}
+
+
+\section*{Notes, resources, and ideas}
+
+\begin{itemize}[leftmargin=1.2em, itemsep=1.0ex, parsep=0pt]
+	\item \textbf{Paper 1 --- continuous vs discretised reconstruction.}
+		Continuous-coordinate reconstruction vs discretised counterparts, characterising the trade-offs in terms of accuracy and computational cost.
+		Sets the premise for continuous coordinate gamma localisation which underpins the rest of the thesis.
+	\item \textbf{CRLB (or otherwise) for optimal SiPM placement.}
+		Readout gains happen when a SiPM is able to service a larger volume of scintillator; as JPET and light sharing modules fundamentally trade.
+		Establishing the most efficient way to position SiPMs around a scintillator volume to maximise the information content of the data - an information and sampling theory question.
+		This intrinsically targets the reduction of readout channels and in turn the cost of the system, while preserving localisation accuracy.
+		Paper~1 establishes the benefits of continuous coordinate reconstruction, and this asks how can we most efficiently afford continuous localisation capabilities?
+		Ideally this explores scintillator types, size and geometry.
+	\item \textbf{Multiple interaction vertices in a monolithic scintillator.}
+		Investigate whether Compton scattering can be used to help parameterise image reconstruction.
+		Such a monolithic detector effectively serves as a dual PET--Compton camera, and Compton kinematics could help quantify per-event uncertainty and improve scanner sensitivity.
+		Extends the previous work by using multi-site localisation to inform image reconstruction.
+	\item \textbf{Plastic scintillator camera localisation.}
+		\url{https://www.youtube.com/watch?v=To6yDq3kYds} and \url{https://www.nature.com/articles/s41467-026-70918-x}
+	\item \textbf{PET lecture slides from CERN.}
+		\url{https://indico.cern.ch/event/54940/attachments/979499/1392131/Del_Guerra_Lecture_2.pdf}
+\end{itemize}
 
 \end{document}

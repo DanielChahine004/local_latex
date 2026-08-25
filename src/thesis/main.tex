@@ -14,8 +14,13 @@
 \usetikzlibrary{decorations.pathmorphing} % snake, for photon squiggles
 \usetikzlibrary{external} % each tikzpicture compiled once to <jobname>-figureN.pdf beside the output, redone on change
 \tikzexternalize
-\ifdefined\XeTeXversion % tectonic has no -jobname; tools/tikz-external.bat fakes one (pdflatex default elsewhere)
+\ifdefined\XeTeXversion % tectonic has no -jobname; tools/tikz-external.bat fakes one
 	\tikzset{external/system call={tikz-external \image}}
+\else % Overleaf compiles with -jobname output, so pgf's default call would \input the nonexistent output.tex;
+% realjob stays output so the sub-run reads output.aux and \ref inside figures resolves
+	\tikzset{external/system call={pdflatex \tikzexternalcheckshellescape
+		-halt-on-error -interaction=batchmode -jobname "\image"
+		"\def\tikzexternalrealjob{output}\input{main}"}}
 \fi
 \usepackage[hidelinks]{hyperref}
 \usepackage{bookmark} % writes PDF outlines directly: saves a whole rerun pass

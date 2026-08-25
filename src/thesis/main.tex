@@ -16,11 +16,13 @@
 \tikzexternalize
 \ifdefined\XeTeXversion % tectonic has no -jobname; tools/tikz-external.bat fakes one
 	\tikzset{external/system call={tikz-external \image}}
-\else % Overleaf compiles with -jobname output, so pgf's default call would \input the nonexistent output.tex;
-% realjob stays output so the sub-run reads output.aux and \ref inside figures resolves
+\else % Overleaf compiles with -jobname output while the file is main.tex, so pgf's
+% auto-detected call would \input the nonexistent output.tex. Built with \string
+% because pgf \xdef's this key: raw \def/\input tokens expand there and eat the file.
+% realjob stays output so the sub-run reads output.aux and \ref in figures resolves.
+	\edef\overleaffigsource{\string\def\string\tikzexternalrealjob{output}\string\input{main}}
 	\tikzset{external/system call={pdflatex \tikzexternalcheckshellescape
-		-halt-on-error -interaction=batchmode -jobname "\image"
-		"\def\tikzexternalrealjob{output}\input{main}"}}
+		-halt-on-error -interaction=batchmode -jobname "\image" "\overleaffigsource"}}
 \fi
 \usepackage[hidelinks]{hyperref}
 \usepackage{bookmark} % writes PDF outlines directly: saves a whole rerun pass

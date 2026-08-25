@@ -139,9 +139,14 @@
 \chapter*{Abstract}
 % Abstract goes here.
 
-\tableofcontents
-\listoffigures
-\listoftables
+% Not in figure sub-runs: the main run truncates and rewrites the toc/lof/lot
+% on disk while a sub-run compiles, and a half-written \contentsline is fatal
+% there. The sub-run ships only its figure and never needs them.
+\tikzifexternalizing{}{%
+	\tableofcontents
+	\listoffigures
+	\listoftables
+}
 \input{acronyms}
 
 \clearpage

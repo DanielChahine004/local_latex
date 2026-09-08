@@ -133,6 +133,22 @@
 
 \legend
 
+
+\meeting{2026-09-07} % adjust to the actual date
+
+\begin{agenda}{The CRLB study is closed and the paper is a draft in progress. Bulk scattering has a predictable optimum, surface scattering does not substitute for it, and the scattering is the more robust optical model.}
+	\raisept{74 GATE runs of 100k gammas, every point through the trust gates. The writeup is a 17-page working draft that builds from the repo with every number regenerated from the run records; not yet a submission.}
+	\raisept{The design rule rests on 15 runs of the reference slab (Rayleigh and Mie) plus 10 varying thickness, 25 varying index and 10 varying footprint. On a whole-crystal metric the DOI bound has an optimum at $\ell^*_{\mathrm{opt}} \approx \frac12 T(1-\cos\theta_c)$, about $T/5$ for LSO; the $n=2.0$ sweep was a blind prediction and landed inside the predicted range. Payoff grows with index: none at $n=1.6$, 24\,\% for LSO, 50\,\% at $n=2.15$.}
+	\raisept{The same runs on an interior metric show no optimum: the bound keeps falling with stronger scattering and halves at the shortest length. The whole-crystal optimum is a crossover set by the outer 3 mm, so a detector that excludes the rim should scatter as hard as the bound stays valid.}
+	\raisept{Four runs replaced bulk scattering with a ground face or diffuser sheets at the grease, readout or entrance. None recovers any of the gain.}
+	\raisept{Robustness: fit the response on one crystal, run the estimator on a perturbed one, over 20 pairs (5 new runs for wrap gaps and finish). The optimum is insensitive to phase function, its one sensitivity is a two-number depth calibration, and the clear crystal is fragile: a faint scatter doubles its error, an air gap behind the paint multiplies it by 13.}
+	\raisept{Checks: 3 anisotropy runs leave the interior bound identical to 1\,\%; yield and dark counts are analytic and do not move the optimum; 2 forced-scintillation runs reproduce the bound at half the cost; a Ziv--Zakai bound and posterior-mean estimator confirm the optimum is what an estimator sees.}
+	\raisept{Stated limits: absorbing wrap only, design comparisons not predicted resolutions, $\ell$ and $n$ treated as independent, no timing.}
+	\outcome{Publishable once the draft settles;} {a referee will attack the rule because it rests on the rim, and the defence is that two achievable estimators find the same optimum. The reflective-wrap gap cannot be argued away: scope it or run it.}
+\end{agenda}
+
+
+
 \meeting{2026-08-24}
 
 \begin{agenda}{Go over new literature encountered. CRLB for nanocomposites seems additive to the program and historically underexplored. }
@@ -140,7 +156,7 @@
 	\raisept{Did more scintillator research, went down a nanocomposite rabbit hole, and found a couple more monolithic programs around the world}
 	\raisept{All the CRLB work is monocrystalline: Delft on LYSO, Miyaoka's group on LSO, Korevaar on CsI.}
     \outcome{CRLB work seems like a winner;} {continue validating and learning about it; how it hasn't been applied really to composites (macro, nano, quantum dots, and otherwise) where photon transport differs from the ubiquitous monocrystalline CRLB monolithic research since the transport is much less ballistic and more diffusive - some rules of thumb may not hold in the diffusive regime. The CRLB tooling could be powerful for downstream research like interaction seperability, in time and space, contextualising empirical estimation methods (knn, cauchy fits, neural localisation), and energy, direction of travel estimation and so on.}
-    \action{Share Dan Frank into this overleaf, write up a paper-style premise-method-results for the CRLB, and }
+    \action{Share Dan Frank into phd overleaf, write up a paper-style premise-method-results for the CRLB, and qc crlb study.}
     
 \end{agenda}
 

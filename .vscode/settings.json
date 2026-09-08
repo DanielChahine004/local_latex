@@ -24,5 +24,9 @@
     ],
     // Outputs go to build/ at the repo root. Anchored to %WORKSPACE_FOLDER%:
     // %DIR%-relative paths threw meetings.tex's output above the repo.
-    "latex-workshop.latex.outDir": "%WORKSPACE_FOLDER%/build"
+    "latex-workshop.latex.outDir": "%WORKSPACE_FOLDER%/build",
+    // The PDF tab becoming active after a build would otherwise expand build/ in the Explorer.
+    "explorer.autoRevealExclude": {
+        "**/build": true
+    }
 }

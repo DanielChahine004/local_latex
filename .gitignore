@@ -12,3 +12,6 @@ build/*
 *.bbl
 *.blg
 *.synctex.gz
+
+# python bytecode from one-off tools
+__pycache__/

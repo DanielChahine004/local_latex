@@ -24,6 +24,15 @@ env = { PATH = "$PIXI_PROJECT_ROOT/tools/biber;$PATH" }
 cmd = "mkdir -p build/paper-notes && tectonic --synctex -Z search-path=src/thesis --outdir build/paper-notes src/paper-notes/main.tex"
 env = { PATH = "$PIXI_PROJECT_ROOT/tools/biber;$PATH" }
 
+# paper-notes as a zoomable mind map in the browser (tools/notes_canvas.py);
+# uv resolves danvas from the script's inline metadata, nothing to install
+[tasks.notes-canvas]
+cmd = "uv run --python 3.12 tools/notes_canvas.py"
+
+# the same board pinned to a world map by institution (tools/assets/world-blue-marble.jpg, NASA, public domain)
+[tasks.notes-map]
+cmd = "uv run --python 3.12 tools/notes_canvas.py --map"
+
 # commit local work, pull --rebase the other machine's commits, push
 [tasks.sync]
 cmd = "powershell -NoProfile -ExecutionPolicy Bypass -File tools/sync.ps1"

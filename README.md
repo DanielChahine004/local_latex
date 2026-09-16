@@ -20,13 +20,15 @@ Three standalone documents, one folder each, every root named `main.tex`.
 - `tools/` — standalone `biber.exe` 2.17 (matches biblatex 3.17 in Tectonic's
   bundle; not on conda-forge for Windows) and a wrapper batch file for the
   VS Code build, plus `tikz-external.bat`, the per-figure compile behind TikZ
-  externalisation
+  externalisation. Linux twins: `get-biber.sh` (fetches biber 2.17 on first
+  build), `tikz-external` and `sync.sh`
 
 ## Setup (fresh clone)
 
-Windows only: `pixi.toml` targets `win-64` and `tools/biber/biber.exe` is a
-Windows binary. Other platforms need a matching biber and platform added to
-`pixi.toml`.
+Windows (`win-64`) and Linux (`linux-64`). The `pixi run` tasks are the same on
+both; on Linux the first build downloads biber 2.17 into `tools/biber/`
+(gitignored). VS Code's Ctrl+Alt+B build runs through `pixi run vscode-build`,
+so pixi must be on the PATH VS Code sees.
 
 Install [pixi](https://pixi.sh), then in the repo root:
 

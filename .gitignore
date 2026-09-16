@@ -15,3 +15,6 @@ build/*
 
 # python bytecode from one-off tools
 __pycache__/
+
+# Linux biber, fetched by tools/get-biber.sh (biber.exe is committed)
+tools/biber/biber

@@ -2,28 +2,68 @@
 authors = ["DanielChahine004 <daniel.chahine004@gmail.com>"]
 channels = ["conda-forge"]
 name = "local_latex"
-platforms = ["win-64"]
+platforms = ["win-64", "linux-64"]
 version = "0.1.0"
 
-[tasks]
+# Build tasks differ per OS: PATH separator, and the biber / tikz-external /
+# sync helpers in tools/ (.exe/.bat/.ps1 on Windows, .sh/no extension on Linux).
+
+# --- Windows ---
 # biber (not on conda-forge for Windows) lives in tools/biber; tectonic
 # invokes it automatically for biblatex documents if it's on PATH
-[tasks.build]
+[target.win-64.tasks.build]
 # -k keeps the TikZ externalisation stamps (*.md5); shell-escape-cwd lands the
 # figure sub-compiles (tools/tikz-external.bat) in the same outdir
 cmd = "mkdir -p build/thesis && tectonic --synctex -k -Z shell-escape-cwd=build/thesis --outdir build/thesis src/thesis/main.tex"
 env = { PATH = "$PIXI_PROJECT_ROOT/tools;$PIXI_PROJECT_ROOT/tools/biber;$PATH" }
 
-[tasks.build-meetings]
+[target.win-64.tasks.build-meetings]
 cmd = "mkdir -p build/meetings && tectonic --synctex --outdir build/meetings src/meetings/main.tex"
 env = { PATH = "$PIXI_PROJECT_ROOT/tools/biber;$PATH" }
 
 # search-path lets it read the thesis's units.tex and references.bib in place,
 # so there are no copies to keep in sync
-[tasks.build-notes]
+[target.win-64.tasks.build-notes]
 cmd = "mkdir -p build/paper-notes && tectonic --synctex -Z search-path=src/thesis --outdir build/paper-notes src/paper-notes/main.tex"
 env = { PATH = "$PIXI_PROJECT_ROOT/tools/biber;$PATH" }
 
+# commit local work, pull --rebase the other machine's commits, push
+[target.win-64.tasks.sync]
+cmd = "powershell -NoProfile -ExecutionPolicy Bypass -File tools/sync.ps1"
+
+# LaTeX Workshop (Ctrl+Alt+B) runs `pixi run vscode-build <tectonic args>` on
+# both OSes; this picks the wrapper
+[target.win-64.tasks.vscode-build]
+cmd = "cmd /c $PIXI_PROJECT_ROOT/tools/vscode-tectonic.bat"
+
+# --- Linux ---
+# tools/get-biber.sh fetches biber 2.17 into tools/biber (gitignored) on first
+# use; tools/tikz-external is the twin of tikz-external.bat
+[target.linux-64.tasks.get-biber]
+cmd = "bash tools/get-biber.sh"
+
+[target.linux-64.tasks.build]
+cmd = "mkdir -p build/thesis && tectonic --synctex -k -Z shell-escape-cwd=build/thesis --outdir build/thesis src/thesis/main.tex"
+env = { PATH = "$PIXI_PROJECT_ROOT/tools:$PIXI_PROJECT_ROOT/tools/biber:$PATH" }
+depends-on = ["get-biber"]
+
+[target.linux-64.tasks.build-meetings]
+cmd = "mkdir -p build/meetings && tectonic --synctex --outdir build/meetings src/meetings/main.tex"
+env = { PATH = "$PIXI_PROJECT_ROOT/tools/biber:$PATH" }
+depends-on = ["get-biber"]
+
+[target.linux-64.tasks.build-notes]
+cmd = "mkdir -p build/paper-notes && tectonic --synctex -Z search-path=src/thesis --outdir build/paper-notes src/paper-notes/main.tex"
+env = { PATH = "$PIXI_PROJECT_ROOT/tools/biber:$PATH" }
+depends-on = ["get-biber"]
+
+[target.linux-64.tasks.vscode-build]
+cmd = "bash tools/vscode-tectonic.sh"
+
+[target.linux-64.tasks.sync]
+cmd = "bash tools/sync.sh"
+
+# --- both ---
 # paper-notes as a zoomable mind map in the browser (tools/notes_canvas.py); uv
 # is a dependency below because it is what resolves danvas from the script's
 # inline metadata; the board hot-reloads on edits to src/paper-notes
@@ -33,10 +73,6 @@ cmd = "uv run --python 3.12 tools/notes_canvas.py"
 # the same board pinned to a world map by institution (tools/assets/world-blue-marble.jpg, NASA, public domain)
 [tasks.notes-map]
 cmd = "uv run --python 3.12 tools/notes_canvas.py --map"
-
-# commit local work, pull --rebase the other machine's commits, push
-[tasks.sync]
-cmd = "powershell -NoProfile -ExecutionPolicy Bypass -File tools/sync.ps1"
 
 [dependencies]
 tectonic = ">=0.16.9,<0.17"

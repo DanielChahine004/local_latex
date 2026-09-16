@@ -7,3 +7,7 @@ pixi.lock merge=binary linguist-language=YAML linguist-generated=true -diff
 *.tex text eol=crlf
 *.bib text eol=crlf
 *.md  text eol=crlf
+
+# shell scripts run on Linux: keep LF whatever the checkout machine
+*.sh text eol=lf
+tools/tikz-external text eol=lf

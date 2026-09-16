@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+# TikZ externalisation under tectonic, which has no -jobname: the Linux twin of
+# tikz-external.bat (no extension, so the same `tikz-external \image` call in
+# main.tex finds it). The main run calls this via \write18 with cwd = its
+# outdir and $1 = figure name. A driver named after the figure gives the
+# sub-run the right \jobname. Quotes stripped: \write18 quoting varies by
+# engine. The run.xml is suppressed because tectonic would read it and run
+# biber on a sub-run; the stale .dpth goes because tectonic leaves a file it
+# would write empty.
+set -euo pipefail
+fig="${1//\"/}"
+root="$(cd "$(dirname "$0")/.." && pwd)"
+rm -f "$fig.dpth"
+printf '%s\n' '\makeatletter\def\tikzexternalrealjob{main}\AtEndDocument{\let\lrq@writeout\relax}\makeatother\input{main}' > "$fig.tex"
+exec tectonic --reruns 0 -Z search-path="$root/src/thesis" "$fig.tex"

@@ -1,13 +1,16 @@
 {
-    // Build (Ctrl+Alt+B) via tools/vscode-tectonic.bat so tectonic finds biber
-    // without the pixi environment active. Run `pixi install` once after cloning.
+    // Build (Ctrl+Alt+B) via `pixi run vscode-build`, which runs
+    // tools/vscode-tectonic.bat (Windows) or tools/vscode-tectonic.sh (Linux) so
+    // tectonic finds biber. Needs pixi on PATH; run `pixi install` once after cloning.
     "latex-workshop.latex.tools": [
         {
             "name": "tectonic",
-            "command": "cmd",
+            "command": "pixi",
             "args": [
-                "/c",
-                "%WORKSPACE_FOLDER%/tools/vscode-tectonic.bat",
+                "run",
+                "--manifest-path",
+                "%WORKSPACE_FOLDER%/pixi.toml",
+                "vscode-build",
                 "--synctex",
                 "--keep-intermediates",
                 "-Z", "shell-escape-cwd=%OUTDIR%",

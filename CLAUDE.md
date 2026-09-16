@@ -16,8 +16,9 @@ place.
 
 TikZ is externalised (`\tikzexternalize` in `main.tex`): each `tikzpicture`
 becomes `build/thesis/main-figureN.pdf`, remade only when its source changes.
-Tectonic has no `-jobname`, so `tools/tikz-external.bat` writes a same-named
-driver and compiles that; Overleaf uses pgf's stock `pdflatex` call. The build
+Tectonic has no `-jobname`, so `tools/tikz-external.bat` (Linux:
+`tools/tikz-external`, kept in step with it) writes a same-named driver and
+compiles that; Overleaf uses pgf's stock `pdflatex` call. The build
 needs `-k` (the `.md5` stamps are intermediates) and `-Z shell-escape-cwd=` at
 the outdir. A figure that reads `\ref` is remade on the next pass after its
 labels settle; that is pgf, not a bug. Delete `build/thesis/main-figure*` to

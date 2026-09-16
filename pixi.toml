@@ -24,8 +24,9 @@ env = { PATH = "$PIXI_PROJECT_ROOT/tools/biber;$PATH" }
 cmd = "mkdir -p build/paper-notes && tectonic --synctex -Z search-path=src/thesis --outdir build/paper-notes src/paper-notes/main.tex"
 env = { PATH = "$PIXI_PROJECT_ROOT/tools/biber;$PATH" }
 
-# paper-notes as a zoomable mind map in the browser (tools/notes_canvas.py);
-# uv resolves danvas from the script's inline metadata, nothing to install
+# paper-notes as a zoomable mind map in the browser (tools/notes_canvas.py); uv
+# is a dependency below because it is what resolves danvas from the script's
+# inline metadata; the board hot-reloads on edits to src/paper-notes
 [tasks.notes-canvas]
 cmd = "uv run --python 3.12 tools/notes_canvas.py"
 
@@ -39,3 +40,4 @@ cmd = "powershell -NoProfile -ExecutionPolicy Bypass -File tools/sync.ps1"
 
 [dependencies]
 tectonic = ">=0.16.9,<0.17"
+uv = ">=0.12.13,<0.13"

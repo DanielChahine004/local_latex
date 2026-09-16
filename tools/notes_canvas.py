@@ -10,8 +10,9 @@ Reads src/paper-notes/main.tex. Each programme shows its title, a lead line, its
 note is unfolded; paths resolve from the paper-notes folder, as for the PDF.
 Clicking a title or card unfolds the full note in place; arrows follow the notes'
 \\ref cross-references. Run: pixi run notes-canvas (uv fetches danvas on first
-run); --map pins the panels to a world map; add --snapshot out.png to also write
-a PNG and layout dump once a browser connects.
+run); edits to main.tex reload the board in place; --map pins the panels to a
+world map; add --snapshot out.png to also write a PNG and layout dump once a
+browser connects.
 """
 from __future__ import annotations
 
@@ -621,7 +622,13 @@ def main() -> None:
     snapshot = sys.argv[sys.argv.index("--snapshot") + 1] if "--snapshot" in sys.argv else None
     # open on the map's centre with the whole world in view; the board view frames its panels
     view = {"grid": False, "zoom": 0.2, "x": MAP_W / 2, "y": MAP_H / 2} if map_mode else {"grid": True, "zoom": 0.5}
-    canvas.serve(port=8000, view=view, block=snapshot is None)
+    # hot_reload re-runs this script when main.tex or an image it pulls in
+    # changes, so an edit reaches the open tab without a relaunch; the watch
+    # globs resolve from this file's folder, not the cwd. It needs block=True,
+    # so --snapshot, which serves in the background, goes without.
+    live = snapshot is None
+    canvas.serve(port=8000, view=view, block=live, hot_reload=live,
+                 watch=["../src/paper-notes/*.tex", "../src/paper-notes/img/**/*"])
     if snapshot:
         # wait for a browser tab (the only thing that can render), write a PNG and
         # the resolved layout, then unfold one note and write both again so the

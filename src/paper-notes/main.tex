@@ -1,34 +1,39 @@
-% Working notes on papers -- standalone, NOT part of the thesis. Analyse a
-% paper here as soon as it is read; copy anything the thesis needs by hand.
-% Build: pixi run build-notes.
+% Paper notes: the source of the notes map (pixi run notes-map) and of a PDF
+% (pixi run build-notes). Run pixi run notes-check before you commit.
 %
-% One entry per paper. Lead with \paragraph{Summary} -- who did what, in
-% plain terms -- so the entry says what the paper even did before the
-% Capsule argues why it matters. Free-form after that (\paragraph headings
-% suit dense papers; plain paragraphs are fine too):
+% A programme, with its papers inside it:
 %
-%   \begin{papernote}{Author Year -- short descriptive title}{BibKey}
+%   \begin{programnote}{Group -- what they build}{Key}
+%   \location{lat}{lon}{City, Country}   % the map pin
+%   \thumb{img/key.png}                  % optional; images live in img/
+%   \paragraph{What it is}
+%   ...
+%   \begin{papernote}{Author et al.\ Year -- Title}{AuthorYear}
+%   Journal vol:page, \doi{10.xxxx/...}.  % or \href{url}{name}: the card's link
+%   \paragraph{Summary}
 %   ...
 %   \end{papernote}
+%   \end{programnote}
 %
-% BibKey is the references.bib key (shared with the thesis).
+% Rules:
+%  - Put each \begin and \end on its own line.
+%  - Keep the title format. The year dates and orders the cards, and the text
+%    before " -- " is the name a \ref{prog:Key} or \ref{note:Key} shows.
+%  - Keys are AuthorYear for papers and a short name for programmes.
+%  - A paper outside any programme is a top-level papernote, and the map
+%    leaves it out.
 %
-% Images live in img/ next to this file and are referenced by relative path.
-% \thumb{img/annpet.png} right after \begin{...note} is the
-% image that fronts the entry (a small figure here, the card image on the
-% canvas); \includegraphics[width=...]{file} anywhere in the body is an inline
-% figure in both. \doi{10.1088/...} in a papernote is the paper's link, clickable
-% in the PDF and on the canvas card (\href/\url work too).
+% The map is public. The PDF keeps everything.
+%  - Shown on the map: What it is, Summary, Detector, Method, Key Findings,
+%    People, and any heading not listed under [publish] in notesmap.toml.
+%  - Hidden from the map: Why it matters here, Capsule, Relevance to This
+%    Thesis, Where It Might Go, Thesis entry, Scope boundary. Put your own
+%    reasoning under these headings.
+%  - \aside{...} marks a remark of your own inside a shown paragraph.
+%  - \gap{...} marks something not yet checked. The map hides it.
+%  - A \ref inside hidden text draws no arrow.
 %
-% \location[dx,dy]{lat}{lon}{Place} right after \begin{programnote} pins the
-% programme on the map; [dx,dy] fixes its panel's offset from the pin in
-% pixels, and without it the panel finds a free spot on its own.
-%
-% Structure: a paper that belongs to a programme (J-PET, AnnPET, ...) sits
-% inside that programme's programnote -- overview first (actor-level facts:
-% membership, detector lineage, IP, scope boundary), then its papers in the
-% programme's reading order, nested in the TOC. Any other paper is a
-% top-level papernote. The TOC is the index.
+% More detail is in tools/notesmap/README.md.
 
 \documentclass[11pt, a4paper]{article}
 

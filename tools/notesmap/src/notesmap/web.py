@@ -82,7 +82,8 @@ a.chip { text-decoration: none; }
         border: 1px solid rgba(127,127,127,.3); transition: border-color .1s, background .1s; }
 .card:hover { border-color: var(--pc-accent, #3b82f6); background: rgba(127,127,127,.2); }
 .card.on { border-color: var(--pc-accent, #3b82f6); box-shadow: 0 0 0 1px var(--pc-accent, #3b82f6); }
-.card img, .card .thumb { width: 100%; height: 96px; object-fit: cover; border-radius: 4px; display: block; }
+.card img, .card .thumb { width: 100%; height: 96px; border-radius: 4px; display: block; }
+.card img { object-fit: fill; background: #fff; }   /* the whole figure, stretched to the box, never cropped */
 .card .thumb { display: grid; place-items: center; font-size: 40px; background: rgba(127,127,127,.25); }
 .card .t { font-weight: 600; font-size: 12px; margin: 6px 0 2px; display: -webkit-box; -webkit-line-clamp: 3;
            -webkit-box-orient: vertical; overflow: hidden; }

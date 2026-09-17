@@ -33,6 +33,38 @@ ACCENTS = (("'", "aeiouAEIOU", "áéíóúÁÉÍÓÚ"), ("`", "aeiou", "àèìò
            ("~", "aonAON", "ãõñÃÕÑ"), ("^", "aeiou", "âêîôû"))
 BRACED_ACCENTS = {r"\c{c}": "ç", r"\c{C}": "Ç", r"\v{s}": "š", r"\v{c}": "č", r"\l{}": "ł", r"\o{}": "ø"}
 
+MATH = {
+    r"\rightarrow": "→", r"\leftarrow": "←", r"\to": "→", r"\pm": "±", r"\mp": "∓",
+    r"\geq": "≥", r"\leq": "≤", r"\ge": "≥", r"\le": "≤", r"\neq": "≠", r"\sim": "~",
+    r"\approx": "≈", r"\propto": "∝", r"\times": "×", r"\cdot": "·", r"\infty": "∞",
+    r"\circ": "°", r"\degree": "°", r"\partial": "∂", r"\sum": "Σ", r"\prod": "Π",
+    r"\sqrt": "√", r"\ln": "ln", r"\log": "log", r"\exp": "exp",
+    r"\alpha": "α", r"\beta": "β", r"\gamma": "γ", r"\delta": "δ", r"\Delta": "Δ",
+    r"\epsilon": "ε", r"\theta": "θ", r"\lambda": "λ", r"\mu": "µ", r"\nu": "ν",
+    r"\pi": "π", r"\rho": "ρ", r"\sigma": "σ", r"\Sigma": "Σ", r"\tau": "τ",
+    r"\phi": "φ", r"\chi": "χ", r"\omega": "ω", r"\Omega": "Ω",
+}
+
+
+def math_text(s: str) -> str:
+    """Inline math as readable text: symbols, super- and subscripts, no markup."""
+    for k in sorted(MATH, key=len, reverse=True):
+        s = re.sub(re.escape(k) + r"(?![A-Za-z])", MATH[k], s)
+    s = re.sub(r"\\hat\s*\{?(\w)\}?", "\\1\u0302", s)
+    s = re.sub(r"\\bar\s*\{?(\w)\}?", "\\1\u0304", s)
+    s = re.sub(r"\\(?:mathrm|text|mathbf|mathit|tilde|left|right|big|Big)(?![A-Za-z])", "", s)
+    s = re.sub(r"\\[td]?frac\s*\{([^{}]*)\}\s*\{([^{}]*)\}", r"(\1)/(\2)", s)
+    s = re.sub(r"\\[td]?frac\s*(\w)(\w)", r"\1/\2", s)
+    s = re.sub(r"\((\w)\)/\((\w)\)", r"\1/\2", s)
+    s = re.sub(r"\^\{([^{}]*)\}|\^(\S)", lambda m: f"<sup>{m.group(1) or m.group(2)}</sup>", s)
+    s = re.sub(r"_\{([^{}]*)\}|_(\S)", lambda m: f"<sub>{m.group(1) or m.group(2)}</sub>", s)
+    s = re.sub(r"\\[,;:! ]", " ", s)
+    s = re.sub(r"\\[A-Za-z]+", "", s)
+    return s.replace("{", "").replace("}", "")
+
+
+REF_OPEN, REF_CLOSE = "\ue000", "\ue001"   # brackets a reference while its sentence is found
+
 Handler = Callable[..., str]
 
 
@@ -86,9 +118,11 @@ def expand(text: str, macro: str, n: int, fn: Handler) -> str:
 class Converter:
     def __init__(self, units: dict[str, str] | None = None) -> None:
         self.units = dict(UNITS, **(units or {}))
+        self.labels: dict[str, str] = {}    # key -> readable name, for \ref (set by the renderer)
         self.macros: dict[str, tuple[int, Handler]] = {}   # insertion order is application order
         u = self.unit
         self.add("gap", 1, lambda a: f"**[gap: {self.to_md(a)}]**")
+        self.add("aside", 1, lambda a: a)               # shown unless redacted (redact.py)
         self.add("qtyproduct", 2, lambda v, x: f"{v.replace(' x ', '×')} {u(x)}")
         self.add("qtyrange", 3, lambda a, b, x: f"{a}–{b} {u(x)}")
         self.add("qty", 2, lambda v, x: f"{v} {u(x)}")
@@ -101,7 +135,7 @@ class Converter:
         self.add("textsuperscript", 1, lambda a: f"<sup>{a}</sup>")
         self.add("textsubscript", 1, lambda a: a)
         self.add("textcolor", 2, lambda c, a: a)
-        self.add("ref", 1, lambda a: a.split(":", 1)[-1])
+        self.add("ref", 1, self._ref)
         self.add("cite", 1, lambda a: f"[{a}]")
         self.add("label", 1, lambda a: "")
         self.add("thumb", 1, lambda a: "")              # read by Entry.thumb, not shown in the text
@@ -142,6 +176,19 @@ class Converter:
         s = s.strip()
         return self.units.get(s, s.lstrip("\\"))
 
+    def _ref(self, target: str) -> str:
+        key = target.split(":", 1)[-1]
+        return self.labels.get(key, key)
+
+    def mark_refs(self, tex: str, prefixes: list[str]) -> str:
+        """Follow each \\ref{prefix:key} with a marker, so the sentence around it can be found."""
+        pat = r"(\\ref\{(?:%s):([^}]+)\})" % "|".join(map(re.escape, prefixes))
+        return re.sub(pat, lambda m: f"{m.group(1)}{REF_OPEN}{m.group(2)}{REF_CLOSE}", tex)
+
+    @staticmethod
+    def unmark(text: str) -> str:
+        return re.sub(f"{REF_OPEN}[^{REF_CLOSE}]*{REF_CLOSE}", "", text)
+
     def to_md(self, tex: str) -> str:
         t = "\n".join(l for l in tex.splitlines() if not l.lstrip().startswith("%"))
         t = re.sub(r"(?<!\\)%.*", "", t)                       # trailing comments
@@ -153,19 +200,24 @@ class Converter:
         t = re.sub(r"\\begin\{quote\}(.*?)\\end\{quote\}",
                    lambda m: "\n> " + " ".join(m.group(1).split()) + "\n", t, flags=re.S)
         t = re.sub(r"^\s*\\item\s*", "- ", t, flags=re.M)
-        t = re.sub(r"\$([^$]+)\$", r"`\1`", t)
+        t = re.sub(r"\\\[(.*?)\\\]", lambda m: "\n\n" + math_text(m.group(1)) + "\n\n", t, flags=re.S)
+        t = re.sub(r"(?<!\\)\$([^$]+?)(?<!\\)\$", lambda m: math_text(m.group(1)), t)
         for acc, plain, accented in ACCENTS:
             for p, a in zip(plain, accented):
                 t = t.replace(f"\\{acc}{p}", a).replace(f"\\{acc}{{{p}}}", a)
         for k, v in BRACED_ACCENTS.items():
             t = t.replace(k, v)
-        t = t.replace("\\\\", " ").replace("\\ ", " ").replace("~", " ")
+        t = t.replace("\\\\", " ").replace("~", " ")
+        t = re.sub(r"\\(\s)", r"\1", t)                        # "et al.\ " and "al.\" before a line break
+        t = re.sub(r"\\[,;:!]", " ", t)
         t = t.replace("---", "—").replace("--", "–").replace("``", "“").replace("''", "”")
         t = t.replace("\\%", "%").replace("\\&", "&").replace("\\$", "$").replace("\\_", "_")
         t = t.replace("\\S", "§").replace("\\textdegree", "°").replace("{,}", ",")
         t = re.sub(r"\\[A-Za-z]+\{([^{}]*)\}", r"\1", t)     # any leftover \cmd{arg}
         t = re.sub(r"\\[A-Za-z]+", "", t)
         t = t.replace("{", "").replace("}", "")
+        t = re.sub(r"(?<=\S)[ \t]{2,}", " ", t)                # stray double spaces
+        t = re.sub(r"\b([\w.-]+) \(\1\)", r"\1", t)           # "AnnPET (AnnPET)" from a \ref after its own name
         # join hard-wrapped lines inside a paragraph; keep list items, quotes, images
         out: list[str] = []
         for line in t.splitlines():

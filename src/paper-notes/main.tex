@@ -100,8 +100,8 @@ The scaling is exact and worth stating plainly:
 Every dimension doubles, and the SiPM pitch doubles with it (\mm{3}
 $\rightarrow$ \mm{6}), preserving the 8 x 8 channel count. \textbf{The clinical
 block geometry was set by doubling a prototype, not by optimisation} --- stated
-in their own words. Note this: it is a clean, citable instance of design-by-scaling
-in exactly the place a co-design argument wants one.
+in their own words. \aside{Note this: it is a clean, citable instance of design-by-scaling
+in exactly the place a co-design argument wants one.}
 
 \paragraph{WT-PET system context (Vandenberghe et al.\ 2023, EJNMMI 50(12):3558--3571)}
 Two flat panels, each \qtyproduct{70 x 106}{\centi\metre}, \cm{50} apart, patient
@@ -112,8 +112,8 @@ at comparable sensitivity. Later simulation work reports spatial resolution belo
 against \qty{175.4}{cps\per\kilo\becquerel} for a Quadra-like system. Ghent-led;
 Sportelli and Belcari (Pisa) are co-authors. Carra is not on this paper.
 
-These system numbers are context only --- they do not belong in any chapter of
-this thesis. The detector spec above does.
+\aside{These system numbers are context only --- they do not belong in any chapter of
+this thesis. The detector spec above does.}
 
 \paragraph{Intellectual property}
 Italian patent application \textbf{102021000026609}, ``Method and device for the
@@ -198,8 +198,8 @@ algorithm level.
 \begin{itemize}
 	\item \textbf{Performance:} \mm{0.78} 2D FWHM in the $(x,y)$ plane,
 		\mm{1.2} FWHM in DOI, \ps{156} coincidence time resolution.
-		\textbf{Caveat: the crystal is \mm{8} thick.} These figures do not
-		transfer to the thicknesses relevant to this thesis, and \mm{1.2} DOI
+		\textbf{Caveat: the crystal is \mm{8} thick.} \aside{These figures do not
+		transfer to the thicknesses relevant to this thesis, and }\mm{1.2} DOI
 		FWHM on an \mm{8} block is a large fraction of the available depth.
 	\item \textbf{Readout:} 64 Hamamatsu SiPMs of
 		\qtyproduct{3 x 3}{\milli\metre} --- an 8 x 8 grid,
@@ -667,15 +667,15 @@ question moves from ``is it open'' to ``what did each leave undone''.
 \paragraph{Commercial and funding}
 Spin-off Oncovision (Benlloch); preclinical line acquired by Bruker. The
 Albira preclinical scanner is, as far as known, the first commercial PET built on
-monolithic crystals, and the review cites it as such. \gap{Confirm Albira's
+monolithic crystals\aside{, and the review cites it as such}. \gap{Confirm Albira's
 detector (monolithic LYSO, truncated-pyramid blocks?) and first-sale year; and
 MINDView's monolithic brain-insert detector paper.}
 Benlloch holds an ERC Advanced Grant (4D-PET) with an OPEN-IMAGING proof of
 concept for in-beam flat-panel PET in protontherapy. González is co-PI on an NIH
 R01. He also coordinated the EU projects MAMMI (FP6) and MINDView (FP7).
  
-Note this is a group with an ERC AdG, an NIH R01, a spin-off, and a decade of
-priority. Treat its stated scope as authoritative.
+\aside{Note this is a group with an ERC AdG, an NIH R01, a spin-off, and a decade of
+priority. Treat its stated scope as authoritative.}
  
 \paragraph{External links}
 Stan Majewski, who was at West Virginia University when the annulus concept
@@ -683,7 +683,7 @@ was conceived there and is now at the University of Virginia, co-authors the
 2018 single-tube feasibility study (\ref{note:i3MTube2018}) --- so i3M and
 AnnPET (\ref{prog:AnnPET}) share a person, not an institution.
 González-Montoro co-authored the ``Advances in Detector Instrumentation for PET''
-review in \emph{J Nucl Med} 2022 cited by \ref{note:Xie2026}.
+review in \emph{J Nucl Med} 2022\aside{ cited by \ref{note:Xie2026}}.
  
 \paragraph{People}
 Antonio J.\ González (lead, DMIL), José M.\ Benlloch (director), Andrea
@@ -764,9 +764,9 @@ Imaging) and the Chair of Imaging and Computer Vision (LfB). Volkmar Schulz
 holds posts in both, plus Hyperion Hybrid Imaging Systems GmbH and the
 Fraunhofer Institute for Digital Medicine MEVIS, Bremen.
  
-Thull's own address is LfB --- he came into PET from hematopoietic cell
+\aside{Thull's own address is LfB --- he came into PET from hematopoietic cell
 classification, which is visible in the paper's shape: a computer-vision
-treatment of a detector-physics problem.
+treatment of a detector-physics problem.}
  
 \paragraph{Platform}
 Hyperion III preclinical PET/MRI; also the Hypmed scanner. Semi-monolithic LYSO
@@ -784,7 +784,7 @@ light-distribution version of ICS characterisation should be treated as theirs.
 \paragraph{People}
 Volkmar Schulz (chair), Julian Thull, Jan Remennik, David Schug, Björn Weissler,
 Yannick Kuhl. Also Stefan Gundacker, Vanessa Nadig (TOF/DOI detector units,
-TRPMS 2024) --- relevant separately for the BGO and Cherenkov work.
+TRPMS 2024)\aside{ --- relevant separately for the BGO and Cherenkov work}.
  
 \paragraph{Adjacent outputs}
 \begin{itemize}
@@ -999,8 +999,8 @@ Vanhove.
  
 \paragraph{Key outputs}
 \begin{itemize}
-	\item Espa\~na et al.\ 2014 PMB --- DigiPET, the start of the lineage; its own
-		note below (\ref{note:DigiPET2014}).
+	\item Espa\~na et al.\ 2014 PMB --- DigiPET, the start of the lineage\aside{; its own
+		note below (\ref{note:DigiPET2014})}.
 	\item Stockhoff, Decuyper, Van Holen, Vandenberghe 2021 PMB ---
 		high-resolution monolithic LYSO with 6-layer DOI for clinical PET.
 		\gap{Block dimensions. Determines whether this or the Pisa block is the
@@ -1011,10 +1011,10 @@ Vanhove.
 		\gap{Full citation; distinguish carefully from \ref{note:Carra2022}.}
 	\item Maebe PhD thesis, Ghent 2024 --- ``Timing capabilities and image
 		reconstruction for the walk-through PET''.
-	\item The walk-through line has its own notes below: PET20.0
+	\aside{\item The walk-through line has its own notes below: PET20.0
 		(\ref{note:PET20}), the WT-PET design paper (\ref{note:WTPET2023}) and
 		the flat-panel versus cylinder simulation (\ref{note:WTPETSim2023}).
-		Detector detail is held in \ref{prog:UTOFPET}.
+		Detector detail is held in \ref{prog:UTOFPET}.}
 \end{itemize}
  
 \paragraph{Thesis entry}
@@ -1060,8 +1060,8 @@ the patient standing upright between them; 14 x 20 = 280 monolithic blocks
 per panel, \qtyproduct{50 x 50 x 16}{\milli\metre} BGO or LYSO on 8 x 8
 arrays of \qtyproduct{6 x 6}{\milli\metre} SiPMs with 6-layer DOI. Detector
 surface is reduced 1.9x and scintillator volume 2.2x against a long-axial-FOV
-cylinder at comparable sensitivity. System detail is held in
-\ref{prog:UTOFPET}, including the block sizing by doubling.
+cylinder at comparable sensitivity. \aside{System detail is held in
+\ref{prog:UTOFPET}, including the block sizing by doubling.}
 
 \paragraph{Why it matters here}
 The clearest published statement that panel geometry is a \emph{cost}
@@ -1272,8 +1272,8 @@ calibration is not a bound on the detector.
 The CRLB does not represent the detector's resolution; it requires a
 systematic-error-free response model, an ML or WLS estimator and a
 linear-Gaussian problem, none strictly met. It does rank-order detector designs
-and is a quick guide when comparing geometries. That is exactly the use the
-thesis makes of it, and the caveats are the ones the CRLB chapter has to carry.
+and is a quick guide when comparing geometries. \aside{That is exactly the use the
+thesis makes of it, and the caveats are the ones the CRLB chapter has to carry.}
 
 \paragraph{Reading order}
 Joung, Miyaoka and Lewellen 2002 NIM A 489 (cMiCE concept and SBP)
@@ -1416,8 +1416,8 @@ does it end? Ask Franklin directly.}
 A technique for localising LOR endpoints in a PET scanner built from a
 continuous cylindrical shell scintillator, demonstrated on a simulated
 sensitivity-optimised shell in two materials, the ceramic garnet GLuGAG:Ce and
-a LuF\textsubscript{3}:Ce--polystyrene nanocomposite. The co-supervisor's own
-prior art on the capstone geometry.
+a LuF\textsubscript{3}:Ce--polystyrene nanocomposite. \aside{The co-supervisor's own
+prior art on the capstone geometry.}
 \gap{DOI or IEEE Xplore link; the positioning method and the resolution it
 reached.}
 

@@ -27,6 +27,11 @@ class Config:
     prune: list[list[str]] = field(default_factory=list)
     loose_key: str = "loose"
     loose_title: str = "Papers without a programme"
+    # [publish]
+    hide_sections: list[str] = field(default_factory=list)
+    hide_gaps: bool = False
+    show_loose: bool = True
+    hide_programmes: list[str] = field(default_factory=list)
     # [map]
     map_image: str = ""                          # empty: the bundled Blue Marble
     map_width: int = 9000
@@ -50,6 +55,8 @@ _SECTIONS = {
               "units": "units", "macros": "macros", "plugins": "plugins"},
     "board": {"rows": "rows", "prune": "prune", "loose_key": "loose_key",
               "loose_title": "loose_title"},
+    "publish": {"hide_sections": "hide_sections", "hide_gaps": "hide_gaps", "show_loose": "show_loose",
+                "hide_programmes": "hide_programmes"},
     "map": {"image": "map_image", "width": "map_width", "unplaced": "unplaced"},
     "server": {"port": "port", "title": "title"},
 }

@@ -7,7 +7,7 @@ poll = 2.0
 lock_files = [".lock"]
 
 [latex]
-overview_sections = ["what it is", "summary", "why it matters", "capsule"]
+overview_sections = ["what it is", "summary"]
 # the thesis's own unit shorthands (src/thesis/units.tex) are built in:
 # \mm \cm \um \ps \ns \keV \MeV and \qty / \qtyrange / \qtyproduct
 
@@ -21,6 +21,35 @@ rows = [
 prune = [["i3M", "machinery"], ["Delft", "machinery"]]
 loose_key = "machinery"
 loose_title = "Machinery (no programme)"
+
+[publish]
+# the board is public and states what the papers and programmes say; these are
+# this thesis's own working, kept in the PDF and left off the board, along with
+# \aside{...} sentences and \gap{...} markers
+hide_sections = [
+	"why it matters",            # also "why it matters here"
+	"capsule",
+	"relevance to this thesis",
+	"where it might go",
+	"thesis entry",
+	"scope boundary",
+	"intellectual property",
+	"why it stays in the file",
+	"why separate from",
+	"why it needs to exist",
+	"the claim to be substantiated",
+	"why the third point",
+	"the number to take",
+	"reading order",
+	"to read",
+	"to record",
+	"arithmetic to check",
+]
+hide_gaps = true
+# the loose papers are the thesis's own methods reading, not programmes
+show_loose = false
+# tooling the thesis leans on, not monolithic PET programmes
+hide_programmes = ["MODE", "OpenGATE"]
 
 [map]
 width = 9000

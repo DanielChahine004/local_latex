@@ -98,21 +98,24 @@ class Entry:
 
     def ref_reasons(self, conv: Converter, prefixes: list[str]) -> dict[str, str]:
         """Target key -> the sentence that makes the reference, as an arrow caption."""
+        from .latex import REF_CLOSE, REF_OPEN
         pat = r"\\ref\{(?:%s):([^}]+)\}" % "|".join(map(re.escape, prefixes))
         out: dict[str, str] = {}
         for para in re.split(r"\n\s*\n", self.code):
-            for key in dict.fromkeys(re.findall(pat, para)):
-                if key == self.key or key in out:
-                    continue
-                text = conv.to_md(re.sub(r"^\\paragraph\{[^}]*\}", "", para.strip()))
-                text = re.sub(r"\*\*\[gap:.*?\]\*\*", "", text, flags=re.S)
-                text = re.sub(r"[*`>]|^- ", "", text, flags=re.M)
-                # keep "et al." and initials such as "A. J." from ending a sentence
-                text = re.sub(r"\b(al|vs|et|cf|e\.g|i\.e)\.", r"\1․", " ".join(text.split()))
-                text = re.sub(r"\b([A-Z])\.", r"\1․", text)
-                for sent in re.split(r"(?<=[.!?])\s+", text):
-                    if key in sent:
-                        out[key] = sent.replace("․", ".")
+            keys = [k for k in dict.fromkeys(re.findall(pat, para)) if k != self.key and k not in out]
+            if not keys:
+                continue
+            text = conv.to_md(conv.mark_refs(re.sub(r"^\\paragraph\{[^}]*\}", "", para.strip()), prefixes))
+            text = re.sub(r"\*\*\[gap:.*?\]\*\*", "", text, flags=re.S)
+            text = re.sub(r"[*`>]|^- ", "", text, flags=re.M)
+            # keep "et al." and initials such as "A. J." from ending a sentence
+            text = re.sub(r"\b(al|vs|et|cf|e\.g|i\.e)\.", r"\1․", " ".join(text.split()))
+            text = re.sub(r"\b([A-Z])\.", r"\1․", text)
+            sentences = re.split(r"(?<=[.!?])\s+", text)
+            for key in keys:
+                for sent in sentences:
+                    if f"{REF_OPEN}{key}{REF_CLOSE}" in sent:
+                        out[key] = conv.unmark(sent).replace("․", ".")
                         break
         return out
 

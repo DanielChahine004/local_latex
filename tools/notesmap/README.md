@@ -43,9 +43,31 @@ Journal 1:2, \doi{10.xxxx/yyyy}.                               % the card's link
 \end{programnote}
 ```
 
+A cross-reference reads as the target's short name on the map. The short
+name is the entry's title up to ` -- `, for example "Carra et al. 2022".
+
 Each `\begin{...}` and `\end{...}` goes on its own line. A paper outside any
 programme goes on a shelf of its own. A programme without `\location` is
 shelved too, and `notesmap check` lists it.
+
+## Keeping your own working off a public map
+
+Notes usually mix what a paper says with why it matters to you. The PDF keeps
+both. The map can leave your side out, which matters when the map is public.
+Configure this under `[publish]` in `notesmap.toml`:
+
+- **Whole sections.** `hide_sections` lists `\paragraph` headings to leave
+  out, such as "why it matters" or "relevance to this thesis". A heading
+  matches when it starts with a listed entry, ignoring case.
+- **Single sentences.** `\aside{...}` marks one of your own sentences inside
+  a factual paragraph. It prints as normal text in the PDF and is left off the
+  map.
+- **Gaps.** `hide_gaps = true` leaves `\gap{...}` to-do markers off the map.
+- **Whole entries.** `hide_programmes` lists programme keys to leave out, and
+  `show_loose = false` drops papers that sit outside any programme.
+
+A cross-reference inside hidden text disappears with it. An arrow therefore
+stays only if some sentence still shown makes the reference.
 
 ## Sharing notes across a lab
 
@@ -80,6 +102,7 @@ annotated copy.
 | `[source]` | where the notes are, how often to poll, lock file names |
 | `[latex]` | environment names, the heading used for the lead line, your macros and units, plugins |
 | `[board]` | rows for the non-map view, links not to draw, the shelf for loose papers |
+| `[publish]` | what the map leaves out: sections, gaps, programmes, loose papers |
 | `[map]` | the map image (any equirectangular image), its width, where unplaced panels go |
 | `[server]` | port |
 
@@ -102,6 +125,7 @@ beside `notesmap.toml`, listed in `[latex] plugins`, with
 | `source.py` | reads files locally or over http(s), and reports versions and locks |
 | `parse.py` | turns the `.tex` into programmes, papers, locations, images, links and cross-references |
 | `latex.py` | converts note bodies to Markdown, through the extensible macro table |
+| `redact.py` | removes the `[publish]` exclusions before anything is rendered |
 | `render.py` | turns the notes into danvas panels, pins and arrows, diffed on each reload |
 | `layout.py` | handles the map projection and automatic panel placement |
 | `watch.py` | polls, waits for changes to settle, respects locks, keeps the last good version |

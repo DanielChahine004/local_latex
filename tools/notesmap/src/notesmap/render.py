@@ -20,6 +20,7 @@ from .config import Config
 from .latex import Converter
 from .layout import PANEL_W, Rect, auto_place, estimate_height, project
 from .parse import Entry, Notes
+from .redact import redact
 from .source import Source
 from .web import MAP_CSS, PIN_JSX, REACT_CSS, REACT_SRC
 
@@ -53,7 +54,13 @@ class Board:
     # --- public -------------------------------------------------------------------
 
     def apply(self, notes: Notes) -> dict:
+        # \ref{..:key} reads as the entry's short name, its title up to " -- ",
+        # taken before redaction so a reference to a hidden entry still reads well
+        labels = {e.key: self.conv.to_md(e.title).split(" – ")[0].strip() for e in notes.all_entries()}
+        notes = redact(notes, self.cfg.hide_sections, self.cfg.hide_gaps, self.cfg.show_loose,
+                       self.cfg.hide_programmes)
         with self.lock:
+            self.conv.labels = labels
             groups = self._groups(notes)
             added = [k for k in groups if k not in self.panels]
             removed = [k for k in self.panels if k not in groups]
@@ -132,7 +139,9 @@ class Board:
 
     def _html(self, md: str) -> str:
         def inline(s: str) -> str:
-            s = html.escape(s, quote=False).replace("&lt;sup&gt;", "<sup>").replace("&lt;/sup&gt;", "</sup>")
+            s = html.escape(s, quote=False)
+            for tag in ("sup", "sub"):
+                s = s.replace(f"&lt;{tag}&gt;", f"<{tag}>").replace(f"&lt;/{tag}&gt;", f"</{tag}>")
             s = re.sub(r"\*\*(.+?)\*\*", r"<b>\1</b>", s)
             s = re.sub(r"(?<!\*)\*(?!\*)(.+?)(?<!\*)\*(?!\*)", r"<i>\1</i>", s)
             return re.sub(r"`([^`]+)`", r"<code>\1</code>", s)
@@ -168,7 +177,10 @@ class Board:
         plain = re.sub(r"\*\*\[gap:.*?\]\*\*", "", text, flags=re.S).strip()
         if not plain:   # an unread paper: the gap is all there is, so show it
             plain = re.sub(r"\*\*\[gap:\s*(.*?)\]\*\*", r"\1", text, flags=re.S).strip()
-        first = re.split(r"(?<=[.!?])\s", plain, maxsplit=1)[0]
+        # "et al." and initials such as "A. J." do not end the first sentence
+        guarded = re.sub(r"\b(al|vs|et|cf|e\.g|i\.e)\.", r"\1․", plain)
+        guarded = re.sub(r"\b([A-Z])\.", r"\1․", guarded)
+        first = re.split(r"(?<=[.!?])\s", guarded, maxsplit=1)[0].replace("․", ".")
         return re.sub(r"[*`]", "", first)[:220]
 
     def _props(self, key: str, title: str, node: Entry | None, papers: list[Entry]) -> dict:

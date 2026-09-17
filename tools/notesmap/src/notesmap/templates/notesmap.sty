@@ -7,6 +7,7 @@
 %   \location[dx,dy]{lat}{lon}{Place}   where a programme sits on the map
 %   \thumb{img/file.png}                the image fronting an entry
 %   \doi{10.xxxx/...}                   the entry's link (\href and \url work too)
+%   \aside{...}                         your own remark: in the PDF, not on the map
 %   \gap{...}                           something not yet verified
 %   \ref{prog:key}, \ref{note:key}      a cross-reference, drawn as an arrow
 \NeedsTeXFormat{LaTeX2e}
@@ -38,6 +39,9 @@
 
 % where a paper lives: a clickable doi.org link here, the card's link on the map
 \newcommand{\doi}[1]{\href{https://doi.org/#1}{doi:#1}}
+
+% your own aside inside a factual paragraph: normal text here, left off the map
+\newcommand{\aside}[1]{#1}
 
 % something not yet verified against the source; breakable space after the tag
 \newcommand{\gap}[1]{\textcolor{red}{\textbf{[gap:} #1\textbf{]}}}

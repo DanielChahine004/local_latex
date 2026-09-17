@@ -20,6 +20,10 @@
 % figure in both. \doi{10.1088/...} in a papernote is the paper's link, clickable
 % in the PDF and on the canvas card (\href/\url work too).
 %
+% \location[dx,dy]{lat}{lon}{Place} right after \begin{programnote} pins the
+% programme on the map; [dx,dy] fixes its panel's offset from the pin in
+% pixels, and without it the panel finds a free spot on its own.
+%
 % Structure: a paper that belongs to a programme (J-PET, AnnPET, ...) sits
 % inside that programme's programnote -- overview first (actor-level facts:
 % membership, detector lineage, IP, scope boundary), then its papers in the
@@ -38,11 +42,9 @@
 \usepackage{xcolor}
 \usepackage[hidelinks]{hyperref}
 \usepackage{xurl}
-\usepackage{graphicx}
-% the image that fronts an entry: small, centred, no caption
-\newcommand{\thumb}[1]{\begin{center}\includegraphics[width=0.3\linewidth]{#1}\end{center}}
-% where a paper lives: a clickable doi.org link here, the card's link on the canvas
-\newcommand{\doi}[1]{\href{https://doi.org/#1}{doi:#1}}
+% programnote/papernote, \location, \thumb, \doi, \gap: the macros the
+% notes map reads (tools/notesmap; the canonical copy is in its templates/)
+\usepackage{notesmap}
 
 \addbibresource{references.bib}
 
@@ -51,25 +53,6 @@
 \titleformat{\paragraph}[block]{\normalfont\bfseries\raggedright}{}{0pt}{}
 \titlespacing*{\paragraph}{0pt}{1.5ex plus 1ex minus .2ex}{0.5ex}
 
-% A papernote is a \section, except inside a programnote, where it drops to
-% \subsection so the programme's papers nest under it in the TOC.
-% Top-level TOC entries carry their kind (Paper: / Programme:), TOC-only;
-% nested papers need no tag -- the indentation already says it.
-\newcommand{\papernoteheading}{\section}
-\newcommand{\papernotetag}{Paper: }
-\NewDocumentEnvironment{papernote}{mm}
-	{\papernoteheading[\papernotetag#1]{#1}\label{note:#2}}
-	{}
-\NewDocumentEnvironment{programnote}{mm}
-	{\section[Programme: #1]{#1}\label{prog:#2}%
-	 \renewcommand{\papernoteheading}{\subsection}%
-	 \renewcommand{\papernotetag}{}}
-	{}
-
-% Something not yet verified against the source PDF.
-% breakable space after the tag, or long gaps overflow narrow lines
-\newcommand{\gap}[1]{\textcolor{red}{\textbf{[gap:} #1\textbf{]}}}
-
 \begin{document}
 
 \tableofcontents
@@ -77,6 +60,7 @@
 \clearpage
 
 \begin{programnote}{UTOFPET -- Pisa + Ghent monolithic TOF-PET}{UTOFPET}
+\location[150,2000]{43.72}{10.40}{Pisa, Italy}
 
 \paragraph{What it is}
 A joint project of the University of Pisa (Dipartimento di Fisica E.\ Fermi /
@@ -463,6 +447,7 @@ optimistic. Changes no conclusion, but check the convention before quoting.
 % ===========================================================================
  
 \begin{programnote}{AnnPET -- West Virginia, USA}{AnnPET}
+\location[100,-520]{39.63}{-79.95}{Morgantown, West Virginia}
 \thumb{img/annpet.png}
  
 \paragraph{What it is}
@@ -582,6 +567,7 @@ the factor of two between detector and image.}
 % ===========================================================================
  
 \begin{programnote}{J-PET -- Jagiellonian, Poland}{J-PET}
+\location[420,-300]{50.06}{19.94}{Krak\'ow, Poland}
 \thumb{img/jpet.png}
  
 \paragraph{What it is --- and what it is not}
@@ -645,6 +631,7 @@ strip. If it does, the narrowed claim above needs narrowing again.}
 % ===========================================================================
  
 \begin{programnote}{i3M Valencia -- Detectors for Molecular Imaging Lab}{i3M}
+\location[-1000,1500]{39.48}{-0.34}{Valencia, Spain}
 \thumb{img/i3m.png}
  
 \paragraph{What it is}
@@ -768,6 +755,7 @@ meet at the same number is itself a finding worth stating in the review.
 % ===========================================================================
  
 \begin{programnote}{RWTH Aachen -- Schulz group / Hyperion}{Aachen}
+\location[150,-820]{50.78}{6.08}{Aachen, Germany}
  
 \paragraph{What it is}
 Two RWTH units, which matters for reading the author lists: the Department of
@@ -989,6 +977,7 @@ appears to run it in reverse.
 % ===========================================================================
  
 \begin{programnote}{Ghent MEDISIP -- monolithic lineage and WT-PET}{Ghent}
+\location[-960,200]{51.05}{3.72}{Ghent, Belgium}
 \thumb{img/wt.png}
  
 \paragraph{Why separate from UTOFPET}
@@ -1131,6 +1120,7 @@ with a cooling fan each.
 % ===========================================================================
  
 \begin{programnote}{TU Delft -- Schaart group}{Delft}
+\location[-960,-700]{52.00}{4.37}{Delft, Netherlands}
  
 \gap{Entire node unverified. Everything below is memory-level.}
  
@@ -1173,6 +1163,7 @@ calibration-burden argument in the review has to quote.}
 % ===========================================================================
 
 \begin{programnote}{Penn -- HEAD PENN-PET and C-PET, continuous NaI(Tl) plates}{Penn}
+\location[100,300]{39.95}{-75.19}{Philadelphia, Pennsylvania}
 
 Karp and Muehllehner, University of Pennsylvania. HEAD PENN-PET (brain, one
 annular NaI(Tl) crystal) and then C-PET (whole body, curved NaI(Tl) plates).
@@ -1221,6 +1212,7 @@ ended --- stopping power and count rate of NaI(Tl) against LSO blocks.}
 % ===========================================================================
 
 \begin{programnote}{cMiCE -- University of Washington, Miyaoka and Lewellen}{cMiCE}
+\location[100,-320]{47.65}{-122.31}{Seattle, Washington}
 
 \paragraph{What it is}
 Department of Radiology, University of Washington, Seattle. Robert S.\ Miyaoka
@@ -1302,6 +1294,7 @@ once read; confirm the first three citations against the PDFs.}
 % ===========================================================================
 
 \begin{programnote}{HUST Wuhan -- monolithic scintillator ring}{HUST}
+\location[-960,-700]{30.51}{114.41}{Wuhan, China}
 
 \paragraph{What it is}
 State Key Lab of Digital Manufacturing Equipment and Technology, School of
@@ -1342,6 +1335,7 @@ matters for the thin-ring argument.}
 % ===========================================================================
  
 \begin{programnote}{MODE Collaboration -- differentiable detector design}{MODE}
+\location[-960,1100]{50.67}{4.61}{Louvain-la-Neuve, Belgium}
  
 \gap{\textbf{Entire node unverified.} This is the load-bearing claim of the
 thesis pivot and currently has no grounding in this file at all. Fill before
@@ -1375,6 +1369,7 @@ shown.
 % ===========================================================================
  
 \begin{programnote}{OpenGATE -- GATE 10}{OpenGATE}
+\location[150,1100]{45.76}{4.84}{Lyon, France}
  
 \gap{Entire node unverified.}
  
@@ -1397,6 +1392,7 @@ question is the difference between a feasible thesis and an infeasible one.}
 % ===========================================================================
  
 \begin{programnote}{UTS -- Franklin group}{UTS}
+\location[-900,-600]{-33.88}{151.20}{Sydney, Australia}
 
 \paragraph{What it is}
 School of Electrical and Data Engineering, University of Technology Sydney.

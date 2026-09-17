@@ -64,15 +64,18 @@ cmd = "bash tools/vscode-tectonic.sh"
 cmd = "bash tools/sync.sh"
 
 # --- both ---
-# paper-notes as a zoomable mind map in the browser (tools/notes_canvas.py); uv
-# is a dependency below because it is what resolves danvas from the script's
-# inline metadata; the board hot-reloads on edits to src/paper-notes
-[tasks.notes-canvas]
-cmd = "uv run --python 3.12 tools/notes_canvas.py"
-
-# the same board pinned to a world map by institution (tools/assets/world-blue-marble.jpg, NASA, public domain)
+# the paper notes as a live board or world map (tools/notesmap, configured by
+# notesmap.toml); uv, a dependency below, builds the tool's environment from
+# its pyproject on first run. The board follows edits to the notes in place.
 [tasks.notes-map]
-cmd = "uv run --python 3.12 tools/notes_canvas.py --map"
+cmd = "uv run --quiet --python 3.12 --project tools/notesmap notesmap serve --map"
+
+[tasks.notes-canvas]
+cmd = "uv run --quiet --python 3.12 --project tools/notesmap notesmap serve"
+
+# lint the notes: missing images, dangling \refs, programmes without \location
+[tasks.notes-check]
+cmd = "uv run --quiet --python 3.12 --project tools/notesmap notesmap check"
 
 [dependencies]
 tectonic = ">=0.16.9,<0.17"

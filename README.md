@@ -47,6 +47,20 @@ pixi run build-notes      # paper notes -> build/paper-notes/main.pdf
 pixi run build-meetings   # meeting log -> build/meetings/main.pdf
 ```
 
+The paper notes also render as a live board, and as a world map pinned by
+institution. The tool is `tools/notesmap`, configured by `notesmap.toml`, and
+it follows edits to the notes without a restart:
+
+```
+pixi run notes-map        # world map, http://127.0.0.1:8000
+pixi run notes-canvas     # the same notes as clustered rows
+pixi run notes-check      # lint: missing images, dangling refs, unplaced programmes
+```
+
+`tools/notesmap/README.md` explains the note macros, the lab-sharing setup
+(one file per programme, lock files, bucket or URL sources), and how another
+lab adapts it.
+
 In VS Code, Ctrl+Alt+B (LaTeX Workshop) builds the document the open file
 belongs to (chapter files declare `% !TeX root = ../main.tex`).
 

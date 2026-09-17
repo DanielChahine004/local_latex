@@ -1,0 +1,35 @@
+% Research-programme notes, read by notesmap and buildable as a PDF.
+% One programme per file under programmes/ keeps edits and locks small:
+% two people can work on different programmes without touching the same file.
+\documentclass[11pt, a4paper]{article}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage[hidelinks]{hyperref}
+\usepackage{notesmap}
+
+\begin{document}
+\tableofcontents
+\clearpage
+
+\begin{programnote}{Example Lab -- what the group builds}{Example}
+\location{51.50}{-0.12}{London}
+% \thumb{img/example.png}   % put the image in img/ and uncomment
+
+\paragraph{What it is}
+One or two sentences on who the group is and what they build.
+
+\paragraph{Why it matters here}
+Why this programme matters to your work. A cross-reference to another
+programme's label (prog:its-key) or paper's label (note:its-key), made with
+the usual ref command, becomes an arrow on the map, captioned by its sentence.
+
+\begin{papernote}{Author et al.\ 2024 -- Short title}{Author2024}
+Journal 1:2, \doi{10.0000/example}.
+
+\paragraph{Summary}
+What the paper did, in plain terms. \gap{What is still to be checked.}
+
+\end{papernote}
+
+\end{programnote}
+
+\end{document}

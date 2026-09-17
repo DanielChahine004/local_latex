@@ -1,0 +1,30 @@
+# notesmap configuration for this repo's paper notes (tools/notesmap).
+# pixi run notes-map / notes-canvas / notes-check
+
+[source]
+path = "src/paper-notes/main.tex"
+poll = 2.0
+lock_files = [".lock"]
+
+[latex]
+overview_sections = ["what it is", "summary", "why it matters", "capsule"]
+# the thesis's own unit shorthands (src/thesis/units.tex) are built in:
+# \mm \cm \um \ps \ns \keV \MeV and \qty / \qtyrange / \qtyproduct
+
+[board]
+rows = [
+	["i3M", "AnnPET", "HUST", "Delft", "machinery"],    # the annulus cluster and what it cites
+	["cMiCE", "Ghent", "UTOFPET", "Aachen", "J-PET"],   # neural localisation and its precursors
+	["MODE", "OpenGATE", "UTS", "Penn"],                # tooling stubs and history
+]
+# cross-references that are a shared citation, not a relationship
+prune = [["i3M", "machinery"], ["Delft", "machinery"]]
+loose_key = "machinery"
+loose_title = "Machinery (no programme)"
+
+[map]
+width = 9000
+unplaced = [400, 3500]    # the machinery panel: no institution, so the Southern Ocean
+
+[server]
+port = 8000

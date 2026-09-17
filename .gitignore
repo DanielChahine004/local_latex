@@ -18,3 +18,6 @@ __pycache__/
 
 # Linux biber, fetched by tools/get-biber.sh (biber.exe is committed)
 tools/biber/biber
+
+# notesmap tool environment (uv)
+tools/notesmap/.venv/

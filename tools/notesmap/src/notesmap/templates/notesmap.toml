@@ -1,0 +1,39 @@
+# notesmap configuration. Every key is optional; paths are relative to this file.
+
+[source]
+# the notes' main file: a local path (a checkout, or a synced or mounted bucket)
+# or an http(s) URL to it
+path = "NOTES_PATH"
+poll = 2.0
+# while any of these exists beside the main file (or <file>.tex.lock beside a
+# notes file), the board keeps its last good version
+lock_files = [".lock"]
+
+[latex]
+programme_env = "programnote"
+paper_env = "papernote"
+# the heading whose text becomes a panel's lead line, first match wins
+overview_sections = ["what it is", "summary", "why it matters"]
+# your own macros: {1}.. are arguments, {n:unit} maps an siunitx unit,
+# {n:md} converts the argument
+# [latex.macros]
+# kg = "{1} kg"
+# [latex.units]
+# "\\kilo\\gram" = "kg"
+# plugins = ["mylab_macros"]   # a module beside this file with register(converter)
+
+[board]
+# rows for the board view (keys of programmes); anything unlisted goes last
+rows = []
+# cross-references not to draw, as [source, target]
+prune = []
+loose_key = "loose"
+loose_title = "Papers without a programme"
+
+[map]
+# image = "maps/world.jpg"    # an equirectangular image; default: NASA Blue Marble
+width = 9000
+unplaced = [400, 3500]        # where programmes without \location are shelved
+
+[server]
+port = 8000

@@ -1,0 +1,45 @@
+% notesmap.sty -- the note environments and macros notesmap reads.
+% Keep this file beside the notes' main.tex; `notesmap init` copies it there.
+% Everything here also typesets, so the same notes build as a PDF.
+%
+%   \begin{programnote}{Title}{key} ... \end{programnote}
+%   \begin{papernote}{Title}{key} ... \end{papernote}    inside a programme, or alone
+%   \location[dx,dy]{lat}{lon}{Place}   where a programme sits on the map
+%   \thumb{img/file.png}                the image fronting an entry
+%   \doi{10.xxxx/...}                   the entry's link (\href and \url work too)
+%   \gap{...}                           something not yet verified
+%   \ref{prog:key}, \ref{note:key}      a cross-reference, drawn as an arrow
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{notesmap}[2026/09/17 notesmap note environments]
+
+\RequirePackage{xcolor}
+\RequirePackage{graphicx}
+\RequirePackage{hyperref}
+
+% A papernote is a \section, except inside a programnote, where it drops to
+% \subsection so the programme's papers nest under it in the TOC. Top-level TOC
+% entries carry their kind; nested papers need no tag.
+\newcommand{\papernoteheading}{\section}
+\newcommand{\papernotetag}{Paper: }
+\NewDocumentEnvironment{papernote}{mm}
+	{\papernoteheading[\papernotetag#1]{#1}\label{note:#2}}
+	{}
+\NewDocumentEnvironment{programnote}{mm}
+	{\section[Programme: #1]{#1}\label{prog:#2}%
+	 \renewcommand{\papernoteheading}{\subsection}%
+	 \renewcommand{\papernotetag}{}}
+	{}
+
+% the place under the heading; the coordinates and offset are for the map only
+\NewDocumentCommand{\location}{o m m m}{\par\noindent{\small\itshape #4}\par}
+
+% the image that fronts an entry: small, centred, no caption
+\newcommand{\thumb}[1]{\begin{center}\includegraphics[width=0.3\linewidth]{#1}\end{center}}
+
+% where a paper lives: a clickable doi.org link here, the card's link on the map
+\newcommand{\doi}[1]{\href{https://doi.org/#1}{doi:#1}}
+
+% something not yet verified against the source; breakable space after the tag
+\newcommand{\gap}[1]{\textcolor{red}{\textbf{[gap:} #1\textbf{]}}}
+
+\endinput

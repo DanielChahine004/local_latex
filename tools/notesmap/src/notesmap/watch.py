@@ -9,14 +9,14 @@ import threading
 import time
 from typing import Callable
 
-from .parse import Notes, ParseError, parse
+from .parse import Notes, ParseError
 from .source import Source
 
 
 class Watcher:
-    def __init__(self, src: Source, programme_env: str, paper_env: str, poll: float,
+    def __init__(self, src: Source, parse_fn: Callable[[Source], Notes], poll: float,
                  lock_files: list[str], on_notes: Callable[[Notes], None]) -> None:
-        self.src, self.envs, self.poll = src, (programme_env, paper_env), poll
+        self.src, self.parse_fn, self.poll = src, parse_fn, poll
         self.lock_files, self.on_notes = lock_files, on_notes
         self.files: list[str] = [src.main]
         self.images: set[str] = set()
@@ -36,16 +36,20 @@ class Watcher:
 
     def load(self) -> Notes | None:
         """Parse now; None (and one message per distinct problem) if it fails."""
+        self.src.touched.clear()
         try:
-            notes = parse(self.src, *self.envs)
-        except (ParseError, OSError, UnicodeDecodeError) as e:
-            msg = f"[notesmap] keeping the last good version: {e}"
+            notes = self.parse_fn(self.src)
+        except Exception as e:             # a parser of anyone's writing may raise anything
+            kind = "" if isinstance(e, (ParseError, OSError, UnicodeDecodeError)) else f"{type(e).__name__}: "
+            msg = f"[notesmap] keeping the last good version: {kind}{e}"
             if msg != self.reported:
                 print(msg, flush=True)
                 self.reported = msg
             return None
         self.reported = None
-        self.files, self.images = notes.files, notes.images
+        self.images = notes.images
+        read = [f for f in sorted(self.src.touched) if f not in self.images]
+        self.files = list(dict.fromkeys([self.src.main] + list(notes.files) + read))
         return notes
 
     def run(self) -> None:

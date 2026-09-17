@@ -12,6 +12,7 @@ class Config:
     # [source]
     path: str = "notes/main.tex"                 # local file, or http(s) URL
     poll: float = 2.0                            # seconds between change checks
+    parser: str = ""                             # "module:function"; empty: the LaTeX parser
     lock_files: list[str] = field(default_factory=lambda: [".lock"])
     # [latex]
     programme_env: str = "programnote"
@@ -49,7 +50,7 @@ class Config:
 
 
 _SECTIONS = {
-    "source": {"path": "path", "poll": "poll", "lock_files": "lock_files"},
+    "source": {"path": "path", "poll": "poll", "lock_files": "lock_files", "parser": "parser"},
     "latex": {"programme_env": "programme_env", "paper_env": "paper_env",
               "ref_prefixes": "ref_prefixes", "overview_sections": "overview_sections",
               "units": "units", "macros": "macros", "plugins": "plugins"},

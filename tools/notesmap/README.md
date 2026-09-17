@@ -18,6 +18,16 @@ notesmap check                        # lint: missing images, dangling refs, unp
 notesmap serve --map                  # opens the map in your browser
 ```
 
+## Using the map
+
+- **Resize.** Drag the grip in a panel's bottom-right corner. The whole panel
+  scales with its width, and its height follows the content.
+- **Move.** Drag the small square in a panel's top-right corner. Clicking it
+  selects the panel and shows the usual resize handles, which also work.
+- **Read.** Click a paper card or "programme note" to unfold the note. Titles,
+  places, lead lines and unfolded notes can be selected and copied.
+- **Reset.** Sizes and positions return to the defaults when the map restarts.
+
 ## Writing notes
 
 ```latex
@@ -99,12 +109,58 @@ annotated copy.
 
 | Section | What it controls |
 |---|---|
-| `[source]` | where the notes are, how often to poll, lock file names |
+| `[source]` | where the notes are, how often to poll, lock file names, the parser |
 | `[latex]` | environment names, the heading used for the lead line, your macros and units, plugins |
 | `[board]` | rows for the non-map view, links not to draw, the shelf for loose papers |
 | `[publish]` | what the map leaves out: sections, gaps, programmes, loose papers |
 | `[map]` | the map image (any equirectangular image), its width, where unplaced panels go |
 | `[server]` | port |
+
+### Your own parser
+
+The map, the watcher and the live updates don't depend on LaTeX. Any Python
+function that turns your files into notes can drive them:
+
+```toml
+[source]
+path = "notes/index.md"          # where your files live
+parser = "mynotes:parse"         # mynotes.py, beside notesmap.toml
+```
+
+```python
+from notesmap.parse import Entry, Location, Notes
+
+def parse(source, cfg):
+    text = source.read_text("programmes/ghent.md")     # read through source...
+    files = source.listdir("programmes")               # ...so edits reach the map
+    prog = Entry("programme", "Ghent MEDISIP", "Ghent", given={
+        "location": Location(51.05, 3.72, "Ghent"),
+        "lead": "One line for the panel.",
+        "full": "The **programme note**, in Markdown.",
+        "thumb": "img/ghent.png", "link": "https://...", "refs": ["Pisa"],
+    })
+    prog.papers.append(Entry("paper", "España et al. 2014 -- DigiPET", "Espana2014",
+                             given={"year": 2014, "lead": "...", "full": "...", "link": "https://doi.org/..."}))
+    return Notes([prog])
+```
+
+- **Reading files.** Read them through `source`: use `read_text`, `read_bytes`
+  or `listdir`, with paths relative to the main file's folder. The watcher
+  follows everything read this way, including files added to a listed
+  folder.
+- **Entry fields.** `Entry.given` holds what the map shows. The keys are
+  `thumb`, `images`, `link`, `location`, `year`, `lead`, `full` (both
+  Markdown), `refs`, and `reasons`, which holds the arrow captions. See the
+  `Entry` docstring.
+- **Errors.** A parser that raises keeps the last good version on screen, and
+  the error is printed once.
+- **What doesn't apply.** `[publish]` hiding works on LaTeX bodies, so a
+  parser of your own decides for itself what to leave out.
+
+`examples/markdown/` is a working example: one Markdown file per programme.
+Run it from that folder with `uv run --project ../.. notesmap serve --map`.
+
+### Your own macros
 
 For a macro of your own, add a template under `[latex.macros]`:
 
@@ -123,7 +179,7 @@ beside `notesmap.toml`, listed in `[latex] plugins`, with
 | Module | Role |
 |---|---|
 | `source.py` | reads files locally or over http(s), and reports versions and locks |
-| `parse.py` | turns the `.tex` into programmes, papers, locations, images, links and cross-references |
+| `parse.py` | defines the notes model and the LaTeX parser, and loads a parser of your own |
 | `latex.py` | converts note bodies to Markdown, through the extensible macro table |
 | `redact.py` | removes the `[publish]` exclusions before anything is rendered |
 | `render.py` | turns the notes into danvas panels, pins and arrows, diffed on each reload |

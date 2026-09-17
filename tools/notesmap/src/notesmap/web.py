@@ -6,8 +6,57 @@ unfolded note, or null). Clicks go back to Python as {event: "toggle", key}.
 """
 
 REACT_SRC = r"""
+const DESIGN_W = 880;   // the width the panel is laid out at; any other width zooms it
+
 function Component({ canvas, props }) {
   const p = props;
+  // resizing a panel scales its whole content with the width, so a smaller
+  // panel is a smaller copy rather than a tall narrow column; its height
+  // follows from the scaled content
+  const root = React.useRef(null);
+  const [scale, setScale] = React.useState(1);
+  React.useEffect(() => {
+    const el = root.current;
+    if (!el) return;
+    const fit = () => {
+      const w = el.clientWidth;
+      if (w) setScale(s => {
+        const next = Math.min(3, Math.max(0.25, w / DESIGN_W));
+        return Math.abs(next - s) < 0.002 ? s : next;
+      });
+    };
+    fit();
+    const ro = new ResizeObserver(fit);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+  // the corner grip: drag outward to enlarge, inward to shrink. Widths go to
+  // Python, which resizes the panel; the height follows the scaled content
+  const grip = {
+    onMouseDown: e => e.stopPropagation(),
+    onPointerDown: e => {
+      e.stopPropagation(); e.preventDefault();
+      const el = root.current, target = e.currentTarget;
+      const w0 = el.clientWidth, h0 = Math.max(1, el.clientHeight);
+      const zoom = el.getBoundingClientRect().width / w0 || 1;   // screen px per canvas px
+      const x0 = e.clientX, y0 = e.clientY;
+      let w = w0, sent = 0;
+      target.setPointerCapture(e.pointerId);
+      const move = ev => {
+        const dw = ((ev.clientX - x0) + (ev.clientY - y0) * (w0 / h0)) / 2 / zoom;
+        w = Math.round(Math.min(DESIGN_W * 3, Math.max(DESIGN_W / 4, w0 + dw)));
+        const now = Date.now();
+        if (now - sent > 60) { sent = now; canvas.send({ event: "resize", w }); }
+      };
+      const up = () => {
+        target.removeEventListener("pointermove", move);
+        target.removeEventListener("pointerup", up);
+        canvas.send({ event: "resize", w });
+      };
+      target.addEventListener("pointermove", move);
+      target.addEventListener("pointerup", up);
+    },
+  };
   const open = p.open || null;
   const toggle = (k) => canvas.send({ event: "toggle", key: k });
   const openNode = open === p.key ? p : (p.papers || []).find(x => x.key === open);
@@ -15,7 +64,8 @@ function Component({ canvas, props }) {
   // the canvas, which would otherwise start a drag of the panel
   const keep = { onPointerDown: e => e.stopPropagation(), onMouseDown: e => e.stopPropagation() };
   return (
-    <div className="prog">
+    <div ref={root} className="fit">
+    <div className="prog" style={{ width: DESIGN_W, zoom: scale }}>
       <div className="head">
         <h1 className="sel" {...keep}>{p.title}</h1>
         {p.place && <span className="place sel" {...keep}>{p.place}</span>}
@@ -61,12 +111,24 @@ function Component({ canvas, props }) {
         </div>
       )}
     </div>
+    <div className="grip" title="Drag to resize" {...grip} />
+    </div>
   );
 }
 """
 
 REACT_CSS = """
-.prog { font: 14px/1.45 system-ui, sans-serif; color: var(--pc-text, #ddd); padding: 12px 14px 14px;
+.fit { width: 100%; overflow: hidden; position: relative; }
+.grip { position: absolute; right: 2px; bottom: 2px; width: 22px; height: 22px; cursor: nwse-resize;
+        border-bottom-right-radius: 8px; opacity: .55; transition: opacity .1s;
+        background: linear-gradient(135deg, transparent 45%, var(--pc-accent, #3b82f6) 45% 52%, transparent 52% 64%,
+                    var(--pc-accent, #3b82f6) 64% 71%, transparent 71% 83%, var(--pc-accent, #3b82f6) 83% 90%, transparent 90%); }
+.grip:hover { opacity: 1; }
+/* danvas's move handle on a frameless panel: larger and visible, so a panel can be found and dragged */
+.pc-drag-handle { width: 22px !important; height: 22px !important; opacity: .7 !important; border-radius: 6px;
+                  background: var(--pc-accent, #3b82f6) !important; }
+.pc-drag-handle:hover { opacity: 1 !important; }
+.prog { box-sizing: border-box; font: 14px/1.45 system-ui, sans-serif; color: var(--pc-text, #ddd); padding: 12px 14px 14px;
         border: 1px solid rgba(127,127,127,.45); border-radius: 10px; background: rgba(127,127,127,.07); }
 .head { display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap; margin-bottom: 6px; }
 .prog h1 { font-size: 26px; font-weight: 500; margin: 0; }

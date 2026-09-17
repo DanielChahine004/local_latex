@@ -16,7 +16,7 @@ from pathlib import Path
 
 from . import config as config_mod
 from .latex import Converter
-from .parse import ParseError, parse
+from .parse import load_parser
 from .source import open_source
 
 TEMPLATES = Path(__file__).parent / "templates"
@@ -30,15 +30,16 @@ def _setup(args):
     for name, template in cfg.macros.items():
         conv.add_template(name, template)
     conv.load_plugins(cfg.plugins, cfg.root)
-    return cfg, src, conv
+    parser = load_parser(cfg.parser, cfg.root)
+    return cfg, src, conv, parser
 
 
 def cmd_check(args) -> int:
-    cfg, src, conv = _setup(args)
+    cfg, src, conv, parser = _setup(args)
     try:
-        notes = parse(src, cfg.programme_env, cfg.paper_env)
-    except (ParseError, OSError) as e:
-        print(f"error: {e}")
+        notes = parser(src, cfg)
+    except Exception as e:
+        print(f"error: {type(e).__name__}: {e}")
         return 1
     problems = list(notes.warnings)
     keys = {e.key for e in notes.all_entries()}
@@ -52,7 +53,8 @@ def cmd_check(args) -> int:
     for p in notes.programmes:
         if p.location is None:
             problems.append(f"{p.file}:{p.line}: {p.key}: no \\location (shelved on the map)")
-    print(f"{src.describe()}: {len(notes.files)} file(s), {len(notes.programmes)} programmes, "
+    files = set(notes.files) | (src.touched - notes.images)
+    print(f"{src.describe()}: {len(files)} file(s), {len(notes.programmes)} programmes, "
           f"{sum(len(p.papers) for p in notes.programmes)} papers in programmes, {len(notes.loose)} loose")
     for p in notes.programmes:
         loc = p.location
@@ -92,10 +94,10 @@ def cmd_serve(args) -> int:
     from .render import Board
     from .watch import Watcher
 
-    cfg, src, conv = _setup(args)
+    cfg, src, conv, parser = _setup(args)
     if args.map_width:
         cfg.map_width = args.map_width
-    watcher = Watcher(src, cfg.programme_env, cfg.paper_env, cfg.poll, cfg.lock_files, lambda n: None)
+    watcher = Watcher(src, lambda s: parser(s, cfg), cfg.poll, cfg.lock_files, lambda n: None)
     notes = watcher.load()
     if notes is None:
         return 1

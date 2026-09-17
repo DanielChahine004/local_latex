@@ -26,13 +26,30 @@ from urllib.parse import urljoin
 
 
 class Source:
+    """Every read and folder listing is recorded in `touched`, so the watcher
+    follows whatever files a parser used, without being told."""
     main: str                                    # the main file, relative to the base
+
+    def __init__(self) -> None:
+        self.touched: set[str] = set()
 
     def read_text(self, rel: str) -> str:
         return self.read_bytes(rel).decode("utf-8")
 
     def read_bytes(self, rel: str) -> bytes:
+        self.touched.add(rel)
+        return self._read_bytes(rel)
+
+    def listdir(self, rel_dir: str = ".") -> list[str]:
+        """File names in a folder, relative to the base, sorted. Local sources only."""
+        self.touched.add(posixpath.normpath(rel_dir))
+        return self._listdir(posixpath.normpath(rel_dir))
+
+    def _read_bytes(self, rel: str) -> bytes:
         raise NotImplementedError
+
+    def _listdir(self, rel_dir: str) -> list[str]:
+        raise NotImplementedError(f"{type(self).__name__} cannot list folders; name the files instead")
 
     def stamp(self, rel: str) -> str | None:
         """An opaque version token, or None if the file does not exist."""
@@ -60,14 +77,20 @@ class Source:
 
 class LocalSource(Source):
     def __init__(self, main_file: Path) -> None:
+        super().__init__()
         self.base = main_file.parent
         self.main = main_file.name
 
     def _p(self, rel: str) -> Path:
         return self.base / rel
 
-    def read_bytes(self, rel: str) -> bytes:
+    def _read_bytes(self, rel: str) -> bytes:
         return self._p(rel).read_bytes()
+
+    def _listdir(self, rel_dir: str) -> list[str]:
+        folder = self._p(rel_dir)
+        return sorted(posixpath.join(rel_dir, p.name) if rel_dir != "." else p.name
+                      for p in folder.iterdir() if p.is_file())
 
     def stamp(self, rel: str) -> str | None:
         try:
@@ -82,6 +105,7 @@ class LocalSource(Source):
 
 class HttpSource(Source):
     def __init__(self, url: str, timeout: float = 10.0) -> None:
+        super().__init__()
         self.base_url = url.rsplit("/", 1)[0] + "/"
         self.main = url.rsplit("/", 1)[1]
         self.timeout = timeout
@@ -89,7 +113,7 @@ class HttpSource(Source):
     def _url(self, rel: str) -> str:
         return urljoin(self.base_url, rel)
 
-    def read_bytes(self, rel: str) -> bytes:
+    def _read_bytes(self, rel: str) -> bytes:
         with urllib.request.urlopen(self._url(rel), timeout=self.timeout) as r:
             return r.read()
 

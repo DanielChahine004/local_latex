@@ -27,11 +27,6 @@ from .web import MAP_CSS, PIN_JSX, REACT_CSS, REACT_SRC
 PITCH, ROW_GAP = PANEL_W + 40, 100
 
 
-def year_of(title: str) -> str:
-    m = re.search(r"\b(?:19|20)\d{2}\b(?:\s*onwards)?", title)
-    return m.group(0) if m else ""
-
-
 class Board:
     def __init__(self, canvas, cfg: Config, source: Source, conv: Converter, map_mode: bool) -> None:
         self.canvas, self.cfg, self.src, self.conv, self.map_mode = canvas, cfg, source, conv, map_mode
@@ -94,17 +89,34 @@ class Board:
             self.panels[key].to_front()
             self.later(self.settle, 1.0, 3.0)
 
+    def resize(self, key: str, w) -> None:
+        """Set a panel's width from its corner grip; the content scales to fit."""
+        try:
+            w = int(float(w))
+        except (TypeError, ValueError):
+            return
+        w = max(PANEL_W // 4, min(PANEL_W * 3, w))
+        with self.lock:
+            panel = self.panels.get(key)
+            if panel is not None:
+                panel.set_layout(w=w)
+        self.later(self.settle, 0.8)
+
     def settle(self) -> None:
         """Re-stack after heights change: rows repack, and on the map the arrows
         and then the map go to the back (an arrow's to_back does not persist)."""
         with self.lock:
             if self.rows:
-                hs = {e["name"]: e["h"] for e in self.canvas.describe() if isinstance(e.get("h"), (int, float))}
+                geo = {e["name"]: e for e in self.canvas.describe() if isinstance(e.get("h"), (int, float))}
                 y = 40
                 for row in self.rows:
+                    x = 40
                     for key in row:
-                        self.panels[key].set_layout(y=y)
-                    y += max(hs.get(k, 300) for k in row) + ROW_GAP
+                        # columns follow each panel's own width, so a resized panel
+                        # pushes its neighbours along instead of covering them
+                        self.panels[key].set_layout(x=x, y=y)
+                        x += geo.get(key, {}).get("w", PANEL_W) + (PITCH - PANEL_W)
+                    y += max(geo.get(k, {}).get("h", 300) for k in row) + ROW_GAP
             if self.map_mode:
                 for arrow in self.arrow_objs.values():
                     arrow.to_back()
@@ -186,7 +198,8 @@ class Board:
     def _props(self, key: str, title: str, node: Entry | None, papers: list[Entry]) -> dict:
         thumb = self._image(node.thumb) if node else None
         loc = node.location if node else None
-        dated = sorted(papers, key=lambda p: int(year_of(p.title)[:4]) if year_of(p.title) else 9999)
+        # cards in date order; undated ones keep note order at the end
+        dated = sorted(papers, key=lambda p: p.year if p.year is not None else 9999)
         props = {
             "key": key, "title": title,
             "open": self.props.get(key, {}).get("open"),
@@ -195,7 +208,7 @@ class Board:
             "html": self._html(node.full(self.conv)) if node else "",
             "lead": self._snippet(node) if node else "",
             "link": node.link if node else None,
-            "papers": [{"key": p.key, "title": self.conv.to_md(p.title), "year": year_of(p.title),
+            "papers": [{"key": p.key, "title": self.conv.to_md(p.title), "year": str(p.year) if p.year else "",
                         "snippet": self._snippet(p), "thumb": self._image(p.thumb), "link": p.link,
                         "html": self._html(p.full(self.conv)) or "<p><i>(empty)</i></p>"}
                        for p in dated],
@@ -213,10 +226,15 @@ class Board:
                                   frame=False, x=x, y=y)
         panel.on_error(lambda msg, key=key: print(f"[notesmap] panel {key}: {msg}", flush=True))
         panel.on("toggle")(lambda msg, key=key: self.set_open(key, msg.get("key")))
+        panel.on("resize")(lambda msg, key=key: self.resize(key, msg.get("w")))
         panel.on_layout(self._on_layout)
         self.panels[key], self.props[key] = panel, props
 
     def _on_layout(self, comp) -> None:
+        # a corner drag pins the height; the content scales with the width and
+        # sets its own height, so hand the height back to the content
+        if getattr(comp, "_auto_h", True) is False:
+            comp.h = "auto"
         # the browser reports a fitted height like a drag; debounce and repack
         self._tick += 1
         mine = self._tick

@@ -5,6 +5,8 @@
 # or an http(s) URL to it
 path = "NOTES_PATH"
 poll = 2.0
+# parser = "mynotes:parse"   # a function of your own in mynotes.py beside this file;
+#                            # default: the LaTeX notes format (see the README)
 # while any of these exists beside the main file (or <file>.tex.lock beside a
 # notes file), the board keeps its last good version
 lock_files = [".lock"]

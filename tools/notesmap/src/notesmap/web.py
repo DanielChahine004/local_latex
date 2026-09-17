@@ -11,17 +11,20 @@ function Component({ canvas, props }) {
   const open = p.open || null;
   const toggle = (k) => canvas.send({ event: "toggle", key: k });
   const openNode = open === p.key ? p : (p.papers || []).find(x => x.key === open);
+  // text you can select: a press here stays with the text instead of reaching
+  // the canvas, which would otherwise start a drag of the panel
+  const keep = { onPointerDown: e => e.stopPropagation(), onMouseDown: e => e.stopPropagation() };
   return (
     <div className="prog">
       <div className="head">
-        <h1>{p.title}</h1>
-        {p.place && <span className="place">{p.place}</span>}
+        <h1 className="sel" {...keep}>{p.title}</h1>
+        {p.place && <span className="place sel" {...keep}>{p.place}</span>}
         {p.link && <a className="chip" href={p.link} target="_blank" rel="noreferrer" title={p.link}>site ↗</a>}
         {p.html && <button className={"chip" + (open === p.key ? " on" : "")} onClick={() => toggle(p.key)}>
           {open === p.key ? "hide programme note" : "programme note"}
         </button>}
       </div>
-      {p.lead && <p className="lead">{p.lead}</p>}
+      {p.lead && <p className="lead sel" {...keep}>{p.lead}</p>}
       {p.figures.length > 0 && (
         <div className="figs">
           {p.figures.map((f, i) => (
@@ -52,8 +55,9 @@ function Component({ canvas, props }) {
       )}
       {openNode && (
         <div className="note">
-          <div className="nh">{openNode.title}<span onClick={() => toggle(open)}>close</span></div>
-          <div dangerouslySetInnerHTML={{ __html: openNode.html }} />
+          <div className="nh"><span className="sel" {...keep}>{openNode.title}</span>
+            <span className="close" onClick={() => toggle(open)}>close</span></div>
+          <div className="sel" {...keep} dangerouslySetInnerHTML={{ __html: openNode.html }} />
         </div>
       )}
     </div>
@@ -92,9 +96,11 @@ a.chip { text-decoration: none; }
 .card .y { font-size: 11px; opacity: .8; margin-top: 6px; display: flex; gap: 8px; align-items: center; }
 .card .y .hint { margin-left: auto; color: var(--pc-accent, #3b82f6); }
 .card .y a { color: var(--pc-accent, #3b82f6); text-decoration: none; font-weight: 600; }
+.sel, .sel * { -webkit-user-select: text; user-select: text; cursor: text; }
 .note { margin-top: 14px; padding: 10px 12px; border-top: 1px solid rgba(127,127,127,.4); }
 .note .nh { font-weight: 600; display: flex; justify-content: space-between; margin-bottom: 6px; }
-.note .nh span { cursor: pointer; opacity: .6; font-weight: 400; }
+.note .nh { gap: 16px; }
+.note .nh .close { cursor: pointer; opacity: .6; font-weight: 400; flex: none; }
 .note p, .note li { margin: 0 0 8px; }
 .note blockquote { margin: 0 0 8px 12px; opacity: .85; }
 .note code { font-size: 12px; }

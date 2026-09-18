@@ -75,7 +75,8 @@ def editor(env):
         return subprocess.Popen(
             ["sudo", "-n", "-u", "notes", "--preserve-env=" + ",".join(PASSED),
              str(ISOLATED / "bin" / "jupyter-lab"), f"--config={ISOLATED / 'config.py'}"],
-            cwd="/", env=env)
+            cwd="/", env=env,
+            start_new_session=True)   # sudo drops signals from its own process group
     print("[notes-lab] WARNING: the editor runs as this account, so anyone with the"
           " password is one Jupyter bug away from its keys and logins."
           " Run `sudo bash tools/notes-editor-setup.sh` once to isolate it.", flush=True)

@@ -82,7 +82,13 @@ class LocalSource(Source):
         self.main = main_file.name
 
     def _p(self, rel: str) -> Path:
-        return self.base / rel
+        # the notes may be edited by others (a shared editor) while this reads them
+        # as the owner, so a \thumb{../../.ssh/key} must not reach past the folder;
+        # OSError makes it read as missing everywhere. A symlink out counts as out.
+        p = (self.base / rel).resolve()
+        if not p.is_relative_to(self.base.resolve()):
+            raise OSError(f"{rel}: outside the notes folder")
+        return p
 
     def _read_bytes(self, rel: str) -> bytes:
         return self._p(rel).read_bytes()

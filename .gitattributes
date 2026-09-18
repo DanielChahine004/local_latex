@@ -8,6 +8,11 @@ pixi.lock merge=binary linguist-language=YAML linguist-generated=true -diff
 *.bib text eol=crlf
 *.md  text eol=crlf
 
+# Exception: the paper notes are edited live in JupyterLab, which always writes
+# LF. They never go to Overleaf, so the CRLF rule buys nothing here and would
+# mark the whole file changed after every save.
+src/paper-notes/**.tex text eol=lf
+
 # shell scripts run on Linux: keep LF whatever the checkout machine
 *.sh text eol=lf
 tools/tikz-external text eol=lf

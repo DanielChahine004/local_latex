@@ -55,7 +55,35 @@ it follows edits to the notes without a restart:
 pixi run notes-map        # world map, http://127.0.0.1:8000
 pixi run notes-canvas     # the same notes as clustered rows
 pixi run notes-check      # lint: missing images, dangling refs, unplaced programmes
+pixi run notes-edit       # shared live editor, http://127.0.0.1:8891/lab
 ```
+
+`notes-edit` serves `src/paper-notes` as JupyterLab with real-time
+collaboration: several people type in the notes at once, images arrive by
+dropping them in the file tree, and every keystroke is written to the file, so
+the map follows without a save or a push. The map carries a link to it.
+Its password is `NOTES_EDIT_TOKEN`, seeded with a placeholder in `pixi.toml`
+and configured in `tools/jupyter-notes-config.py` — change it before sharing
+the link, because anyone holding it can edit the notes. Open `map.html` in the
+editor (pressing "Trust HTML") to keep the map in a tab beside the text.
+
+To share both with a lab, one command does the lot:
+
+```
+NOTES_EDIT_TOKEN=<a password> pixi run notes-lab
+```
+
+It opens a public HTTPS tunnel for each (danvas bundles the tunnel binary, so
+there is nothing to install), starts the editor and the map, points the map's
+button at the editor's public address, and prints the two links. The tunnels are
+held by detached keeper processes, so **the addresses survive a restart** — stop
+them deliberately with `python -m danvas.tunnel --stop --port 8000`. Set
+`NOTES_MAP_URL` and `NOTES_EDIT_URL` to skip tunnelling, for a domain of your
+own or to run the pair locally.
+
+The map has no password: anyone with the link can read it, and can also scribble
+on the canvas and drag panels, which a restart clears. The editor's password is
+the only thing protecting the notes, so treat the two links differently.
 
 `tools/notesmap/README.md` explains the note macros, the lab-sharing setup
 (one file per programme, lock files, bucket or URL sources), and how another

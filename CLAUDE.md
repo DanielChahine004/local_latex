@@ -42,6 +42,10 @@ the search-path flag, so it builds locally, not on Overleaf.
   full stop.
 - **UTF-8 without a BOM, CRLF endings.** `.editorconfig` and `.gitattributes`
   both enforce it. A BOM on an `\input` file reaches the page as a character.
+  One exception, in `.gitattributes`: `src/paper-notes/**.tex` is LF, because it
+  is edited live in JupyterLab (`pixi run notes-edit`), which always writes LF
+  and would otherwise mark the whole file changed on every save. Those files
+  never go to Overleaf, so the rule buys nothing there.
 - **`% !TeX root = <path>/main.tex` heads every file that is not a root**, so a
   build triggered from a chapter or a figure finds the right document.
 

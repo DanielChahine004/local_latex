@@ -79,6 +79,39 @@ Configure this under `[publish]` in `notesmap.toml`:
 A cross-reference inside hidden text disappears with it. An arrow therefore
 stays only if some sentence still shown makes the reference.
 
+## Editing together, live
+
+The notes are a file, so any editor works. For several people at once, the
+simplest arrangement is JupyterLab with its collaboration extension, which
+serves a folder in the browser and writes every keystroke straight to the file.
+That is what the map watches, so there is no save, commit or push step:
+
+```
+uv run --with jupyterlab --with jupyter-collaboration jupyter lab \
+    --ServerApp.root_dir=notes --IdentityProvider.token=<your password>
+```
+
+Checked behaviours, since they decide whether this is usable:
+
+- **Two people in one file at once** land both sets of edits, merged per
+  character, and the file on disk gets the result.
+- **Someone editing outside the browser** is not clobbered. An edit written by
+  another editor reaches the live session, and typing there does not undo it.
+- **Line endings become LF** on every save. If your repository insists on CRLF
+  for `.tex`, exempt the notes folder, or every save marks the whole file
+  changed.
+- **The file tree is the image folder.** Dragging an image into it is all the
+  upload anyone needs; `\thumb{img/x.png}` then points at it.
+
+Point `[server] edit_url` at that server and the map carries a signpost to it,
+so a reader can cross over to editing and meet its password. Keep the two on
+separate addresses: the map only reads, while the editor writes to your disk
+and browses a folder, so they do not deserve the same exposure.
+
+To show the map inside the editor, put a one-line HTML file beside the notes
+holding an `<iframe>` pointed at the map, and open it as a tab. JupyterLab
+blocks scripts in local pages until you press "Trust HTML" in that tab.
+
 ## Sharing notes across a lab
 
 Several people can edit one set of notes when it lives in shared storage.
@@ -114,7 +147,7 @@ annotated copy.
 | `[board]` | rows for the non-map view, links not to draw, the shelf for loose papers |
 | `[publish]` | what the map leaves out: sections, gaps, programmes, loose papers |
 | `[map]` | the map image (any equirectangular image), its width, where unplaced panels go |
-| `[server]` | port |
+| `[server]` | port, and the companion editor the map links to |
 
 ### Your own parser
 

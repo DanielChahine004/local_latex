@@ -77,6 +77,21 @@ cmd = "uv run --quiet --python 3.12 --project tools/notesmap notesmap serve"
 [tasks.notes-check]
 cmd = "uv run --quiet --python 3.12 --project tools/notesmap notesmap check"
 
+# the notes as a live shared editor: JupyterLab with real-time collaboration, so
+# several people type in one file at once and the map follows. It serves only
+# src/paper-notes, and the frame-ancestors header lets the map embed it.
+# NOTES_EDIT_TOKEN is the password (default: change-me). A pixi task env would
+# override one set in the shell, so it is left to the config file's default.
+[tasks.notes-edit]
+cmd = "uv run --quiet --python 3.12 --with jupyterlab --with jupyter-collaboration --no-project jupyter lab --config=tools/jupyter-notes-config.py"
+
+
+# the whole shared setup in one command: map, editor, and a public link for each
+# through danvas's tunnel keepers, which hold their addresses across restarts
+[tasks.notes-lab]
+cmd = "uv run --quiet --python 3.12 --project tools/notesmap --with pycloudflared python tools/notes-lab.py"
+
+
 [dependencies]
 tectonic = ">=0.16.9,<0.17"
 uv = ">=0.12.13,<0.13"

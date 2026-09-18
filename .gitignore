@@ -21,3 +21,9 @@ tools/biber/biber
 
 # notesmap tool environment (uv)
 tools/notesmap/.venv/
+
+# JupyterLab live editing: per-machine config, the CRDT history store, and the
+# checkpoint copies its file browser leaves beside anything opened
+.jupyter/
+.jupyter_ystore.db
+.ipynb_checkpoints/

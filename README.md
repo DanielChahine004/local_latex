@@ -64,8 +64,7 @@ dropping them in the file tree, and every keystroke is written to the file, so
 the map follows without a save or a push. The map carries a link to it.
 Its password is `NOTES_EDIT_TOKEN`, which falls back to the placeholder
 `change-me` in `tools/jupyter-notes-config.py` when unset — change it before sharing
-the link, because anyone holding it can edit the notes. Open `map.html` in the
-editor (pressing "Trust HTML") to keep the map in a tab beside the text.
+the link, because anyone holding it can edit the notes.
 
 To share both with a lab, one command does the lot:
 

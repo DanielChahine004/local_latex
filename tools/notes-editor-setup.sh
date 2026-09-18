@@ -41,8 +41,9 @@ mountpoint -q /srv/paper-notes || mount /srv/paper-notes
 export UV_CACHE_DIR; UV_CACHE_DIR=$(mktemp -d)
 export UV_LINK_MODE=copy
 [ -x "$OPT/bin/python" ] || "$UV" venv --quiet --python /usr/bin/python3.12 "$OPT"
-"$UV" pip install --quiet --python "$OPT/bin/python" --upgrade \
-	jupyterlab jupyter-collaboration jupyterlab-iframe
+"$UV" pip install --quiet --python "$OPT/bin/python" --upgrade jupyterlab jupyter-collaboration
+# its lab half works only through a server proxy that fetches any URL from here
+"$UV" pip uninstall --quiet --python "$OPT/bin/python" jupyterlab-iframe 2>/dev/null || true
 rm -rf "$UV_CACHE_DIR"
 install -o "$OWNER" -g notes-edit -m 640 "$REPO/tools/jupyter-notes-config.py" "$OPT/config.py"
 

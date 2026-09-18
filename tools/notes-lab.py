@@ -33,8 +33,7 @@ EDIT_PORT = int(os.environ.get("NOTES_EDIT_PORT", "8891"))
 TOKEN = os.environ.get("NOTES_EDIT_TOKEN", "change-me")
 
 UV = ["uv", "run", "--quiet", "--python", "3.12"]
-EDITOR = ["--with", "jupyterlab", "--with", "jupyter-collaboration", "--with", "jupyterlab-iframe",
-          "--no-project",
+EDITOR = ["--with", "jupyterlab", "--with", "jupyter-collaboration", "--no-project",
           "jupyter", "lab", "--config=tools/jupyter-notes-config.py"]
 
 # Set up by tools/notes-editor-setup.sh: the editor runs as the `notes` user,
@@ -116,7 +115,9 @@ def main() -> int:
     except KeyboardInterrupt:
         for p in procs:
             if p.poll() is None:
-                p.send_signal(signal.CTRL_BREAK_EVENT if os.name == "nt" else signal.SIGTERM)
+                # SIGINT, not SIGTERM: Jupyter behind sudo outlasted the wait on
+                # SIGTERM, and killing sudo then left it running as an orphan
+                p.send_signal(signal.CTRL_BREAK_EVENT if os.name == "nt" else signal.SIGINT)
         for p in procs:
             try:
                 p.wait(timeout=10)

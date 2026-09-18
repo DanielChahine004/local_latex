@@ -83,7 +83,7 @@ cmd = "uv run --quiet --python 3.12 --project tools/notesmap notesmap check"
 # NOTES_EDIT_TOKEN is the password (default: change-me). A pixi task env would
 # override one set in the shell, so it is left to the config file's default.
 [tasks.notes-edit]
-cmd = "uv run --quiet --python 3.12 --with jupyterlab --with jupyter-collaboration --no-project jupyter lab --config=tools/jupyter-notes-config.py"
+cmd = "uv run --quiet --python 3.12 --with jupyterlab --with jupyter-collaboration --with jupyterlab-iframe --no-project jupyter lab --config=tools/jupyter-notes-config.py"
 
 
 # the whole shared setup in one command: map, editor, and a public link for each

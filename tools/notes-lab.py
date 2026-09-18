@@ -20,6 +20,7 @@ anyone holding it can edit the notes and upload files. The map itself has no
 password; a restart clears anything a visitor draws on it.
 """
 import os
+import shutil
 import signal
 import subprocess
 import sys
@@ -32,8 +33,15 @@ EDIT_PORT = int(os.environ.get("NOTES_EDIT_PORT", "8891"))
 TOKEN = os.environ.get("NOTES_EDIT_TOKEN", "change-me")
 
 UV = ["uv", "run", "--quiet", "--python", "3.12"]
-EDITOR = ["--with", "jupyterlab", "--with", "jupyter-collaboration", "--no-project",
+EDITOR = ["--with", "jupyterlab", "--with", "jupyter-collaboration", "--with", "jupyterlab-iframe",
+          "--no-project",
           "jupyter", "lab", "--config=tools/jupyter-notes-config.py"]
+
+# Set up by tools/notes-editor-setup.sh: the editor runs as the `notes` user,
+# which holds none of this account's keys or logins, on a bind mount of the notes
+ISOLATED = Path("/opt/notes-editor")
+PASSED = ["NOTES_EDIT_PUBLIC", "NOTES_EDIT_TOKEN", "NOTES_EDIT_PORT", "NOTES_MAP_ORIGIN",
+          "NOTES_EDIT_ROOT"]
 
 
 def tunnel(port: int, what: str, given: str):
@@ -59,6 +67,22 @@ def spawn(args, env):
     return subprocess.Popen(UV + args, cwd=REPO, env=env)
 
 
+def editor(env):
+    """The editor: as the notes user when set up, else as this account."""
+    if os.name != "nt" and (ISOLATED / "bin" / "jupyter-lab").exists():
+        shutil.copyfile(REPO / "tools" / "jupyter-notes-config.py", ISOLATED / "config.py")
+        env = dict(env, NOTES_EDIT_ROOT="/srv/paper-notes")
+        print("[notes-lab] editor runs as notes", flush=True)
+        return subprocess.Popen(
+            ["sudo", "-n", "-u", "notes", "--preserve-env=" + ",".join(PASSED),
+             str(ISOLATED / "bin" / "jupyter-lab"), f"--config={ISOLATED / 'config.py'}"],
+            cwd="/", env=env)
+    print("[notes-lab] WARNING: the editor runs as this account, so anyone with the"
+          " password is one Jupyter bug away from its keys and logins."
+          " Run `sudo bash tools/notes-editor-setup.sh` once to isolate it.", flush=True)
+    return spawn(EDITOR, env)
+
+
 def main() -> int:
     edit_url = tunnel(EDIT_PORT, "editor", os.environ.get("NOTES_EDIT_URL", ""))
     map_url = tunnel(MAP_PORT, "map", os.environ.get("NOTES_MAP_URL", ""))
@@ -68,7 +92,7 @@ def main() -> int:
                NOTES_EDIT_PORT=str(EDIT_PORT),
                NOTES_MAP_ORIGIN=map_url)      # so the map may embed the editor
     procs = [
-        spawn(EDITOR, env),
+        editor(env),
         spawn(["--project", "tools/notesmap", "notesmap", "serve", "--map", "--no-browser",
                "--port", str(MAP_PORT), "--edit-url", f"{edit_url}/lab"], env),
     ]

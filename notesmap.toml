@@ -46,14 +46,20 @@ hide_sections = [
 	"arithmetic to check",
 ]
 hide_gaps = true
-# the loose papers are the thesis's own methods reading, not programmes
-show_loose = false
+# the loose papers: methods reading with no programme, shelved in the Southern
+# Ocean as one panel
+show_loose = true
 # tooling the thesis leans on, not monolithic PET programmes
 hide_programmes = ["MODE", "OpenGATE"]
 
 [map]
 width = 9000
-unplaced = [400, 3500]    # the machinery panel: no institution, so the Southern Ocean
+unplaced = [400, 3250]    # the machinery panel: no institution, so the Southern Ocean
+                          # (clear of danvas's own buttons at the viewport's lower left)
 
 [server]
 port = 8000
+# the companion editor (pixi run notes-edit); a link to it sits on the map.
+# comment this out and the map shows no link at all.
+edit_url = "http://127.0.0.1:8891/lab"
+edit_label = "Edit these notes"

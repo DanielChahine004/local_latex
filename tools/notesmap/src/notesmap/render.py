@@ -22,7 +22,7 @@ from .layout import PANEL_W, Rect, auto_place, estimate_height, project
 from .parse import Entry, Notes
 from .redact import redact
 from .source import Source
-from .web import MAP_CSS, PIN_JSX, REACT_CSS, REACT_SRC
+from .web import MAP_CSS, PIN_JSX, REACT_CSS, REACT_SRC, edit_jsx
 
 PITCH, ROW_GAP = PANEL_W + 40, 100
 
@@ -44,7 +44,29 @@ class Board:
         self.map_w = cfg.map_width
         if map_mode:
             self._draw_map()
+        self._edit_link()
         canvas.on_connect(lambda viewer: self.later(self.settle, 3.0, 9.0))
+
+    def _edit_link(self) -> None:
+        """A standing panel linking to the companion editor, if one is configured."""
+        self.edit_panel = None
+        if not self.cfg.edit_url:
+            return
+        if self.map_mode:
+            # a footer, centred just below the map rather than on it: danvas's own
+            # toolbar floats over the middle of the viewport's bottom edge, and a
+            # signpost placed under it cannot be clicked
+            scale = self.map_w / 4500          # legible without dominating the map
+            w = round(300 * scale)
+            # left of centre, because danvas's toolbar floats over the middle of
+            # the viewport's bottom edge and would take the click
+            x, y = round(self.map_w * 0.24), self.map_w // 2 + round(24 * scale)
+        else:
+            scale, w = 1.0, 380
+            x, y = 0, -220
+        self.edit_panel = self.canvas.react(
+            jsx=edit_jsx(self.cfg.edit_url, self.cfg.edit_label, scale),
+            name="edit_link", w=w, x=x, y=y)
 
     # --- public -------------------------------------------------------------------
 
@@ -121,6 +143,10 @@ class Board:
                 for arrow in self.arrow_objs.values():
                     arrow.to_back()
                 self.canvas["world"].to_back()
+            # the arrow layer takes the pointer wherever it crosses the link, so
+            # the link has to sit above it or it cannot be clicked
+            if self.edit_panel is not None:
+                self.edit_panel.to_front()
 
     @staticmethod
     def later(fn, *delays: float) -> None:

@@ -97,6 +97,8 @@ def cmd_serve(args) -> int:
     cfg, src, conv, parser = _setup(args)
     if args.map_width:
         cfg.map_width = args.map_width
+    if args.edit_url:
+        cfg.edit_url = args.edit_url
     watcher = Watcher(src, lambda s: parser(s, cfg), cfg.poll, cfg.lock_files, lambda n: None)
     notes = watcher.load()
     if notes is None:
@@ -163,6 +165,8 @@ def main(argv: list[str] | None = None) -> None:
                                                    "and again after every reload")
     s.add_argument("--frame", help="comma-separated panel keys to frame in snapshots, or 'all'")
     s.add_argument("--map-width", type=int, help="override [map] width, e.g. 2400 to capture the whole map")
+    s.add_argument("--edit-url", help="override [server] edit_url: where the map's edit button points, "
+                                      "for an address only known at startup such as a tunnel's")
     c = sub.add_parser("check", help="lint the notes")
     c.add_argument("--config")
     i = sub.add_parser("init", help="starter notes and config for a new lab")

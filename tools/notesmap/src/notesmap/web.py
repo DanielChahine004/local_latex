@@ -172,3 +172,33 @@ MAP_CSS = ".prog { background: #12151c; }"   # opaque over terrain
 
 PIN_JSX = ('<div style="width:30px;height:30px;border-radius:50%;background:#e5322d;'
            'border:4px solid #fff;box-shadow:0 0 8px #000"></div>')
+
+
+def edit_jsx(url: str, label: str, scale: float = 1.0) -> str:
+    """A link to the companion editor, opened in a tab of its own.
+
+    Two things this has to survive. The panel swallows pointer-down so the canvas
+    does not read the click as the start of a drag, without which the anchor never
+    fires. And `scale` sizes it for the camera it will be read at: the map opens
+    with the whole world in view, where ordinary panel text is a couple of pixels
+    tall, so the signpost is drawn many times larger than a note.
+    """
+    url = url.replace("\\", "\\\\").replace('"', "&quot;")
+    label = label.replace("<", "&lt;").replace(">", "&gt;")
+
+    def px(n: float) -> str:
+        return f"{round(n * scale)}px"
+
+    return (
+        f'<div style={{{{padding:"{px(12)} {px(14)}",'
+        f'font:"{px(11)} system-ui,-apple-system,sans-serif",color:"#8d98a7",'
+        'textAlign:"center"}}>'
+        f'<a href="{url}" target="_blank" rel="noopener noreferrer" '
+        'onPointerDown={e => e.stopPropagation()} onMouseDown={e => e.stopPropagation()} '
+        f'style={{{{display:"block",padding:"{px(10)} {px(14)}",borderRadius:"{px(8)}",'
+        f'background:"#2b6cb0",color:"#fff",fontSize:"{px(14)}",fontWeight:700,'
+        f'textDecoration:"none",boxShadow:"0 {px(2)} {px(6)} rgba(0,0,0,.45)"}}}}>'
+        f'{label}</a>'
+        f'<div style={{{{marginTop:"{px(7)}",lineHeight:1.4}}}}>'
+        'Password required. Edits reach this map on their own.</div></div>'
+    )

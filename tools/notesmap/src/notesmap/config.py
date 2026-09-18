@@ -40,6 +40,8 @@ class Config:
     # [server]
     port: int = 8000
     title: str = "notesmap"
+    edit_url: str = ""                           # a companion editor; empty: no link shown
+    edit_label: str = "Edit these notes"
 
     def resolve(self, p: str) -> Path:
         return (self.root / p).resolve()
@@ -59,7 +61,8 @@ _SECTIONS = {
     "publish": {"hide_sections": "hide_sections", "hide_gaps": "hide_gaps", "show_loose": "show_loose",
                 "hide_programmes": "hide_programmes"},
     "map": {"image": "map_image", "width": "map_width", "unplaced": "unplaced"},
-    "server": {"port": "port", "title": "title"},
+    "server": {"port": "port", "title": "title", "edit_url": "edit_url",
+               "edit_label": "edit_label"},
 }
 
 

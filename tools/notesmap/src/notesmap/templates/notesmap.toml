@@ -47,3 +47,7 @@ unplaced = [400, 3500]        # where programmes without \location are shelved
 
 [server]
 port = 8000
+# a companion editor for the notes. Set it and the map carries a signpost
+# linking to it; leave it out and the map shows no link at all.
+# edit_url = "http://127.0.0.1:8891/lab"
+# edit_label = "Edit these notes"

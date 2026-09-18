@@ -44,6 +44,12 @@ c = get_config()  # noqa: F821  (provided by traitlets when it loads this file)
 # user (tools/notes-editor-setup.sh), whose copy of this file is not in the repo
 c.ServerApp.root_dir = os.environ.get("NOTES_EDIT_ROOT", str(REPO / "src" / "paper-notes"))
 os.umask(0o002)  # files the editor creates stay writable by the notes-edit group
+# the collaboration store defaults to the working directory, which the notes user
+# cannot write; its own home it can (from the password database: sudo may leave
+# HOME pointing at the account that started it)
+if os.name == "posix":
+	import pwd
+	c.SQLiteYStore.db_path = str(Path(pwd.getpwuid(os.getuid()).pw_dir) / ".jupyter_ystore.db")
 c.ServerApp.ip = "127.0.0.1"
 c.ServerApp.port = int(os.environ.get("NOTES_EDIT_PORT", "8891"))
 c.ServerApp.open_browser = False

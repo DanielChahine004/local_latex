@@ -62,8 +62,8 @@ pixi run notes-edit       # shared live editor, http://127.0.0.1:8891/lab
 collaboration: several people type in the notes at once, images arrive by
 dropping them in the file tree, and every keystroke is written to the file, so
 the map follows without a save or a push. The map carries a link to it.
-Its password is `NOTES_EDIT_TOKEN`, seeded with a placeholder in `pixi.toml`
-and configured in `tools/jupyter-notes-config.py` — change it before sharing
+Its password is `NOTES_EDIT_TOKEN`, which falls back to the placeholder
+`change-me` in `tools/jupyter-notes-config.py` when unset — change it before sharing
 the link, because anyone holding it can edit the notes. Open `map.html` in the
 editor (pressing "Trust HTML") to keep the map in a tab beside the text.
 

@@ -11,8 +11,8 @@ Two settings here are load-bearing:
   frame-ancestors   Jupyter refuses to be framed by another origin by default;
                     this lets the map at MAP_ORIGIN embed it in a panel
 
-The token is the password. It comes from NOTES_EDIT_TOKEN, which pixi.toml
-seeds with a placeholder — change it before sharing the link, and remember that
+The token is the password. It comes from NOTES_EDIT_TOKEN, falling back to
+the placeholder below when unset — change it before sharing the link, and remember that
 anyone holding it can edit the notes and upload files.
 
 Reaching it from elsewhere (a tunnel, a phone):

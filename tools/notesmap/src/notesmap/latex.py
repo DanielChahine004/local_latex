@@ -213,6 +213,8 @@ class Converter:
         t = t.replace("---", "—").replace("--", "–").replace("``", "“").replace("''", "”")
         t = t.replace("\\%", "%").replace("\\&", "&").replace("\\$", "$").replace("\\_", "_")
         t = t.replace("\\S", "§").replace("\\textdegree", "°").replace("{,}", ",")
+        for k in sorted(MATH, key=len, reverse=True):          # \pm and friends outside $...$,
+            t = re.sub(re.escape(k) + r"(?![A-Za-z])", MATH[k], t)   # as in \mm{1.4 \pm 0.2}
         t = re.sub(r"\\[A-Za-z]+\{([^{}]*)\}", r"\1", t)     # any leftover \cmd{arg}
         t = re.sub(r"\\[A-Za-z]+", "", t)
         t = t.replace("{", "").replace("}", "")

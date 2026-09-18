@@ -637,6 +637,7 @@ strip. If it does, the narrowed claim above needs narrowing again.}
  
 \begin{programnote}{i3M Valencia -- Detectors for Molecular Imaging Lab}{i3M}
 \location[-1000,1500]{39.48}{-0.34}{Valencia, Spain}
+\thumb{img/i3mgroup.png}
  
 \paragraph{What it is}
 Instituto de Instrumentación para Imagen Molecular (I3M), Centro Mixto
@@ -655,7 +656,7 @@ Two reasons, and the second is the urgent one.
  
 First, they own the largest share of the monolithic positioning literature ---
 González-Montoro, Freire, Barrio, Cucarella, Valladares, Sánchez --- including
-semi-monolithic NN positioning (Freire et al.\ 2022 PMB) and monolithic BGO.
+semi-monolithic NN positioning (\ref{note:Freire2022NN}) and monolithic BGO.
  
 Second: \textbf{i3M is building a PET system based on a single toroidal
 crystal}, five-year US-funded project led by González, announced 2020. González
@@ -748,6 +749,47 @@ The other annular monolithic scanner, and the direct comparison for
 land at about \mm{1.4} FWHM --- AnnPET with a deep network and SSRB-FBP,
 this one with centre of gravity and Voronoi calibration. That the two routes
 meet at the same number is itself a finding worth stating in the review.
+
+\end{papernote}
+
+\begin{papernote}{Freire et al.\ 2022 -- Position estimation using neural networks in semi-monolithic PET detectors}{Freire2022NN}
+\thumb{img/freire2022position.png}
+Phys.\ Med.\ Biol.\ 67(24):245011, \doi{10.1088/1361-6560/aca389}.
+
+\paragraph{Summary}
+i3M's second 2022 paper, and a different detector line from the single-crystal
+tube of \ref{note:i3MTube}: a flat semi-monolithic detector for total-body PET
+rather than an annulus for rodents. One array of 1 x 8 LYSO slabs of
+\qtyproduct{25.8 x 3.1 x 20}{\milli\metre}, separated by Enhanced Specular
+Reflector and coupled to an 8 x 8 SiPM array. A neural network estimates the
+impact position along the monolithic length and in depth; the slab itself
+fixes the third coordinate. The variables are the surfaces and the sensor,
+not the algorithm: three crystal treatments (lateral faces black painted with
+a retroreflector on top, ESR on the lateral faces with a retroreflector on
+top, and ESR everywhere) crossed with two Hamamatsu arrays, S13361-3050AE-08
+and S14161-3050AS-08. Measured with a $^{22}$Na point source through a
+pinhole collimator against a reference detector, stepping the detector by
+\mm{1}. Energy resolution lands between 11\% and 16\%, and the mean absolute
+positioning error between \mm{1.1 \pm 0.5} and \mm{1.3 \pm 0.5} on one
+estimated axis and between \mm{1.7 \pm 0.8} and \mm{2.2 \pm 1.0} on the
+other, with the black-painted and retroreflector combination best on both and
+the SiPM model making no difference to position. Authors: Freire, Barrio,
+Cucarella, Valladares, González-Montoro, de Alfonso, Benlloch, González ---
+all i3M. Neural positioning on semi-monolithic LYSO is the same technique
+\ref{prog:Aachen} applies four years later on a built scanner
+(\ref{note:Thull2026}), which adds a per-event variance to it.
+\gap{Which axis is which: the published abstract drops the axis labels, so
+the \mm{1.1} figure is the monolithic length and the \mm{1.7} depth of
+interaction by inference from the slab geometry, not from the text. Same for
+the energy-resolution list, which loses its treatment-to-sensor mapping.}
+
+\paragraph{Why it matters here}
+This is Valencia's total-body entry, so the group is in the flat-panel
+contest with \ref{prog:Ghent} as well as the annular one with
+\ref{prog:AnnPET}, and neither claim leaves much monolithic ground vacant.
+Read as a bench measurement, not a scanner: these are mean absolute errors
+from a collimated setup, so they do not compare with the \mm{1.4} FWHM of
+\ref{note:i3MTube}.
 
 \end{papernote}
  

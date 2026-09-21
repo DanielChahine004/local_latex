@@ -1,0 +1,29 @@
+# pixi environments
+.pixi/*
+!.pixi/config.toml
+
+# build output (keep the dir so tectonic's --outdir exists on a fresh clone)
+build/*
+!build/.gitkeep
+
+# LaTeX intermediates
+*.aux
+*.log
+*.bbl
+*.blg
+*.synctex.gz
+
+# python bytecode from one-off tools
+__pycache__/
+
+# Linux biber, fetched by tools/get-biber.sh (biber.exe is committed)
+tools/biber/biber
+
+# notesmap tool environment (uv)
+tools/notesmap/.venv/
+
+# JupyterLab live editing: per-machine config, the CRDT history store, and the
+# checkpoint copies its file browser leaves beside anything opened
+.jupyter/
+.jupyter_ystore.db
+.ipynb_checkpoints/

@@ -1,0 +1,254 @@
+% Supervisor meeting log -- standalone, NOT \input by main.tex.
+% Build: pixi run build-meetings        Newest entry at the top.
+% Source convention: one sentence per line, no hard wrap.
+\documentclass[11pt, a4paper]{article}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{parskip}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+\usepackage{xurl} % let long URLs break anywhere instead of overrunning the margin
+
+% Tag palette, picked for a white page.
+\definecolor{askc}{HTML}{1F4E9C}    % question to put to him
+\definecolor{raisec}{HTML}{6B3FA0}  % point I intend to make
+\definecolor{outc}{HTML}{1B6B3A}    % what came back
+\definecolor{actc}{HTML}{B4530A}    % action on me
+\definecolor{ansc}{HTML}{1B6B3A}    % the answer slot under a question
+\definecolor{answerc}{HTML}{6B7A85} % the unanswered placeholder
+\definecolor{rulec}{HTML}{9AA3AE}
+
+% Narrow measure plus unbreakable tokens (Lu-177, Safavi-Naeini) overflow the
+% margin. Only applied to paragraphs that would otherwise be overfull.
+\emergencystretch=1.5em
+
+\newcommand{\mtag}[2]{{\sffamily\bfseries\footnotesize\textcolor{#1}{#2}}}
+\newcommand{\ASK}{\mtag{askc}{ASK}}
+\newcommand{\RAISE}{\mtag{raisec}{RAISE}}
+\newcommand{\OUT}{\mtag{outc}{OUTCOME}}
+\newcommand{\ACT}{\mtag{actc}{ACTION}}
+
+% `agenda' wraps `agendalist' to give \end{agenda} a \closeask hook and to take
+% an optional title: \begin{agenda} or \begin{agenda}{Being tactical}.
+% Same restriction as \ask -- the first item must not start with a brace group.
+\newlist{agendalist}{itemize}{1}
+\setlist[agendalist]{leftmargin=6.2em, labelwidth=5.4em, labelsep=0.8em,
+	align=right, topsep=0.6ex, itemsep=1.0ex, parsep=0pt}
+
+\makeatletter
+\newenvironment{agenda}
+	{\askopenfalse\@ifnextchar\bgroup{\agenda@titled}{\agenda@plain}}
+	{\closeask\end{agendalist}}
+\newcommand{\agenda@titled}[1]{{\large\itshape #1\par}\vspace{0.2ex}\agenda@plain}
+\newcommand{\agenda@plain}{\begin{agendalist}}
+\makeatother
+
+% Item kinds, used inside agenda -- a command, then the body sentences:
+%   \ask{Heading}   \ask{Heading}{His answer.}
+%   \raisept{Heading}   \outcome{Heading}   \action{Heading}
+% `raisept' not `raise': \raise is a TeX primitive.
+% \kindhead has no \par on purpose -- the body runs on from the heading.
+\newcommand{\kindhead}[3]{\item[#1]{\color{#2}\bfseries #3}}
+
+% The answer is stored, not typeset in place, so it prints under the body;
+% \closeask flushes it at the next item or at \end{agenda}.
+% Restriction: a body must not START with a brace group, or it is taken as
+% the answer.
+\newif\ifaskopen
+\global\let\pendingans\empty
+
+\makeatletter
+\newcommand{\ask}[1]{%
+	\closeask
+	\kindhead{\ASK}{askc}{#1}%
+	\askopentrue
+	\global\let\pendingans\empty
+	\@ifnextchar\bgroup{\ask@grab}{\space}} % \@ifnextchar eats the space; put one back
+\newcommand{\ask@grab}[1]{\gdef\pendingans{#1}}
+\makeatother
+
+\newcommand{\raisept}[1]{\closeask\kindhead{\RAISE}{raisec}{#1}}
+\newcommand{\outcome}[1]{\closeask\kindhead{\OUT}{outc}{#1}}
+\newcommand{\action}[1]{\closeask\kindhead{\ACT}{actc}{#1}}
+
+% #1 is the colour of both the tag and the body: answered slots are green,
+% the unanswered placeholder stays muted so it does not read as an answer.
+\newcommand{\anshead}[2]{\par\vspace{0.7ex}\noindent{\mtag{#1}{ANSWER}}~{\color{#1}#2}\par}
+\newcommand{\closeask}{%
+	\ifaskopen
+		\askopenfalse
+		\ifx\pendingans\empty
+			\anshead{answerc}{\itshape not yet answered}%
+		\else
+			\anshead{ansc}{\pendingans}%
+		\fi
+	\fi}
+
+% \meeting{DATE} starts each entry on its own page and labels it "Nth meeting".
+% Entries are newest-first, so N counts DOWN the page: the total is written to
+% the .aux at the end of one run and read back at the start of the next, which
+% is why a brand-new build needs two passes (tectonic does that by itself).
+\newcounter{mtg}
+\newcommand{\mtgtotal}{0}
+\makeatletter
+\AtEndDocument{\immediate\write\@auxout{\string\gdef\string\mtgtotal{\arabic{mtg}}}}
+\makeatother
+
+% "1st/2nd/3rd/4th", with the 11th/12th/13th exception. \divide truncates;
+% \numexpr's / rounds, which would give the wrong remainder.
+\newcount\ordn
+\newcount\ordm
+\newcommand{\ordinal}[1]{%
+	\ordn=\numexpr#1\relax
+	\number\ordn
+	\ordm=\ordn \divide\ordm by 100 \multiply\ordm by 100
+	\advance\ordn by -\ordm                        % n mod 100
+	\ifnum\ordn>10 \ifnum\ordn<14 \ordn=4 \fi\fi   % 11-13 always "th"
+	\ordm=\ordn \divide\ordm by 10 \multiply\ordm by 10
+	\advance\ordn by -\ordm                        % n mod 10
+	\ifcase\ordn th\or st\or nd\or rd\else th\fi}
+
+\newcommand{\meeting}[1]{%
+	\clearpage
+	\stepcounter{mtg}%
+	{\Large\bfseries #1\hfill
+		{\normalsize\normalfont\color{rulec}%
+			\ordinal{\mtgtotal-\value{mtg}+1}\ meeting}\par}%
+	\vspace{0.3ex}{\color{rulec}\hrule height 0.8pt}\vspace{0.6ex}%
+	\par}
+
+\newcommand{\legend}{%
+	\par\vspace{0.5ex}%
+	{\color{rulec}\hrule height 0.4pt}\vspace{0.8ex}%
+	\noindent\ASK\ to put to him \quad \RAISE\ point to make \quad
+	\OUT\ what came back \quad \ACT\ on me\par
+	\vspace{0.4ex}{\color{rulec}\hrule height 0.4pt}\par}
+
+\title{Supervisor Meetings}
+\author{Daniel Chahine}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\legend
+
+
+\meeting{2026-09-07} % adjust to the actual date
+
+\begin{agenda}{The CRLB study is closed and the paper is a draft in progress. Bulk scattering has a predictable optimum, surface scattering does not substitute for it, and the scattering is the more robust optical model.}
+	\raisept{74 GATE runs of 100k gammas, every point through the trust gates. The writeup is a 17-page working draft that builds from the repo with every number regenerated from the run records; not yet a submission.}
+	\raisept{The design rule rests on 15 runs of the reference slab (Rayleigh and Mie) plus 10 varying thickness, 25 varying index and 10 varying footprint. On a whole-crystal metric the DOI bound has an optimum at $\ell^*_{\mathrm{opt}} \approx \frac12 T(1-\cos\theta_c)$, about $T/5$ for LSO; the $n=2.0$ sweep was a blind prediction and landed inside the predicted range. Payoff grows with index: none at $n=1.6$, 24\,\% for LSO, 50\,\% at $n=2.15$.}
+	\raisept{The same runs on an interior metric show no optimum: the bound keeps falling with stronger scattering and halves at the shortest length. The whole-crystal optimum is a crossover set by the outer 3 mm, so a detector that excludes the rim should scatter as hard as the bound stays valid.}
+	\raisept{Four runs replaced bulk scattering with a ground face or diffuser sheets at the grease, readout or entrance. None recovers any of the gain.}
+	\raisept{Robustness: fit the response on one crystal, run the estimator on a perturbed one, over 20 pairs (5 new runs for wrap gaps and finish). The optimum is insensitive to phase function, its one sensitivity is a two-number depth calibration, and the clear crystal is fragile: a faint scatter doubles its error, an air gap behind the paint multiplies it by 13.}
+	\raisept{Checks: 3 anisotropy runs leave the interior bound identical to 1\,\%; yield and dark counts are analytic and do not move the optimum; 2 forced-scintillation runs reproduce the bound at half the cost; a Ziv--Zakai bound and posterior-mean estimator confirm the optimum is what an estimator sees.}
+	\raisept{Stated limits: absorbing wrap only, design comparisons not predicted resolutions, $\ell$ and $n$ treated as independent, no timing.}
+	\outcome{Publishable once the draft settles;} {a referee will attack the rule because it rests on the rim, and the defence is that two achievable estimators find the same optimum. The reflective-wrap gap cannot be argued away: scope it or run it.}
+\end{agenda}
+
+
+
+\meeting{2026-08-24}
+
+\begin{agenda}{Go over new literature encountered. CRLB for nanocomposites seems additive to the program and historically underexplored. }
+	\raisept{Casual Academic stuff ready, card access works, overleaf is accessible}
+	\raisept{Did more scintillator research, went down a nanocomposite rabbit hole, and found a couple more monolithic programs around the world}
+	\raisept{All the CRLB work is monocrystalline: Delft on LYSO, Miyaoka's group on LSO, Korevaar on CsI.}
+    \outcome{CRLB work seems like a winner;} {continue validating and learning about it; how it hasn't been applied really to composites (macro, nano, quantum dots, and otherwise) where photon transport differs from the ubiquitous monocrystalline CRLB monolithic research since the transport is much less ballistic and more diffusive - some rules of thumb may not hold in the diffusive regime. The CRLB tooling could be powerful for downstream research like interaction seperability, in time and space, contextualising empirical estimation methods (knn, cauchy fits, neural localisation), and energy, direction of travel estimation and so on.}
+    \action{Share Dan Frank into phd overleaf, write up a paper-style premise-method-results for the CRLB, and qc crlb study.}
+    
+\end{agenda}
+
+
+\meeting{2026-08-10}
+
+\begin{agenda}{Being tactical with PhD direction. Need to constrain the search space; software-bound contributions, grant positioning, contribution classes (characterisations vs novelties), and relation to prior program.}
+	\raisept{I've written a bit more about the physics underlying emission tomography, and organic and inorganic scintillators.}
+		Thesis additions: positron emission, annihilation, coincidence detection and the organic/inorganic scintillator sections are drafted, then I stopped to read around PET, SPECT, scintillator materials science, beam therapies, prompt gamma imaging, in-beam PET and dosimetry.
+	\raisept{Discouraging search so far; many negative results (napkin code/calcs) and occupied novelties and non-obvious gaps - perhaps expected.}
+		Monolithic PET is obviously mature: small-animal through clinical-scale prototypes, even total-body monolithic scanners like WT-PET.
+		Optical photon transport is the least trustworthy piece of the simulation chain and the main barrier to sim-to-real transfer, but routinely handled by fine tuning on real hardware, at the cost of tedious calibration.
+		Converged many times with the field's wisdom; Inorganics are simply very good; the case for nanocomposites is manufacturability, not necessarily performance, and scattering and temporal blurring still hurt composites and glass ceramics.
+		Plastics are cheap and fast but low density, poor yield (on CTR) and sensitivity poor; J-PET buys its axial coordinate from dual-ended timing along each strip, and pays for it in transaxial discretisation.
+		Reconstruction and motion correction are active but crowded, and usually tied to real hardware.
+	\raisept{Software-bound does help constrain the search for contribution type.}
+		For what its worth; RNSH hosts the Australian National Total Body PET Facility --- a Biograph Vision Quadra, time-shared between clinical and research use, with research access open through Sydney Imaging on scientific merit under NIF/NCRIS with Meikle.
+		A NEMA-validated GATE digital twin with vendor e7 reconstruction exists.
+	\raisept{Thesis directions positioned for on top-up opportunities; presumably ANSTO}
+		AINSE PGRA 2027 opens $\sim$Feb; condition is facility use \textbf{and/or} an ANSTO collaborator.
+		Simulation-only seems feasible there: Dingo's validated Monte Carlo model was extended into a 3D Geant4 beamline twin underpinning a new in vitro neutron capture capability (B-10 in glioma cells, Dec 2025) --- squarely Safavi-Naeini's scope.
+		Theranostics pull: Mo-99, I-131 and Lu-177 are the Lucas Heights products (Tb-161 and Sc-47 pipeline at best); ANSTO supplies the n.c.a. Lu-177 used in ANZUP, Peter MacCallum and Melanoma \& Skin Cancer trials.
+		Also on site: the Imaging and Medical Beamline for microbeam radiotherapy, radiobiology and dosimetry, and Becquerel traceability for PET activity standards.
+		Bragg Centre timeline: unverified.
+	% \raisept{You'd think NeuroSphere is dope} \url{https://www.researchgate.net/figure/a-Render-of-the-NeuroSphere-PET-detector-block-layout-which-provides-sim70-of_fig1_410682891}
+	\ask{I think the monolithic PET moves forward defensible only if the manufacturability of nanocomposites is meaningfully exploited - conventional monolithic geometries are already well served. How, if at all, do you see the monolithic program likely progressing, and what does it need?}{Franklin does see the monolithic PET program moving forward into a build - a focus on what likely breaks between simulation to real life transfer is certainly helpful... but essentially agreeing with most of my opinions and suggestions. We are on the same page, he seems to trust that I'll find some angle or something to make it work. Reconstruction side and optical flashes to image space transformation also seems of interest to him.}
+		A position to argue with rather than an open question: the durable contributions here seem to be bounds, characterisations and design rules, not firsts.
+		Information-theoretic optimisation of SiPM placement could be justified, but CRLB was applied to monolithic PET around 2012, so the claim would be the design-optimisation use, not the bound itself.
+		Alternatively, the program before me investigated the recoverability of interaction localisation, and recently multi-interaction events, but perhaps not monolithic nanocomposite effects on temporal resolution (Rayleigh, Compton, and Mie scattering in larger-particle composites add stochasticity to the photon transport to SiPMs, especially with anisotropy and imperfections) and energy resolution (optical photons must be attributed to a particular interaction - overlapping flashes noise each other).
+		Keenan, Roumani, Shen and Ragy took it from materials and thickness through LOR localisation to learned localisation in thick scattering media; my honours work added continuous-coordinate list-mode reconstruction.
+		Is that the arc as you see it, and does it end in a build? If a build is defensible and funding plausible, what would I need to produce to help prop one up?
+	\ask{Is 'monolithic PET', 'image reconstruction', and 'experimental validation' in the proposal title binding?}{Not really - he's open for prompt gamma imaging or spect stuff or continuing monoliths. ANSTO collaboration can be spoken about - some work could align with Mitras space.}
+		Experimental validation may not need a scanner: ANSTO has Co-60 gamma, x-ray, proton and heavier-ion sources for irradiating materials and devices, so characterising a scintillator sample or detector element under a known beam would be a real validation chapter.
+	\ask{How should I prioritise in my thesis direction? Space for publishability? Capitalise on leverages we have (simulation, ML, collaborators?)}{No correct answer - can relax on the 'bounds not novelty' idea; just doing a particular combination of independently existing works can warrant a publication with the right framing.}
+	\outcome{Continue with the research; particularly look into newer scintillator materials; Franklin routinely expresses interest in perovskites and glass ceramic - formal catalogue opinions and thoughts on these maybe.}
+	\outcome{Seems to have interest in restoring the direction of travel of photons in a monolith.}
+	\outcome{Also keen on my image reconstruction skills in particular; is a personal leverage factor for me in particular.}
+		
+\end{agenda}
+
+\meeting{2026-07-27}
+
+\begin{agenda}{Follow-up on monolithic PET directions}
+	\raisept{Known information loss from discretisation.}
+		Mention the pre-existing literature on this; frame my paper as a demonstration with Ragy's localisation network.
+	\raisept{Analytic pipeline.}
+		The comparison framework I'm building to analytically estimate a scintillator's performance on localiser-specific properties, i.e.\ model any given scintillator's ability to function as a monolithic slab --- is this what Franklin's past research was though?
+	\raisept{Survey paper --- test the waters.}
+		Efforts to preserve information at every interface in PET: scintillators as the first interface, localisation the second, then readout electronics and image reconstruction.
+	\raisept{Thesis scaffold.}
+		Show what exists so far.
+	\outcome{Keep going.}
+		Basically keep doing what I'm doing --- the taxonomy idea is clean and good for a survey, and the pipeline could be publishable.
+		You know what you're doing, just keep it up.
+		Keep characterising the field broadly for now and noting potential ideas to pursue for papers later.
+\end{agenda}
+
+\meeting{2026-07-13}
+
+\begin{agenda}{First meeting as HDR}
+	\outcome{High-level chat.}
+		Basically be creative and explore ideas at the moment.
+	\outcome{First paper direction.}
+		Starting on the lit review; confident on resubmitting Ragy's work and preparing for a continuous-coordinate vs binned reconstruction paper as my first paper.
+	\outcome{Supervision.}
+		Adding Roumani as co-supervisor.
+		Enrolled afterward.
+	\action{Next time.}
+		Come back with some lit review done and flexible ideas for project direction.
+\end{agenda}
+
+
+\section*{Notes, resources, and ideas}
+
+\begin{itemize}[leftmargin=1.2em, itemsep=1.0ex, parsep=0pt]
+	\item \textbf{Paper 1 --- continuous vs discretised reconstruction.}
+		Continuous-coordinate reconstruction vs discretised counterparts, characterising the trade-offs in terms of accuracy and computational cost.
+		Sets the premise for continuous coordinate gamma localisation which underpins the rest of the thesis.
+	\item \textbf{CRLB (or otherwise) for optimal SiPM placement.}
+		Readout gains happen when a SiPM is able to service a larger volume of scintillator; as JPET and light sharing modules fundamentally trade.
+		Establishing the most efficient way to position SiPMs around a scintillator volume to maximise the information content of the data - an information and sampling theory question.
+		This intrinsically targets the reduction of readout channels and in turn the cost of the system, while preserving localisation accuracy.
+		Paper~1 establishes the benefits of continuous coordinate reconstruction, and this asks how can we most efficiently afford continuous localisation capabilities?
+		Ideally this explores scintillator types, size and geometry.
+	\item \textbf{Multiple interaction vertices in a monolithic scintillator.}
+		Investigate whether Compton scattering can be used to help parameterise image reconstruction.
+		Such a monolithic detector effectively serves as a dual PET--Compton camera, and Compton kinematics could help quantify per-event uncertainty and improve scanner sensitivity.
+		Extends the previous work by using multi-site localisation to inform image reconstruction.
+	\item \textbf{Plastic scintillator camera localisation.}
+		\url{https://www.youtube.com/watch?v=To6yDq3kYds} and \url{https://www.nature.com/articles/s41467-026-70918-x}
+	\item \textbf{PET lecture slides from CERN.}
+		\url{https://indico.cern.ch/event/54940/attachments/979499/1392131/Del_Guerra_Lecture_2.pdf}
+\end{itemize}
+
+\end{document}

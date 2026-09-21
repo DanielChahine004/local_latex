@@ -1,0 +1,65 @@
+# notesmap configuration for this repo's paper notes (tools/notesmap).
+# pixi run notes-map / notes-canvas / notes-check
+
+[source]
+path = "src/paper-notes/main.tex"
+poll = 2.0
+lock_files = [".lock"]
+
+[latex]
+overview_sections = ["what it is", "summary"]
+# the thesis's own unit shorthands (src/thesis/units.tex) are built in:
+# \mm \cm \um \ps \ns \keV \MeV and \qty / \qtyrange / \qtyproduct
+
+[board]
+rows = [
+	["i3M", "AnnPET", "HUST", "Delft", "machinery"],    # the annulus cluster and what it cites
+	["cMiCE", "Ghent", "UTOFPET", "Aachen", "J-PET"],   # neural localisation and its precursors
+	["MODE", "OpenGATE", "UTS", "Penn"],                # tooling stubs and history
+]
+# cross-references that are a shared citation, not a relationship
+prune = [["i3M", "machinery"], ["Delft", "machinery"]]
+loose_key = "machinery"
+loose_title = "Machinery (no programme)"
+
+[publish]
+# the board is public and states what the papers and programmes say; these are
+# this thesis's own working, kept in the PDF and left off the board, along with
+# \aside{...} sentences and \gap{...} markers
+hide_sections = [
+	"why it matters",            # also "why it matters here"
+	"capsule",
+	"relevance to this thesis",
+	"where it might go",
+	"thesis entry",
+	"scope boundary",
+	"intellectual property",
+	"why it stays in the file",
+	"why separate from",
+	"why it needs to exist",
+	"the claim to be substantiated",
+	"why the third point",
+	"the number to take",
+	"reading order",
+	"to read",
+	"to record",
+	"arithmetic to check",
+]
+hide_gaps = true
+# the loose papers: methods reading with no programme, shelved in the Southern
+# Ocean as one panel
+show_loose = true
+# tooling the thesis leans on, not monolithic PET programmes
+hide_programmes = ["MODE", "OpenGATE"]
+
+[map]
+width = 9000
+unplaced = [400, 3250]    # the machinery panel: no institution, so the Southern Ocean
+                          # (clear of danvas's own buttons at the viewport's lower left)
+
+[server]
+port = 8000
+# the companion editor (pixi run notes-edit); a link to it sits on the map.
+# comment this out and the map shows no link at all.
+edit_url = "http://127.0.0.1:8891/lab"
+edit_label = "Edit these notes"

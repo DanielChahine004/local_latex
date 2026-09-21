@@ -1,0 +1,123 @@
+% !TeX root = ./main.tex
+% Acronyms and terms -- maintained BY HAND, sorted AUTOMATICALLY when printed.
+% Type them as plain text in the body; nothing expands or links. Two entry
+% types, rendered alike and sorted case-insensitively into one list, so the
+% order here does not matter:
+%
+%   \acr{PET}{\textbf{positron emission tomography}---a functional modality}
+%   \term{positron range}{the displacement between emission and annihilation}
+%
+% Sorted with expl3, not datatool: its load-and-sort cost helped push Overleaf
+% past its compile timeout. Expandable string compare is \pdfstrcmp on pdfTeX
+% (Overleaf), \strcmp on XeTeX (tectonic).
+\ifdefined\pdfstrcmp\let\acrstrcmp\pdfstrcmp\else\let\acrstrcmp\strcmp\fi
+\ExplSyntaxOn
+\seq_new:N \g__acr_seq
+\bool_new:N \g__acr_first_bool
+% Case fold for the sort key. Renamed across expl3 releases, so take whichever
+% this kernel has.
+\cs_if_exist:NTF \str_casefold:n
+	{ \cs_new_eq:NN \__acr_fold:n \str_casefold:n }
+	{
+	\cs_if_exist:NTF \str_foldcase:n
+		{ \cs_new_eq:NN \__acr_fold:n \str_foldcase:n }
+		{ \cs_new_eq:NN \__acr_fold:n \tl_to_str:n }
+	}
+\cs_new_protected:Npn \acr #1#2
+	{ \seq_gput_right:Nn \g__acr_seq { {#1} {#2} } }
+% Same mechanism; the separate name only records which kind an entry is.
+\cs_new_eq:NN \term \acr
+\cs_new_protected:Npn \__acr_row:nn #1#2
+	{ \textbf{#1} & #2 }
+\cs_new_protected:Npn \printacronyms
+	{
+	\seq_sort:Nn \g__acr_seq
+		{
+		\int_compare:nNnTF
+			{ \acrstrcmp
+				{ \exp_args:Ne \__acr_fold:n { \use_i:nn ##1 } }
+				{ \exp_args:Ne \__acr_fold:n { \use_i:nn ##2 } } }
+			> { 0 }
+			{ \sort_return_swapped: }
+			{ \sort_return_same: }
+		}
+	\bool_gset_true:N \g__acr_first_bool
+	\seq_map_inline:Nn \g__acr_seq
+		{
+		\bool_if:NTF \g__acr_first_bool
+			{ \bool_gset_false:N \g__acr_first_bool }
+			{ \\ }
+		\__acr_row:nn ##1
+		}
+	}
+\ExplSyntaxOff
+
+\acr{PET}{\textbf{positron emission tomography}---a functional imaging modality}
+\acr{CT}{\textbf{computed tomography}---an anatomical imaging modality}
+\acr{MRI}{\textbf{magnetic resonance imaging}---an anatomical imaging modality}
+\acr{FDG}{\textbf{fluorodeoxyglucose}---a glucose-analogue radiotracer}
+\acr{LOR}{\textbf{line of response}---the straight path along which a coincident pair of gamma photons are inferred to have originated. Can alternatively be used to refer to the straight path which connects two activated detectors of a PET scanner}
+\acr{TOF}{\textbf{time-of-flight}---a technique using high-speed timing to better localise the annihilation position along a LOR}
+\acr{SNR}{\textbf{signal-to-noise ratio}---a measure of data quality}
+\acr{ICS}{\textbf{inter-crystal scatter}---the phenomenon where a gamma photon Compton scatters in one segment of a PET detector and goes on to interact inside another nearby segment}
+\acr{LSO}{\textbf{lutetium oxyorthosilicate}---an inorganic scintillator crystal}
+\acr{LYSO}{\textbf{lutetium-yttrium oxyorthosilicate}---an inorganic scintillator crystal}
+\acr{BGO}{\textbf{bismuth germanate}---an inorganic scintillator crystal}
+\acr{NaI(Tl)}{\textbf{thallium-doped sodium iodide}---an inorganic scintillator crystal}
+\acr{GAGG}{\textbf{gadolinium aluminium gallium garnet}---an inorganic scintillator crystal}
+\acr{CZT}{\textbf{cadmium zinc telluride}---a semiconductor detector material, converting gamma photons to charge directly rather than via scintillation}
+\acr{PMT}{\textbf{photomultiplier tube}---a vacuum photodetector, the conventional readout for scintillators}
+\acr{SiPM}{\textbf{silicon photomultiplier}---a solid-state photodetector, an array of SPADs read out in parallel}
+\acr{SPAD}{\textbf{single-photon avalanche diode}---the individual sensing element of a SiPM}
+\acr{APD}{\textbf{avalanche photodiode}---a solid-state photodetector operated below breakdown}
+\acr{ASIC}{\textbf{application-specific integrated circuit}---custom readout electronics}
+\acr{ADC}{\textbf{analogue-to-digital converter}}
+\acr{TDC}{\textbf{time-to-digital converter}}
+\acr{DAQ}{\textbf{data acquisition}}
+\acr{CTR}{\textbf{coincidence resolving time}---the timing resolution of a detector pair, which sets the achievable TOF localisation}
+\acr{NECR}{\textbf{noise-equivalent count rate}---a count rate corrected for the noise contributed by randoms and scatter, the standard scalar measure of a scanner's sensitivity}
+\acr{FWHM}{\textbf{full width at half maximum}---the conventional measure of spatial, energy and timing resolutions}
+\acr{FWTM}{\textbf{full width at tenth maximum}---a similar measure of spatial, energy and timing resolution as FWHM}
+\acr{SUV}{\textbf{standardised uptake value}---a semi-quantitative measure of tracer uptake}
+\acr{NEMA}{\textbf{National Electrical Manufacturers Association}---publisher of the NU 2 standard by which PET scanner performance is measured}
+\acr{DOI}{\textbf{depth of interaction}---the radial depth at which a photon interacts within a crystal, unresolved in conventional designs and a source of parallax error}
+\acr{FOV}{\textbf{field of view}---the region imaged by the scanner}
+\acr{AFOV}{\textbf{axial field of view}---the extent of the FOV along the patient axis}
+\acr{LAFOV}{\textbf{long axial field of view}---scanner designs extending the AFOV towards total-body coverage}
+\acr{UBP}{\textbf{unfiltered backprojection}---primitive image reconstruction method which simply backprojects all LORs through a voxelwise volume, produces a distinctly blurred (by  $1/r$) image}
+\acr{FBP}{\textbf{filtered backprojection}---UBP preceded by a ramp filter that removes the $1/r$ blur, a standard simple analytical reconstruction algorithm}
+\acr{MLEM}{\textbf{maximum-likelihood expectation maximisation}---an iterative reconstruction algorithm}
+\acr{OSEM}{\textbf{ordered-subset expectation maximisation}---an accelerated variant of MLEM, standard in clinical practice}
+\acr{PSF}{\textbf{point spread function}---the imaged response to a point source, modelled within reconstruction to recover resolution}
+\acr{ROI}{\textbf{region of interest}}
+\acr{CRLB}{\textbf{Cramér--Rao lower bound}---an information-theoretic bound on the minimum variance achievable by any unbiased estimator of a deterministic parameter}
+\acr{MC}{\textbf{Monte Carlo}---stochastic simulation of a process involving random variables; here, of photon transport and detection}
+\acr{GATE}{\textbf{Geant4 Application for Tomographic Emission}---a Monte Carlo simulation toolkit for emission imaging}
+\acr{SSS}{\textbf{single scatter simulation}---a simulation method for estimating the expected scatter in an acquired PET scan, informed by an attenuation map}
+\acr{SPECT}{\textbf{single-photon emission computed tomography}---the single-photon counterpart to PET, in which tomographic reconstruction was first demonstrated}
+\acr{PSMA}{\textbf{prostate-specific membrane antigen}---the target of a widely used class of radioligands}
+\acr{PSNR}{\textbf{peak signal-to-noise ratio}}
+
+% Terms with no acronym. Same list, same sort -- see the header comment.
+\term{annihilation photons}{the two \keV{511} photons produced when a positron annihilates with an atomic electron.}
+\term{positron range}{the displacement between the point of positron emission and the point of annihilation.}
+
+
+\chapter*{Acronyms and Terms}
+\addcontentsline{toc}{chapter}{Acronyms and Terms}
+% xltabular = longtable (breaks across pages) + tabularx's X column, needed
+% once the list outgrew one page. Column 1 is a fixed p, not an l: a multi-word
+% \term would stretch an l column and crush the meaning beside it.
+\begin{xltabular}{\textwidth}{@{}>{\raggedright\arraybackslash}p{0.23\textwidth} @{\hspace{1.5em}} X@{}}
+\toprule
+\textbf{Term} & \textbf{Meaning}\\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Term} & \textbf{Meaning}\\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
+\printacronyms\\
+\end{xltabular}

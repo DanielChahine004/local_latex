@@ -1,0 +1,69 @@
+% !TeX root = ../../main.tex
+% Noble-element excimer scintillation as potential-energy curves against
+% internuclear separation: a repulsive ground state below, the bound singlet
+% and triplet excimer states above. \input by chapters/02-literature-review.tex.
+% Deliberately narrower than the two mechanism figures it follows: the
+% material is a research option, not one the comparisons return to.
+%
+% The curves are illustrative shapes, not data: the ground state is 0.9 + 10/R^2
+% and the excimers are Morse wells with their bottom at R = 3.6, so the
+% emission arrows land on the repulsive wall. Labels live in the empty bands:
+% between the curve families (y = 2 to 4), above the excimer asymptote
+% (y > 5.8) and below the ground asymptote (y < 0.95); never on a curve.
+%
+% Needs arrows.meta, loaded in main.tex.
+
+\providecolor{excsing}{HTML}{378ADD}
+\providecolor{exctrip}{HTML}{D4537E}
+\providecolor{excexcite}{HTML}{E24B4A}
+\providecolor{excinert}{HTML}{888780}
+
+\begin{tikzpicture}[
+	x=1cm, y=1cm,
+	ann/.style   = {font=\footnotesize, align=center},
+	side/.style  = {ann, align=left},
+	curve/.style = {line width=0.8pt},
+	flow/.style  = {-{Stealth[length=4pt]}, line width=0.5pt},
+	]
+
+% ---------- axes ------------------------------------------------------
+\draw[flow, line width=0.3pt] (0.9,0.3) -- (0.9,7.4);
+\node[ann] at (0.9,7.65) {$E$};
+\draw[flow, line width=0.3pt] (0.9,0.3) -- (11.3,0.3);
+\node[ann, anchor=north] at (5.8,0.05) {Internuclear separation $R$};
+
+% ---------- curves ----------------------------------------------------
+% repulsive ground state: no minimum, so no bound Xe2 to reabsorb the photon
+\draw[curve] plot[domain=1.5:10.2, samples=70] (\x, {0.9 + 10/(\x*\x)});
+\node[ann, anchor=west] at (10.35,1.0) {Xe + Xe};
+
+% bound excimer states, singlet above triplet
+\draw[curve, excsing] plot[domain=2.6:10.2, samples=70]
+	(\x, {4.30 + 1.4*(1 - exp(-0.8*(\x-3.6)))^2});
+\draw[curve, exctrip] plot[domain=2.6:10.2, samples=70]
+	(\x, {4.05 + 1.4*(1 - exp(-0.8*(\x-3.6)))^2});
+\node[ann, anchor=west] at (10.35,5.62) {Xe$^*$ + Xe};
+\node[side, anchor=west] at (4.3,3.85) {Xe$_2^*$ excimer};
+
+% ---------- entry: excitation and recombination both make Xe* ---------
+\draw[flow, excexcite, line width=0.6pt] (9.7,7.25) -- (9.7,5.85);
+\node[side, anchor=east, align=right] at (9.5,6.95)
+	{Xe$^*$, by excitation or\\[-1pt] by Xe$^+$ + e$^-$ recombination};
+
+% Xe* binds a neighbour and the pair slides into the well: drawn just above
+% the singlet curve so it reads as motion along it
+\draw[flow, excinert, dashed] (8.8,6.25) -- (4.0,5.0);
+\node[ann, anchor=south] at (6.4,6.05) {binds a neighbour, $\sim$ps};
+
+% ---------- emission and dissociation ---------------------------------
+\draw[flow, excsing] (3.45,4.30) -- (3.45,1.82);
+\draw[flow, exctrip, dotted, line width=0.6pt] (3.75,4.05) -- (3.75,1.70);
+\node[side, anchor=west, text width=5.4cm] at (4.05,3.05)
+	{VUV photon, \qty{178}{\nano\metre} Xe, \qty{128}{\nano\metre} Ar\\[-1pt]
+		\textcolor{excsing}{singlet} $\sim$ns, prompt\\[-1pt]
+		\textcolor{exctrip}{triplet} $\sim$\qty{27}{\nano\second} Xe, $\sim$\unit{\micro\second} Ar};
+
+\draw[flow, excinert] (3.9,1.35) to[bend right=8] (6.6,1.0);
+\node[ann, anchor=north] at (6.3,0.92) {atoms fly apart: nothing reabsorbs the photon};
+
+\end{tikzpicture}

@@ -1,0 +1,12 @@
+root = true
+
+# Conventions are documented in CLAUDE.md; this makes the editor follow them.
+[*.{tex,bib,md}]
+end_of_line = crlf
+charset = utf-8
+
+[*.tex]
+indent_style = tab
+indent_size = 4
+trim_trailing_whitespace = true
+insert_final_newline = true

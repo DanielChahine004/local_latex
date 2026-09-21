@@ -1,0 +1,92 @@
+% !TeX root = ../main.tex
+\chapter{Introduction}
+\label{ch:introduction}
+
+\section{Positron Emission Tomography: Principles and Practice}
+\label{sec:pet-principles}
+% \topics{physics-first framing: emission versus transmission imaging and the fixed photon budget that follows; annihilation coincidence detection in one paragraph; the resolution limits set by positron range and acollinearity; PET as functional/molecular imaging versus the anatomical modalities (CT, MRI); hybrid PET/CT and PET/MRI, and the anatomical scan's role in attenuation correction; the basic scanner anatomy: scintillator, photodetector, electronics, reconstruction. Clinical roles are deliberately kept out of this section -- they belong in the cost argument and in the review chapter.}
+
+\paragraph{Radiotracers and What PET Measures}
+Positron emission tomography (PET) is an emission imaging modality, as it captures the spatial distribution of a positron-emitting radionuclide inside the subject, reconstructed from the annihilation photons that radioactive distribution emits.
+This distinguishes PET from transmission imaging modalities, in which an external source is projected through the subject and the flux is measured on the far side.
+The consequence is that the signal available to a PET scanner is fixed by the amount of activity the subject can safely be given and by the fraction of the emitted photons the instrument can intercept, hence every design decision in the chapters that follow is ultimately an attempt to recover more of that fixed information budget that is the source distribution.
+The radionuclide is bound to a biologically active carrier molecule to form a radiotracer, which is administered to the subject, generally via injection into the bloodstream, and progressively accumulates according to the biological process that the carrier targets.
+The most widely used tracer, fluorodeoxyglucose (FDG), is a glucose analogue that is taken up by glucose transporters and trapped after phosphorylation, and therefore accumulates in tissues with high glycolytic activity; other tracers instead target receptor expression, perfusion, or protein deposition.
+The choice of carrier determines what the image means but not how it is formed: whatever the tracer, the measurement is the same, since all positron emitters are observed through the identical \keV{511} annihilation signature.
+
+\paragraph{Annihilation and Coincidence Detection}
+Over time, the radionuclide decays, emitting positrons, which travel a short distance known as the positron range before annihilating with an electron and producing two approximately collinear \keV{511} annihilation photons, a small fraction of which escape the subject's body without scattering and are detected by the PET scanner.
+The positron range depends on the emitter, from sub-millimetre for fluorine-18 to several millimetres for higher-energy emitters such as rubidium-82, and the residual momentum of the electron--positron pair at annihilation spreads the opening angle about \degs{180} with a full width at half maximum of roughly \degs{0.5}; together these place a fundamental limit on the spatial resolution achievable by any conventional PET system, irrespective of detector quality.
+Two photons detected within a coincidence window of a few nanoseconds are taken to originate from the same annihilation, and the positions at which they are detected define a line of response (LOR): the path along which reconstruction presumes the annihilation event took place.
+
+\paragraph{From Lines of Response to Images}
+As hundreds of millions of coincidence events are recorded over the course of a scan, the resulting dataset of LORs is used, with the aid of tomographic image reconstruction algorithms, to produce a volumetric image of the radiotracer distribution.
+In principle, where more LORs intersect in the volume, more annihilation events are indicated, and thus the radiotracer concentration there is higher, and vice versa; this correspondence holds only once the data are corrected for attenuation, scattered and random coincidences, and non-uniform detector sensitivity, which otherwise bias the apparent distribution.
+Where the radiotracer appears to accumulate, by proxy we infer that the corresponding biological process targeted by the tracer is occurring.
+
+\paragraph{Functional Imaging and Hybrid Systems}
+This makes PET a functional or molecular imaging modality, as opposed to an anatomical imaging modality such as computed tomography (CT) or magnetic resonance imaging (MRI), which image the structure of the subject.
+Many modern clinical workflows employ PET in combination with CT or MRI, often in hybrid scanner systems, so that functional and anatomical information are acquired in a single session and spatially co-registered.
+Beyond informing clinical interpretation, the anatomical scan also supports reconstruction itself.
+CT measures attenuation directly, and so can replace the radionuclide transmission scan that earlier PET systems required \cite{Kinahan1998}; however,  it does so at the effective energy of the polychromatic X-ray beam ($\sim$\keV{70} at 120\,kVp) rather than at \keV{511}.
+The two energies are not related by a single scale factor: the photoelectric contribution is non-negligible in higher-Z materials such as bone and iodinated contrast agents, and scales steeply with atomic number, whereas at \keV{511} it is negligible and attenuation is governed almost entirely by electron density.
+Two materials sharing a Hounsfield value may therefore differ in their attenuation at \keV{511}.
+A piecewise-linear rescaling of Hounsfield units (unit of radiodensity) is consequently applied, interpolating between air and water below the breakpoint and between water and cortical bone above it, to convert the CT image into a \keV{511} attenuation map \cite{Burger2003,Carney2006}.
+
+\paragraph{Scanner Anatomy}
+A PET scanner can be understood as being comprised of a chain of successive transductions, in which the signal is repeatedly converted from one carrier into another, with some information interface at every conversion.
+The scanner's detectors are built around this chain: a scintillator converts an incoming annihilation photon into some thousands of optical photons, then a photodetector converts those into a charge pulse, and readout electronics amplify, digitise, and timestamp that pulse so that pairs of them can be sorted into coincidences and passed to a computer for reconstruction.
+Each conversion has both a multiplicity, which determines how much signal survives, and a resolution cost, which determines how well the event can be localised in time, space, and energy.
+The design of a scanner can be understood as optimising where in that chain to allocate more or less resources.
+Figures~\ref{fig:chain-emission} to~\ref{fig:chain-readout} outline that chain in full, from administration to the reconstructed image.
+Each stage names first the quantities that govern the conversion and then the physical channels available to it: those a conventional scanner may use, and alternatives that could in principle serve the same purpose.
+They are given because a chain drawn with only its conventional path reads as a description of what PET canonically is, when what it actually records is a series of choices: localisation, for instance, need not be optical at all, since the energy deposited in a detector also launches a pressure wave whose acoustic time of flight would encode the interaction depth directly, and the scattered photons that conventional PET discards carry, in their scattering angle, the information needed to place the event without a second detector at all.
+Some of these alternatives are the basis of active research programmes whereas others are real effects that are simply too weak to build an instrument on; the thermoacoustic signal from a single \keV{511} deposition for example is far below the noise floor of any practical transducer at clinical count rates.
+The division between the figures is itself the argument of this thesis in miniature: almost nothing in Figure~\ref{fig:chain-emission} is under the designer's control, since it is fixed by isotope physics and patient anatomy, whereas almost everything in Figures~\ref{fig:chain-optical} and~\ref{fig:chain-readout} is a decision, and therefore a place where money is either spent or saved.
+
+\begin{figure}[p]
+	\centering
+	\input{figures/01-introduction/signal-chain-emission}
+	\caption[The PET signal chain, part 1: emission and transport]{%
+		The PET signal chain, part~1: from administration to energy deposited in the detector.
+		Each box is one interface at which the signal changes hands.
+		Beside it, the \textsc{governed by} line gives the quantities that fix the conversion, and the bullets below it give the physical channels available: a filled blue bullet marks the channel a conventional scanner uses, a hollow rust bullet an alternative that could serve the same stage but conventionally does not.
+		Almost every entry in this part is fixed by the physics of the isotope or the anatomy of the patient, and so is outside the scanner designer's control; Figures~\ref{fig:chain-optical} and~\ref{fig:chain-readout} continue the chain into the detector, where the opposite is true.
+		Figure~\ref{fig:photon-flow} then takes stages~5 to~7 here and sets out what governs the losses at each of them.}
+	\label{fig:chain-emission}
+\end{figure}
+
+\begin{figure}[p]
+	\centering
+	\input{figures/01-introduction/signal-chain-optical}
+	\caption[The PET signal chain, part 2: the optical domain]{%
+		The PET signal chain, part~2: the optical domain, from the energy deposited in the crystal to optical photons arriving at the sensor face.
+		Continues Figure~\ref{fig:chain-emission} and uses the same row convention.
+		Alternatives are denser here than in part~1 because every stage is a design decision rather than a fact of physics.
+		The first stage is the one worth dwelling on: converting the deposited energy into optical photons is a choice among at least five channels, and the three stages after it exist only to serve that one decision.}
+	\label{fig:chain-optical}
+\end{figure}
+
+\begin{figure}[p]
+	\centering
+	\input{figures/01-introduction/signal-chain-readout}
+	\caption[The PET signal chain, part 3: readout and reconstruction]{%
+		The PET signal chain, part~3: from the sensor face to the reconstructed image, continuing Figure~\ref{fig:chain-optical}.
+		The division between parts~2 and~3 is photon detection efficiency, the factor that converts an arriving optical photon into a detected one.
+		It is the only genuine transduction in the detector---everything before it is counted in optical photons, everything after in charge, timestamps and voxels---and it is worth noting how little of the chain it occupies relative to how much of the design serves it.
+		A scintillator is chosen, shaped, polished and wrapped almost entirely to deliver photons into a sensor whose efficiency then decides how many of them count at all.}
+	\label{fig:chain-readout}
+\end{figure}
+
+\begin{figure}[p]
+	\centering
+	\input{figures/01-introduction/photon-flow}
+	\caption[What governs the fate of an annihilation photon]{%
+		The fate of a single \keV{511} annihilation photon, from emission to a recorded single carrying a valid LOR.
+		The figure is qualitative: no scanner is assumed, the trunk is drawn as halving at each interface rather than to scale, and the ledger beneath gives the properties that raise or lower each surviving fraction together with its rough range.
+		Scattering is drawn as a terminal loss, but what it destroys is the LOR, not the photon, which continues at reduced energy and may still be detected and recorded as a scattered coincidence; the trunk follows only those photons that retain a valid LOR.
+		Little of what is emitted survives as trustworthy signal, and paying to recover the rest is what makes PET expensive: solid angle and crystal interaction are sensitivity bought back with detector material, whereas scatter is paid for in the correction machinery needed to subtract counts that are present but mispositioned.
+		Of the two dominant losses only solid angle is a design choice rather than a fixed cost of imaging a human, coverage ranging from the order of \qty{20}{\percent} in a conventional ring to as much as \qty{80}{\percent} in long axial field-of-view scanners \cite{Vandenberghe2020}.
+		A coincidence requires both photons, so the per-photon terms compound while the solid-angle term does not, the photons being emitted back-to-back; axial length therefore pays once where crystal thickness and light yield pay twice.}
+	\label{fig:photon-flow}
+\end{figure}

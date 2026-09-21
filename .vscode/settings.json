@@ -1,0 +1,35 @@
+{
+    // Build (Ctrl+Alt+B) via `pixi run vscode-build`, which runs
+    // tools/vscode-tectonic.bat (Windows) or tools/vscode-tectonic.sh (Linux) so
+    // tectonic finds biber. Needs pixi on PATH; run `pixi install` once after cloning.
+    "latex-workshop.latex.tools": [
+        {
+            "name": "tectonic",
+            "command": "pixi",
+            "args": [
+                "run",
+                "--manifest-path",
+                "%WORKSPACE_FOLDER%/pixi.toml",
+                "vscode-build",
+                "--synctex",
+                "--keep-intermediates",
+                "-Z", "shell-escape-cwd=%OUTDIR%",
+                "--outdir=%OUTDIR%",
+                "%DOC_EXT%"
+            ]
+        }
+    ],
+    "latex-workshop.latex.recipes": [
+        {
+            "name": "tectonic",
+            "tools": ["tectonic"]
+        }
+    ],
+    // Outputs go to build/ at the repo root. Anchored to %WORKSPACE_FOLDER%:
+    // %DIR%-relative paths threw meetings.tex's output above the repo.
+    "latex-workshop.latex.outDir": "%WORKSPACE_FOLDER%/build",
+    // The PDF tab becoming active after a build would otherwise expand build/ in the Explorer.
+    "explorer.autoRevealExclude": {
+        "**/build": true
+    }
+}

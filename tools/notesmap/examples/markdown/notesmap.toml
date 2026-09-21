@@ -1,0 +1,9 @@
+# The Markdown example: notesmap with a parser of its own.
+# From this folder: uv run --project ../.. notesmap serve --map
+
+[source]
+path = "notes/index.md"      # the folder the parser reads from; programmes/ sits beside it
+parser = "mdnotes:parse"     # mdnotes.py, beside this file
+
+[server]
+port = 8010

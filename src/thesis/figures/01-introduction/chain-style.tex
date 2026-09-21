@@ -1,0 +1,62 @@
+% !TeX root = ../../main.tex
+% Shared styles for the signal-chain figures, \input by each so they cannot
+% drift apart visually. Draws nothing itself.
+%
+% LAYOUT: a vertical spine of stage boxes, channels listed to the right of each.
+% Nothing is hand-positioned -- a stage sits below the previous bullet block, so
+% the figure reflows and rows cannot collide. Do not hand-set row pitches again.
+% Page fit is the one thing this cannot self-correct; \chainfit guards it.
+%
+% ROW SEMANTICS, restated in the captions:
+%   \govrow  header, blue -- the QUANTITIES that fix this conversion; anything
+%                            you could measure or trade, never a technology
+%   \conrow  filled, blue -- the channel conventional PET uses
+%   \altrow  hollow, rust -- an alternative channel not conventionally used
+% Keep the kinds strictly apart; a governing quantity loose in a bullet list is
+% silently lost.
+
+\providecolor{chainbox}{HTML}{E8EFF3}
+\providecolor{chainline}{HTML}{2A6F97}
+\providecolor{chaintext}{HTML}{3D4A52}
+\providecolor{chainalt}{HTML}{9A5B3D}
+
+% Bullet rows: each expands to the first two cells of a tabular row.
+\providecommand{\govrow}[1]{%
+	\multicolumn{2}{@{}p{10.9cm}@{}}{\textcolor{chainline}{\scshape governed by}~ #1}}
+\providecommand{\conrow}[1]{\textcolor{chainline}{\textbullet} & #1}
+\providecommand{\altrow}[1]{\textcolor{chainalt}{$\circ$} & \textcolor{chainalt}{#1}}
+
+% The bullet list: fixed 10.4 cm measure, the p-column hanging-indents wraps.
+\providecommand{\chainlist}[1]{%
+	\renewcommand{\arraystretch}{1.1}%
+	\begin{tabular}{@{}c@{~~}p{10.4cm}@{}}#1\end{tabular}}
+
+% Page-fit guard, called just before \end{tikzpicture} in each chain figure.
+% "Float too large for page" reaches no channel tectonic surfaces (verified), so
+% an overgrown figure fails silently; this raises a hard error instead. Budget:
+% \textheight less \chaincapspace (caption room, ~8 lines at 11pt) -- raise that
+% if a caption outgrows it, rather than ignore the error.
+\providecommand{\chaincapspace}{150pt}
+\providecommand{\chainfit}{%
+	\path let \p1=(current bounding box.north), \p2=(current bounding box.south) in
+		\pgfextra{%
+			\ifdim\dimexpr\y1-\y2\relax>\dimexpr\textheight-\chaincapspace\relax
+				\PackageError{chain-style}{Chain figure is too tall for its page}%
+					{It measures \the\dimexpr\y1-\y2\relax\space against a budget of
+					\the\dimexpr\textheight-\chaincapspace\relax. Shorten a bullet,
+					drop a stage, or split the figure again.}%
+			\fi};}
+
+\tikzset{
+	% Stage box. Narrow on purpose: the bullet list carries the detail.
+	stage/.style={draw=chainline, line width=0.6pt, fill=chainbox,
+		rounded corners=2pt, text width=3.4cm, align=center,
+			inner sep=4pt, text=chainline, font=\small\bfseries},
+	% Bullet block. inner xsep clears the rule drawn at its west edge; inner
+	% ysep=0 keeps the reflow arithmetic honest.
+	bullets/.style={inner xsep=2mm, inner ysep=0pt, anchor=north west,
+		font=\scriptsize, text=chaintext},
+	% Spine arrow. Not `step' -- /tikz/step is taken (grid spacing) and errors.
+	chainstep/.style={->, chainline, line width=0.7pt},
+	tie/.style={chainline, line width=0.5pt},
+}

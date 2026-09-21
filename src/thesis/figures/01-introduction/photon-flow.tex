@@ -1,0 +1,130 @@
+% !TeX root = ../../main.tex
+% Alluvial/Sankey: the fate of one 511 keV annihilation photon.
+% \input by chapters/01-introduction.tex.
+%
+% QUALITATIVE: band widths are schematic (the trunk halves at each interface).
+% The claims live in the ledger, whose ranges are order-of-magnitude and still
+% want a source, and which must keep body scatter and solid angle dominant --
+% of those, only solid angle is a design choice.
+% SCATTER destroys the LOR, not the photon, so the trunk tracks only photons
+% that keep a valid LOR.
+% PAIRS: this tracks ONE photon, so per-photon terms square for a coincidence
+% -- EXCEPT solid angle, since back-to-back photons largely clear the ring
+% together. Axial length pays once where crystal thickness pays twice.
+%
+% LAYOUT: columns at x = 0, 2.2, ..., 8.8; bars 0.16 wide; 0.40 cm node gap.
+% Losses terminate at the stage that claims them; only the trunk carries on.
+% Ribbons are cubic beziers with horizontal tangents, so they cannot fold.
+
+\providecolor{flowkeep}{HTML}{2A6F97}
+\providecolor{flownode}{HTML}{1F4E6B}
+\providecolor{flowloss1}{HTML}{CDD6DB}
+\providecolor{flowloss2}{HTML}{AAB8C0}
+\providecolor{flowloss3}{HTML}{8B9BA4}
+\providecolor{flowloss4}{HTML}{64757E}
+\providecolor{flowtext}{HTML}{3D4A52}
+
+\begin{tikzpicture}[x=1cm, y=1cm, font=\footnotesize,
+	ribbon/.style={fill opacity=0.75},
+	node/.style={}]
+\fill[flowkeep, ribbon]
+	(0.080,0.000) .. controls (1.100,0.000) and (1.100,0.000) .. (2.120,0.000) -- (2.120,-3.000) .. controls (1.100,-3.000) and (1.100,-3.000) .. (0.080,-3.000) -- cycle;
+\fill[flowloss1, ribbon]
+	(0.080,-3.000) .. controls (1.100,-3.000) and (1.100,-3.400) .. (2.120,-3.400) -- (2.120,-6.400) .. controls (1.100,-6.400) and (1.100,-6.000) .. (0.080,-6.000) -- cycle;
+\fill[flowkeep, ribbon]
+	(2.280,0.000) .. controls (3.300,0.000) and (3.300,0.000) .. (4.320,0.000) -- (4.320,-1.500) .. controls (3.300,-1.500) and (3.300,-1.500) .. (2.280,-1.500) -- cycle;
+\fill[flowloss2, ribbon]
+	(2.280,-1.500) .. controls (3.300,-1.500) and (3.300,-1.900) .. (4.320,-1.900) -- (4.320,-3.400) .. controls (3.300,-3.400) and (3.300,-3.000) .. (2.280,-3.000) -- cycle;
+\fill[flowkeep, ribbon]
+	(4.480,0.000) .. controls (5.500,0.000) and (5.500,0.000) .. (6.520,0.000) -- (6.520,-0.750) .. controls (5.500,-0.750) and (5.500,-0.750) .. (4.480,-0.750) -- cycle;
+\fill[flowloss3, ribbon]
+	(4.480,-0.750) .. controls (5.500,-0.750) and (5.500,-1.150) .. (6.520,-1.150) -- (6.520,-1.900) .. controls (5.500,-1.900) and (5.500,-1.500) .. (4.480,-1.500) -- cycle;
+\fill[flowkeep, ribbon]
+	(6.680,0.000) .. controls (7.700,0.000) and (7.700,0.000) .. (8.720,0.000) -- (8.720,-0.375) .. controls (7.700,-0.375) and (7.700,-0.375) .. (6.680,-0.375) -- cycle;
+\fill[flowloss4, ribbon]
+	(6.680,-0.375) .. controls (7.700,-0.375) and (7.700,-0.775) .. (8.720,-0.775) -- (8.720,-1.150) .. controls (7.700,-1.150) and (7.700,-0.750) .. (6.680,-0.750) -- cycle;
+\fill[flownode, node]
+	(-0.080,0.000) rectangle (0.080,-6.000);
+\fill[flowkeep, node]
+	(2.120,0.000) rectangle (2.280,-3.000);
+\fill[flowloss1, node]
+	(2.120,-3.400) rectangle (2.280,-6.400);
+\fill[flowkeep, node]
+	(4.320,0.000) rectangle (4.480,-1.500);
+\fill[flowloss2, node]
+	(4.320,-1.900) rectangle (4.480,-3.400);
+\fill[flowkeep, node]
+	(6.520,0.000) rectangle (6.680,-0.750);
+\fill[flowloss3, node]
+	(6.520,-1.150) rectangle (6.680,-1.900);
+\fill[flowkeep, node]
+	(8.720,0.000) rectangle (8.880,-0.375);
+\fill[flowloss4, node]
+	(8.720,-0.775) rectangle (8.880,-1.150);
+
+%% Stage labels. Cues collide without warning once two neighbours sum past
+%% 125 pt -- keep each near 45 pt. Every \\ must sit at the top level of the
+%% node text: nested in a group it breaks TikZ's line breaker, hence the bare
+%% font switch.
+\node[anchor=south, align=center, text=flowtext] at (1.10,0.30)
+	{Body\\transport\\[2pt]\scriptsize\itshape patient size\\and density};
+\node[anchor=south, align=center, text=flowtext] at (3.30,0.30)
+	{Solid\\angle\\[2pt]\scriptsize\itshape axial FOV and\\ring diameter};
+\node[anchor=south, align=center, text=flowtext] at (5.50,0.30)
+	{Crystal\\interaction\\[2pt]\scriptsize\itshape density, $Z_{\mathrm{eff}}$,\\thickness};
+\node[anchor=south, align=center, text=flowtext] at (7.70,0.30)
+	{Energy\\window\\[2pt]\scriptsize\itshape light yield and\\resolution};
+
+\node[anchor=east, align=right, text=flowtext] at (-0.18,-3.000)
+	{\keV{511}\\photons\\emitted};
+
+%% Terminal losses, named beside their node: the ribbons are too narrow.
+\node[anchor=west, align=left, text=flowtext] at (2.35,-4.900)
+	{Compton scattered in the body,\\so the line of response is lost};
+\node[anchor=west, align=left, text=flowtext] at (4.55,-2.650)
+	{Emitted outside the\\detector's solid angle};
+
+%% Tightest spacing in the figure: three two-line labels sharing the top 2.6 cm
+%% with 0.2 cm of white between. The crystal leader must stay above the
+%% solid-angle label (leader y -1.63 vs label top -2.27 near x 7.05).
+\draw[flowtext, line width=0.3pt] (8.88,-0.960) -- (8.94,-1.150);
+\node[anchor=west, align=left, text=flowtext] at (9.00,-1.150)
+	{Rejected by the\\energy window};
+\draw[flowtext, line width=0.3pt] (6.70,-1.525) -- (8.94,-2.200);
+\node[anchor=west, align=left, text=flowtext] at (9.00,-2.200)
+	{Passed through with no\\interaction in the crystal};
+\node[anchor=west, align=left, text=flowkeep] at (9.00,-0.188)
+	{\textbf{Recorded single}\\\textbf{with a valid LOR}};
+
+%% The ledger. 2.35+0.3+1.55+0.3+5.35+0.3+5.35 = 15.5 cm, centred. The closing
+%% note is a separate node: prose in a p-cell halts TeX ("Missing \endgroup").
+\node[anchor=north, text=flowtext, font=\scriptsize] (ledger) at (5.25,-6.80) {%
+	\begin{tabular}{@{}p{2.35cm} @{\hspace{0.3cm}} p{1.55cm} @{\hspace{0.3cm}} p{5.35cm} @{\hspace{0.3cm}} p{5.35cm}@{}}
+		\toprule
+		\textbf{Interface} & \textbf{Range} & \textbf{Larger surviving fraction} & \textbf{Smaller surviving fraction} \\
+		\midrule
+		Body transport
+			& $\approx$\,15--60\,\%
+			& Smaller or less dense patient; source nearer the surface.
+			& Large or dense patient; deep-lying source. Set by the patient, not the scanner. \\
+		\addlinespace
+		Solid angle
+			& $\approx$\,20--80\,\%
+			& Longer axial field of view; smaller ring diameter; source near the axial centre.
+			& Short axial extent; wide bore; source near the end of the field of view. \\
+		\addlinespace
+		Crystal interaction
+			& $\approx$\,60--90\,\%
+			& Denser, higher-$Z_{\mathrm{eff}}$, thicker scintillator; high packing fraction, so little of the face is reflector or gap.
+			& Thin or low-density crystals; thick reflector between elements. Thickness is bought against depth-of-interaction blur. \\
+		\addlinespace
+		Energy window
+			& $\approx$\,40--70\,\%
+			& High and uniform light yield, hence better energy resolution; high $Z_{\mathrm{eff}}$; a wider window.
+			& Poor or non-uniform light collection; low $Z_{\mathrm{eff}}$; a narrow window. \\
+		\bottomrule
+	\end{tabular}};
+\node[anchor=north west, text=flowtext, font=\scriptsize\itshape,
+	text width=15.5cm, align=left] at ([yshift=-3pt]ledger.south west)
+	{Each range is the fraction surviving that interface alone, not of all emitted photons, and spans the designs and patients in ordinary use rather than the extremes. The last row is the only one where a larger fraction is not automatically better, since the window widens to admit scatter as well as photopeak events; note too that the photofraction and the fraction reaching the photopeak differ, because Compton interactions that deposit their remaining energy in the same crystal still land in the photopeak.\needcite{ranges for each of the four interfaces -- a review, or the author's own Monte Carlo model}};
+\end{tikzpicture}

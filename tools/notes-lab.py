@@ -63,7 +63,8 @@ def tunnel(port: int, what: str, given: str):
 
 
 def spawn(args, env):
-    return subprocess.Popen(UV + args, cwd=REPO, env=env)
+    # own session: stop() signals the group, and sudo ignores signals from its own
+    return subprocess.Popen(UV + args, cwd=REPO, env=env, start_new_session=True)
 
 
 def editor(env):
@@ -83,6 +84,45 @@ def editor(env):
     return spawn(EDITOR, env)
 
 
+def mapper(env, edit_url):
+    return spawn(["--project", "tools/notesmap", "notesmap", "serve", "--map", "--no-browser",
+                  "--port", str(MAP_PORT), "--edit-url", f"{edit_url}/lab"], env)
+
+
+def signal_all(p, sig) -> None:
+    """Signal the whole service, wrappers included: `uv run` and `sudo` each hold
+    the process that actually serves, and neither passes on every signal."""
+    if os.name == "nt":
+        p.send_signal(signal.CTRL_BREAK_EVENT)
+        return
+    try:
+        os.killpg(os.getpgid(p.pid), sig)
+    except (ProcessLookupError, PermissionError):
+        p.send_signal(sig)
+
+
+def stop(p) -> None:
+    if p.poll() is None:
+        # SIGINT, not SIGTERM: Jupyter behind sudo outlasted the wait on SIGTERM,
+        # and killing sudo then left it running as an orphan
+        signal_all(p, signal.SIGINT)
+        try:
+            p.wait(timeout=10)
+        except subprocess.TimeoutExpired:
+            signal_all(p, signal.SIGKILL)
+
+
+def current(port: int, given: str) -> str:
+    """The keeper's URL for a port right now, or "" if it cannot be read."""
+    if given:
+        return given.rstrip("/")
+    try:
+        from danvas.tunnel import ensure_tunnel
+        return ensure_tunnel(port).url.rstrip("/")
+    except Exception:                         # a keeper mid-restart says nothing yet
+        return ""
+
+
 def main() -> int:
     edit_url = tunnel(EDIT_PORT, "editor", os.environ.get("NOTES_EDIT_URL", ""))
     map_url = tunnel(MAP_PORT, "map", os.environ.get("NOTES_MAP_URL", ""))
@@ -91,11 +131,7 @@ def main() -> int:
                NOTES_EDIT_TOKEN=TOKEN,
                NOTES_EDIT_PORT=str(EDIT_PORT),
                NOTES_MAP_ORIGIN=map_url)      # so the map may embed the editor
-    procs = [
-        editor(env),
-        spawn(["--project", "tools/notesmap", "notesmap", "serve", "--map", "--no-browser",
-               "--port", str(MAP_PORT), "--edit-url", f"{edit_url}/lab"], env),
-    ]
+    procs = [editor(env), mapper(env, edit_url)]
     print("\n".join([
         "",
         "  the lab reads:  " + map_url,
@@ -106,24 +142,40 @@ def main() -> int:
         "  Ctrl+C stops both. The tunnels keep their addresses for the next run.",
         "",
     ]), flush=True)
+    # A free tunnel that drops comes back under a new name, and whoever was told
+    # the old one keeps repeating it: the map's edit button, or the editor's
+    # frame-ancestors. Each side is handed its address at startup, so the side
+    # holding a stale one is restarted -- not the keeper, whose address is what
+    # the shared links are.
     try:
+        ticks = 0
         while True:
             for p in procs:
                 if p.poll() is not None:
                     print(f"[notes-lab] a service exited ({p.returncode}); stopping", flush=True)
                     raise KeyboardInterrupt
             time.sleep(1.0)
+            ticks += 1
+            if ticks % 30:
+                continue
+            now_edit = current(EDIT_PORT, os.environ.get("NOTES_EDIT_URL", ""))
+            now_map = current(MAP_PORT, os.environ.get("NOTES_MAP_URL", ""))
+            if now_map and now_map != map_url:
+                print(f"[notes-lab] map address changed to {now_map}; restarting the editor,"
+                      " which may only be framed by the address it was given", flush=True)
+                map_url = now_map
+                env["NOTES_MAP_ORIGIN"] = map_url
+                stop(procs[0])
+                procs[0] = editor(env)
+            if now_edit and now_edit != edit_url:
+                print(f"[notes-lab] editor address changed to {now_edit}/lab;"
+                      " restarting the map so its edit button follows", flush=True)
+                edit_url = now_edit
+                stop(procs[1])
+                procs[1] = mapper(env, edit_url)
     except KeyboardInterrupt:
         for p in procs:
-            if p.poll() is None:
-                # SIGINT, not SIGTERM: Jupyter behind sudo outlasted the wait on
-                # SIGTERM, and killing sudo then left it running as an orphan
-                p.send_signal(signal.CTRL_BREAK_EVENT if os.name == "nt" else signal.SIGINT)
-        for p in procs:
-            try:
-                p.wait(timeout=10)
-            except subprocess.TimeoutExpired:
-                p.kill()
+            stop(p)
     return 0
 
 

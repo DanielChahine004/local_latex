@@ -1,12 +1,14 @@
 """The programme panel: a React component and its CSS, rendered by danvas.
 
-Props: key, title, lead, link, html (the programme note), figures, papers
+Props: key, kind, title, dates, lead, link, html (the programme note), figures, papers
 (each: key, title, year, snippet, thumb, link, html) and open (the key of the
 unfolded note, or null). Clicks go back to Python as {event: "toggle", key}.
 """
 
 REACT_SRC = r"""
-const DESIGN_W = 880;   // the width the panel is laid out at; any other width zooms it
+const DESIGN_W = 880;   // the width the panel is laid out at; any other width zooms
+                        // it. layout.py's PANEL_W is the width it is given, and its
+                        // own DESIGN_W must match this one
 
 function Component({ canvas, props }) {
   const p = props;
@@ -30,6 +32,31 @@ function Component({ canvas, props }) {
     ro.observe(el);
     return () => ro.disconnect();
   }, []);
+  // a countdown has to move on its own: the board is only redrawn when the notes
+  // change, so the panel keeps its own clock rather than asking Python for the time
+  const [now, setNow] = React.useState(() => Date.now());
+  const target = p.dates && (p.dates.deadline || p.dates.start);
+  React.useEffect(() => {
+    if (!target) return;
+    const id = setInterval(() => setNow(Date.now()), 1000);
+    return () => clearInterval(id);
+  }, [target]);
+  const left = (t) => {
+    let s = Math.floor((t - now) / 1000);
+    if (s < 0) return null;
+    const d = Math.floor(s / 86400), h = Math.floor(s % 86400 / 3600);
+    const m = Math.floor(s % 3600 / 60);
+    s = s % 60;
+    const pad = (n) => String(n).padStart(2, "0");
+    return d > 0 ? `${d}d ${pad(h)}:${pad(m)}:${pad(s)}` : `${pad(h)}:${pad(m)}:${pad(s)}`;
+  };
+  const countdown = () => {
+    const dl = p.dates.deadline, st = p.dates.start, en = p.dates.end || p.dates.start;
+    if (dl && left(dl)) return { cls: "cd", text: `${p.dates.deadlineLabel} close in ${left(dl)}` };
+    if (st && left(st)) return { cls: "cd", text: `starts in ${left(st)}` };
+    if (en && now <= en) return { cls: "cd now", text: "on now" };
+    return { cls: "cd past", text: dl ? `${p.dates.deadlineLabel} closed` : "over" };
+  };
   // the corner grip: drag outward to enlarge, inward to shrink. Widths go to
   // Python, which resizes the panel; the height follows the scaled content
   const grip = {
@@ -58,37 +85,58 @@ function Component({ canvas, props }) {
     },
   };
   const open = p.open || null;
+  // the search box hands every panel the whole hit list; a panel colours itself
+  // and its cards from it, so one typed word repaints the board at once
+  const hits = React.useMemo(() => new Set(p.hits || []), [p.hits]);
+  const hit = (k) => hits.has(k);
   const toggle = (k) => canvas.send({ event: "toggle", key: k });
   const openNode = open === p.key ? p : (p.papers || []).find(x => x.key === open);
   // text you can select: a press here stays with the text instead of reaching
   // the canvas, which would otherwise start a drag of the panel
   const keep = { onPointerDown: e => e.stopPropagation(), onMouseDown: e => e.stopPropagation() };
   return (
-    <div ref={root} className="fit">
-    <div className="prog" style={{ width: DESIGN_W, zoom: scale }}>
-      <div className="head">
-        <h1 className="sel" {...keep}>{p.title}</h1>
-        {p.place && <span className="place sel" {...keep}>{p.place}</span>}
-        {p.link && <a className="chip" href={p.link} target="_blank" rel="noreferrer" title={p.link}>site ↗</a>}
-        {p.html && <button className={"chip" + (open === p.key ? " on" : "")} onClick={() => toggle(p.key)}>
-          {open === p.key ? "hide programme note" : "programme note"}
-        </button>}
-      </div>
-      {p.lead && <p className="lead sel" {...keep}>{p.lead}</p>}
-      {p.figures.length > 0 && (
-        <div className="figs">
-          {p.figures.map((f, i) => (
-            <figure key={i}>
-              <img src={f.src} alt={f.caption} />
-              {f.caption && <figcaption>{f.caption}</figcaption>}
-            </figure>
-          ))}
+    <div ref={root} className="fit"
+         onMouseEnter={() => canvas.send({ event: "focus", on: true })}
+         onMouseLeave={() => canvas.send({ event: "focus", on: false })}>
+    <div className={"prog " + (p.kind || "programme") + (!p.filtered ? "" : hit(p.key) ? " hit" : " miss")}
+         style={{ width: DESIGN_W, zoom: scale }}>
+      {/* the image sits beside the heading, not above it: a panel is wider than
+          it is tall, so the space next to a thumbnail is free */}
+      <div className={"top" + (p.figures.length > 0 ? " withfig" : "")}>
+        {p.figures.length > 0 && (
+          <div className="figs">
+            {p.figures.map((f, i) => (
+              <figure key={i}>
+                <img src={f.src} alt={f.caption} />
+                {f.caption && <figcaption>{f.caption}</figcaption>}
+              </figure>
+            ))}
+          </div>
+        )}
+        <div className="meta">
+          <div className="head">
+            <h1 className="sel" {...keep}>{p.title}</h1>
+            {p.place && <span className="place sel" {...keep}>{p.place}</span>}
+            {p.link && <a className="chip" href={p.link} target="_blank" rel="noreferrer" title={p.link}>site ↗</a>}
+            {p.html && <button className={"chip" + (open === p.key ? " on" : "")} onClick={() => toggle(p.key)}>
+              {(open === p.key ? "hide " : "") + (p.kind === "conference" ? "conference note" : "programme note")}
+            </button>}
+          </div>
+          {p.dates && (
+            <div className="when">
+              {p.dates.text && <span className="date sel" {...keep}>{p.dates.text}</span>}
+              <span className={countdown().cls}>{countdown().text}</span>
+            </div>
+          )}
+          {p.lead && <p className="lead sel" {...keep}>{p.lead}</p>}
         </div>
-      )}
+      </div>
       {p.papers.length > 0 && (
         <div className="cards">
           {p.papers.map(c => (
-            <div key={c.key} className={"card" + (open === c.key ? " on" : "")} onClick={() => toggle(c.key)}
+            <div key={c.key} onClick={() => toggle(c.key)}
+                 className={"card" + (open === c.key ? " on" : "") +
+                            (!p.filtered ? "" : hit(c.key) ? " hit" : " miss")}
                  title="Click to unfold the note">
               {c.thumb ? <img src={c.thumb} alt="" /> : <div className="thumb">{c.title.slice(0, 1)}</div>}
               <div className="t">{c.title}</div>
@@ -130,6 +178,24 @@ REACT_CSS = """
 .pc-drag-handle:hover { opacity: 1 !important; }
 .prog { box-sizing: border-box; font: 14px/1.45 system-ui, sans-serif; color: var(--pc-text, #ddd); padding: 12px 14px 14px;
         border: 1px solid rgba(127,127,127,.45); border-radius: 10px; background: rgba(127,127,127,.07); }
+/* a conference reads as a different kind of thing at a glance: amber, not grey */
+.prog.conference { border-color: rgba(201,138,42,.75); background: rgba(201,138,42,.10); }
+.prog.conference .chip { border-color: #c98a2a; color: #d69b3f; }
+.prog.conference .chip:hover, .prog.conference .chip.on { background: #c98a2a; color: #fff; }
+.when { display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap; margin: 0 0 10px; }
+.when .date { font-size: 13px; opacity: .85; }
+.when .cd { font: 12px ui-monospace, SFMono-Regular, Menlo, monospace; padding: 2px 10px; border-radius: 999px;
+            background: rgba(201,138,42,.18); border: 1px solid rgba(201,138,42,.55); color: #e0a850;
+            font-variant-numeric: tabular-nums; }
+.when .cd.now { background: rgba(60,170,90,.18); border-color: rgba(60,170,90,.6); color: #5cc47a; }
+.when .cd.past { background: rgba(127,127,127,.15); border-color: rgba(127,127,127,.45); opacity: .7; color: inherit; }
+.top { display: flex; align-items: flex-start; gap: 16px; margin-bottom: 12px; }
+.top .meta { flex: 1 1 auto; min-width: 0; }
+.top.withfig .figs { flex: 0 0 210px; margin: 0; }
+.top.withfig .figs img { max-height: 150px; }
+.top.withfig .head { justify-content: flex-start; text-align: left; }
+.top.withfig .when { justify-content: flex-start; }
+.top.withfig .lead { text-align: left; margin-left: 0; }
 .head { display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap; margin-bottom: 6px; }
 .prog h1 { font-size: 26px; font-weight: 500; margin: 0; }
 .place { font-size: 12px; opacity: .6; }
@@ -137,7 +203,7 @@ REACT_CSS = """
         border: 1px solid var(--pc-accent, #3b82f6); color: var(--pc-accent, #3b82f6); background: transparent; }
 .chip:hover, .chip.on { background: var(--pc-accent, #3b82f6); color: #fff; }
 a.chip { text-decoration: none; }
-.prog .lead { text-align: center; opacity: .8; margin: 0 auto 14px; max-width: 700px; }
+.prog .lead { text-align: center; opacity: .8; margin: 0 auto; max-width: 700px; }
 .figs { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin-bottom: 14px; }
 .figs figure { margin: 0; max-width: 100%; }
 .figs img { max-height: 180px; max-width: 100%; border-radius: 4px; display: block; }
@@ -158,6 +224,12 @@ a.chip { text-decoration: none; }
 .card .y { font-size: 11px; opacity: .8; margin-top: 6px; display: flex; gap: 8px; align-items: center; }
 .card .y .hint { margin-left: auto; color: var(--pc-accent, #3b82f6); }
 .card .y a { color: var(--pc-accent, #3b82f6); text-decoration: none; font-weight: 600; }
+/* a search underway: what matches keeps its colour and gains a green edge, what
+   does not fades, so the eye lands on the hits without anything moving */
+.prog.hit { border-color: #4caf78; box-shadow: 0 0 0 2px rgba(76,175,120,.45); }
+.prog.miss { opacity: .45; }
+.card.hit { border-color: #4caf78; background: rgba(76,175,120,.18); }
+.card.miss { opacity: .4; }
 .sel, .sel * { -webkit-user-select: text; user-select: text; cursor: text; }
 .note { margin-top: 14px; padding: 10px 12px; border-top: 1px solid rgba(127,127,127,.4); }
 .note .nh { font-weight: 600; display: flex; justify-content: space-between; margin-bottom: 6px; }
@@ -168,7 +240,8 @@ a.chip { text-decoration: none; }
 .note code { font-size: 12px; }
 """
 
-MAP_CSS = ".prog { background: #12151c; }"   # opaque over terrain
+MAP_CSS = (".prog { background: #12151c; }"                       # opaque over terrain
+           ".prog.conference { background: #1d1710; }")
 
 PIN_JSX = ('<div style="width:30px;height:30px;border-radius:50%;background:#e5322d;'
            'border:4px solid #fff;box-shadow:0 0 8px #000"></div>')
@@ -202,3 +275,50 @@ def edit_jsx(url: str, label: str, scale: float = 1.0) -> str:
         f'<div style={{{{marginTop:"{px(7)}",lineHeight:1.4}}}}>'
         'Password required. Edits reach this map on their own.</div></div>'
     )
+
+
+# --- the search box ------------------------------------------------------------------
+
+SEARCH_SRC = r"""
+function Component({ canvas, props }) {
+  const p = props;
+  const [q, setQ] = React.useState(p.q || "");
+  // typing goes to Python, which knows the notes; a short wait keeps a
+  // keystroke from costing a round trip each
+  React.useEffect(() => {
+    const id = setTimeout(() => canvas.send({ event: "search", q }), 180);
+    return () => clearTimeout(id);
+  }, [q]);
+  const keep = { onPointerDown: e => e.stopPropagation(), onMouseDown: e => e.stopPropagation() };
+  return (
+    <div className="find" style={{ zoom: p.scale }}>
+      <div className="row">
+        <input className="box" value={q} placeholder="find a word in the notes" spellCheck={false}
+               onChange={e => setQ(e.target.value)} {...keep} />
+        {q && <button className="clear" onClick={() => setQ("")} {...keep}>clear</button>}
+        <span className="count" {...keep}>
+          {!q ? "" : p.hits && p.hits.length ? `${p.hits.length} match${p.hits.length > 1 ? "es" : ""}` : "nothing"}
+        </span>
+      </div>
+      {q && p.hits && p.hits.length > 0 && (
+        <div className="where" {...keep}>{p.hits.map(h => h.title).join(" · ")}</div>
+      )}
+    </div>
+  );
+}
+"""
+
+SEARCH_CSS = """
+.find { font: 14px system-ui, sans-serif; color: var(--pc-text, #ddd); display: flex; align-items: center;
+        gap: 10px; flex-wrap: wrap; padding: 10px 14px; border-radius: 10px;
+        border: 1px solid rgba(127,127,127,.45); background: #12151c; }
+.find .box { flex: 1 1 260px; min-width: 160px; font: inherit; color: inherit; padding: 6px 10px;
+             border-radius: 8px; border: 1px solid rgba(127,127,127,.5); background: rgba(127,127,127,.12); }
+.find .box:focus { outline: none; border-color: var(--pc-accent, #3b82f6); }
+.find .clear { font: 12px system-ui, sans-serif; padding: 4px 10px; border-radius: 999px; cursor: pointer;
+               border: 1px solid rgba(127,127,127,.5); color: inherit; background: transparent; }
+.find .count { font-size: 12px; opacity: .7; }
+.find .where { flex: 1 1 100%; font-size: 12px; opacity: .75; line-height: 1.4; }
+.find { flex-direction: column; align-items: stretch; }
+.find .row { display: flex; align-items: center; gap: 10px; }
+"""

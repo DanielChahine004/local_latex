@@ -4,6 +4,9 @@
 %
 %   \begin{programnote}{Title}{key} ... \end{programnote}
 %   \begin{papernote}{Title}{key} ... \end{papernote}    inside a programme, or alone
+%   \begin{confnote}{Title}{key} ... \end{confnote}   a conference, with dates
+%   \dates{2026-11-07}{2026-11-14}      when it runs (ISO)
+%   \deadline[abstracts]{2027-05-12T23:59:59+02:00}   what the map counts down to
 %   \location[dx,dy]{lat}{lon}{Place}   where a programme sits on the map
 %   \thumb{img/file.png}                the image fronting an entry
 %   \doi{10.xxxx/...}                   the entry's link (\href and \url work too)
@@ -30,6 +33,17 @@
 	 \renewcommand{\papernoteheading}{\subsection}%
 	 \renewcommand{\papernotetag}{}}
 	{}
+
+% a conference: a programme that happens somewhere on a date. \dates spans the
+% meeting, \deadline is what the map counts down to -- both ISO, and a date
+% without an offset is read as UTC
+\NewDocumentEnvironment{confnote}{mm}
+	{\section[Conference: #1]{#1}\label{conf:#2}%
+	 \renewcommand{\papernoteheading}{\subsection}%
+	 \renewcommand{\papernotetag}{}}
+	{}
+\NewDocumentCommand{\dates}{m m}{\par\noindent{\small\bfseries #1 -- #2}\par}
+\NewDocumentCommand{\deadline}{O{deadline} m}{\par\noindent{\small #1: #2}\par}
 
 % the place under the heading; the coordinates and offset are for the map only
 \NewDocumentCommand{\location}{o m m m}{\par\noindent{\small\itshape #4}\par}

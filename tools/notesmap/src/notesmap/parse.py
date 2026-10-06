@@ -1,7 +1,8 @@
 """The notes -> Notes.
 
-A programme is `\\begin{<programme_env>}{Title}{key}`; a paper is
-`\\begin{<paper_env>}{Title}{key}`, nested inside its programme or standing
+A programme is `\\begin{<programme_env>}{Title}{key}`; a conference is
+`\\begin{<conf_env>}{Title}{key}`, the same thing with dates; a paper is
+`\\begin{<paper_env>}{Title}{key}`, nested inside either or standing
 alone. Each environment opens on a line of its own. `\\input` and `\\include`
 in the document body are followed, so a lab can keep one file per programme
 and lock them separately.
@@ -12,6 +13,8 @@ Inside an entry the parser reads, and the converter hides from the text:
     \\location[dx,dy]{lat}{lon}{place}     where a programme sits on the map;
                                           [dx,dy] optionally fixes the panel's
                                           offset from its pin, in pixels
+    \\dates{start}{end}                    when a conference runs (ISO)
+    \\deadline[what]{when}                 a date it counts down to (ISO)
     \\doi{..}, \\href{url}{..}, \\url{..}    the entry's link, first one wins
     \\ref{prog:key}, \\ref{note:key}        a cross-reference, drawn as an arrow
 """
@@ -21,6 +24,7 @@ import importlib
 import re
 import sys
 from dataclasses import dataclass, field
+from datetime import datetime, time, timedelta, timezone
 from typing import Callable
 
 from .latex import Converter
@@ -29,6 +33,19 @@ from .source import Source
 
 class ParseError(Exception):
     pass
+
+
+@dataclass
+class Dates:
+    """When an entry happens, and what it counts down to.
+
+    A date with no offset is read as UTC, so a deadline worth trusting to the
+    hour carries one: the conference's own wording, `23:59:59+02:00`.
+    """
+    start: datetime | None = None
+    end: datetime | None = None
+    deadline: datetime | None = None
+    deadline_label: str = "deadline"
 
 
 @dataclass
@@ -51,12 +68,13 @@ class Entry:
         link      URL
         location  Location
         year      int, orders the cards (default: a year found in the title)
+        dates     Dates
         lead      Markdown: the panel's lead line, or a card's summary
         full      Markdown: the unfolded note
         refs      keys this entry cross-references
         reasons   {key: sentence} captions for those references
     """
-    kind: str                                    # "programme" | "paper"
+    kind: str                                    # "programme" | "conference" | "paper"
     title: str
     key: str
     file: str = ""                               # the file it was read from, for messages
@@ -125,6 +143,36 @@ class Entry:
             except ValueError:
                 raise ParseError(f"{self.file}:{self.line}: \\location[dx,dy] for {self.key} needs two numbers")
         return Location(lat, lon, m.group(4).strip(), offset)
+
+    def _when(self, text: str, end_of_day: bool) -> datetime:
+        """An ISO date or timestamp, always aware. A bare date means the whole day."""
+        raw = text.strip()
+        try:
+            when = datetime.fromisoformat(raw)
+        except ValueError:
+            raise ParseError(f"{self.file}:{self.line}: {self.key}: {raw!r} is not an ISO date "
+                             f"(2026-11-07, or 2027-05-12T23:59:59+02:00)")
+        if len(raw) <= 10 and end_of_day:        # a deadline given as a day closes with it
+            when = datetime.combine(when.date(), time.max)
+        return when if when.tzinfo else when.replace(tzinfo=timezone.utc)
+
+    @property
+    def dates(self) -> Dates | None:
+        if "dates" in self.given:
+            return self.given["dates"]
+        d = Dates()
+        m = re.search(r"\\dates\{([^}]*)\}\{([^}]*)\}", self.code)
+        if m:
+            d.start = self._when(m.group(1), False)
+            d.end = self._when(m.group(2), True)
+            if d.end < d.start:
+                raise ParseError(f"{self.file}:{self.line}: {self.key}: \\dates ends before it starts")
+        m = re.search(r"\\deadline(?:\[([^\]]*)\])?\{([^}]*)\}", self.code)
+        if m:
+            d.deadline = self._when(m.group(2), True)
+            if m.group(1):
+                d.deadline_label = m.group(1).strip()
+        return d if (d.start or d.deadline) else None
 
     def refs(self, prefixes: list[str]) -> list[str]:
         if "refs" in self.given:
@@ -223,7 +271,7 @@ def _read_expanded(src: Source, rel: str, files: list[str], depth: int = 0) -> l
     return out
 
 
-def parse(src: Source, programme_env: str, paper_env: str) -> Notes:
+def parse(src: Source, programme_env: str, paper_env: str, conf_env: str = "") -> Notes:
     files: list[str] = []
     lines = _read_expanded(src, src.main, files)
     # the preamble is not notes: start after \begin{document} when there is one
@@ -231,46 +279,54 @@ def parse(src: Source, programme_env: str, paper_env: str) -> Notes:
         if text.strip().startswith("\\begin{document}"):
             lines = lines[i + 1:]
             break
+    # a conference is a programme that happens on a date: same nesting, same map
+    # pin, same papers inside it, told apart by kind
     envs = {programme_env: "programme", paper_env: "paper"}
-    begin = re.compile(r"\\begin\{(%s|%s)\}\{(.*)\}\{([^{}]*)\}\s*$"
-                       % (re.escape(programme_env), re.escape(paper_env)))
+    if conf_env:
+        envs[conf_env] = "conference"
+    alts = "|".join(map(re.escape, envs))
+    begin = re.compile(r"\\begin\{(%s)\}\{(.*)\}\{([^{}]*)\}\s*$" % alts)
+    end = re.compile(r"\\end\{(%s)\}$" % alts)
     progs: list[Entry] = []
     loose: list[Entry] = []
     warnings: list[str] = []
     seen: dict[str, str] = {}
     prog: Entry | None = None
+    prog_env = ""
     paper: Entry | None = None
     for f, n, text in lines:
         s = text.strip()
         m = begin.match(s)
         if m:
-            kind = envs[m.group(1)]
+            env, kind = m.group(1), envs[m.group(1)]
             e = Entry(kind, m.group(2), m.group(3).strip(), f, n)
             if e.key in seen:
                 warnings.append(f"{f}:{n}: key {e.key!r} already used at {seen[e.key]}")
             seen[e.key] = f"{f}:{n}"
-            if kind == "programme":
-                if prog is not None:
-                    raise ParseError(f"{f}:{n}: {programme_env} {e.key!r} opens inside {prog.key!r}")
-                prog = e
-                progs.append(e)
-            else:
+            if kind == "paper":
                 if paper is not None:
                     raise ParseError(f"{f}:{n}: {paper_env} {e.key!r} opens inside {paper.key!r}")
                 paper = e
                 (prog.papers if prog else loose).append(e)
+            else:
+                if prog is not None:
+                    raise ParseError(f"{f}:{n}: {env} {e.key!r} opens inside {prog.key!r}")
+                prog, prog_env = e, env
+                progs.append(e)
             continue
-        if s == f"\\end{{{paper_env}}}":
-            if paper is None:
-                raise ParseError(f"{f}:{n}: \\end{{{paper_env}}} without a matching begin")
-            paper = None
-            continue
-        if s == f"\\end{{{programme_env}}}":
-            if prog is None:
-                raise ParseError(f"{f}:{n}: \\end{{{programme_env}}} without a matching begin")
-            if paper is not None:
-                raise ParseError(f"{f}:{n}: {programme_env} {prog.key!r} closes with {paper.key!r} still open")
-            prog = None
+        m = end.match(s)
+        if m:
+            env = m.group(1)
+            if envs[env] == "paper":
+                if paper is None:
+                    raise ParseError(f"{f}:{n}: \\end{{{env}}} without a matching begin")
+                paper = None
+            else:
+                if prog is None or env != prog_env:
+                    raise ParseError(f"{f}:{n}: \\end{{{env}}} without a matching begin")
+                if paper is not None:
+                    raise ParseError(f"{f}:{n}: {env} {prog.key!r} closes with {paper.key!r} still open")
+                prog, prog_env = None, ""
             continue
         if s.startswith("\\end{document}"):
             break
@@ -282,10 +338,11 @@ def parse(src: Source, programme_env: str, paper_env: str) -> Notes:
     if paper is not None:
         raise ParseError(f"{paper.file}:{paper.line}: {paper_env} {paper.key!r} never closes")
     if prog is not None:
-        raise ParseError(f"{prog.file}:{prog.line}: {programme_env} {prog.key!r} never closes")
+        raise ParseError(f"{prog.file}:{prog.line}: {prog_env} {prog.key!r} never closes")
     notes = Notes(progs, loose, files, warnings)
     for e in notes.all_entries():
         e.location                                   # raises on a malformed \location
+        e.dates                                      # and on a malformed \dates or \deadline
     return notes
 
 
@@ -301,7 +358,7 @@ Parser = Callable[[Source, object], Notes]
 
 
 def latex_parser(source: Source, cfg) -> Notes:
-    return parse(source, cfg.programme_env, cfg.paper_env)
+    return parse(source, cfg.programme_env, cfg.paper_env, getattr(cfg, "conf_env", ""))
 
 
 def load_parser(spec: str, folder) -> Parser:

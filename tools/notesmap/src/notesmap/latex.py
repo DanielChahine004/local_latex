@@ -140,6 +140,8 @@ class Converter:
         self.add("label", 1, lambda a: "")
         self.add("thumb", 1, lambda a: "")              # read by Entry.thumb, not shown in the text
         self.add("location", 3, lambda la, lo, name: "")  # read by Entry.location
+        self.add("dates", 2, lambda a, b: "")             # read by Entry.dates
+        self.add("deadline", 1, lambda a: "")             # ditto, with its [what]
         self.add("doi", 1, lambda a: f"doi:{a}")
         self.add("href", 2, lambda url, a: a)
         self.add("url", 1, lambda a: a)

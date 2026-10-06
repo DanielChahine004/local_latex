@@ -51,7 +51,18 @@ Journal 1:2, \doi{10.xxxx/yyyy}.                               % the card's link
 \end{papernote}
 
 \end{programnote}
+
+\begin{confnote}{IEEE NSS/MIC 2027 -- Pasadena}{NSSMIC2027}  % a conference: a
+\location{34.15}{-118.14}{Pasadena, USA}          % programme with dates, in its own colour
+\dates{2027-10-30}{2027-11-06}                    % when it runs
+\deadline[abstracts]{2027-05-12T23:59:59+02:00}   % what the panel counts down to, live
+\end{confnote}
 ```
+
+A conference panel ticks down to its deadline, then to the meeting, and says
+so when both have passed. Dates are ISO; one without an offset is read as UTC,
+so a deadline worth trusting to the hour carries the conference's own
+(`23:59:59+02:00`). `notesmap check` warns about a deadline already gone.
 
 A cross-reference reads as the target's short name on the map. The short
 name is the entry's title up to ` -- `, for example "Carra et al. 2022".

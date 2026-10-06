@@ -12,6 +12,7 @@ import shutil
 import sys
 import threading
 import time
+from datetime import datetime, timezone
 from pathlib import Path
 
 from . import config as config_mod
@@ -53,6 +54,13 @@ def cmd_check(args) -> int:
     for p in notes.programmes:
         if p.location is None:
             problems.append(f"{p.file}:{p.line}: {p.key}: no \\location (shelved on the map)")
+        if p.kind == "conference":
+            d = p.dates
+            if d is None:
+                problems.append(f"{p.file}:{p.line}: {p.key}: a conference with no \\dates")
+            elif d.deadline and d.deadline < datetime.now(timezone.utc):
+                problems.append(f"{p.file}:{p.line}: {p.key}: {d.deadline_label} closed on "
+                                f"{d.deadline:%Y-%m-%d} (the panel says so too)")
     files = set(notes.files) | (src.touched - notes.images)
     print(f"{src.describe()}: {len(files)} file(s), {len(notes.programmes)} programmes, "
           f"{sum(len(p.papers) for p in notes.programmes)} papers in programmes, {len(notes.loose)} loose")

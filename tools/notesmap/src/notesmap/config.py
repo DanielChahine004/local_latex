@@ -17,7 +17,8 @@ class Config:
     # [latex]
     programme_env: str = "programnote"
     paper_env: str = "papernote"
-    ref_prefixes: list[str] = field(default_factory=lambda: ["prog", "note"])
+    conf_env: str = "confnote"                   # a conference: a programme with dates
+    ref_prefixes: list[str] = field(default_factory=lambda: ["prog", "note", "conf"])
     overview_sections: list[str] = field(
         default_factory=lambda: ["what it is", "summary", "why it matters", "capsule"])
     units: dict[str, str] = field(default_factory=dict)
@@ -53,7 +54,7 @@ class Config:
 
 _SECTIONS = {
     "source": {"path": "path", "poll": "poll", "lock_files": "lock_files", "parser": "parser"},
-    "latex": {"programme_env": "programme_env", "paper_env": "paper_env",
+    "latex": {"programme_env": "programme_env", "paper_env": "paper_env", "conf_env": "conf_env",
               "ref_prefixes": "ref_prefixes", "overview_sections": "overview_sections",
               "units": "units", "macros": "macros", "plugins": "plugins"},
     "board": {"rows": "rows", "prune": "prune", "loose_key": "loose_key",

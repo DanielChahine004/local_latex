@@ -14,8 +14,9 @@ overview_sections = ["what it is", "summary"]
 [board]
 rows = [
 	["i3M", "AnnPET", "HUST", "Delft", "machinery"],    # the annulus cluster and what it cites
-	["cMiCE", "Ghent", "UTOFPET", "Aachen", "J-PET"],   # neural localisation and its precursors
+	["cMiCE", "Ghent", "WTPET", "Molecubes", "UTOFPET", "Aachen", "J-PET", "SIAT"],   # neural localisation and its precursors, plus the semi-monolithic branch
 	["MODE", "OpenGATE", "UTS", "Penn"],                # tooling stubs and history
+	["NSSMIC2026", "NSSMIC2027"],                       # conferences, with their countdowns
 ]
 # cross-references that are a shared citation, not a relationship
 prune = [["i3M", "machinery"], ["Delft", "machinery"]]

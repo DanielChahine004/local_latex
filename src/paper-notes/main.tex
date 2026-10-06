@@ -8,6 +8,11 @@
 %   \thumb{img/key.png}                  % optional; images live in img/
 %   \paragraph{What it is}
 %   ...
+%   \begin{confnote}{IEEE NSS/MIC 2027 -- Pasadena}{NSSMIC2027}
+%   \dates{2027-10-30}{2027-11-06}       % a conference: dates, and the map
+%   \deadline[abstracts]{2027-05-12T23:59:59+02:00}   % counts down to this
+%   \end{confnote}
+%
 %   \begin{papernote}{Author et al.\ Year -- Title}{AuthorYear}
 %   Journal vol:page, \doi{10.xxxx/...}.  % or \href{url}{name}: the card's link
 %   \paragraph{Summary}
@@ -44,6 +49,9 @@
 % units.tex and references.bib are the thesis's own, found via the
 % -Z search-path=src/thesis that build-notes passes. No copies to keep in sync.
 \input{units} % \keV{511} etc.
+% a \pm inside a number prints as "1.38 ± 0.23 mm", not siunitx's default
+% "1.38(23) mm" -- the map spells it out and the PDF should match.
+\sisetup{separate-uncertainty=true}
 \usepackage{xcolor}
 \usepackage[hidelinks]{hyperref}
 \usepackage{xurl}
@@ -65,7 +73,7 @@
 \clearpage
 
 \begin{programnote}{UTOFPET -- Pisa + Ghent monolithic TOF-PET}{UTOFPET}
-\location[150,2000]{43.72}{10.40}{Pisa, Italy}
+\location[-68,109]{43.72}{10.40}{Pisa, Italy}
 
 \paragraph{What it is}
 A joint project of the University of Pisa (Dipartimento di Fisica E.\ Fermi /
@@ -639,7 +647,7 @@ strip. If it does, the narrowed claim above needs narrowing again.}
 % ===========================================================================
  
 \begin{programnote}{i3M Valencia -- Detectors for Molecular Imaging Lab}{i3M}
-\location[-1000,1500]{39.48}{-0.34}{Valencia, Spain}
+\location[109,260]{39.48}{-0.34}{Valencia, Spain}
 \thumb{img/i3mgroup.png}
  
 \paragraph{What it is}
@@ -788,7 +796,7 @@ the energy-resolution list, which loses its treatment-to-sensor mapping.}
 
 \paragraph{Why it matters here}
 This is Valencia's total-body entry, so the group is in the flat-panel
-contest with \ref{prog:Ghent} as well as the annular one with
+contest with \ref{prog:WTPET} as well as the annular one with
 \ref{prog:AnnPET}, and neither claim leaves much monolithic ground vacant.
 Read as a bench measurement, not a scanner: these are mean absolute errors
 from a collimated setup, so they do not compare with the \mm{1.4} FWHM of
@@ -1026,49 +1034,63 @@ appears to run it in reverse.
  
 % ===========================================================================
 % 6. NEW -- Ghent, disentangled from UTOFPET. Partially verified.
+
 % ===========================================================================
- 
-\begin{programnote}{Ghent MEDISIP -- monolithic lineage and WT-PET}{Ghent}
+% 6. Ghent MEDISIP -- the detector thread. The system thread is 6a. Partially
+% verified.
+% ===========================================================================
+
+\begin{programnote}{Ghent MEDISIP -- the monolithic detector lineage}{Ghent}
 \location[-960,200]{51.05}{3.72}{Ghent, Belgium}
-\thumb{img/wt.png}
- 
+
 \paragraph{Why separate from UTOFPET}
 Ghent has a monolithic lineage that predates and runs parallel to the
 consortium. Nesting Stockhoff 2021 and Decuyper 2021 under \ref{prog:UTOFPET}
 implies more coordination than the evidence supports. Keep the nodes distinct
 and cross-reference; UTOFPET is the joint detector project, not the whole of
 either group.
- 
+
+\paragraph{Why separate from WT-PET}
+This node was nine papers doing two jobs. The detectors and the positioning
+stay here; the total-body system designs built on them are \ref{prog:WTPET},
+and the spin-off that sells one is \ref{prog:Molecubes}. Three nodes, one pin
+--- Ghent is the single most productive address on this map, and the threads
+make different claims.
+
 \paragraph{What it is}
 Medical Image and Signal Processing (MEDISIP), Department of Electronics and
-Information Systems, Ghent University. PI Stefaan Vandenberghe. Walk-through
-PET site: \url{https://www.wt-pet.org/}.
- 
+Information Systems, Ghent University. PI Stefaan Vandenberghe. The thread
+here is the detector itself: thin monolithic crystals in
+\ref{note:DigiPET2014}, a characterised \qtyproduct{50 x 50 x 16}{\mm} block
+in \ref{note:Stockhoff2021}, and a positioning network for it in
+\ref{note:Decuyper2021}.
+
 \paragraph{People}
-Vandenberghe (PI), Roel Van Holen, Mariele Stockhoff, Milan Decuyper, Jens
-Maebe, Florence Muller, Meysam Dadgar, Maya Abi Akl, Boris Vervenne, Christian
-Vanhove.
- 
+Vandenberghe (PI), Roel Van Holen, Mariele Stockhoff, Milan Decuyper, with
+Jens Maebe on the positioning-and-timing work.
+
 \paragraph{Key outputs}
 \begin{itemize}
-	\item Espa\~na et al.\ 2014 PMB --- DigiPET, the start of the lineage\aside{; its own
-		note below (\ref{note:DigiPET2014})}.
-	\item Stockhoff, Decuyper, Van Holen, Vandenberghe 2021 PMB ---
-		high-resolution monolithic LYSO with 6-layer DOI for clinical PET.
-		\gap{Block dimensions. Determines whether this or the Pisa block is the
-		``existing preclinical monolithic detector'' scaled 2x in WT-PET.}
-	\item Decuyper 2021 --- sim-to-real transfer for NN localisation.
-		\gap{Full citation. This is kill (g) and needs its own papernote.}
+	\item Espa\~na et al.\ 2014 PMB --- DigiPET, the start of the lineage
+		(\ref{note:DigiPET2014}).
+	\item Stockhoff et al.\ 2021 PMB --- the measured block
+		(\ref{note:Stockhoff2021}), \qtyproduct{50 x 50 x 16}{\mm}: the one the
+		walk-through panels are built from, not the \qtyproduct{25.4 x 25.4 x 8}{\mm}
+		block \ref{prog:Molecubes} ships.
+	\item Decuyper et al.\ 2021 PMB --- the positioning network
+		(\ref{note:Decuyper2021}). Kill (g).
 	\item Maebe \& Vandenberghe 2022 PMB --- joint position/timestamp.
 		\gap{Full citation; distinguish carefully from \ref{note:Carra2022}.}
-	\item Maebe PhD thesis, Ghent 2024 --- ``Timing capabilities and image
-		reconstruction for the walk-through PET''.
-	\aside{\item The walk-through line has its own notes below: PET20.0
-		(\ref{note:PET20}), the WT-PET design paper (\ref{note:WTPET2023}) and
-		the flat-panel versus cylinder simulation (\ref{note:WTPETSim2023}).
-		Detector detail is held in \ref{prog:UTOFPET}.}
 \end{itemize}
- 
+
+\paragraph{Why it matters here}
+Everything \ref{prog:WTPET} claims at system level rests on two papers from
+this node, and they are measured rather than simulated: a real monolith at
+\mm{1.14} intrinsic over its whole face, and a network that beats nearest
+neighbour on it. If a thesis wants to contest the panel campaign, this is
+where the contestable number actually lives --- not in the system simulations,
+which only inherit it.
+
 \paragraph{Thesis entry}
 The review folds this node and \ref{prog:UTOFPET} into one programme entry,
 ``UTOFPET: Pisa and Ghent, from DigiPET to walk-through PET'', because the
@@ -1076,7 +1098,150 @@ WT-PET paper itself names UTOFPET as the detector's origin. Pisa is credited
 for the positioning-and-timing network (\ref{note:Carra2022}), Ghent for DigiPET
 and the WT-PET system. The separation kept here is for prior-art bookkeeping,
 not something the thesis argues.
- 
+
+\begin{papernote}{Espa\~na et al.\ 2014 -- DigiPET: sub-millimeter spatial resolution small-animal PET imaging using thin monolithic scintillators}{DigiPET2014}
+\thumb{img/digipet.png}
+Phys.\ Med.\ Biol.\ 59(13):3405, \doi{10.1088/0031-9155/59/13/3405}. Espa\~na,
+Marcinkowski, Keereman, Vandenberghe, Van Holen.
+
+\paragraph{Summary}
+Sub-millimetre small-animal PET from thin monolithic LYSO slabs on digital
+SiPMs: the thin slab trades stopping power for a light distribution narrow
+enough to localise below a millimetre without DOI. The first monolithic
+scanner in the Ghent line, and the preclinical detector that the WT-PET block
+descends from by way of the Pisa block (\ref{note:Carra2022}).
+\gap{Unread. Slab dimensions, the positioning method (nearest-neighbour as at
+Delft, or otherwise), the resolution and sensitivity figures, and whether the
+thin-slab choice is argued as a cost or a resolution decision.} From the
+figure: a \mm{13} thick LYSO slab, \mm{38.5} across the back and \mm{34.5}
+of active face, on a dSiPM array, two opposed detectors on a printed frame
+with a cooling fan each.
+
+\end{papernote}
+
+\begin{papernote}{Stockhoff et al.\ 2021 -- High-resolution monolithic LYSO detector with 6-layer depth-of-interaction for clinical PET}{Stockhoff2021}
+Phys.\ Med.\ Biol.\ 66:155014, \doi{10.1088/1361-6560/ac1459}. Stockhoff,
+Decuyper, Van Holen, Vandenberghe.
+
+\paragraph{Detector}
+A \qtyproduct{50 x 50 x 16}{\mm} LYSO monolith on backside SiPM readout, with
+DOI read from the shape of the light distribution rather than from a layered
+build. Measured, not simulated: calibrated in singles mode against a
+collimated beam.
+
+\paragraph{Key Findings}
+Intrinsic resolution \mm{1.14} FWHM over the whole face with a neural
+network and \mm{1.17} with mean nearest neighbour; \mm{1.02} and \mm{1.13}
+respectively over the central \qtyproduct{30 x 30}{\mm}. The stated target is
+the \mm{1.3} intrinsic needed for \mm{2} at system level in whole-body PET.
+\gap{Unread beyond the abstract. Read for how the six DOI layers are defined
+and measured, the energy and timing figures, and how much of the
+network-over-MNN gain survives off centre.}
+
+\paragraph{Why it matters here}
+This is the block the walk-through work scales up from
+(\ref{note:WTPET2023}, \ref{note:AbiAkl2025}) and the same one
+\ref{note:Decuyper2021} positions in simulation --- so the lineage's
+detector, measured. Note the size: \qtyproduct{50 x 50 x 16}{\mm} here
+against the \qtyproduct{25.4 x 25.4 x 8}{\mm} block
+\ref{prog:Molecubes} sells, which settles which detector the WT-PET paper
+means by its ``existing monolithic detector''.
+
+\end{papernote}
+
+\begin{papernote}{Decuyper et al.\ 2021 -- Artificial neural networks for positioning of gamma interactions in monolithic PET detectors}{Decuyper2021}
+Phys.\ Med.\ Biol.\ 66:075001, \doi{10.1088/1361-6560/abebfc}. Decuyper,
+Stockhoff, Vandenberghe, Van Holen.
+
+\paragraph{Method}
+A network of three hidden layers of 256 neurons maps the light distribution to
+the first interaction position --- Compton or photoelectric --- in a
+\qtyproduct{50 x 50 x 16}{\mm} LYSO monolith read out by a photodetector
+array, trained on optical simulation where that first position is known.
+
+\paragraph{Key Findings}
+Median 3D positioning error \mm{0.77} and 2D FWHM \mm{0.46}, a
+\qty{17}{\percent} improvement in FWHM on nearest neighbour; restricted to
+non-Compton events, \mm{0.40} and \mm{0.42}.
+\gap{The abstract reports optical simulation only, while this node's summary
+had it as sim-to-real transfer. Either a companion paper carries the
+experimental transfer or that claim is wrong --- resolve before citing it as
+evidence that simulation-trained networks survive real data.}
+
+\paragraph{Why it matters here}
+Kill (g): the strongest published claim that a network beats nearest
+neighbour on a monolith, and the one an annulus positioning argument has to
+better or explain. Its ceiling is the first-interaction position, which only
+simulation knows, so the gap above decides how much the number is worth
+against a real detector such as \ref{note:Stockhoff2021}.
+
+\end{papernote}
+
+\end{programnote}
+
+
+% ===========================================================================
+% 6a. WT-PET -- the system thread split out of Ghent. Four re-costings of one
+% geometry; read them as one campaign, not six papers.
+% ===========================================================================
+
+\begin{programnote}{WT-PET -- Ghent's flat-panel total-body campaign}{WTPET}
+\location[-358,-487]{51.05}{3.72}{Ghent, Belgium}
+\thumb{img/wt.png}
+
+\paragraph{What it is}
+The system-design thread of \ref{prog:Ghent}, under the same PI: stand the
+patient upright between two flat panels of monolithic detectors instead of
+lying them inside a cylinder, and buy resolution and sensitivity with
+proximity rather than with crystal. Walk-through PET site:
+\url{https://www.wt-pet.org/}. The detector is not its own --- it is the
+\qtyproduct{50 x 50 x 16}{\mm} block of \ref{note:Stockhoff2021}, assumed at
+\ps{300} CTR and \mm{2.67} DOI throughout.
+\gap{Funding and project status. The site reads like a funded project with a
+named grant; find it, because ``a funded programme'' and ``a series of
+simulation papers'' are different claims and this node currently asserts
+neither.}
+
+\paragraph{People}
+Vandenberghe (PI), Jens Maebe, Maya Abi Akl, Meysam Dadgar, Boris Vervenne,
+Elke Dhaenens, Florence Muller, Christian Vanhove.
+
+\paragraph{Key outputs}
+Six papers, and they are one argument rather than six results:
+\begin{itemize}
+	\item \ref{note:PET20} (2018) --- the cost-efficient total-body target the
+		rest inherits.
+	\item \ref{note:WTPET2023} --- the walk-through design itself.
+	\item \ref{note:WTPETSim2023} --- panels against a cylinder, in BGO.
+	\item \ref{note:AbiAkl2023} --- the same block wrapped into a ring instead.
+	\item \ref{note:AbiAkl2025} --- panels thinned, gaps closed by moving them
+		vertically.
+	\item \ref{note:STPET2026} --- panels narrowed, swept laterally.
+	\item Maebe PhD thesis, Ghent 2024 --- ``Timing capabilities and image
+		reconstruction for the walk-through PET''.
+		\gap{Unread. The reconstruction half is where the limited-angle
+		artefacts are either solved or conceded.}
+\end{itemize}
+
+\paragraph{Why it matters here}
+Read in order, the campaign states its own weakness four times. Every
+costing-down buys detectors back with angular coverage, and every paper ends
+asking for better timing: \ref{note:WTPETSim2023} weighs the panels against a
+closed geometry, \ref{note:AbiAkl2025} reports
+\qtyrange{3}{3.5}{\mm} perpendicular to the panel face, and
+\ref{note:STPET2026} concedes elongation artefacts in both its flat-panel
+builds and asks for better than \ps{300} to suppress them. That is the
+argument for a closed geometry made by the open-geometry camp itself --- an
+annulus has no limited-angle artefact to buy off and no moving part to
+schedule. It is also the reason \ref{note:AbiAkl2023} exists: when the same
+group wrapped the same block into a ring, the comparison stopped being
+rhetorical.
+
+\paragraph{Scope boundary}
+This node is system geometry. Detector physics, including the \mm{1.14} the
+whole campaign assumes, is \ref{prog:Ghent}; the productised preclinical
+scanner is \ref{prog:Molecubes}.
+
 \begin{papernote}{Vandenberghe et al.\ 2018 -- PET20.0: a cost-efficient, 2 mm spatial resolution total body PET with point sensitivity up to 22\% and adaptive axial FOV of maximum 2.00 m}{PET20}
 Abstract, 33rd International Austrian Winter Symposium; EJNMMI Res.\ 8(Suppl 1):5,
 \doi{10.1186/s13550-017-0354-4}. Vandenberghe, Mikhaylova, Borys, Viswanath,
@@ -1146,23 +1311,243 @@ list had this as ``Vervenne \& Vandenberghe''.
 
 \end{papernote}
 
-\begin{papernote}{Espa\~na et al.\ 2014 -- DigiPET: sub-millimeter spatial resolution small-animal PET imaging using thin monolithic scintillators}{DigiPET2014}
-\thumb{img/digipet.png}
-Phys.\ Med.\ Biol.\ 59(13):3405, \doi{10.1088/0031-9155/59/13/3405}. Espa\~na,
-Marcinkowski, Keereman, Vandenberghe, Van Holen.
+\begin{papernote}{Abi-Akl et al.\ 2023 -- Monte Carlo simulation of the system performance of a long axial field-of-view PET based on monolithic LYSO detectors}{AbiAkl2023}
+EJNMMI Phys.\ 10:37, \doi{10.1186/s40658-023-00559-2}. Abi-Akl, Dadgar,
+Toufique, Bouhali, Vandenberghe. Ghent MEDISIP with Texas A\&M University at
+Qatar.
 
 \paragraph{Summary}
-Sub-millimetre small-animal PET from thin monolithic LYSO slabs on digital
-SiPMs: the thin slab trades stopping power for a light distribution narrow
-enough to localise below a millimetre without DOI. The first monolithic
-scanner in the Ghent line, and the preclinical detector that the WT-PET block
-descends from by way of the Pisa block (\ref{note:Carra2022}).
-\gap{Unread. Slab dimensions, the positioning method (nearest-neighbour as at
-Delft, or otherwise), the resolution and sensitivity figures, and whether the
-thin-slab choice is argued as a cost or a resolution decision.} From the
-figure: a \mm{13} thick LYSO slab, \mm{38.5} across the back and \mm{34.5}
-of active face, on a dSiPM array, two opposed detectors on a printed frame
-with a cooling fan each.
+GATE study of monolithic LYSO blocks, \qtyproduct{50 x 50 x 16}{\mm},
+DOI-capable, 40 modules to a ring around a \cm{70} bore, in two lengths:
+\cm{36.2} axial FOV over 7 rings and \cm{72.6} over 14. Sub-\mm{2} FWHM in
+all three directions, central sensitivity \qty{29.2}{\kilo cps\per\mega\becquerel}
+and \qty{106.8}{\kilo cps\per\mega\becquerel}, NECR peaks \qty{716}{\kilo cps}
+and \qty{1235}{\kilo cps}, scatter fraction 32\%, timing modelled at \ps{200}.
+\gap{Unread beyond the abstract and the numbers above. Read for how the DOI
+layers are modelled and what the \ps{200} assumes, since the same block
+appears in the walk-through work at a different granularity.}
+
+\paragraph{Why it matters here}
+The cylindrical counterpart to \ref{note:WTPETSim2023}, from the same group
+and the same simulation campaign: monolithic LYSO wrapped into a ring rather
+than flattened into panels. Not a walk-through paper. It is the cleanest
+published statement of what monolithic blocks with DOI reach in a conventional
+cylinder --- sub-\mm{2} in every direction, where the panels lose to
+\mm{3.36} perpendicular --- which makes it the comparison an annular
+monolith such as \ref{prog:AnnPET} or \ref{prog:HUST} is measured against.
+\aside{Abi Akl was already in the Ghent people list; this is the paper she
+leads.}
+
+\end{papernote}
+
+\begin{papernote}{Abi-Akl et al.\ 2025 -- Performance evaluation of a medium axial field-of-view sparse PET system based on flat panels of monolithic LYSO detectors: a simulation study}{AbiAkl2025}
+EJNMMI Phys.\ 12:49, \doi{10.1186/s40658-025-00766-z}. Abi-Akl, Maebe,
+Vervenne, Bouhali, Vanhove, Vandenberghe.
+
+\paragraph{Summary}
+The walk-through geometry costed down. Two vertical panels \cm{50} apart, in
+two builds: the long panel at \cm{106} axial FOV over 20 detector rows, and a
+sparse medium panel at \cm{60} over 8 rows with \mm{28} axial gaps --- about
+half a detector width, closed by moving the panels vertically rather than by
+buying detectors. Monolithic LYSO \qtyproduct{50 x 50 x 16}{\mm} with DOI,
+intrinsic resolution \mm{1.14} parallel to the panel face and \mm{2.67} in
+depth, CTR \ps{300}. The sparse build averages
+\qty{26}{\kilo cps\per\mega\becquerel}, \num{4.6} times less sensitive than
+the long one, holds sub-\mm{2} in the panel-parallel directions and
+\qtyrange{3}{3.5}{\mm} perpendicular, and needs \qtyrange{2}{3}{\minute} to
+match what the long panel does in \qty{30}{\second}.
+\gap{Unread beyond the abstract. Read for how the panel motion is scheduled
+and whether the gap is filled exactly or sampled, and for what the \ps{300}
+rests on.}
+
+\paragraph{Why it matters here}
+The third point of the same campaign, and the one that prices the geometry:
+\ref{note:WTPET2023} proposed the panels, \ref{note:WTPETSim2023} weighed
+them against a cylinder in BGO, \ref{note:AbiAkl2023} wrapped the same
+monolithic LYSO block into a ring, and this halves the detector count and
+reports what that costs. The perpendicular \qtyrange{3}{3.5}{\mm} is the
+panel geometry's standing weakness, in LYSO as in BGO --- the direction a
+monolithic annulus does not have.
+
+\end{papernote}
+
+\begin{papernote}{Dhaenens, Vervenne et al.\ 2026 -- Simulation study of a low-cost Slide-Through PET scanner based on narrow flat panels with monolithic detectors}{STPET2026}
+Front.\ Phys.\ 13:1712273, \doi{10.3389/fphy.2025.1712273}. Dhaenens and
+Vervenne (joint first), Abi Akl, Maebe, Vanhove, Vandenberghe. Ghent MEDISIP.
+
+\paragraph{Summary}
+The walk-through panels narrowed and put on rails. Two vertical panels
+\cm{50} apart, each \cm{190.5} tall and stepped in width: \cm{20.9} across the
+top for the torso, \cm{10.3} across the bottom for the legs. Instead of a panel
+wide enough for the patient, the pair translates sideways to sweep a
+\cm{73.9} field of view, 224 detector modules in all. The detector is the
+lineage's own --- \qtyproduct{50 x 50 x 16}{\mm} monolithic LYSO on an 8 x 8
+array of \qtyproduct{6 x 6}{\mm} SiPMs, with resolution values taken from
+\ref{note:Stockhoff2021}, \ps{300} CTR and \mm{2.67} DOI.
+
+\paragraph{Method}
+GATE v9.4, against two references built from the same detectors: a wide static
+flat panel and a cylinder. Three panel motions were tried (parallel, opposite,
+single-panel), scored on NEMA image quality and XCAT phantoms.
+
+\paragraph{Key Findings}
+Only parallel motion covers the anatomy; the other two sample a focused region
+and miss the rest. Sensitivity on a whole-body water phantom is
+\qty{1.66}{cps\per\kilo\becquerel} in the upper section and
+\qty{0.52}{cps\per\kilo\becquerel} in the lower, against
+\qty{1.05}{cps\per\kilo\becquerel} everywhere for the cylinder --- so the
+torso gains about half again and the legs lose half. Sub-\mm{3} at the centre
+of the field of view. On torso noise, \mins{4} of ST-PET matches \mins{9.15}
+of the cylinder. Both flat-panel systems show mild elongation artefacts from
+the limited angular coverage, and the conclusion asks for better than \ps{300}
+to suppress them.
+\aside{This paper's sensitivity is a whole-body water phantom with
+attenuation, while \ref{note:AbiAkl2025} quotes
+\qty{26}{\kilo cps\per\mega\becquerel} on its own figure of merit. The units
+are interconvertible and the numbers are not; do not put them in one table.}
+\gap{Unread beyond the abstract and the stated geometry. No cost figure and no
+detector-count saving is given anywhere, despite ``low-cost'' in the title ---
+224 modules against the walk-through's count is the comparison the claim needs.
+Also worth reading for what the legs' \qty{0.52}{cps\per\kilo\becquerel}
+means clinically, and how the lateral sweep is scheduled against tracer
+kinetics.}
+
+\paragraph{Why it matters here}
+The fourth costing-down of one geometry, and the clearest statement of what
+the panels keep paying with. \ref{note:WTPET2023} proposed them,
+\ref{note:WTPETSim2023} weighed them against a cylinder in BGO,
+\ref{note:AbiAkl2025} thinned them and closed the gaps by moving them
+vertically, and this one narrows them and moves them sideways. Every step buys
+detectors back with angular coverage, and every step ends asking for better
+timing --- limited-angle elongation is the structural cost of a flat panel, and
+\ps{300} is not enough to hide it. That is the argument for a closed geometry
+stated by the panel camp itself: a monolithic annulus has no limited-angle
+problem to buy off, and no moving part to schedule.
+
+\end{papernote}
+
+\end{programnote}
+ 
+ 
+% ===========================================================================
+% 6b. NEW -- Molecubes. The commercial arm of the Ghent lineage.
+% ===========================================================================
+ 
+\begin{programnote}{Molecubes -- Ghent spin-off, monolithic PET sold as a product}{Molecubes}
+\location[-975,-379]{51.05}{3.72}{Ghent, Belgium}
+\thumb{img/molecubes.png}
+ 
+\paragraph{What it is}
+A Ghent University spin-off selling benchtop preclinical scanners as a family
+of stacking cubes: the $\beta$-CUBE (PET), $\gamma$-CUBE (SPECT) and X-CUBE
+(CT). \url{https://www.molecubes.com/}. The $\beta$-CUBE is the monolithic
+lineage of \ref{prog:Ghent} turned into a product --- monolithic LYSO with
+DOI, neural-network positioning, sold rather than demonstrated. Acquired by
+Bruker on 19 November 2021 and run inside its BioSpin preclinical imaging
+division; over 70 systems installed by then, on about 5 million euro of
+2020 revenue.
+\gap{Founding year: Qbic says 2015, another account 2016. Whether the
+positioning network in the shipped product is the published one, and whether
+anything of the calibration is documented outside the papers.}
+ 
+\paragraph{People}
+Roel Van Holen (co-founder, CEO), Pieter Mollet, Ewout Vansteenkiste, with
+Stefaan Vandenberghe on the $\beta$-CUBE work --- the same people as
+\ref{prog:Ghent}, which is why this is a separate node rather than a paper
+inside it.
+ 
+\paragraph{Literature}
+Thin, and that is the point: one peer-reviewed performance paper
+(\ref{note:BetaCube2018}), its IEEE NSS/MIC 2017 conference version and the makers' own JNM
+abstract (\ref{note:BetaCube2017}), then nothing until other groups' application papers that use a
+$\beta$-CUBE as a platform rather than study it. No independent NEMA NU4
+evaluation by a second lab, and no published account of the calibration a
+shipped monolithic scanner needs.
+\gap{Searched, not found --- worth one more pass before the thesis says
+``none''. If it holds, the absence is itself evidence: the hard part of
+monolithic PET is exactly what a vendor does not publish.}
+
+\paragraph{Why it matters here}
+The existence proof that a monolithic scanner can be productised: whatever a
+thesis argues about calibration burden or positioning fragility has to survive
+the fact that someone sells one and 70-odd labs run it. It also puts a
+commercial floor under the annulus comparison --- \ref{prog:AnnPET} and
+\ref{prog:HUST} are measured against \mm{1} at \qty{12.4}{\percent}, not
+against a research prototype.
+ 
+\begin{papernote}{Mollet et al.\ 2017 -- The beta-CUBE, a high-end compact preclinical benchtop PET for total body imaging}{BetaCube2017}
+J.\ Nucl.\ Med.\ 58(supplement 1):393,
+\href{https://jnm.snmjournals.org/content/58/supplement_1/393}{jnm.snmjournals.org}.
+Mollet, Deprez, Vandeghinste, Neyt,
+Marcinkowski, Vandenberghe, Van Holen. A meeting abstract, not a paper: cite
+it as one, and prefer \ref{note:BetaCube2018} wherever both cover the same
+ground.
+
+\paragraph{Detector}
+The makers' own description of the shipped machine, which
+\ref{note:BetaCube2018} does not give: nine modules to a ring, \mm{76} inner
+diameter, \cm{13.3} axial FOV; five \qtyproduct{25.4 x 25.4 x 8}{\mm}
+monolithic LYSO blocks per module on analogue Hamamatsu MPPCs, Peltier-held at
+\qty{23}{\celsius}, per-pixel readout into five coincidence boards. Event
+positioning is statistical and runs on a GPU in the acquisition server;
+reconstruction is tube-of-response OSEM, 50 iterations, with continuous DOI
+functions. Acquisition and reconstruction servers live inside the
+\qtyproduct{54 x 54 x 54}{\cm} box.
+
+\paragraph{Key Findings}
+Intrinsic detector resolution \mm{0.76} FWHM against a \mm{0.4} collimated
+beam. Reconstructed \mm{0.874} tangential and \mm{0.780} axial at the centre;
+radial nearly flat, \mm{0.9} at \mm{10} off centre to \mm{1.15} at \mm{25}.
+Hot-rod \mm{0.8} rods clear, some \mm{0.7} separable. Uniformity
+\qty{16.6}{\percent}, recovery coefficients \numrange{0.28}{0.96}, absolute
+peak sensitivity \qty{10.2}{\percent}.
+
+\paragraph{Why it matters here}
+Two things nothing else gives. First, ``statistical event positioning on a
+GPU'' is the only published word on how the shipped product positions events
+--- the calibration question this node keeps asking, answered to one phrase.
+Second, the numbers disagree with the independent measurement a year later:
+\qty{10.2}{\percent} peak sensitivity here against
+\qty{12.4}{\percent} in \ref{note:BetaCube2018}, uniformity
+\qty{16.6}{\percent} against \qty{7.4}{\percent}, and sub-\mm{1}
+reconstructed resolution against about \mm{1}.
+\gap{Reconcile the two. Different energy windows, reconstruction settings or
+a hardware revision between 2017 and 2018 would each explain it, and which it
+is decides whether the vendor figures or the Penn ones belong in the thesis.}
+
+\end{papernote}
+ 
+\begin{papernote}{Krishnamoorthy et al.\ 2018 -- Performance evaluation of the MOLECUBES beta-CUBE: a high spatial resolution and high sensitivity small animal PET scanner utilizing monolithic LYSO scintillation detectors}{BetaCube2018}
+\thumb{img/molecubes_betacube.png}
+Phys.\ Med.\ Biol.\ 63:155013, \doi{10.1088/1361-6560/aacec3}.
+Krishnamoorthy, Blankemeyer, Mollet, Surti, Van Holen, Karp. Penn and Ghent
+together: \ref{prog:Penn} measuring the spin-off's scanner.
+
+\paragraph{Detector}
+\mm{8} thick monolithic LYSO read out by an array of \qtyproduct{3 x 3}{\mm}
+Hamamatsu SiPMs, giving DOI; five monolithic blocks
+(\qtyproduct{25.4 x 25.4 x 8}{\mm} each) to a module.
+\cm{13} axial FOV, \cm{7.6} bore --- total-body mouse in one bed position.
+Nine modules to the ring, \mm{76} inner diameter, \cm{13.3} axial FOV, five
+blocks to a module (\ref{note:BetaCube2017}); the journal paper rounds the
+axial FOV to \cm{13}.
+
+\paragraph{Key Findings}
+\mm{1} FWHM at the centre with filtered back-projection, and \mm{1}
+volumetric resolution; absolute peak sensitivity \qty{12.4}{\percent} in a
+\qtyrange{255}{765}{\kilo\electronvolt} window; peak NEC
+\qty{300}{\kilo cps} for the mouse phantom and \qty{160}{\kilo cps} for the
+rat; uniformity \qty{7.4}{\percent}, spill-over ratio \qty{8}{\percent},
+about \qty{70}{\percent} contrast recovery on the \mm{2} rods.
+\gap{Unread beyond the abstract. Read for the positioning method as shipped,
+the energy resolution figure, and how the \mm{1} is defined --- FBP at the
+centre is the friendliest case.}
+
+\paragraph{Why it matters here}
+The number to beat, and the one a reviewer will reach for: a monolithic
+preclinical PET with \mm{1} resolution and \qty{12.4}{\percent} sensitivity,
+measured by an independent group (Karp and Surti at Penn) rather than by the
+makers.
 
 \end{papernote}
  
@@ -1174,7 +1559,7 @@ with a cooling fan each.
 % ===========================================================================
  
 \begin{programnote}{TU Delft -- Schaart group}{Delft}
-\location[-960,-700]{52.00}{4.37}{Delft, Netherlands}
+\location[-992,-724]{52.00}{4.37}{Delft, Netherlands}
  
 \gap{Entire node unverified. Everything below is memory-level.}
  
@@ -1387,6 +1772,270 @@ matters for the thin-ring argument.}
 
 \end{programnote}
 
+% ===========================================================================
+% 7d. SIAT Shenzhen -- the semi-monolithic slab line. Abstracts read; PDFs not.
+% ===========================================================================
+
+\begin{programnote}{SIAT Shenzhen -- long semi-monolithic slabs with DOI}{SIAT}
+\location[-1180,420]{22.60}{113.99}{Shenzhen, China}
+
+\paragraph{What it is}
+Paul C.\ Lauterbur Research Center for Biomedical Imaging, Shenzhen Institutes
+of Advanced Technology, Chinese Academy of Sciences, led by Yongfeng Yang and
+Zheng Liu, with Xiangnan University (Chenzhou) on the recent papers and Lanzhou
+University on the early ones. Their detector is a stack of long scintillator
+slabs: continuous along one axis and segmented along the other, read out at one
+end by a SiPM array, with DOI taken from how far the light has spread inside
+the slab. Nine years on one geometry, from a first SiPM demonstration in 2017
+to a prototype scanner in 2026.
+
+\paragraph{Literature}
+Six papers that read as one argument. \ref{note:Zhang2017} shows a stack of
+slabs can encode depth and names its own next steps; the programme then takes
+them one at a time --- longer slabs in \ref{note:Zhang2019}, thicker ones in
+\ref{note:Zhang2021}, better positioning in \ref{note:Kinyanjui2025}, a
+different crystal in \ref{note:KuangGAGG2026}, a scanner in
+\ref{note:KuangScanner2026}.
+\gap{All six are read as abstracts only. The two that need the PDF are
+\ref{note:Zhang2021}, for the clinical argument, and
+\ref{note:KuangScanner2026}, for what the 20-detector ring actually assumes.}
+
+\paragraph{People}
+Yongfeng Yang (professor at SIAT since 2015) and Zheng Liu lead; Zhonghua Kuang
+(also Xiangnan University), Ning Ren, Samuel Mungai Kinyanjui, Xiaoming Zhang,
+Ling Zhang, with Zhanli Hu, Dong Liang, Xin Liu and Hairong Zheng on the SIAT
+papers.
+
+\paragraph{Why it matters here}
+The semi-monolithic design point: one continuous axis instead of two, which
+buys DOI and sub-millimetre resolution in the monolithic direction while the
+pixelated axis keeps the edge effect a full monolith suffers. That is the
+cheapest published counter-argument to a monolithic annulus --- half the
+positioning problem solved by sawing --- and it is the one this thesis has to
+answer, not dismiss. Two further reasons: this is the only line pushing GAGG
+rather than LYSO (\ref{note:KuangGAGG2026}), and \ref{note:Kinyanjui2025}
+against \ref{note:Zhang2019} is a rare like-for-like of analytic against
+learned positioning on the same hardware. The same technique appears at
+\ref{prog:i3M} (\ref{note:Freire2022NN}) and \ref{prog:Aachen}; this is the
+group that has carried it furthest, and the second Chinese group on the map
+after \ref{prog:HUST}.
+
+\begin{papernote}{Zhang et al.\ 2017 -- Performance of a SiPM based semi-monolithic scintillator PET detector}{Zhang2017}
+Phys.\ Med.\ Biol.\ 62(19):7889--7904, \doi{10.1088/1361-6560/aa898a}. Zhang,
+Wang, Ren, Kuang, Deng, Fu, Wu, Sang, Hu, Liang, Liu, Zheng, Yang.
+
+\paragraph{Detector}
+Eleven polished LYSO slices of \qtyproduct{1 x 11.6 x 10}{\mm}, glued with
+enhanced specular reflector between and outside them, on a 4 x 4 SiPM array
+through a \mm{1} light guide. Nothing reflects on the top and the two open
+sides --- deliberately, to suppress the reflections that confuse position. The
+16 signals are summed into four rows and four columns: columns identify the
+slice, rows give $y$ from the centre of gravity of the light and $z$ from its
+width. Scanned at \mm{1} intervals in $y$ and $z$ by electronic collimation (a
+\mm{0.25} $^{22}$Na source against a \qtyproduct{1 x 1 x 20}{\mm} LYSO
+crystal).
+
+\paragraph{Key Findings}
+All \mm{1} slices resolve, with slice-based energy resolution
+\qty{14.9}{\percent} and \ps{575} timing. Positioning is quoted as mean
+absolute error, not FWHM: \mm{1.15} in both $y$ and $z$, falling to \mm{0.7}
+once multiple-scatter events are rejected. Centre of gravity gives a different
+$y$ for the same $y$ at different depths --- a depth-dependent edge effect ---
+and both a least-squares and a maximum-likelihood estimator fix part of it at
+the slab edges.
+\aside{Mean absolute error is not FWHM, so \mm{0.7} here and the FWHM figures
+of the later papers are not the same quantity. The rejection is also a cut:
+\mm{0.7} is conditional on throwing events away, and the abstract does not say
+how many.}
+\gap{Unread beyond the abstract. What fraction survives the multiple-scatter
+rejection, and how it is identified from the light alone.}
+
+\paragraph{Why it matters here}
+The programme's first paper, and it names its own next three: longer slabs to
+reduce the edge effect, \mm{20} thickness, better positioning algorithms. Each
+became \ref{note:Zhang2019}, \ref{note:Zhang2021} and
+\ref{note:Kinyanjui2025} --- a stated plan carried out over eight years, which
+is worth more as evidence of what the geometry can and cannot reach than any
+one of the papers.
+
+\end{papernote}
+
+\begin{papernote}{Zhang et al.\ 2019 -- Performance of long rectangular semi-monolithic scintillator PET detectors}{Zhang2019}
+Med.\ Phys.\ 46(4):1608--1619, \doi{10.1002/mp.13432}. Zhang, Wang, Ren, Hu,
+Ding, Kuang, Wu, Sang, Hu, Du, Liang, Liu, Zheng, Yang. SIAT with Lanzhou
+University.
+
+\paragraph{Detector}
+Eleven polished LYSO slabs of \qtyproduct{1 x 37.6 x 10}{\mm} with enhanced
+specular reflector between them, read out at one end by a SiPM array, scanned
+with a collimated \keV{511} beam.
+
+\paragraph{Key Findings}
+Black paint on the front and both end surfaces gives \mm{1.07} FWHM in the
+monolithic direction and \mm{1.55} DOI, at the cost of \qty{24.9}{\percent}
+energy resolution and \ps{788} coincidence timing. The trade is the whole
+result: painting the surfaces kills the reflections that smear position, and
+with them the light the energy and timing need.
+\gap{Unread beyond the abstract. The unpainted numbers, and whether \ps{788}
+is the painted detector against itself or against a reference crystal.}
+
+\paragraph{Why it matters here}
+The baseline the later papers move: analytic positioning, one slab thickness,
+and a timing figure far outside TOF. Read it for what the surface treatment
+costs, which is the same choice an annulus faces at its ends.
+
+\end{papernote}
+
+\begin{papernote}{Zhang et al.\ 2021 -- A thick semi-monolithic scintillator detector for clinical PET scanners}{Zhang2021}
+Phys.\ Med.\ Biol.\ 66:065023, \doi{10.1088/1361-6560/abe761}. C.\ Zhang, Wang,
+Sun, Kuang, X.\ Zhang, Ren, Wu, Sang, Sun, Hu, Yang, Liu. First author at
+Shenzhen Technology University with SIAT.
+
+\paragraph{Detector}
+Nine LYSO slices of \qtyproduct{1.37 x 51.2 x 20}{\mm} with \mm{0.065} ESR foil
+between them --- \mm{20} thick, twice the rest of the line, for detection
+efficiency at clinical energies. Read out both ways for comparison: single-ended
+and dual-ended, each end a 16 x 4 SiPM array of \qtyproduct{3.0 x 3.0}{\mm}
+pixels at \mm{3.2} pitch, every one of the 64 channels through its own TOFPET2
+ASIC channel.
+\aside{The published abstract expands ESR as ``erythrocyte sedimentation rate
+foils''. It means enhanced specular reflector; do not quote that sentence.}
+
+\paragraph{Key Findings}
+Single-ended: $y$ \mm{2.43}, DOI \mm{4.77}, energy \qty{25.7}{\percent}, timing
+\ps{779}. Dual-ended: $y$ \mm{1.97}, DOI \mm{2.60}, energy
+\qty{21.7}{\percent}, timing \ps{718} --- so the second photodetector nearly
+halves the depth error and does little else. All but the edge slices resolve.
+The paper says plainly that its energy and timing are worse than a segmented
+array's and need work, and claims only cost against the array and a smaller
+edge effect against a full monolith.
+\gap{Unread beyond the abstract. Which edge slices fail and why, and whether
+the \mm{20} thickness or the \mm{1.37} slab width costs the \mm{2.43}
+single-ended $y$.}
+
+\paragraph{Why it matters here}
+The line's one attempt at clinical rather than preclinical scale, and the
+honest version of the trade: at \mm{20} the single-ended depth estimate decays
+to \mm{4.77}, and recovering it costs a second SiPM array per module. Read
+against \ref{note:Stockhoff2021}, which gets \mm{1.14} intrinsic from a
+\mm{16} monolith on one-sided readout --- the comparison that decides whether
+sawing the monolith into slabs helps at clinical thickness or only at
+preclinical.
+
+\end{papernote}
+
+\begin{papernote}{Kinyanjui et al.\ 2025 -- Machine learning positioning algorithms for long semi-monolithic scintillator PET detectors}{Kinyanjui2025}
+Phys.\ Med.\ Biol.\ 70(11):115018, \doi{10.1088/1361-6560/addbbe}. Kinyanjui,
+Kuang, Liu, Ren, Yang.
+
+\paragraph{Detector}
+Two detectors: 12 LYSO slabs of \qtyproduct{0.96 x 56 x 10}{\mm} and 14 of
+\qtyproduct{0.81 x 56 x 10}{\mm}, read out by a 4 x 16 SiPM array.
+Calibration irradiates 27 x 5 $(y, z)$ positions per detector with a collimated
+$^{22}$Na pencil beam.
+
+\paragraph{Method}
+Extreme gradient boosting (XGBoost) predicts the monolithic ($y$) and DOI
+($z$) coordinate, with hyperparameters searched by a genetic algorithm or
+particle swarm optimisation --- not a neural network, which is what every
+other group on this map reaches for.
+
+\paragraph{Key Findings}
+Against squared centre of gravity, $y$ improves from \mm{1.38 \pm 0.23} to
+\mm{0.92 \pm 0.41} on the thicker-slab detector and from \mm{1.39 \pm 0.25} to
+\mm{0.94 \pm 0.44} on the thinner. Against inverse standard deviation, DOI
+improves from \mm{2.09 \pm 0.82} to \mm{1.67 \pm 0.41} and from
+\mm{2.14 \pm 0.81} to \mm{1.68 \pm 0.45}. The gain is largest at both ends of
+the slabs, which is where the analytic estimators break down.
+\aside{Note the spread: the mean falls but the standard deviation rises, so
+the learned estimator is better on average and less uniform.}
+\gap{Unread beyond the abstract. Whether training and test came from the same
+collimated scan --- 27 x 5 positions is a small grid to both fit and judge on
+--- and what happens between the calibrated points.}
+
+\paragraph{Why it matters here}
+The like-for-like that \ref{note:Decuyper2021} cannot give: same detector, same
+data, analytic against learned, and the improvement concentrated at the edges.
+A tree ensemble beating centre of gravity by \qty{33}{\percent} on one axis
+sets the floor any annulus positioning network has to clear before the network
+itself is the interesting part.
+
+\end{papernote}
+
+\begin{papernote}{Kuang et al.\ 2026 -- Performance of high-resolution PET detectors consisting of long GAGG slabs with different reflectors}{KuangGAGG2026}
+EJNMMI Phys.\ 13:31, \doi{10.1186/s40658-026-00856-6}. Kuang, Kinyanjui, Zhang,
+Ren, Liu, Tan, Huang, Hu, Yang. Xiangnan University with SIAT.
+
+\paragraph{Detector}
+Twelve GAGG slabs of \qtyproduct{0.96 x 56 x 10}{\mm} --- the geometry of
+\ref{note:Kinyanjui2025} in a different crystal --- with BaSO$_4$ (detector 1)
+or ESR (detector 2) between the slabs and black ink on the front and both end
+surfaces. Single-ended readout by a 4 x 16 SiPM array of
+\qtyproduct{3 x 3}{\mm} pixels at \mm{3.65} pitch, with a row-and-column
+summing circuit reducing 64 signals to 4 + 16. Positions are selected by
+electronic collimation (a \mm{0.3} $^{22}$Na source against a single
+\qtyproduct{1 x 1 x 20}{\mm} LYSO reference) plus a \mm{1} hole in \mm{5} of
+tungsten.
+
+\paragraph{Key Findings}
+All \mm{0.96} slabs resolve in both flood histograms. Peak-to-valley 3.96
+(BaSO$_4$) against 3.55 (ESR); energy resolution
+\qty{15.6 \pm 1.8}{\percent} against \qty{14.7 \pm 1.2}{\percent}; squared
+centre of gravity \mm{1.60 \pm 0.32} against \mm{1.59 \pm 0.26} in $y$; DOI
+\mm{2.33 \pm 0.68} against \mm{2.37 \pm 0.58}. The reflector barely matters:
+ESR buys a little energy resolution and loses a little flood quality.
+Against the same detector in LYSO, GAGG gives the same position and DOI
+resolution, better energy resolution and a better flood histogram, and much
+worse timing --- \qty{4.30 \pm 0.57}{\nano\second} and
+\qty{4.76 \pm 0.56}{\nano\second}.
+\gap{Unread beyond the abstract. Which LYSO detector the comparison is
+against, and whether the \qtyrange{4}{5}{\nano\second} timing is the
+scintillator's rise time or the summing circuit.}
+
+\paragraph{Why it matters here}
+The only GAGG entry on this map, and it prices the swap: brighter crystal,
+roughly \qty{15}{\percent} energy resolution instead of \qty{25}{\percent},
+and timing an order of magnitude outside TOF. It also shows what the slab
+geometry cannot buy --- \mm{1.6} in $y$ and \mm{2.3} DOI are set by the light
+spread, not the light yield, since GAGG's extra photons moved neither.
+
+\end{papernote}
+
+\begin{papernote}{Kuang et al.\ 2026 -- Initial performance of a prototype small animal PET scanner consisting of long semi-monolithic scintillator detectors}{KuangScanner2026}
+Sensors 26(15):4943, \doi{10.3390/s26154943}. Kuang, Kinyanjui, Zhang, Ren, Li,
+Hu, Yang, Liu.
+
+\paragraph{Detector}
+Two semi-monolithic detectors of 12 LYSO slabs of
+\qtyproduct{0.96 x 56 x 10}{\mm}, one with ESR and one with BaSO$_4$, facing
+each other across a rotation platform; a full ring of 20 such detectors is
+simulated in GATE rather than built.
+
+\paragraph{Key Findings}
+A position calibration that corrects the non-uniform response in both the
+monolithic and the DOI direction, applied at system level. Reconstructed
+spatial resolution better than \mm{0.65} from the two-detector prototype with
+point-spread-function modelling; in simulation the 20-detector ring reaches
+\qty{5.45}{\percent} peak sensitivity and resolves \mm{0.75} rods.
+\aside{\mm{0.65} is a reconstructed figure with PSF modelling on a rotating
+pair, not an intrinsic detector resolution --- against the
+\mm{0.92} intrinsic of \ref{note:Kinyanjui2025} the two are not comparable.}
+\gap{Unread beyond the abstract. Whether the full ring is funded or only
+simulated, and how the 20-detector sensitivity compares with the
+\qty{12.4}{\percent} \ref{prog:Molecubes} sells.}
+
+\paragraph{Why it matters here}
+The line reaching a scanner, and the number that gets quoted from it:
+sub-millimetre preclinical resolution from slabs rather than from a monolith
+or a fine pixel array, at 20 detectors and one SiPM array each. Compare it
+with \ref{prog:AnnPET} and \ref{prog:HUST} as the third answer to the same
+preclinical problem --- not a monolithic ring, but a ring of one-dimensional
+monoliths.
+
+\end{papernote}
+
+\end{programnote}
+
 
 % ===========================================================================
 % 8. STUB -- MODE. The pivot rests on this and it is entirely unverified.
@@ -1533,6 +2182,49 @@ touch arrival times at all?}
 
 \end{programnote}
  
+ 
+% ===========================================================================
+% 11. CONFERENCES. confnote, not programnote: same panel and map pin, plus the
+%     dates the board counts down to.
+% ===========================================================================
+ 
+\begin{confnote}{IEEE NSS/MIC/RTSD 2026 -- Granada}{NSSMIC2026}
+\location[-268,266]{37.18}{-3.60}{Granada, Spain}
+\dates{2026-11-07}{2026-11-14}
+\deadline[abstracts]{2026-05-12T23:59:59+02:00}
+\href{https://nssmic.ieee.org/2026/}{nssmic.ieee.org/2026}.
+
+\paragraph{What it is}
+The IEEE Nuclear Science Symposium, Medical Imaging Conference and Room
+Temperature Semiconductor Detector Conference: the annual meeting where
+detector physicists, engineers, medical physicists and clinicians present
+radiation instrumentation, and where monolithic PET work is shown.
+At the Palacio de Congresos, short courses 7--10 November, sessions to the
+14th.
+
+\paragraph{Why it matters here}
+The abstract deadline passed on 12 May 2026, so this edition is a reading
+target rather than a submission one: the monolithic sessions say who is
+still active and what \ref{prog:AnnPET}, \ref{prog:i3M} and \ref{prog:Ghent}
+are claiming now.
+\end{confnote}
+ 
+\begin{confnote}{IEEE NSS/MIC/RTSD 2027 -- Pasadena}{NSSMIC2027}
+\location[22,-236]{34.15}{-118.14}{Pasadena, California, USA}
+\dates{2027-10-30}{2027-11-06}
+\href{https://ieee-npss.org/nss-mic-conference-links/}{IEEE NPSS conference links}.
+
+\paragraph{What it is}
+The next edition, 30 October--6 November 2027.
+\gap{Venue listed as Pasadena by a conference aggregator and as Los Angeles by
+another; IEEE has published no 2027 page yet. Confirm both the venue and the
+abstract deadline when it appears --- 2026's abstracts closed 12 May for a
+November meeting, so expect roughly May 2027. No \deadline is recorded here
+until IEEE states one, so the panel counts down to the meeting itself.}
+
+\paragraph{Why it matters here}
+The realistic first submission target for this thesis's own monolithic work.
+\end{confnote}
  
 % ===========================================================================
 % 11. STUBS -- machinery. Top-level papernotes, not programme-affiliated.

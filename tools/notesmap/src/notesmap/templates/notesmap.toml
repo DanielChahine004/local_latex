@@ -40,6 +40,11 @@ hide_gaps = false
 hide_programmes = []
 show_loose = true
 
+[check]
+# a bibliography to cross-check \doi{} against, so a paper is not noted under
+# one DOI and cited under another. Unset: the cross-check does not run.
+# bib = "paper.bib"
+
 [map]
 # image = "maps/world.jpg"    # an equirectangular image; default: NASA Blue Marble
 width = 9000

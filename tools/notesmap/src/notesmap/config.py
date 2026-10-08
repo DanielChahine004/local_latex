@@ -38,6 +38,8 @@ class Config:
     map_image: str = ""                          # empty: the bundled Blue Marble
     map_width: int = 9000
     unplaced: list[int] = field(default_factory=lambda: [400, 3500])
+    # [check]
+    bib: str = ""                                # BibTeX file to cross-check \doi{} against
     # [server]
     port: int = 8000
     title: str = "notesmap"
@@ -61,6 +63,7 @@ _SECTIONS = {
               "loose_title": "loose_title"},
     "publish": {"hide_sections": "hide_sections", "hide_gaps": "hide_gaps", "show_loose": "show_loose",
                 "hide_programmes": "hide_programmes"},
+    "check": {"bib": "bib"},
     "map": {"image": "map_image", "width": "map_width", "unplaced": "unplaced"},
     "server": {"port": "port", "title": "title", "edit_url": "edit_url",
                "edit_label": "edit_label"},

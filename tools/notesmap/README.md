@@ -15,6 +15,7 @@ updates in place within a few seconds.
 uv tool install ./tools/notesmap      # or: uv run --project tools/notesmap notesmap ...
 notesmap init notes                   # notes/main.tex, notes/notesmap.sty, notes/img/, ./notesmap.toml
 notesmap check                        # lint: missing images, dangling refs, unplaced programmes
+notesmap check --gaps --strict         # also incomplete notes; non-zero exit, for CI
 notesmap serve --map                  # opens the map in your browser
 ```
 
@@ -90,6 +91,37 @@ Configure this under `[publish]` in `notesmap.toml`:
 A cross-reference inside hidden text disappears with it. An arrow therefore
 stays only if some sentence still shown makes the reference.
 
+## Checking the notes
+
+`notesmap check` parses the notes and reports what a reader of the board would
+trip over: an image that is not there, a `\ref` to a key nothing defines, a
+programme with no `\location`, a conference with no `\dates` or with its
+deadline already gone, and a key used twice.
+
+Two additions are worth knowing about.
+
+**The bibliography cross-check.** Notes and a thesis bibliography are written
+at different times, and nothing otherwise connects them, so the same paper can
+be noted under one DOI and cited under another -- or read, noted, and never
+cited. Point `[check] bib` at the `.bib` and every `\doi{}` in the notes is
+required to reach an entry in it:
+
+```toml
+[check]
+bib = "src/thesis/references.bib"
+```
+
+It also reports one DOI appearing under two entry keys, which is the other way
+a bibliography drifts. Leave `bib` unset and the cross-check does not run.
+
+**`--gaps`** lists notes that are present but unfinished -- a paper with no
+`\doi`, `\href` or `\url`, a paper with no `\thumb`, a programme with no
+papers. These are to-do items rather than mistakes, so they are off by default;
+ask for them when you are sitting down to fill gaps rather than on every run.
+
+**`--strict`** exits non-zero if anything was reported, which is what a CI step
+or a pre-commit hook wants.
+
 ## Editing together, live
 
 The notes are a file, so any editor works. For several people at once, the
@@ -157,6 +189,7 @@ annotated copy.
 | `[latex]` | environment names, the heading used for the lead line, your macros and units, plugins |
 | `[board]` | rows for the non-map view, links not to draw, the shelf for loose papers |
 | `[publish]` | what the map leaves out: sections, gaps, programmes, loose papers |
+| `[check]` | the bibliography `notesmap check` cross-checks `\doi{}` against |
 | `[map]` | the map image (any equirectangular image), its width, where unplaced panels go |
 | `[server]` | port, and the companion editor the map links to |
 

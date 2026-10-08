@@ -1,13 +1,14 @@
 """notesmap serve | check | init.
 
     notesmap serve [--map] [--config notesmap.toml]   the live board or world map
-    notesmap check [--config notesmap.toml]           lint the notes, no browser
+    notesmap check [--gaps] [--strict]                lint the notes, no browser
     notesmap init DIR                                 starter notes for a new lab
 """
 from __future__ import annotations
 
 import argparse
 import json
+import re
 import shutil
 import sys
 import threading
@@ -33,6 +34,66 @@ def _setup(args):
     conv.load_plugins(cfg.plugins, cfg.root)
     parser = load_parser(cfg.parser, cfg.root)
     return cfg, src, conv, parser
+
+
+DOI_LINK = re.compile(r"(?:doi\.org/|^10\.\d)")
+
+
+def _doi_of(entry) -> str:
+    """The entry's DOI, normalised -- from \\doi{} or a doi.org link, else empty."""
+    from .bib import normalise
+    link = entry.link or ""
+    return normalise(link) if DOI_LINK.search(link) else ""
+
+
+def _bib_check(cfg, notes) -> tuple[list[str], list[str]]:
+    """Cross-check the notes' \\doi{} against the thesis bibliography.
+
+    The two are written at different times and nothing else connects them, so
+    a paper can be noted under one DOI and cited under another, or noted and
+    never cited. Returns (problems, summary lines).
+    """
+    from .bib import Bibliography
+    path = cfg.resolve(cfg.bib)
+    if not path.exists():
+        return [f"[check] bib = {cfg.bib!r}: no such file (looked in {path.parent})"], []
+    try:
+        bib = Bibliography(path)
+    except (OSError, UnicodeDecodeError) as e:
+        return [f"{path}: {type(e).__name__}: {e}"], []
+    problems, carried, cited = [], 0, 0
+    for e in notes.all_entries():
+        if e.kind != "paper":
+            continue
+        doi = _doi_of(e)
+        if not doi:
+            continue
+        carried += 1
+        if doi in bib.by_doi:
+            cited += 1
+        else:
+            problems.append(f"{e.file}:{e.line}: {e.key}: doi {doi} is in no {path.name} entry")
+    for doi, keys in sorted(bib.duplicate_dois.items()):
+        problems.append(f"{path.name}: one paper under {len(keys)} keys: {doi} -> {', '.join(sorted(keys))}")
+    summary = [f"  {path.name}: {len(bib)} entries, {len(bib) - len(bib.without_doi)} with a DOI; "
+               f"{carried} note(s) carry one, {cited} of those cited"]
+    return problems, summary
+
+
+def _gap_check(notes) -> list[str]:
+    """Notes that are present but incomplete. Off by default: these are to-do, not wrong."""
+    out = []
+    for p in notes.programmes:
+        if p.kind == "programme" and not p.papers:
+            out.append(f"{p.file}:{p.line}: {p.key}: a programme with no papers")
+    for e in notes.all_entries():
+        if e.kind != "paper":
+            continue
+        if not e.link:
+            out.append(f"{e.file}:{e.line}: {e.key}: no \\doi, \\href or \\url")
+        if not e.thumb:
+            out.append(f"{e.file}:{e.line}: {e.key}: no \\thumb")
+    return out
 
 
 def cmd_check(args) -> int:
@@ -68,9 +129,17 @@ def cmd_check(args) -> int:
         loc = p.location
         where = f"{conv.to_md(loc.place)} ({loc.lat:.2f}, {loc.lon:.2f})" if loc else "no location"
         print(f"  {p.key:<14} {len(p.papers):>2} papers  {where}")
+    extra = _bib_check(cfg, notes) if cfg.bib else ([], [])
+    problems += extra[0]
+    for line in extra[1]:
+        print(line)
+    if args.gaps:
+        problems += _gap_check(notes)
     for msg in problems:
         print(f"warning: {msg}")
-    return 0
+    if problems:
+        print(f"{len(problems)} warning(s)")
+    return 1 if (args.strict and problems) else 0
 
 
 def cmd_init(args) -> int:
@@ -177,6 +246,9 @@ def main(argv: list[str] | None = None) -> None:
                                       "for an address only known at startup such as a tunnel's")
     c = sub.add_parser("check", help="lint the notes")
     c.add_argument("--config")
+    c.add_argument("--gaps", action="store_true",
+                   help="also list incomplete notes: no \\doi, no \\thumb, a programme with no papers")
+    c.add_argument("--strict", action="store_true", help="exit non-zero if anything was reported (for CI)")
     i = sub.add_parser("init", help="starter notes and config for a new lab")
     i.add_argument("dir", help="folder for main.tex, notesmap.sty and img/")
     args = ap.parse_args(argv)

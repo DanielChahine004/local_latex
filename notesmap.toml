@@ -11,6 +11,11 @@ overview_sections = ["what it is", "summary"]
 # the thesis's own unit shorthands (src/thesis/units.tex) are built in:
 # \mm \cm \um \ps \ns \keV \MeV and \qty / \qtyrange / \qtyproduct
 
+[check]
+# the thesis's bibliography: every \doi{} in the notes should reach an entry
+# here, so a paper is not noted under one DOI and cited under another
+bib = "src/thesis/references.bib"
+
 [board]
 rows = [
 	["i3M", "AnnPET", "HUST", "Delft", "machinery"],    # the annulus cluster and what it cites

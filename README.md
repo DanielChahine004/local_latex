@@ -54,7 +54,9 @@ it follows edits to the notes without a restart:
 ```
 pixi run notes-map        # world map, http://127.0.0.1:8000
 pixi run notes-canvas     # the same notes as clustered rows
-pixi run notes-check      # lint: missing images, dangling refs, unplaced programmes
+pixi run notes-check      # lint: missing images, dangling refs, unplaced programmes,
+                          # and every \doi{} in the notes against src/thesis/references.bib
+pixi run notes-check --gaps --strict   # also unfinished notes; non-zero exit, for CI
 pixi run notes-edit       # shared live editor, http://127.0.0.1:8891/lab
 ```
 

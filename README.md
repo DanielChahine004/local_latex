@@ -99,6 +99,20 @@ the first build after a clone or a `build/` wipe is slow (one full pass per
 figure) and the rest are not. Delete `build/thesis/main-figure*` to force a
 redo.
 
+## CI
+
+`.github/workflows/build.yml` runs on every push. One job lints the notes
+(`notesmap check --gaps --strict`); the other builds all three documents with
+the same Tectonic the lockfile pins and uploads `thesis.pdf`,
+`paper-notes.pdf` and `meetings.pdf` as a run artefact, so a current PDF is
+downloadable from any machine without a local toolchain. Tectonic's bundle,
+biber and the externalised TikZ figures are cached between runs.
+
+`--strict` fails on a defect in the notes — a missing image, a `\ref` to a key
+nothing defines, a programme with no `\location`, a `\doi` that reaches no
+`references.bib` entry. Unfinished notes and a conference whose deadline has
+passed print as `note:` and never fail the run.
+
 ## Sync
 
 ```

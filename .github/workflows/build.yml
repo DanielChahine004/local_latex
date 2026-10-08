@@ -1,0 +1,107 @@
+# Lint the paper notes, and build the three documents so a current PDF is
+# downloadable from anywhere without a local toolchain.
+#
+# Both jobs install the environment from pixi.lock, so CI uses the same
+# Tectonic as a laptop does. `frozen: true` installs the lock as written and
+# never re-solves; swap it for `locked: true` if you would rather CI failed
+# when pixi.lock has drifted from pixi.toml.
+
+name: notes and PDFs
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# a run of `pixi run sync` can push several times in a minute; only the last
+# one is worth building
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  notes:
+    name: lint the paper notes
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: prefix-dev/setup-pixi@v0.11.0
+        with:
+          frozen: true
+          cache: true
+
+      # --strict fails on a defect in the notes -- a missing image, a \ref to a
+      # key nothing defines, a programme with no \location, a conference with
+      # no \dates, a key used twice, a \doi that reaches no references.bib
+      # entry. --gaps additionally lists unfinished notes, which print as
+      # `note:` and never fail the run.
+      - name: notesmap check
+        run: pixi run notes-check --gaps --strict
+
+  pdfs:
+    name: build the three documents
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: prefix-dev/setup-pixi@v0.11.0
+        with:
+          frozen: true
+          cache: true
+
+      # Tectonic fetches its support bundle on first use and it is large; a
+      # cold cache is the difference between a one-minute build and a ten.
+      - name: cache the Tectonic bundle
+        uses: actions/cache@v6
+        with:
+          path: ~/.cache/Tectonic
+          key: tectonic-${{ hashFiles('pixi.lock') }}
+          restore-keys: tectonic-
+
+      # tools/get-biber.sh pulls biber 2.17 from SourceForge on first build.
+      # Caching it keeps every run from depending on that host being up.
+      - name: cache biber
+        uses: actions/cache@v6
+        with:
+          path: tools/biber
+          key: biber-${{ hashFiles('tools/get-biber.sh') }}
+
+      # Each tikzpicture compiles to its own PDF and is remade only when its
+      # source changes, so a warm build/ makes the usual run cheap. pgf's .md5
+      # stamps decide what to redo, which is why an inexact restore is safe.
+      - name: cache the externalised TikZ figures
+        uses: actions/cache@v6
+        with:
+          path: build/thesis
+          key: tikz-${{ hashFiles('src/thesis/figures/**', 'src/thesis/chapters/**', 'src/thesis/main.tex') }}
+          restore-keys: tikz-
+
+      - name: thesis
+        run: pixi run build
+
+      - name: paper notes
+        run: pixi run build-notes
+
+      - name: meeting log
+        run: pixi run build-meetings
+
+      - name: collect
+        run: |
+          mkdir -p out
+          cp build/thesis/main.pdf      out/thesis.pdf
+          cp build/paper-notes/main.pdf out/paper-notes.pdf
+          cp build/meetings/main.pdf    out/meetings.pdf
+          ls -lh out
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: pdfs-${{ github.sha }}
+          path: out/*.pdf
+          if-no-files-found: error
+          retention-days: 90

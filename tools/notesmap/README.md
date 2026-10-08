@@ -119,8 +119,12 @@ a bibliography drifts. Leave `bib` unset and the cross-check does not run.
 papers. These are to-do items rather than mistakes, so they are off by default;
 ask for them when you are sitting down to fill gaps rather than on every run.
 
-**`--strict`** exits non-zero if anything was reported, which is what a CI step
-or a pre-commit hook wants.
+**`--strict`** exits non-zero if any *problem* was reported, which is what a CI
+step or a pre-commit hook wants. The distinction matters: a problem is a defect
+in the notes and prints as `warning:`, while a `note:` is something true of the
+world rather than wrong with the file — a conference whose deadline has passed,
+or anything `--gaps` turns up. Notes never fail a run, so `--strict` stays
+meaningful instead of going permanently red the first time a deadline lapses.
 
 ## Editing together, live
 

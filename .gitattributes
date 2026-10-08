@@ -16,3 +16,6 @@ src/paper-notes/**.tex text eol=lf
 # shell scripts run on Linux: keep LF whatever the checkout machine
 *.sh text eol=lf
 tools/tikz-external text eol=lf
+# the workflow's run: blocks are bash on a Linux runner; CRLF there is a
+# syntax error, so this is the same rule as the one above
+*.yml text eol=lf

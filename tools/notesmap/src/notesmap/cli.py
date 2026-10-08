@@ -103,7 +103,11 @@ def cmd_check(args) -> int:
     except Exception as e:
         print(f"error: {type(e).__name__}: {e}")
         return 1
+    # two lists, because they mean different things to --strict: a problem is a
+    # defect in the notes, a notice is something true of the world (a deadline
+    # that has passed, a note not finished yet) and must never fail a build
     problems = list(notes.warnings)
+    notices: list[str] = []
     keys = {e.key for e in notes.all_entries()}
     for e in notes.all_entries():
         for img in e.images:
@@ -120,7 +124,7 @@ def cmd_check(args) -> int:
             if d is None:
                 problems.append(f"{p.file}:{p.line}: {p.key}: a conference with no \\dates")
             elif d.deadline and d.deadline < datetime.now(timezone.utc):
-                problems.append(f"{p.file}:{p.line}: {p.key}: {d.deadline_label} closed on "
+                notices.append(f"{p.file}:{p.line}: {p.key}: {d.deadline_label} closed on "
                                 f"{d.deadline:%Y-%m-%d} (the panel says so too)")
     files = set(notes.files) | (src.touched - notes.images)
     print(f"{src.describe()}: {len(files)} file(s), {len(notes.programmes)} programmes, "
@@ -129,16 +133,18 @@ def cmd_check(args) -> int:
         loc = p.location
         where = f"{conv.to_md(loc.place)} ({loc.lat:.2f}, {loc.lon:.2f})" if loc else "no location"
         print(f"  {p.key:<14} {len(p.papers):>2} papers  {where}")
-    extra = _bib_check(cfg, notes) if cfg.bib else ([], [])
-    problems += extra[0]
-    for line in extra[1]:
+    bib_problems, bib_summary = _bib_check(cfg, notes) if cfg.bib else ([], [])
+    problems += bib_problems
+    for line in bib_summary:
         print(line)
     if args.gaps:
-        problems += _gap_check(notes)
+        notices += _gap_check(notes)
     for msg in problems:
         print(f"warning: {msg}")
-    if problems:
-        print(f"{len(problems)} warning(s)")
+    for msg in notices:
+        print(f"note: {msg}")
+    if problems or notices:
+        print(f"{len(problems)} warning(s), {len(notices)} note(s)")
     return 1 if (args.strict and problems) else 0
 
 
@@ -248,7 +254,8 @@ def main(argv: list[str] | None = None) -> None:
     c.add_argument("--config")
     c.add_argument("--gaps", action="store_true",
                    help="also list incomplete notes: no \\doi, no \\thumb, a programme with no papers")
-    c.add_argument("--strict", action="store_true", help="exit non-zero if anything was reported (for CI)")
+    c.add_argument("--strict", action="store_true",
+                   help="exit non-zero if any warning was reported; notes never fail (for CI)")
     i = sub.add_parser("init", help="starter notes and config for a new lab")
     i.add_argument("dir", help="folder for main.tex, notesmap.sty and img/")
     args = ap.parse_args(argv)

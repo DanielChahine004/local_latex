@@ -1665,7 +1665,7 @@ small-animal PET from monolithic LYSO slabs with a statistics-based positioning
 (SBP) algorithm.
 
 \paragraph{Why it matters here}
-The one monolithic programme that used Fisher information and the Cram\'er--Rao
+The one monolithic programme that used Fisher information and the Cramér--Rao
 lower bound as a detector design metric, a decade before the current revival ---
 the direct precedent for the CRLB study, and the contrast to the UTOFPET scope
 boundary (\ref{prog:UTOFPET}), where no bound appears anywhere in the lineage.
@@ -2041,6 +2041,552 @@ monoliths.
 % 8. STUB -- MODE. The pivot rests on this and it is entirely unverified.
 % ===========================================================================
  
+\begin{programnote}{UC Davis -- Roncali and Cherry, optical transport and dual-ended DOI}{Davis}
+\location{38.54}{-121.75}{Davis, California, USA}
+
+Emilie Roncali and Simon Cherry, University of California, Davis. Two lines
+that meet: a measured description of what a crystal surface does to
+scintillation light, and a dual-ended-readout DOI detector programme that tests
+reflector and surface-finish choices against DOI resolution.
+
+\paragraph{What it is}
+The group that turned optical photon transport in a scintillator into a
+measured quantity rather than a fitted one. Rather than describe a rough
+surface by the width of an assumed Gaussian distribution of micro-facet
+normals, Roncali and Cherry scanned real polished and ground crystal faces with
+atomic force microscopy and computed reflectance look-up tables from the
+measured topography. Cherry's dual-ended line is the experimental counterpart,
+where the gradient of light collection with depth --- the thing a surface finish
+actually controls --- is measured against DOI resolution across reflectors.
+
+\paragraph{Why it matters here}
+This is the programme closest to this thesis's own question, and it approaches
+it from the opposite side. Both are about the optical transfer function; the
+LUT work treats surface scattering as the thing to characterise so that light
+loss can be predicted, while this thesis treats bulk scattering as the thing to
+design, as a DOI encoding mechanism rather than a loss term. Roncali's
+measured-surface argument is also the strongest available answer to the
+objection that an optical model is unfalsifiable, which the characterisation
+chapter has to answer.
+\aside{Their LUT is a surface model and says nothing about the bulk; that gap is
+where this thesis sits, and it should be stated in exactly those terms rather
+than as a claim of novelty.}
+
+\paragraph{People}
+Emilie Roncali, Simon R. Cherry. Junwei Du and Silin Ren on the dual-ended
+detector papers.
+\gap{Confirm who now runs the optical-transport line and whether Roncali's
+group maintains the GATE implementation; also whether Nadig or Kratochwil, who
+appear on recent Davis-affiliated detector papers, belong to this programme or
+are visiting from \ref{prog:Aachen} and Crystal Clear.}
+
+\paragraph{To record}
+\gap{The LUT model reaches GATE as the \texttt{LUT Davis} optical surface
+option. Check its status in GATE 10 against \ref{prog:OpenGATE} before citing
+it --- the 2013 paper lists the GATE implementation as future work, so the
+version that shipped needs its own reference.}
+
+\begin{papernote}{Roncali and Cherry 2013 -- Simulation of light transport in scintillators based on 3D characterization of crystal surfaces}{Roncali2013}
+Phys.\ Med.\ Biol.\ 58(7):2185--2198, \doi{10.1088/0031-9155/58/7/2185}.
+
+\paragraph{Summary}
+The paper that replaced the micro-facet surface description with a measured
+one. Polished and ground LSO crystals were scanned by atomic force microscopy,
+the angular distributions of reflectance and of reflected ray direction were
+computed from the measured topography, and the result was stored as
+incidence-angle-dependent look-up tables and used in a light transport model.
+Simulated maximum light output and light output as a function of DOI were then
+compared against measurements of the same crystals.
+
+\paragraph{Detector}
+Single LSO elements, \qtyproduct{2 x 2 x 20}{\milli\metre} and
+\qtyproduct{5 x 5 x 20}{\milli\metre}, each either mechanically polished or
+coarse ground, simulated and measured with and without reflector.
+
+\paragraph{Key findings}
+\begin{itemize}
+	\item AFM gives the ground finish a height variation of roughly
+		\qtyrange{-3}{3}{\micro\metre} and a mean surface slope near \degs{18},
+		rising towards \degs{35} at high incidence --- a distribution the
+		single-parameter micro-facet model cannot represent.
+	\item Without reflector the UNIFIED model overestimates maximum light
+		output by \qty{38}{\percent} for the ground
+		\qtyproduct{2 x 2 x 20}{\milli\metre} crystals and \qty{20}{\percent}
+		for the ground \qtyproduct{5 x 5 x 20}{\milli\metre} crystals.
+	\item With reflector the LUT simulations agree with experiment to within
+		about \qty{10}{\percent} for \qtyproduct{5 x 5 x 20}{\milli\metre} and
+		better than \qty{2}{\percent} for
+		\qtyproduct{2 x 2 x 20}{\milli\metre}, where UNIFIED is still out by
+		about \qty{10}{\percent} and \qty{30}{\percent} respectively.
+	\item Energy resolution for the ground
+		\qtyproduct{2 x 2 x 20}{\milli\metre} crystals was \qty{24}{\percent}
+		measured against \qty{22}{\percent} from the LUT simulation.
+\end{itemize}
+
+\paragraph{The number to take}
+The aspect-ratio dependence of the error. UNIFIED is worst exactly where this
+thesis works --- the narrow, long element whose light has to bounce many times
+before it arrives --- and the direction of the error is always an overestimate of
+collected light, so any positioning or DOI bound computed on a UNIFIED surface
+is optimistic.
+\gap{Read the full paper for the LUT construction itself: how many incidence
+angles are tabulated, how the tables are interpolated, and what AFM scan area
+and resolution were used. Those are the parameters a bulk-scattering equivalent
+would have to match.}
+
+\end{papernote}
+
+\begin{papernote}{Ren, Du and Cherry 2014 -- Effects of reflector and crystal surface on the performance of a depth-encoding PET detector with dual-ended readout}{Du2014}
+Med.\ Phys.\ 41(7):072503, \doi{10.1118/1.4881097}.
+
+\paragraph{Summary}
+The experimental counterpart: five LSO arrays built with three intercrystal
+reflectors and with either polished or unpolished crystal surfaces, read out at
+both ends by position-sensitive avalanche photodiodes and compared on flood
+histogram, energy resolution and DOI resolution.
+
+\paragraph{Detector}
+LSO arrays of \mm{1.5} crystals, dual-ended PSAPD readout, reflectors enhanced
+specular reflector (ESR), Toray and Crystal Wrap, surfaces polished or
+unpolished.
+
+\paragraph{Key findings}
+\begin{itemize}
+	\item Every array except the polished-ESR one gave DOI resolution in
+		\qtyrange{1.9}{2.9}{\milli\metre}; the polished ESR array was the
+		outlier.
+	\item DOI resolution improved as the gradient in light collection
+		efficiency with depth (GLCED) increased --- the paper's own
+		single-figure explanation of why surface finish controls DOI.
+	\item The ESR arrays gave the best energy resolution and Crystal Wrap the
+		worst, with ESR and Toray giving comparable flood histograms.
+	\item The geometric mean of the two end energies gives a more uniform
+		photopeak position with depth than the conventional sum, so a
+		depth-independent energy window becomes possible.
+\end{itemize}
+
+\paragraph{Why it matters here}
+GLCED is the one-number summary of the optical transfer function that the
+detector community already accepts, and this paper is where it is tied to a
+measured DOI resolution. If the bulk-scattering mechanism is to be argued as a
+DOI encoder, the comparison a reviewer will reach for is its GLCED against
+these numbers --- a polished crystal with a scattering bulk versus a ground
+crystal with a clear one.
+
+\end{papernote}
+
+\begin{papernote}{Roncali, Mosleh-Shirazi and Badano 2017 -- Modelling the transport of optical photons in scintillation detectors for diagnostic and radiotherapy imaging}{Roncali2017}
+Phys.\ Med.\ Biol.\ 62(20):R207--R235, \doi{10.1088/1361-6560/aa8b31}.
+
+\paragraph{Summary}
+Topical review of the optical Monte Carlo packages and analytical models
+available for scintillation detectors, their respective limitations, and their
+applications across nuclear medicine, diagnostic and radiotherapy imaging. The
+review's framing argument is that the community has invested heavily in
+modelling ionising radiation transport while light transport is often ignored
+or modelled coarsely, and that the complexity of the tools plus the spread of
+private user codes has kept optical studies from being fully exploited.
+
+\paragraph{Why it matters here}
+The citation for ``nobody models the light properly'' --- the sentence the
+introduction needs and which is otherwise hard to source without editorialising.
+\gap{Abstract and skim only. The table of packages and what each can and cannot
+do is the part to extract; it is the natural basis for the thesis's own
+statement of which optical model it uses and why.}
+
+\end{papernote}
+
+\end{programnote}
+
+\begin{programnote}{Prism-PET -- Stony Brook and Weill Cornell, Goldan group}{PrismPET}
+\location{40.91}{-73.12}{Stony Brook, New York, USA}
+
+Amir Goldan's group, Stony Brook University, with Weill Cornell Medicine on
+every paper since 2023. Single-ended readout of segmented LYSO arrays with a
+segmented light guide --- an array of prismatoids --- in place of the uniform
+glass slab.
+
+\paragraph{What it is}
+The leading light-guide approach to DOI encoding. The mechanism is deliberate
+rather than statistical: each prismatoid redirects light into a defined set of
+neighbouring readout pixels, so the light-sharing pattern mimics dual-ended
+readout while keeping one readout face, and crystal identification improves
+rather than degrades. The programme has carried it from a module to a conformal
+brain scanner and then to tapered crystals.
+
+\paragraph{Why it matters here}
+This is the design the bulk-scattering mechanism competes with, and the
+comparison is the sharpest one available because both answer the same question
+--- how to get DOI out of a single readout face --- by shaping where the light
+goes rather than by adding a second photosensor. Prism-PET shapes it with
+geometry at the far face; this thesis shapes it in the bulk. Their
+\ref{note:Li2024} result matters most: an optical photon time-of-flight depth
+estimate, which is the optical transfer function read out directly in the time
+domain rather than through a light-distribution centroid.
+\aside{The honest framing is that their encoding is deterministic and mine is
+statistical, which is a disadvantage on resolution and an advantage on
+manufacturability. Do not pretend otherwise.}
+
+\paragraph{Detector lineage}
+Polished LYSO arrays coupled 4-to-1 or 9-to-1 to \qtyproduct{3 x 3}{\milli\metre}
+SiPM pixels, prismatoid light-guide array on the non-readout face, \mm{20}
+thick throughout.
+
+\paragraph{Scope boundary}
+A segmented array, not a monolith --- it belongs on this map as a DOI-encoding
+programme, not as a monolithic one, and the review entry should say so.
+
+\begin{papernote}{LaBella et al.\ 2020 -- High-resolution depth-encoding PET detector module with prismatoid light-guide array}{LaBella2020}
+J.\ Nucl.\ Med.\ 61(10):1528--1533, \doi{10.2967/jnumed.119.239343}.
+
+\paragraph{Summary}
+The module paper that introduced the prismatoid light guide, measured against a
+uniform glass light guide built the same way. Flood histograms were taken with
+a \MBq{3} \textsuperscript{22}Na source and DOI resolution from lead-collimated
+irradiation at known depths.
+
+\paragraph{Key findings}
+\begin{itemize}
+	\item The uniform glass light-guide module gave DOI resolution \mm{5.0}
+		FWHM and energy resolution \qty{13}{\percent} FWHM.
+	\item The 4-to-1 coupled Prism-PET module gave DOI resolution \mm{2.5}
+		FWHM and energy resolution \qty{9}{\percent} FWHM --- a factor of two in
+		DOI from the light guide alone.
+	\item Crystal separation in the flood histogram is uniform across the
+		Prism-PET array, where the uniform glass module degrades at the edges
+		and corners.
+\end{itemize}
+
+\paragraph{The number to take}
+\mm{2.5} FWHM DOI at \mm{20} thickness with single-ended readout, with the
+edge-and-corner uniformity as the second claim. The uniformity is the one that
+is hard to match statistically, because an edge crystal in a monolith sees a
+truncated light distribution no matter what the bulk does.
+
+\end{papernote}
+
+\begin{papernote}{Zeng et al.\ 2023 -- A conformal TOF-DOI Prism-PET prototype scanner for high-resolution quantitative neuroimaging}{Zeng2023}
+Med.\ Phys.\ 50(6):3401--3417, \doi{10.1002/mp.16223}.
+
+\paragraph{Summary}
+The programme's scanner: a decagon-shaped, brain-dedicated single-ring
+prototype built from 40 Prism-PET modules, evaluated on DOI, energy, timing and
+spatial resolution, sensitivity, and ultra-micro Derenzo and 3D Hoffman
+phantoms.
+
+\paragraph{Detector}
+Long diameter \cm{38.5}, short diameter \cm{29.1}, axial field of view
+\mm{25.5}; each module a 16 x 16 array of
+\qtyproduct{1.5 x 1.5 x 20}{\milli\metre} LYSO coupled 4-to-1 to an 8 x 8 SiPM
+array with the prismatoid guide opposite.
+
+\paragraph{Key findings}
+\begin{itemize}
+	\item DOI resolution \mm{2.85} FWHM, DOI-corrected energy resolution
+		\qty{12.6}{\percent}, timing resolution \ps{271} FWHM.
+	\item Intrinsic spatial resolution \qtyrange{0.89}{1.40}{\milli\metre} FWHM,
+		averaging \mm{1.22}; reconstructed resolution \mm{1.53} FWHM across the
+		field of view with 3D filtered back-projection.
+	\item Peak absolute sensitivity \qty{1.2}{\percent} over a
+		\qtyrange{400}{650}{\kilo\electronvolt} window.
+	\item \mm{1.00} diameter hot rods fully resolved in the ultra-micro Derenzo
+		phantom, which they claim as the highest reported spatial resolution for
+		a human brain PET scanner.
+\end{itemize}
+
+\paragraph{Why it matters here}
+The benchmark a monolithic brain insert gets compared against, and the set of
+numbers to quote when the thesis argues what DOI resolution is worth at the
+image level. Note the gap between \mm{1.22} intrinsic and \mm{1.53}
+reconstructed, which they attribute to mechanical misalignment of detector
+blocks rather than to the detector.
+
+\end{papernote}
+
+\begin{papernote}{Li et al.\ 2024 -- Depth-encoding using optical photon TOF in a Prism-PET detector with tapered crystals}{Li2024}
+Med.\ Phys.\ 51(6):4044--4055, \doi{10.1002/mp.17095}.
+
+\paragraph{Summary}
+The one to read first. A light-sharing module generates several timestamps per
+gamma event, and the difference between timestamps from photons travelling in
+opposite directions is a depth-dependent optical photon time of flight (oTOF).
+The paper's argument is that light leak at the crystal--readout interface is
+what destroys this signal, and that tapering the crystal to sit inside the SiPM
+active area recovers it.
+
+\paragraph{Detector}
+16 x 16 array of \qtyproduct{1.5 x 1.5 x 20}{\milli\metre} LYSO tapered to
+\qtyproduct{1.2 x 1.2}{\milli\metre} at the readout face, coupled 4-to-1 to an
+8 x 8 array of \qtyproduct{3 x 3}{\milli\metre} SiPM pixels, prismatoid guide
+opposite, barium sulphate reflector at \mm{0.1} intercrystal spacing. Scanner
+sensitivities were simulated in GATE.
+
+\paragraph{Key findings}
+\begin{itemize}
+	\item oTOF-based DOI resolution \mm{5.42} FWHM tapered against \mm{13.87}
+		FWHM non-tapered --- the first experimental report of oTOF depth
+		encoding at module level.
+	\item Energy-based DOI resolution \mm{2.35} against \mm{3.18} FWHM, so
+		tapering improves the conventional estimator as well.
+	\item Energy resolution \qty{8.88}{\percent} against
+		\qty{11.18}{\percent} FWHM; coincidence timing \ps{243} against
+		\ps{286} FWHM.
+	\item Simulated sensitivity for a 10-ring scanner
+		\qty{29.5}{\kilo cps\per\mega\becquerel} tapered against
+		\qty{30.9}{\kilo cps\per\mega\becquerel} non-tapered --- the geometric
+		cost of tapering is small.
+\end{itemize}
+
+\paragraph{Why it matters here}
+This is the optical transfer function measured in the time domain, by the
+programme that encodes DOI geometrically. The \mm{5.42} against \mm{13.87}
+comparison is a direct measurement of how much an interface imperfection
+degrades a transfer-function-based estimator, which is the same sensitivity
+this thesis has to quantify for bulk scattering --- and it is far larger than the
+energy-based estimator's degradation over the same change. That asymmetry is
+the finding, and it is an argument for caution about time-domain encoding.
+\gap{Arithmetic to check: oTOF DOI degrades by a factor \num{2.6} between
+tapered and non-tapered while the energy-based estimate degrades by \num{1.35}.
+Confirm from the paper whether that is attributed entirely to light leak or
+partly to the changed reflector spacing, because the two are varied together.}
+
+\end{papernote}
+
+\end{programnote}
+
+\begin{programnote}{Crystal Clear and Milano-Bicocca -- light sharing, recirculation and the timing limit}{CrystalClear}
+\location{46.23}{6.05}{CERN, Geneva, Switzerland}
+
+Marco Pizzichemi, Stefan Gundacker, Etiennette Auffray and colleagues, spanning
+the CERN Crystal Clear collaboration and the University of Milano-Bicocca ---
+one group with two addresses, pinned here at CERN.
+
+\paragraph{What it is}
+The programme that made light sharing a designed mechanism with a theory
+attached. Their modules obtain continuous DOI from a single readout side by
+sharing and redirecting scintillation light between neighbouring detectors and
+exploiting its attenuation along the crystal, without one-to-one coupling, and
+the same group then pushed the coincidence timing of such modules towards the
+limit and derived what the timing signal itself can say about depth.
+
+\paragraph{Why it matters here}
+Three things this thesis needs come from here. The light-sharing-and-
+recirculation mechanism is the conceptual ancestor of every single-ended DOI
+design including \ref{prog:PrismPET}'s prismatoids. The \ps{157} result settles
+that DOI extraction and good timing are not in conflict, which removes the
+standard objection to spending light on depth. And \ref{note:Loignon2021}
+derives a Cramér--Rao lower bound for time-based DOI estimation, which is the
+closest published relative of this thesis's own bound work and has to be cited
+as prior art rather than discovered late.
+
+\paragraph{People}
+Marco Pizzichemi (first author on the light-sharing line, at both CERN and
+Milano-Bicocca), Stefan Gundacker, Etiennette Auffray, Francis Loignon-Houle,
+Roger Lecomte.
+\gap{Confirm current affiliations --- Gundacker has moved to \ref{prog:Aachen}
+and Loignon-Houle's line runs through Sherbrooke, so the group boundary is
+softer than one pin suggests. Decide whether Milano-Bicocca deserves its own
+panel.}
+
+\begin{papernote}{Pizzichemi et al.\ 2016 -- A new method for depth of interaction determination in PET detectors}{Pizzichemi2016}
+Phys.\ Med.\ Biol.\ 61(12):4679--4698, \doi{10.1088/0031-9155/61/12/4679}.
+
+\paragraph{Summary}
+The method paper. Continuous DOI from single-side readout, obtained by sharing
+and redirecting scintillation light among several detectors together with the
+attenuation of light along the crystal length, and without requiring
+one-to-one coupling between scintillators and photosensors. A prototype module
+coupling a LYSO matrix to a commercial SiPM array was built and characterised.
+
+\paragraph{Key findings}
+\begin{itemize}
+	\item Mean DOI resolution \mm{4.1} FWHM on \mm{15} long crystals.
+	\item Average energy resolution \qty{12.7}{\percent} FWHM, with light loss
+		from depolishing found to be negligible.
+	\item Excellent crystal separation for every scintillator in the array,
+		including the edges.
+	\item Preliminary coincidence time resolution \ps{353} FWHM.
+\end{itemize}
+
+\paragraph{Why it matters here}
+``Sharing and redirection, plus attenuation along the crystal'' is the
+mechanism statement this thesis is a variant of, and it is the earliest clean
+one. The claim that depolishing costs negligible light is worth checking
+carefully, because it is the same claim a scattering bulk has to make and the
+same objection it has to answer.
+\gap{Abstract only --- no full text reachable through open access. Needed: the
+module geometry and SiPM pitch, how the light is redirected (what sits on the
+far face), how DOI is estimated from the shared signal, and the basis for the
+negligible-light-loss claim.}
+
+\end{papernote}
+
+\begin{papernote}{Pizzichemi et al.\ 2019 -- On light sharing TOF-PET modules with depth of interaction and 157 ps FWHM coincidence time resolution}{Pizzichemi2019}
+Phys.\ Med.\ Biol.\ 64(15):155008, \doi{10.1088/1361-6560/ab2cb0}.
+
+\paragraph{Summary}
+The timing follow-up: the same light sharing and recirculation mechanism
+examined with timing as the focus, together with a method that uses the DOI
+information to optimise coincidence time resolution. A dedicated 64-channel
+readout with \ps{16} FWHM intrinsic timing resolution was built for it.
+
+\paragraph{Key findings}
+\begin{itemize}
+	\item \ps{157} FWHM coincidence time resolution, with \mm{1.5} FWHM spatial
+		resolution, \mm{3} FWHM DOI resolution and \qty{9}{\percent} FWHM energy
+		resolution at \keV{511}, on \mm{15} long crystals.
+	\item Extracting the DOI coordinate was shown not to deteriorate the
+		module's timing performance.
+	\item The readout's own contribution is \ps{16} FWHM, so the quoted CTR is
+		a detector number rather than an electronics one.
+\end{itemize}
+
+\paragraph{The claim to be substantiated}
+That DOI extraction is free in timing terms. If it holds for a scattering bulk
+as well, the standard objection --- that light spent on depth is light taken from
+the timestamp --- does not apply, and this is the citation that says so first.
+\gap{Abstract only. Needed: whether the \ps{157} and the \mm{3} DOI were
+measured on the same module and the same events, since the abstract reports the
+spatial and DOI figures as ``already demonstrated'' rather than as new
+measurements.}
+
+\end{papernote}
+
+\begin{papernote}{Loignon-Houle et al.\ 2021 -- DOI estimation through signal arrival time distribution: a theoretical description including proof of concept measurements}{Loignon2021}
+Phys.\ Med.\ Biol.\ 66(9):095015, \doi{10.1088/1361-6560/abf604}.
+
+\paragraph{Summary}
+The paper this thesis has to engage with. Fast timing signals intrinsically
+carry DOI information even with single-ended readout, so features of the
+detected photon arrival-time distribution can be used to estimate where the
+interaction happened --- and in return improve timing precision. The argument is
+made in two steps: measurements with LSO:Ce:Ca on FBK NUV-HD SiPMs and
+high-frequency readout, establishing a DOI effect on CTR not visible with
+slower electronics and a double-threshold DOI discrimination scheme; then a
+simulation study of four estimators for future detectors.
+
+\paragraph{Key findings}
+\begin{itemize}
+	\item A DOI-dependent effect on coincidence time resolution is resolvable
+		with high-frequency readout and was not observable with slower
+		electronics.
+	\item A double-threshold scheme on the analogue timing signal, combined
+		with signal intensity, discriminates DOI with no detector modification
+		and no complex readout.
+	\item A simple two-timestamp difference estimator improves CTR; kernel
+		density estimation and a neural network do better and converge to the
+		bound.
+	\item The paper derives a Cramér--Rao lower bound for time-based DOI
+		estimation.
+\end{itemize}
+
+\paragraph{Why it matters here}
+This is prior art for the bound work, and it must be cited as such. The
+difference to establish is one of parameterisation: their bound is on DOI
+estimated from the arrival-time distribution in a clear crystal, where the
+depth dependence comes from optical path length; the bound this thesis needs is
+on position estimated from a scattering bulk, where the depth dependence is
+engineered into the spatial light distribution as well. The Fisher information
+is computed from a different observable, and that has to be said explicitly and
+early.
+\aside{Finding this late would have been bad. It is the single most important
+citation on this map for the CRLB chapter.}
+\gap{Abstract only. Needed before writing the bound chapter: the exact
+likelihood they assume for the timestamp distribution, whether the bound is per
+event or asymptotic, and which nuisance parameters are profiled out. Also
+whether the four estimators are compared on the same simulated detector as the
+measurements.}
+
+\end{papernote}
+
+\end{programnote}
+
+\begin{programnote}{QST Chiba -- Yamaya group, layered DOI and the X'tal cube}{QST}
+\location{35.63}{140.11}{Chiba, Japan}
+
+Taiga Yamaya's group at the National Institutes for Quantum Science and
+Technology (formerly the National Institute of Radiological Sciences), Chiba.
+The main non-monolithic school of DOI encoding, and the only Japanese programme
+on this map.
+
+\paragraph{What it is}
+DOI by segmentation rather than by positioning. The group's long-running answer
+is to build the depth information into the crystal block itself --- staggered
+multi-layer arrays, and in the X'tal cube a three-dimensional array of
+\qtyproduct{1 x 1 x 1}{\milli\metre} crystals laser-processed inside a
+monolithic block and read out on multiple faces --- so that depth is recovered by
+crystal identification instead of from a continuous light distribution. The
+programme also ships: their hemispherical brain scanner is sold in Japan as
+VRAIN.
+
+\paragraph{Why it matters here}
+The alternative this thesis has to argue against, and the one with the strongest
+record. Segmentation gets depth by construction, at the cost of dead material,
+assembly complexity and a fabrication step per layer; a scattering bulk gets it
+from the optics of a single piece of crystal. A literature review that does not
+state that trade-off explicitly has not engaged with the field. The X'tal cube
+is the sharpest case, because it starts from a monolith and then removes the
+very continuity this thesis depends on.
+\aside{Note the irony and use it: the X'tal cube is laser-processed inside a
+monolithic block, so it is a demonstration that the bulk of a monolith can be
+structured optically. That is closer to a scattering bulk than it first looks.}
+
+\paragraph{People}
+Taiga Yamaya (PI), Han Gyu Kang, Eiji Yoshida, Fumihiko Nishikido, Go Akamatsu.
+
+\paragraph{To read}
+\gap{The X'tal cube line itself is unread. Yamaya et al.\ 2011, ``A SiPM-based
+isotropic-3D PET detector X'tal cube with a three-dimensional array of 1 mm3
+crystals'', Phys.\ Med.\ Biol.\ 56(21):6793--6807,
+\doi{10.1088/0031-9155/56/21/003} --- paywalled, not reachable open access, needs
+a library copy. Also the laser-processing papers (2012 NSS/MIC, 2013 TNS) and
+the VRAIN system paper, Akamatsu et al.\ 2022, Phys.\ Med.\ Biol.\
+67(22):225011, \doi{10.1088/1361-6560/ac9e87}, which reports \mm{2.2} rods and
+\ps{229} TOF with one-to-one coupling and no DOI --- worth recording as the
+commercial outcome even though it is off this map's theme.}
+
+\begin{papernote}{Kang et al.\ 2026 -- Design optimization using GATE Monte Carlo simulations for a sub-0.5 mm resolution PET scanner with 3-layer DOI detectors}{Kang2026}
+Phys.\ Med.\ Biol.\ 71(3):035001, \doi{10.1088/1361-6560/ae3b02}.
+
+\paragraph{Summary}
+A GATE study optimising the crystal layer design of a rodent brain scanner
+built from 3-layer DOI detectors. Their previous submillimetre scanner used
+\mm{1} crystal pitch and did not reach \mm{0.5}, which they attribute to the
+pitch and to an unoptimised layer design; here three layer thickness splits are
+compared in simulation and checked against experiment.
+
+\paragraph{Detector}
+Two rings of 16 DOI detectors, \mm{23.4} axial coverage; each detector three
+layers of LYSO at \mm{0.8} crystal pitch. Layer designs compared, front to back: A
+(4 + 4 + \mm{7}), B (3 + 4 + \mm{4}) and C (3 + 3 + \mm{5}).
+
+\paragraph{Key findings}
+\begin{itemize}
+	\item Design C gave the most uniform spatial resolution out to \mm{15}
+		radial offset.
+	\item \mm{0.45} diameter rods were clearly resolved with design C using an
+		iterative algorithm.
+	\item GATE agreed with measured radial resolution except at \mm{15} radial
+		offset.
+\end{itemize}
+
+\paragraph{Why it matters here}
+A GATE-based design optimisation of a DOI detector published by the group with
+the longest DOI record, which makes it the natural methodological comparison
+for this thesis's own GATE studies --- same toolkit, same question, segmented
+geometry instead of monolithic. The reported disagreement between GATE and
+experiment at \mm{15} radial offset is the interesting part and should be
+chased, since it is exactly the regime where optical modelling and oblique
+incidence both start to matter.
+\gap{Abstract only. Needed: whether optical photon transport was simulated at
+all or only gamma interactions, which is the difference between this being a
+geometry study and an optics study. Compare their GATE configuration against
+\ref{prog:OpenGATE}.}
+
+\end{papernote}
+
+\end{programnote}
+
 \begin{programnote}{MODE Collaboration -- differentiable detector design}{MODE}
 \location[-960,1100]{50.67}{4.61}{Louvain-la-Neuve, Belgium}
  
@@ -2260,6 +2806,57 @@ a kill.}
 certain point --- is standard here and is imported wholesale. Stoica \& Nehorai
 or an equivalent treatment of resolution thresholds. This is the machinery that
 makes the readout-rank claim rigorous rather than intuitive.}
+\end{papernote}
+
+\begin{papernote}{Cates, Vinke and Levin 2015 -- Analytical calculation of the lower bound on timing resolution for PET scintillation detectors comprising high-aspect-ratio crystal elements}{Cates2015}
+Phys.\ Med.\ Biol.\ 60(13):5141--5161, \doi{10.1088/0031-9155/60/13/5141}.
+
+\paragraph{Summary}
+A Cramér--Rao lower bound on coincidence timing resolution for long crystals,
+derived with an analytical probability density function for the optical transit
+time inside the crystal rather than a Monte Carlo photon transport
+distribution. The point is that in a high-aspect-ratio element the spread in
+optical path length is no longer negligible against the other terms, so the
+bound has to carry the optics explicitly.
+
+\paragraph{Detector}
+LYSO:Ce pairs, \qtyproduct{3 x 3 x 5}{\milli\metre} and
+\qtyproduct{3 x 3 x 20}{\milli\metre}, on Hamamatsu S12572-50C analogue SiPMs,
+wrapped in ESR or in Teflon tape.
+
+\paragraph{Key findings}
+\begin{itemize}
+	\item Calculated bound \ps{152 \pm 8} for the
+		\qtyproduct{3 x 3 x 20}{\milli\metre} crystals and
+		\ps{125 \pm 8} for \qtyproduct{3 x 3 x 5}{\milli\metre}.
+	\item Measured CTR \ps{162 \pm 1} FWHM (ESR) and
+		\ps{165 \pm 1} (Teflon) at \mm{20}, and
+		\ps{135 \pm 1} at \mm{5} --- within \qty{6.5}{\percent}
+		of the bound for ESR and \qty{8.6}{\percent} for Teflon.
+	\item The analytically calculated optical transport PDF agreed well with
+		detailed light transport simulation, so the analytical route avoids the
+		Monte Carlo step entirely.
+	\item The arrival-time variance is largest for interactions close to the
+		photosensor and decreases with distance from it.
+\end{itemize}
+
+\paragraph{Why it stays in the file}
+The methodological template for this thesis's bound work, and the reason the
+bound chapter cannot treat the optics as a nuisance. Cates derives an analytic
+PDF for the optical observable and puts it inside the Fisher information; the
+same construction is what a scattering bulk needs, with a transit-time-and-
+position PDF in place of a transit-time one. The last finding is the one to
+keep in view --- the optical contribution to the bound is itself depth-dependent,
+which is why a single scalar ``timing resolution'' for a long crystal is
+already an approximation.
+It is the clear precursor of \ref{note:Loignon2021}, which takes the same idea
+from a bound on timing to a bound on depth.
+\gap{Arithmetic to check: measured minus bound is \ps{10} at \mm{20} and
+\ps{10} at \mm{5}, so the absolute excess over the bound is roughly constant
+while the percentage is not. Confirm against the paper whether they comment on
+that, because a constant excess points at an electronics term outside the
+bound.}
+
 \end{papernote}
 
 

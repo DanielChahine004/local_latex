@@ -20,6 +20,7 @@ bib = "src/thesis/references.bib"
 rows = [
 	["i3M", "AnnPET", "HUST", "Delft", "machinery"],    # the annulus cluster and what it cites
 	["cMiCE", "Ghent", "WTPET", "Molecubes", "UTOFPET", "Aachen", "J-PET", "SIAT"],   # neural localisation and its precursors, plus the semi-monolithic branch
+	["Davis", "CrystalClear", "PrismPET", "QST"],        # light transport, light sharing and layered DOI
 	["MODE", "OpenGATE", "UTS", "Penn"],                # tooling stubs and history
 	["NSSMIC2026", "NSSMIC2027"],                       # conferences, with their countdowns
 ]

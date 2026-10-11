@@ -99,7 +99,18 @@ def candidates(doi):
             urls.append(loc["pdf_url"])
     pmcid = (work.get("ids") or {}).get("pmcid")
     if pmcid:
-        urls.append(f"https://europepmc.org/articles/{pmcid.rsplit('/', 1)[-1]}?pdf=render")
+        pmcid = pmcid.rsplit("/", 1)[-1]
+    else:
+        # OpenAlex misses many PubMed Central author manuscripts; ask Europe PMC
+        try:
+            hits = json.loads(get(
+                "https://www.ebi.ac.uk/europepmc/webservices/rest/search?format=json&query="
+                + urllib.parse.quote(f'DOI:"{doi}"')))["resultList"]["result"]
+            pmcid = hits[0].get("pmcid") if hits else None
+        except (urllib.error.URLError, ValueError, KeyError):
+            pmcid = None
+    if pmcid:
+        urls.append(f"https://europepmc.org/articles/{pmcid}?pdf=render")
     return urls
 
 

@@ -143,7 +143,6 @@ function Component({ canvas, props }) {
               <div className="s">{c.snippet}</div>
               <div className="y">
                 <span>{c.year}</span>
-                <span className="hint">{open === c.key ? "hide note" : "note ▾"}</span>
                 {c.link && <a href={c.link} target="_blank" rel="noreferrer" onClick={e => e.stopPropagation()}
                               title={c.link}>{c.link.includes("doi.org") ? "DOI ↗" : "link ↗"}</a>}
                 {c.pdf && <a href={c.pdf} target="_blank" rel="noreferrer" onClick={e => e.stopPropagation()}
@@ -224,7 +223,7 @@ a.chip { text-decoration: none; }
 .card .s { font-size: 10.5px; opacity: .8; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical;
            overflow: hidden; }
 .card .y { font-size: 11px; opacity: .8; margin-top: 6px; display: flex; gap: 8px; align-items: center; }
-.card .y .hint { margin-left: auto; color: var(--pc-accent, #3b82f6); }
+.card .y > span:first-child { margin-right: auto; }   /* the year left, the links right */
 .card .y a { color: var(--pc-accent, #3b82f6); text-decoration: none; font-weight: 600; }
 /* a search underway: what matches keeps its colour and gains a green edge, what
    does not fades, so the eye lands on the hits without anything moving */

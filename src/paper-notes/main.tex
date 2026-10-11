@@ -823,19 +823,50 @@ rows of all 14 modules (168 signals) plus the columns of the three nearest:
 two MLPs (64--128--32) give the transaxial and axial coordinates, trained on
 the assembled ring with a rotating tungsten fan-beam collimator, which cuts
 calibration from 11 days to 3.6. Depth from $E/I_{\max}$ and energy are
-calibrated with Voronoi regions, as in \ref{note:i3MTube}. No TOF.
-Energy resolution 19 $\pm$ 2\%, DOI resolution \mm{3.6 \pm 0.1}. OSEM
-spatial resolution \mm{1.9 \pm 0.1} radial, \mm{1.9 \pm 0.1} tangential and
-\mm{1.7 \pm 0.1} axial FWHM averaged over 0--\mm{80} radius, within 10\%
-across the FOV (\mm{1.7}, \mm{1.7}, \mm{1.3} at the centre); peak
-sensitivity 2.0\%, NECR peak 15 kcps at 13.4 MBq; Derenzo rods resolved
-down to \mm{2.4}. Authors: Freire, Jiménez-Serrano, González-Montoro,
+calibrated with Voronoi regions, as in \ref{note:i3MTube}. Scatter is
+corrected in the image by dual energy window (\qtyrange{358}{409}{\kilo\electronvolt}
+scatter, \qtyrange{408}{613}{\kilo\electronvolt} trues), attenuation from a
+synthetic map, normalisation from a 6-hour ring-phantom scan; randoms, dead
+time and quantification are not corrected, and pileup is not mentioned.
+Authors: Freire, Jiménez-Serrano, González-Montoro,
 García, Toledo, Barberá, Álamo, Torres-Espallardo, Vidal, Loignon-Houle,
 de Alfonso, Echegoyen, Rodríguez-Álvarez, Sánchez, González --- i3M, with
 Oncovision (Barberá, Álamo) and La Fe hospital nuclear medicine.
 \gap{The conference precursors --- hardware (NSS/MIC 2022) and NN
 positioning on glued crystals (NSS/MIC 2021) --- and the detector-level
 gluing study, Freire et al.\ Med.\ Phys.\ 49:5616 (2022), are unread.}
+
+\paragraph{Key Findings}
+\begin{itemize}
+	\item \textbf{Geometry:} \mm{200} bore, \mm{225} outer, \mm{50} axial;
+		useful FOV \mm{160} transaxial; LYSO \mm{12.5} thick.
+	\item \textbf{Spatial resolution} (OSEM, $^{22}$Na point source):
+		\mm{1.7} radial, \mm{1.7} tangential, \mm{1.3} axial FWHM at the
+		centre; \mm{1.9 \pm 0.1}, \mm{1.9 \pm 0.1}, \mm{1.7 \pm 0.1} averaged
+		over 0--\mm{80} radius, within 10\% across the FOV. Derenzo rods
+		resolved down to \mm{2.4}.
+	\item \textbf{DOI resolution:} \mm{3.6 \pm 0.1} FWHM, detector level,
+		about 29\% of the \mm{12.5} depth.
+	\item \textbf{Energy resolution:} 19 $\pm$ 2\%, blamed on the black
+		paint.
+	\item \textbf{Sensitivity:} 2.0\% peak at centre,
+		\qtyrange{408}{613}{\kilo\electronvolt}. Gapless ring estimated at
+		about 21\% more efficient than modules with \mm{5} gaps (theory, not
+		measured).
+	\item \textbf{Count rate:} NECR peak 15 kcps at 13.4 MBq (NU 4 rat
+		phantom); linear below about 7 MBq, readout saturating from about
+		20 MBq.
+	\item \textbf{Timing:} none --- no TOF, no CTR reported; \ns{5}
+		coincidence window, \ns{250} integration.
+	\item \textbf{Image quality:} NU 4 IQ uniformity 5\%, spill-over 6\% air
+		and 23\% water. Dedicated IQ (5:1) contrast 27.9, 28.8, 56.8, 72.5,
+		87.2 and 84.2\% for inserts of 4.5 to \mm{20}.
+	\item \textbf{Against other breast rings} (their Table~2): MAMMI
+		(monolithic LYSO) 1.6\% and \qtyrange{1.8}{7.0}{\milli\metre} across
+		the FOV; Elmammo (pixelated, four-layer DOI) 11.2\% and
+		\qtyrange{1.6}{2.7}{\milli\metre}. DeepBreast holds resolution flat
+		but gives up sensitivity.
+\end{itemize}
 
 \paragraph{Why it matters here}
 Three things. First, the reason the tube was not scaled: the authors say the
@@ -851,7 +882,17 @@ to neural positioning (\ref{note:Freire2022NN}), so the two detector lines
 noted above have met in one scanner. Third, it names its own open items: no
 TOF (they estimate about \ps{100} CTR would be needed to matter at this
 bore), no randoms, dead-time or quantitative corrections, a short axial
-length, and positioning that ends at a single point estimate per event.
+length.
+
+The gap they do not name is multiple interactions. Every event is reduced to
+one point: the networks sum light across all 14 crystals and return a single
+$(x,y)$, depth is one $E/I_{\max}$ ratio, and nothing detects, separates or
+orders Compton scatter inside the ring. The glue makes this worse, not
+better: light crossing the joints is the design, so a photon that scatters
+from one crystal into the next lands in one merged light distribution that
+the network was never trained to split (training used a fan beam, with low
+centre-of-gravity events filtered out). That is the multi-vertex problem this
+thesis takes up, on the one built scanner where the geometry most invites it.
 
 \end{papernote}
  

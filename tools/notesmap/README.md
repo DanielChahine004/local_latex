@@ -194,6 +194,7 @@ annotated copy.
 | `[board]` | rows for the non-map view, links not to draw, the shelf for loose papers |
 | `[publish]` | what the map leaves out: sections, gaps, programmes, loose papers |
 | `[check]` | the bibliography `notesmap check` cross-checks `\doi{}` against |
+| `[pdfs]` | a folder of `<key>.pdf` and the URL a card's PDF link opens |
 | `[map]` | the map image (any equirectangular image), its width, where unplaced panels go |
 | `[server]` | port, and the companion editor the map links to |
 

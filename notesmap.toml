@@ -29,6 +29,14 @@ prune = [["i3M", "machinery"], ["Delft", "machinery"]]
 loose_key = "machinery"
 loose_title = "Machinery (no programme)"
 
+[pdfs]
+# a paper card links to its PDF when papers/<Key>.pdf exists. papers/ is a clone
+# of the private thesis-papers repo (pixi run papers-pull), and the link opens
+# GitHub's viewer: readable by the repo's collaborators, a 404 for anyone else,
+# so the public board publishes no paper
+dir = "papers"
+url = "https://github.com/DanielChahine004/thesis-papers/blob/main/{key}.pdf"
+
 [publish]
 # the board is public and states what the papers and programmes say; these are
 # this thesis's own working, kept in the PDF and left off the board, along with

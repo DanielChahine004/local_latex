@@ -1,7 +1,7 @@
 """The programme panel: a React component and its CSS, rendered by danvas.
 
 Props: key, kind, title, dates, lead, link, html (the programme note), figures, papers
-(each: key, title, year, snippet, thumb, link, html) and open (the key of the
+(each: key, title, year, snippet, thumb, link, pdf, html) and open (the key of the
 unfolded note, or null). Clicks go back to Python as {event: "toggle", key}.
 """
 
@@ -146,6 +146,8 @@ function Component({ canvas, props }) {
                 <span className="hint">{open === c.key ? "hide note" : "note ▾"}</span>
                 {c.link && <a href={c.link} target="_blank" rel="noreferrer" onClick={e => e.stopPropagation()}
                               title={c.link}>{c.link.includes("doi.org") ? "DOI ↗" : "link ↗"}</a>}
+                {c.pdf && <a href={c.pdf} target="_blank" rel="noreferrer" onClick={e => e.stopPropagation()}
+                             title="Open the PDF">PDF ↗</a>}
               </div>
             </div>
           ))}

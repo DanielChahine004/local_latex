@@ -45,6 +45,12 @@ show_loose = true
 # one DOI and cited under another. Unset: the cross-check does not run.
 # bib = "paper.bib"
 
+[pdfs]
+# a paper card links to its PDF when <dir>/<key>.pdf exists; {key} in url is the
+# note's key. Point url somewhere access-controlled if the board is public.
+# dir = "papers"
+# url = "https://github.com/you/papers/blob/main/{key}.pdf"
+
 [map]
 # image = "maps/world.jpg"    # an equirectangular image; default: NASA Blue Marble
 width = 9000

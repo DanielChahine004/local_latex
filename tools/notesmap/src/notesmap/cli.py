@@ -202,6 +202,7 @@ def cmd_serve(args) -> int:
             threading.Thread(target=lambda n=snapshots[0]: shoot(f"_reload{n}", 6), daemon=True).start()
 
     watcher.on_notes = on_notes
+    watcher.extra = cfg.pdf_keys       # a PDF added or removed redraws its card's link
     watcher.start()
     print(f"[notesmap] watching {src.describe()} every {cfg.poll:g}s", flush=True)
 

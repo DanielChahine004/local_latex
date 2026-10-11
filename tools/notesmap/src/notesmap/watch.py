@@ -22,10 +22,11 @@ class Watcher:
         self.images: set[str] = set()
         self.last: tuple | None = None
         self.reported: str | None = None
+        self.extra: Callable[[], object] = lambda: None   # anything else the board shows
 
     def fingerprint(self) -> tuple:
         watched = list(self.files) + sorted(self.images)
-        return tuple((f, self.src.stamp(f)) for f in watched)
+        return tuple((f, self.src.stamp(f)) for f in watched) + (self.extra(),)
 
     def locked(self) -> str | None:
         for name in list(self.lock_files) + [f"{f}.lock" for f in self.files]:

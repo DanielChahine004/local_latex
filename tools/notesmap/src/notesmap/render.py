@@ -334,6 +334,7 @@ class Board:
         loc = node.location if node else None
         # cards in date order; undated ones keep note order at the end
         dated = sorted(papers, key=lambda p: p.year if p.year is not None else 9999)
+        pdfs = self.cfg.pdf_keys()
         props = {
             "key": key, "title": title,
             "query": self.query, "filtered": bool(self.query),
@@ -348,6 +349,7 @@ class Board:
             "link": node.link if node else None,
             "papers": [{"key": p.key, "title": self.conv.to_md(p.title), "year": str(p.year) if p.year else "",
                         "snippet": self._snippet(p), "thumb": self._image(p.thumb), "link": p.link,
+                        "pdf": self.cfg.pdf_url.format(key=p.key) if p.key in pdfs else None,
                         "html": self._html(p.full(self.conv)) or "<p><i>(empty)</i></p>"}
                        for p in dated],
         }

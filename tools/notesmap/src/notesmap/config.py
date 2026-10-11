@@ -40,6 +40,9 @@ class Config:
     unplaced: list[int] = field(default_factory=lambda: [400, 3500])
     # [check]
     bib: str = ""                                # BibTeX file to cross-check \doi{} against
+    # [pdfs]
+    pdf_dir: str = ""                            # folder of <key>.pdf; empty: no PDF links
+    pdf_url: str = ""                            # where a card's PDF link points, with {key}
     # [server]
     port: int = 8000
     title: str = "notesmap"
@@ -48,6 +51,13 @@ class Config:
 
     def resolve(self, p: str) -> Path:
         return (self.root / p).resolve()
+
+    def pdf_keys(self) -> frozenset[str]:
+        """Keys with a PDF in [pdfs] dir; empty when no PDF links are configured."""
+        if not (self.pdf_dir and self.pdf_url):
+            return frozenset()
+        folder = self.resolve(self.pdf_dir)
+        return frozenset(p.stem for p in folder.glob("*.pdf")) if folder.is_dir() else frozenset()
 
     @property
     def is_url(self) -> bool:
@@ -64,6 +74,7 @@ _SECTIONS = {
     "publish": {"hide_sections": "hide_sections", "hide_gaps": "hide_gaps", "show_loose": "show_loose",
                 "hide_programmes": "hide_programmes"},
     "check": {"bib": "bib"},
+    "pdfs": {"dir": "pdf_dir", "url": "pdf_url"},
     "map": {"image": "map_image", "width": "map_width", "unplaced": "unplaced"},
     "server": {"port": "port", "title": "title", "edit_url": "edit_url",
                "edit_label": "edit_label"},

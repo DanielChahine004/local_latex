@@ -91,6 +91,20 @@ cmd = "uv run --quiet --python 3.12 --with jupyterlab --with jupyter-collaborati
 [tasks.notes-lab]
 cmd = "uv run --quiet --python 3.12 --project tools/notesmap --with pycloudflared python tools/notes-lab.py"
 
+# the paper PDFs, one per bibliography key, in papers/: a git-ignored clone of
+# the private thesis-papers repo (tools/papers.py has the details)
+[tasks.papers-pull]
+cmd = "uv run --quiet --python 3.12 --no-project python tools/papers.py pull"
+
+[tasks.papers-push]
+cmd = "uv run --quiet --python 3.12 --no-project python tools/papers.py push"
+
+[tasks.papers-status]
+cmd = "uv run --quiet --python 3.12 --no-project python tools/papers.py status"
+
+[tasks.papers-fetch]
+cmd = "uv run --quiet --python 3.12 --no-project python tools/papers.py fetch"
+
 
 [dependencies]
 tectonic = ">=0.16.9,<0.17"

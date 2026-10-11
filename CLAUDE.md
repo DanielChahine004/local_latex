@@ -105,3 +105,10 @@ After a figure or layout change, render the page and look at it:
 ```
 pixi exec --spec poppler -- pdftoppm -r 130 -f <page> -l <page> -png build/thesis/main.pdf out
 ```
+
+## Paper PDFs
+
+`papers/<BibKey>.pdf`, a git-ignored clone of the private `thesis-papers` repo;
+`pixi run papers-pull` fetches it. Read a paper there before asking for it, and
+file any PDF you are given under its bibliography key, then `papers-push`.
+Never copy a PDF into this repo, which is public.

@@ -27,3 +27,6 @@ tools/notesmap/.venv/
 .jupyter/
 .jupyter_ystore.db
 .ipynb_checkpoints/
+
+# paper PDFs: a clone of the private thesis-papers repo (pixi run papers-pull)
+papers/

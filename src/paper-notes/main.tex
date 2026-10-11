@@ -711,6 +711,44 @@ C.\ Valladares, Pablo Conde.
 \gap{Scope boundary --- what have they NOT claimed? Cannot be filled without
 reading the recent output. Until then this node is a warning, not a map.}
  
+\begin{papernote}{Moliner et al.\ 2012 -- Design and evaluation of the MAMMI dedicated breast PET}{Moliner2012}
+Med.\ Phys.\ 39(9):5393--5404, \doi{10.1118/1.4742850}.
+
+\paragraph{Summary}
+i3M's first monolithic ring, and the one that went to market through
+Oncovision: a dedicated breast PET of 12 compact modules, each a monolithic
+LYSO crystal on a position-sensitive photomultiplier tube (PSPMT). Transaxial
+FOV \mm{170} in diameter, axial \mm{40}, with the ring translating axially to
+cover up to \mm{170}; the patient lies prone so the breast hangs into the
+ring. Attenuation correction by PET image segmentation, developed for the
+scanner. Evaluated by adapting NEMA NU 2-2007 and NU 4-2008. Spatial
+resolution \mm{1.6} axial, \mm{1.8} radial and \mm{1.9} tangential at the
+centre, below \mm{3} over most of the FOV, with only the radial component
+passing \mm{3} beyond \mm{60} radius. Scatter fraction 20.8\%, NEC peak
+25 kcps at 44 MBq, sensitivity 1\% averaged over the FOV and 1.8\% at the
+centre for \qtyrange{250}{750}{\kilo\electronvolt}. Authors: Moliner,
+González, Soriano, Sánchez, Correcher, Orero, Carles, Vidal, Barberá,
+Caballero, Seimetz, Vázquez, Benlloch --- i3M and Oncovision.
+\gap{Abstract only. Crystal size, thickness and shape (truncated pyramid?),
+surface treatment, how DOI was read, the positioning algorithm, and the
+module gaps. An accepted version is in the UPV repository,
+\url{http://hdl.handle.net/10251/79469}; it supplies the thumbnail too.}
+
+\paragraph{Why it matters here}
+The modular baseline that \ref{note:Freire2026} replaces: same group, same
+organ, a similar bore, built from separate monolithic blocks with gaps. Their
+own before-and-after for edgeless rings, but not a like-for-like one ---
+MAMMI's resolution degrades past \mm{3} radially at the FOV edge while
+DeepBreast's stays within 10\%, but the photosensors (PSPMT to SiPM), the
+positioning and the energy window (\qtyrange{250}{750}{\kilo\electronvolt}
+against \qtyrange{408}{613}{\kilo\electronvolt}) all changed as well, so the
+1.8\% against 2.0\% understates DeepBreast's gain, since its window is the
+narrower. It also puts an i3M monolithic ring in clinical use six years
+before the tube was proposed (\ref{note:i3MTube2018}), which backs the
+priority argument in the programme note.
+
+\end{papernote}
+
 \begin{papernote}{González et al.\ 2018 -- Feasibility study of a small animal PET insert based on a single LYSO monolithic tube}{i3MTube2018}
 \thumb{img/toroid.png}
 Front.\ Med.\ 5:328, \doi{10.3389/fmed.2018.00328}.
@@ -865,8 +903,13 @@ gluing study, Freire et al.\ Med.\ Phys.\ 49:5616 (2022), are unread.}
 		(monolithic LYSO) 1.6\% and \qtyrange{1.8}{7.0}{\milli\metre} across
 		the FOV; Elmammo (pixelated, four-layer DOI) 11.2\% and
 		\qtyrange{1.6}{2.7}{\milli\metre}. DeepBreast holds resolution flat
-		but gives up sensitivity.
+		but gives up sensitivity. The table puts MAMMI at 1.6\%, its own paper
+		at 1.8\% in a wider window (\ref{note:Moliner2012}).
 \end{itemize}
+
+\begin{center}
+\includegraphics[width=0.9\linewidth]{img/freire2026table2.png}
+\end{center}
 
 \paragraph{Why it matters here}
 Three things. First, the reason the tube was not scaled: the authors say the

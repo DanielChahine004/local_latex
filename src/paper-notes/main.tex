@@ -712,40 +712,74 @@ C.\ Valladares, Pablo Conde.
 reading the recent output. Until then this node is a warning, not a map.}
  
 \begin{papernote}{Moliner et al.\ 2012 -- Design and evaluation of the MAMMI dedicated breast PET}{Moliner2012}
+\thumb{img/moliner2012.png}
 Med.\ Phys.\ 39(9):5393--5404, \doi{10.1118/1.4742850}.
 
 \paragraph{Summary}
-i3M's first monolithic ring, and the one that went to market through
-Oncovision: a dedicated breast PET of 12 compact modules, each a monolithic
-LYSO crystal on a position-sensitive photomultiplier tube (PSPMT). Transaxial
-FOV \mm{170} in diameter, axial \mm{40}, with the ring translating axially to
-cover up to \mm{170}; the patient lies prone so the breast hangs into the
-ring. Attenuation correction by PET image segmentation, developed for the
-scanner. Evaluated by adapting NEMA NU 2-2007 and NU 4-2008. Spatial
-resolution \mm{1.6} axial, \mm{1.8} radial and \mm{1.9} tangential at the
-centre, below \mm{3} over most of the FOV, with only the radial component
-passing \mm{3} beyond \mm{60} radius. Scatter fraction 20.8\%, NEC peak
-25 kcps at 44 MBq, sensitivity 1\% averaged over the FOV and 1.8\% at the
-centre for \qtyrange{250}{750}{\kilo\electronvolt}. Authors: Moliner,
-González, Soriano, Sánchez, Correcher, Orero, Carles, Vidal, Barberá,
-Caballero, Seimetz, Vázquez, Benlloch --- i3M and Oncovision.
-\gap{Abstract only. Crystal size, thickness and shape (truncated pyramid?),
-surface treatment, how DOI was read, the positioning algorithm, and the
-module gaps. An accepted version is in the UPV repository,
-\url{http://hdl.handle.net/10251/79469}; it supplies the thumbnail too.}
+i3M's first monolithic ring, built with Oncovision and announced as a
+product (MAMMI PET, Oncovision GEM-Imaging): a dedicated breast PET for a
+prone patient, the breast hanging into the ring.
+
+\paragraph{Detector}
+Twelve removable modules in a dodecagon with a \mm{186} aperture, each one
+LYSO crystal \mm{10} thick cut as a truncated pyramid, \qtyproduct{40 x 40}{\mm}
+front face and \qtyproduct{50 x 50}{\mm} back, so the blocks tile the polygon
+with little dead space. The shape is the edge-effect fix of its day: it
+reduces the compression of positions towards the crystal border. Every face
+but the exit is roughened and painted black. Each crystal sits on a
+Hamamatsu H8500 PSPMT with optical grease; a modified Anger resistor network
+reduces the 64 anodes to five signals, the zeroth, first and second moments
+of the light distribution --- energy, centroid $(x,y)$, and spread, which
+gives depth. Detector level: 18\% energy resolution, \mm{1.6} intrinsic, DOI
+\mm{4}. Each module in coincidence with its seven opposite ones, \ns{5}
+window, transaxial FOV \mm{170}. Axial FOV \mm{40} per frame; the whole ring
+steps \mm{34} on an elevator (\mm{6} overlap) to cover \mm{170}.
+
+\paragraph{Method}
+3D MLEM, \qty{1}{\mm} voxels, 12 iterations, a solid-angle system matrix, and
+crystals binned into \qtyproduct{2 x 2}{\mm} pixels. Dead time, scatter and
+randoms corrected in reconstruction. Attenuation from segmenting the PET
+image into breast and air, so no transmission scan. \textbf{DOI is measured
+but not used}: the paper's resolution figures exclude it ``due to computing
+limitations''.
+
+\paragraph{Key Findings}
+\begin{itemize}
+	\item \textbf{Spatial resolution} (MLEM, no DOI): \mm{1.8} radial,
+		\mm{1.9} tangential, \mm{1.6} axial FWHM at the centre. The radial
+		component passes \mm{3} beyond \mm{60} radius and reaches about
+		\mm{6} at the FOV edge; axial and tangential stay under \mm{3}.
+	\item \textbf{Sensitivity:} peak 1.6\% at the centre for
+		\qtyrange{350}{650}{\kilo\electronvolt} (the clinical window), 1.8\%
+		for \qtyrange{250}{750}{\kilo\electronvolt}; normalised total 0.8\% and
+		1.0\%; 0.7\% by the NU 2 line-source method.
+	\item \textbf{Count rate:} scatter fraction 18.2\% (350--650) and 20.8\%
+		(250--750); NEC peak 18 kcps at 38 MBq and 25 kcps at 44 MBq
+		respectively, falling from about 60 MBq as the PMTs saturate. A
+		breast holds about 4 MBq.
+	\item \textbf{Image quality:} contrast 83 $\pm$ 11\% for a \mm{20}
+		hot lesion and 17 $\pm$ 4\% for \mm{4.5} after 12 iterations.
+	\item \textbf{Next version planned:} two rings, \mm{94} axial, LYSO
+		\mm{12} thick.
+\end{itemize}
+Authors: Moliner, González, Soriano, Sánchez, Correcher, Orero, Carles, Vidal,
+Barberá, Caballero, Seimetz, Vázquez, Benlloch --- i3M and Oncovision.
 
 \paragraph{Why it matters here}
 The modular baseline that \ref{note:Freire2026} replaces: same group, same
-organ, a similar bore, built from separate monolithic blocks with gaps. Their
-own before-and-after for edgeless rings, but not a like-for-like one ---
-MAMMI's resolution degrades past \mm{3} radially at the FOV edge while
-DeepBreast's stays within 10\%, but the photosensors (PSPMT to SiPM), the
-positioning and the energy window (\qtyrange{250}{750}{\kilo\electronvolt}
-against \qtyrange{408}{613}{\kilo\electronvolt}) all changed as well, so the
-1.8\% against 2.0\% understates DeepBreast's gain, since its window is the
-narrower. It also puts an i3M monolithic ring in clinical use six years
-before the tube was proposed (\ref{note:i3MTube2018}), which backs the
-priority argument in the programme note.
+organ, a similar bore, separate monolithic blocks with gaps. But it is not a
+clean before-and-after for the edgeless ring, and the reason is specific:
+MAMMI's resolution was measured without its DOI, so its radial loss at the
+FOV edge is likely largely uncorrected parallax, and DeepBreast's flat profile comes
+from using DOI at least as much as from removing the edges. Photosensor
+(PSPMT to SiPM), positioning (analogue centroid to neural network) and
+thickness (\mm{10} to \mm{12.5}) changed too. On sensitivity, DeepBreast's
+2.0\% sits in a narrower window than MAMMI's 1.6\%, so the gain is if
+anything understated. Two things went backwards: MAMMI corrected randoms and
+dead time in 2012, which DeepBreast does not yet, and its NEC peak sat at about
+three times the activity. The edge-effect story also runs through both: the
+truncated pyramid was i3M's answer in 2012, the glued ring is its answer
+now.
 
 \end{papernote}
 
@@ -903,8 +937,9 @@ gluing study, Freire et al.\ Med.\ Phys.\ 49:5616 (2022), are unread.}
 		(monolithic LYSO) 1.6\% and \qtyrange{1.8}{7.0}{\milli\metre} across
 		the FOV; Elmammo (pixelated, four-layer DOI) 11.2\% and
 		\qtyrange{1.6}{2.7}{\milli\metre}. DeepBreast holds resolution flat
-		but gives up sensitivity. The table puts MAMMI at 1.6\%, its own paper
-		at 1.8\% in a wider window (\ref{note:Moliner2012}).
+		but gives up sensitivity. MAMMI's 1.6\% is its
+		\qtyrange{350}{650}{\kilo\electronvolt} figure, and its resolution
+		was measured without DOI (\ref{note:Moliner2012}).
 \end{itemize}
 
 \begin{center}

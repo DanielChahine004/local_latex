@@ -3011,6 +3011,7 @@ measurements.}
 \end{papernote}
 
 \begin{papernote}{Loignon-Houle et al.\ 2021 -- DOI estimation through signal arrival time distribution: a theoretical description including proof of concept measurements}{LoignonHoule2021}
+\thumb{img/loignonhoule2021.png}
 Phys.\ Med.\ Biol.\ 66(9):095015, \doi{10.1088/1361-6560/abf604}.
 
 \paragraph{Summary}
@@ -3025,17 +3026,67 @@ simulation study of four estimators for future detectors.
 
 \paragraph{Key findings}
 \begin{itemize}
+	\item \textbf{Measurement:} a \qtyproduct{2 x 2 x 20}{\mm} LSO:Ce:Ca
+		crystal on a \qtyproduct{4 x 4}{\mm} FBK NUV-HD SiPM, high-frequency
+		readout, scanned at six depths against a \mm{3} reference. CTR is
+		worst mid-crystal even though light output rises towards the SiPM ---
+		not the $1/\sqrt{N}$ behaviour light alone predicts.
 	\item A DOI-dependent effect on coincidence time resolution is resolvable
 		with high-frequency readout and was not observable with slower
 		electronics.
 	\item A double-threshold scheme on the analogue timing signal, combined
 		with signal intensity, discriminates DOI with no detector modification
-		and no complex readout.
+		and no complex readout: \mm{8.5 \pm 0.4} DOI resolution, or about 90\%
+		correct top-half against bottom-half.
 	\item A simple two-timestamp difference estimator improves CTR; kernel
 		density estimation and a neural network do better and converge to the
 		bound.
 	\item The paper derives a Cramér--Rao lower bound for time-based DOI
-		estimation.
+		estimation. The tested estimators, KDE especially, come close to it,
+		so a better estimator would gain little; a larger gain needs a detector
+		whose time profile changes more with depth. Uncorrected, CTR saturates
+		at 60--\ps{70} for a \mm{20} crystal; with DOI correction and
+		\ps{10} SPTR the simulated detectors reach about \ps{10}.
+\end{itemize}
+
+\paragraph{The bound}
+From section 2.2.8.
+\begin{itemize}
+	\item \textbf{Likelihood.} Each detected photon's time is an
+		independent draw from one density $p_{\mathrm{tot}}(t \mid d)$, the
+		convolution of emission (one bi-exponential), transport at depth $d$
+		and a Gaussian SiPM response. Per-photon Fisher information
+		$\mathcal{I}(d) = \int (\partial_d p_{\mathrm{tot}})^2 /
+		p_{\mathrm{tot}}\,\mathrm{d}t$, and the bound is
+		$\mathrm{Var}(\hat{d}) \geq 1/(N_d\,\mathcal{I}(d))$ with $N_d$ the
+		\emph{expected} number of detected photons.\aside{ Photons are
+		treated as i.i.d.\ and unordered, though the estimators use ordered
+		first-$n$ timestamps, and the photon count is fixed rather than
+		Poisson, so depth information in the count itself is left out.}
+	\item \textbf{Per event.} It bounds a single event's depth from its
+		$N_d$ photons; it is the usual i.i.d.\ CRLB, attained only
+		asymptotically in $N_d$. To turn it into a CTR they draw each event's
+		depth from a normal with that variance and push it through the same
+		time-bias correction as the real estimators.
+	\item \textbf{Nuisance.} The gamma's arrival time $\theta$ is the only
+		one, and it is not profiled but removed: each depth's density is
+		shifted so all start together, on the argument that the first trigger
+		alone should say nothing about depth.\aside{ That alignment discards
+		the absolute-onset information a joint $(\theta, d)$ treatment would
+		handle through the Schur complement.}
+	\item \textbf{Same detector?} No, in two ways. The measured detector
+		(analogue SiPM, double threshold) is not the simulated one (a
+		\mm{20} polished crystal, 98\% specular reflector, digital SiPM
+		timestamping every photon, PDE 55\%, no dark counts). And within the
+		simulation, the estimators' transport densities come from Geant4 while
+		the bound's come from the analytic model of \ref{note:Cates2015}.
+	\item \textbf{Single interaction.} Only photoelectric events are
+		simulated and kept. The authors say outright that multi-interaction
+		events --- ``Compton interaction followed by a photoelectric
+		interaction in the same crystal'' --- are ``a complex problem worthy of
+		future investigation, especially for monolithic crystals'', and that
+		energy and depth are confounded in the timestamps: a low-energy deep
+		event can look like a high-energy shallow one.
 \end{itemize}
 
 \paragraph{Why it matters here}
@@ -3047,13 +3098,13 @@ on position estimated from a scattering bulk, where the depth dependence is
 engineered into the spatial light distribution as well. The Fisher information
 is computed from a different observable, and that has to be said explicitly and
 early.
+The full text sharpens the difference into three points to make in the
+chapter: their observable is the time of each photon and nothing else
+(positions, counts per channel and energy are all outside the likelihood);
+their nuisance handling is an alignment, not a profile; and their model is one
+interaction per event, which they name as the open problem for monoliths.
 \aside{Finding this late would have been bad. It is the single most important
 citation on this map for the CRLB chapter.}
-\gap{Abstract only. Needed before writing the bound chapter: the exact
-likelihood they assume for the timestamp distribution, whether the bound is per
-event or asymptotic, and which nuisance parameters are profiled out. Also
-whether the four estimators are compared on the same simulated detector as the
-measurements.}
 
 \end{papernote}
 

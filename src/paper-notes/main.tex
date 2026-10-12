@@ -2138,20 +2138,28 @@ preclinical.
 \end{papernote}
 
 \begin{papernote}{Kinyanjui et al.\ 2025 -- Machine learning positioning algorithms for long semi-monolithic scintillator PET detectors}{Kinyanjui2025}
+\thumb{img/kinyanjui2025.png}
 Phys.\ Med.\ Biol.\ 70(11):115018, \doi{10.1088/1361-6560/addbbe}. Kinyanjui,
 Kuang, Liu, Ren, Yang.
 
 \paragraph{Detector}
 Two detectors: 12 LYSO slabs of \qtyproduct{0.96 x 56 x 10}{\mm} and 14 of
-\qtyproduct{0.81 x 56 x 10}{\mm}, read out by a 4 x 16 SiPM array.
-Calibration irradiates 27 x 5 $(y, z)$ positions per detector with a collimated
-$^{22}$Na pencil beam.
+\qtyproduct{0.81 x 56 x 10}{\mm}, read out by a 4 x 16 SiPM array of \qtyproduct{3.4 x 3.4}{\mm} pixels through
+a \mm{1.5} glass light guide, summed to 4 row and 16 column signals.
+Calibration irradiates 27 x 5 $(y, z)$ positions per detector, \mm{2} apart in
+both directions, with a collimated $^{22}$Na pencil beam about \mm{1} wide,
+roughly 9500 events per position.
 
 \paragraph{Method}
 Extreme gradient boosting (XGBoost) predicts the monolithic ($y$) and DOI
 ($z$) coordinate, with hyperparameters searched by a genetic algorithm or
 particle swarm optimisation --- not a neural network, which is what every
-other group on this map reaches for.
+other group on this map reaches for. The input is the 16 column energies
+alone, normalised; separate models for $y$ and $z$. The events of every
+position are split at random 60/20/20 into training, validation and test, so
+the test events sit on the same 27 x 5 points the model was trained on.
+Before training, events outside $\pm1.5$ FWHM of each column's energy peak
+are cut, to remove inter-crystal scatter.
 
 \paragraph{Key Findings}
 Against squared centre of gravity, $y$ improves from \mm{1.38 \pm 0.23} to
@@ -2160,18 +2168,31 @@ Against squared centre of gravity, $y$ improves from \mm{1.38 \pm 0.23} to
 improves from \mm{2.09 \pm 0.82} to \mm{1.67 \pm 0.41} and from
 \mm{2.14 \pm 0.81} to \mm{1.68 \pm 0.45}. The gain is largest at both ends of
 the slabs, which is where the analytic estimators break down.
-\aside{Note the spread: the mean falls but the standard deviation rises, so
-the learned estimator is better on average and less uniform.}
-\gap{Unread beyond the abstract. Whether training and test came from the same
-collimated scan --- 27 x 5 positions is a small grid to both fit and judge on
---- and what happens between the calibrated points.}
+Absolute bias falls from about \mm{0.23} to under \mm{0.1} in $y$ and from
+about \mm{0.54} to \mm{0.40} in $z$; GA and PSO end up equivalent.
+\aside{Note the spread, which is across positions: in $y$ it widens
+(\mm{0.23} to \mm{0.41}) even as the mean falls, while in $z$ it narrows
+(\mm{0.82} to \mm{0.41}), so the learned estimator is more uniform in depth
+but not along the slab, whatever the text says about uniformity.}
+What it does not test: positions between the calibrated points, since test
+and training share them --- the grid-snapping \ref{note:Decuyper2021} checks for
+with an offset grid --- and inter-crystal scatter, which is filtered out.
+The authors call recovering scattered events future work and cite two papers
+that already attempt it: Lee and Lee 2021, ``Inter-crystal scattering recovery
+of light-sharing PET detectors using convolutional neural networks'',
+Phys.\ Med.\ Biol.\ 66:185004, and Gillam et al.\ 2014, ``Sensitivity
+recovery for the AX-PET prototype using inter-crystal scattering events'',
+Phys.\ Med.\ Biol.\ 59:4065.
+\gap{Read both: they are prior art for the multi-interaction problem that
+this map does not yet hold.}
 
 \paragraph{Why it matters here}
 The like-for-like that \ref{note:Decuyper2021} cannot give: same detector, same
 data, analytic against learned, and the improvement concentrated at the edges.
 A tree ensemble beating centre of gravity by \qty{33}{\percent} on one axis
 sets the floor any annulus positioning network has to clear before the network
-itself is the interesting part.
+itself is the interesting part --- with the caveat that it is judged on its own
+calibration points, so the floor is if anything optimistic.
 
 \end{papernote}
 

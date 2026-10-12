@@ -2403,10 +2403,59 @@ template for the bounds; the 2026 paper measures that PDF per voxel and channel.
 Joshua W.\ Cates (lead), Woon-Seng Choong, Seungeun Lee, Ryan Heller; Erik
 Brubaker on the 2024 monolithic prototype. Cates's earlier work with Levin
 is \ref{note:Cates2015}.
-\gap{The precursor, Cates, Choong and Brubaker 2024, ``Scintillation and
-Cherenkov photon counting detectors with analog silicon photomultipliers for
-TOF-PET'', Phys.\ Med.\ Biol.\ 69:045025: a \qtyproduct{12 x 12 x 15}{\mm}
-BGO monolith on a 4 x 4 array. Unread; note it next.}
+
+\begin{papernote}{Cates, Choong and Brubaker 2024 -- Scintillation and Cherenkov photon counting detectors with analog silicon photomultipliers for TOF-PET}{Cates2024}
+\thumb{img/cates2024.png}
+Phys.\ Med.\ Biol.\ 69(4):045025, \doi{10.1088/1361-6560/ad2125}.
+
+\paragraph{Summary}
+The concept paper. Spread a monolith's light over enough SiPM channels, with
+readout fast enough, and the photons reaching each channel arrive further
+apart than the single-photon pulse is wide, so each can be counted and
+timestamped with ordinary analog SiPMs instead of a digital photon counter.
+A sizing estimate puts BGO within reach of a 4 x 4 array at a \ns{4} pulse,
+and LYSO at about 13 x 13 with \ns{2}. Built as a
+\qtyproduct{12 x 12 x 15}{\mm} BGO monolith, polished and Teflon-wrapped, on
+a 4 x 4 array of \qtyproduct{3 x 3}{\mm} Broadcom SiPMs, with a \mm{1} BG40
+filter between them --- the first use of a crosstalk-absorbing filter on a
+monolith --- 16 low-noise high-frequency channels and waveforms digitised at
+5 GSa/s, shaped to \ns{2} single-photon pulses. Position is relative only:
+squared-weight centroid for $x,y$ and the sum of squared counts for depth,
+coarsened to 3 x 3 x 2 voxels. Per voxel and pixel, a first-photon
+delay distribution with a Cherenkov term gives the timing correction, the
+method \ref{note:Lee2026} develops.
+Authors: Cates, Choong (LBNL), Brubaker (Sandia).
+
+\paragraph{Key Findings}
+\begin{itemize}
+	\item \textbf{Photon counting:} 66\% of optical pulses are single
+		photons, 21\% two and 13\% three or more; every photon is counted,
+		but a bunch shares one timestamp.
+	\item \textbf{Filter:} removes external optical crosstalk almost
+		entirely, leaving the noise the datasheet predicts from dark counts
+		and internal crosstalk.
+	\item \textbf{Readout:} single-photon time resolution \ps{133 \pm 1}
+		at the operating voltage, \ps{117} at best, held back by the
+		digitiser's \qty{1}{\volt} range and bandwidth.
+	\item \textbf{Timing:} CTR against the reference \ps{237 \pm 10} for
+		the fast (Cherenkov-led) component, 51\% of events; about \ps{315}
+		estimated for two such detectors.
+	\item \textbf{Energy:} 17.6\% FWHM from counted photons, after a
+		per-voxel light-collection correction.
+	\item \textbf{Cherenkov yield:} about 18.5 photons per 511 keV event,
+		inferred from the fitted prompt component.
+\end{itemize}
+
+\paragraph{Why it matters here}
+The full-monolith version, so nearer this thesis's geometry than the slab
+of \ref{note:Lee2026}, and the first record of per-photon, per-channel data
+from a monolith with analog SiPMs. Every event is treated as one
+interaction: Compton scatter is not mentioned, and the first-photon fits are
+built per voxel on that assumption. Positioning is deliberately crude here,
+so the paper says nothing about how well the arrival pattern locates an
+interaction, let alone two.
+
+\end{papernote}
 
 \begin{papernote}{Lee et al.\ 2026 -- Exploring spatiotemporal information in a Cherenkov and scintillation photon counting BGO TOF-PET semi-monolithic detector concept}{Lee2026}
 \thumb{img/lee2026.png}

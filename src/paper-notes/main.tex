@@ -2758,6 +2758,7 @@ time-based readout; a multi-interaction analysis is not among them.}
 
 \begin{programnote}{Prism-PET -- Stony Brook and Weill Cornell, Goldan group}{PrismPET}
 \location{40.91}{-73.12}{Stony Brook, New York, USA}
+\thumb{img/prismpet.png}
 
 Amir Goldan's group, Stony Brook University, with Weill Cornell Medicine on
 every paper since 2023. Single-ended readout of segmented LYSO arrays with a
@@ -2785,6 +2786,25 @@ domain rather than through a light-distribution centroid.
 statistical, which is a disadvantage on resolution and an advantage on
 manufacturability. Do not pretend otherwise.}
 
+The same determinism is their claim on multi-interaction events, and it is
+prior art this thesis must cite. Every interaction lights a fixed pattern of
+primary and nearest-neighbour SiPMs, so overlapping patterns from a
+multi-crystal Compton event ``can be very accurately decomposed to yield
+crystal-level energy, spatial, and DOI information of the individual
+interactions'' (\ref{note:Zeng2023}); \ref{note:LaBella2020}'s Supplemental
+Note 2 decomposes side-by-side scattered-photon and recoil-electron events,
+the most common and hardest case. A uniform light guide, or a monolith, gives
+no fixed pattern to decompose against --- which is the difficulty this thesis
+takes on. Yet both the scanner and the oTOF papers reject inter-crystal
+scatter rather than use it.
+\gap{The decomposition paper itself: Petersen, LaBella, Howansky, Zhao and
+Goldan 2020, ``Compton decomposition and recovery in a Prism-PET detector
+module'', IEEE NSS/MIC 2020, pp.\ 1--4. Read for the method, its accuracy,
+and whether it orders the interactions or only separates them. Also LaBella
+2020's Supplemental Note 2, and the reference both build on, Makek et al.\
+2019, ``Scintillator pixel detectors for measurement of Compton scattering'',
+Condens.\ Matter 4:24.}
+
 \paragraph{Detector lineage}
 Polished LYSO arrays coupled 4-to-1 or 9-to-1 to \qtyproduct{3 x 3}{\milli\metre}
 SiPM pixels, prismatoid light-guide array on the non-readout face, \mm{20}
@@ -2795,6 +2815,7 @@ A segmented array, not a monolith --- it belongs on this map as a DOI-encoding
 programme, not as a monolithic one, and the review entry should say so.
 
 \begin{papernote}{LaBella et al.\ 2020 -- High-resolution depth-encoding PET detector module with prismatoid light-guide array}{LaBella2020}
+\thumb{img/labella2020.png}
 J.\ Nucl.\ Med.\ 61(10):1528--1533, \doi{10.2967/jnumed.119.239343}.
 
 \paragraph{Summary}
@@ -2821,9 +2842,17 @@ edge-and-corner uniformity as the second claim. The uniformity is the one that
 is hard to match statistically, because an edge crystal in a monolith sees a
 truncated light distribution no matter what the bulk does.
 
+The paper also stakes the Compton claim: a uniform guide gives each event a
+random SiPM pattern, the prismatoids a deterministic one wherever the
+interaction sits in the column, which lets side-by-side scattered-photon and
+recoil-electron events be decomposed into their energies, positions and DOI
+(Supplemental Note 2). Inter-crystal scatter recovery is listed among the
+design's sensitivity gains, not shown in the main text.
+
 \end{papernote}
 
 \begin{papernote}{Zeng et al.\ 2023 -- A conformal TOF-DOI Prism-PET prototype scanner for high-resolution quantitative neuroimaging}{Zeng2023}
+\thumb{img/zeng2023.png}
 Med.\ Phys.\ 50(6):3401--3417, \doi{10.1002/mp.16223}.
 
 \paragraph{Summary}
@@ -2859,9 +2888,18 @@ image level. Note the gap between \mm{1.22} intrinsic and \mm{1.53}
 reconstructed, which they attribute to mechanical misalignment of detector
 blocks rather than to the detector.
 
+Inter-crystal scatter is identified from its characteristic energy pattern
+across the SiPMs under one prismatoid and rejected before reconstruction; DOI
+rebinning then reassigns each line of response by its continuous depth. The
+discussion counts the cost: about half of singles Compton-scatter in
+\mm{1.5} crystals, so rejecting them halves sensitivity, and it claims the
+overlapping patterns could instead be decomposed to recover the first
+interaction --- not done here.
+
 \end{papernote}
 
 \begin{papernote}{Zeng et al.\ 2024 -- Depth-encoding using optical photon TOF in a Prism-PET detector with tapered crystals}{Zeng2024}
+\thumb{img/zeng2024.png}
 Med.\ Phys.\ 51(6):4044--4055, \doi{10.1002/mp.17095}.
 
 \paragraph{Summary}
@@ -2903,10 +2941,20 @@ degrades a transfer-function-based estimator, which is the same sensitivity
 this thesis has to quantify for bulk scattering --- and it is far larger than the
 energy-based estimator's degradation over the same change. That asymmetry is
 the finding, and it is an argument for caution about time-domain encoding.
-\gap{Arithmetic to check: oTOF DOI degrades by a factor \num{2.6} between
-tapered and non-tapered while the energy-based estimate degrades by \num{1.35}.
-Confirm from the paper whether that is attributed entirely to light leak or
-partly to the changed reflector spacing, because the two are varied together.}
+The arithmetic holds --- oTOF DOI degrades by a factor 2.6 between tapered and
+non-tapered, the energy estimate by 1.35 --- and it is not confounded by
+reflector spacing: tapered and \mm{1.5} cuboid share the same \mm{0.1}
+BaSO$_4$ gaps. The comparison has a third arm that settles it. The \mm{1.5}
+cuboid crystals overhang the SiPM active area by \mm{0.05} on two sides, and
+that leak is the damage; the group's older \mm{1.4} cuboid module, with
+\mm{0.2} gaps and crystals inside the active area, gives \mm{2.59} energy and
+\mm{6.45} oTOF DOI, close to the tapered \mm{2.35} and \mm{5.42}. The
+correlation between the two depth estimates tells the same story: 0.80, 0.43
+and 0.83. oTOF is the difference between the primary SiPM's timestamp and its
+nearest neighbours'; averaging three neighbours gives the \mm{5.42}, and
+combining it with the energy estimate (0.3/0.7) reaches \mm{2.25}, so time adds
+a little to light here. Inter-crystal scatter is rejected first, so the
+timestamps always come from one interaction.
 
 \end{papernote}
 

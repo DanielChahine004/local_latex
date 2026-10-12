@@ -1375,8 +1375,12 @@ It is also the cleanest published number for the multi-interaction problem in
 a monolith: the majority of events, 60\% in \mm{16} of LYSO, are
 multi-site, they carry most of the positioning error, and that error is
 biased in depth. The authors name the next step --- detect the scattered
-events, then treat them separately --- and stop there, which is the step this
-thesis takes up.
+events, then treat them separately --- and stop there. The detecting half has
+since been done, by \ref{note:Shen2025}: a classifier for one, two or
+three-plus deposits, from photon counts, in simulated nanocomposite and
+ceramic slabs. Treating them separately, locating more than the first
+vertex, ordering them, and doing any of it from arrival times all remain
+open.
 \gap{Check whether Ghent later built the scatter-aware networks the
 discussion proposes.}
 
@@ -3209,12 +3213,42 @@ $\geq$77.6\%, three-plus at $\geq$66.7\%; median localisation error
 \qtyrange{0.58}{2.91}{\milli\metre} with the CNN and
 \qtyrange{0.59}{2.10}{\milli\metre} with InceptionNet.
 
+\paragraph{Method}
+GATE simulation of nine thick slabs, five nanocomposites and four ceramics,
+each at the optimum thickness from \ref{note:Wilson2020}, read out on both
+faces through Meltmount; 50{,}000 gammas per material, trained at 100\%
+detector efficiency and evaluated down to lower ones. The input to every
+network is the optical photon \emph{count} map on the two faces, 20 x 20 x 2.
+GATE records each interaction's time, but no network uses it. The classifier
+has three classes --- one, two, or three-plus energy deposits --- and the
+localiser one target, the first point of interaction, from a single network
+for all events: the class is not fed into positioning.
+
+\paragraph{Key Findings}
+\begin{itemize}
+	\item \textbf{Classification} is nearly material-independent: one
+		deposit 90.1--91.4\% correct, two 77.6--81.7\%, three-plus
+		66.4--68.4\%; multi-deposit events are mostly misread as fewer
+		deposits, with about a quarter of three-plus events called single.
+	\item \textbf{Localisation} at 50\% efficiency: median error
+		\mm{0.58} to \mm{1.13} in the ceramics, \mm{0.87} to \mm{2.91} in
+		the nanocomposites, where InceptionNet beats the plain CNN by 46\% on
+		average; both beat the earlier least-squares fit (LaBr$_3$:Ce/PS
+		median \mm{1.2} to \mm{0.87}).
+	\item \textbf{Use of the class} is proposed, not done: weight each event
+		in the sinogram by its number of deposits, and keep Compton events
+		that a photopeak window would drop.
+\end{itemize}
+
 \paragraph{Why it matters here}
 ``Classification'' in the title: interaction multiplicity is already being
-classified in this group, so whether the multiplicity classifier is a
-proposal or an inheritance turns on this paper's scope. \gap{Read it against
-the temporal-axis idea specifically: what inputs does it use, and does it
-touch arrival times at all?}
+classified in this group, so the multiplicity classifier is an inheritance,
+not a proposal. What the paper leaves is the rest of the multi-interaction
+problem: it counts deposits but locates only the first, never orders them,
+never conditions positioning on the count, and never looks at arrival times
+--- the input is photon counts alone. So the temporal axis is untouched here
+as well as in \ref{note:Decuyper2021} and \ref{note:Lee2026}: this is the
+counting half from light, with timing and the later vertices still open.
 
 \end{papernote}
 

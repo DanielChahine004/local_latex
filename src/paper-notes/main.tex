@@ -2947,6 +2947,7 @@ softer than one pin suggests. Decide whether Milano-Bicocca deserves its own
 panel.}
 
 \begin{papernote}{Pizzichemi et al.\ 2016 -- A new method for depth of interaction determination in PET detectors}{Pizzichemi2016}
+\thumb{img/pizzichemi2016.png}
 Phys.\ Med.\ Biol.\ 61(12):4679--4698, \doi{10.1088/0031-9155/61/12/4679}.
 
 \paragraph{Summary}
@@ -2956,14 +2957,40 @@ attenuation of light along the crystal length, and without requiring
 one-to-one coupling between scintillators and photosensors. A prototype module
 coupling a LYSO matrix to a commercial SiPM array was built and characterised.
 
+\paragraph{Detector}
+An 8 x 8 matrix of \qtyproduct{1.53 x 1.53 x 15}{\mm} LYSO at \mm{1.6} pitch,
+ends polished and lateral faces mildly depolished, with \um{70} ESR foils
+between crystals (not bonded, so an air gap remains). Four crystals share each
+\qtyproduct{3 x 3}{\mm} SiPM of a 4 x 4 Hamamatsu array at \mm{3.2} pitch.
+On the far face a \mm{1} glass light guide backed by ESR: the light leaving a
+crystal's far end is reflected back into the whole matrix and spreads over all
+16 SiPMs. A reference module is identical but fully polished, with no light
+guide.
+
+\paragraph{Method}
+The crystal comes from Anger logic, $(u, v)$, on the 16 signals; the depth from
+$w = p_{\max}/P$, the light on the directly coupled SiPM over the total.
+Depolishing makes the near-to-far light ratio depend on depth, and the light
+guide turns the far share into a spread over every SiPM, so $w$ falls as the
+interaction moves away from the sensor. $w$ is linear in depth for every
+crystal, calibrated by electronic tagging. Events depositing in more than one
+crystal fall away from the 64 clusters in $(u, v, w)$ and are discarded as
+``not useful in a realistic PET system''.
+
 \paragraph{Key findings}
 \begin{itemize}
-	\item Mean DOI resolution \mm{4.1} FWHM on \mm{15} long crystals.
-	\item Average energy resolution \qty{12.7}{\percent} FWHM, with light loss
-		from depolishing found to be negligible.
+	\item Mean DOI resolution \mm{4.1 \pm 0.1} FWHM on \mm{15} long crystals,
+		uniform across the array.
+	\item Light output 8800 against 9100 ADC channels for the polished
+		reference, about 3\% lower: that is the ``negligible light loss''.
+		Energy resolution is not: raw, 16.1\% against the reference's
+		11.2\%, blamed on depolishing and the light guide's absorption. The
+		headline 12.7\% is after a depth-dependent gain correction using $w$,
+		while the reference figure is uncorrected.
 	\item Excellent crystal separation for every scintillator in the array,
 		including the edges.
-	\item Preliminary coincidence time resolution \ps{353} FWHM.
+	\item Preliminary coincidence time resolution \ps{353 \pm 7} FWHM, about
+		\ps{30} worse than the reference.
 \end{itemize}
 
 \paragraph{Why it matters here}
@@ -2972,14 +2999,17 @@ mechanism statement this thesis is a variant of, and it is the earliest clean
 one. The claim that depolishing costs negligible light is worth checking
 carefully, because it is the same claim a scattering bulk has to make and the
 same objection it has to answer.
-\gap{Abstract only --- no full text reachable through open access. Needed: the
-module geometry and SiPM pitch, how the light is redirected (what sits on the
-far face), how DOI is estimated from the shared signal, and the basis for the
-negligible-light-loss claim.}
+So the claim holds for light output and not for energy resolution: depth
+encoded by depolishing costs spectral sharpness, which a correction recovers
+only partly. A scattering bulk has to answer the same split --- total light
+kept, but how is it distributed event to event. And the multi-crystal events
+are thrown away by construction, which is the opposite of what this thesis
+wants to do with them.
 
 \end{papernote}
 
 \begin{papernote}{Pizzichemi et al.\ 2019 -- On light sharing TOF-PET modules with depth of interaction and 157 ps FWHM coincidence time resolution}{Pizzichemi2019}
+\thumb{img/pizzichemi2019.png}
 Phys.\ Med.\ Biol.\ 64(15):155008, \doi{10.1088/1361-6560/ab2cb0}.
 
 \paragraph{Summary}
@@ -2988,11 +3018,26 @@ examined with timing as the focus, together with a method that uses the DOI
 information to optimise coincidence time resolution. A dedicated 64-channel
 readout with \ps{16} FWHM intrinsic timing resolution was built for it.
 
+\paragraph{Method}
+Eight modules: depth-encoding (depolished, glass light guide) and polished
+references, each as an 8 x 8 matrix of \mm{1.53} crystals or a 4 x 4 of
+\mm{3.1}, all \mm{15} long on 4 x 4 arrays of \mm{3} SiPMs read through
+NINO32. Timing uses every SiPM, not only the one under the crystal: light
+reaching the others is delayed by an amount that depends on depth, so each
+measured delay $g_i(w) = \langle t_i - t_1 \rangle$ is calibrated against $w$,
+every SiPM yields its own estimate $t_1^{(i)} = t_i - g_i(w)$, and the
+estimates are averaged with weights $1/\sigma_i^2$. The thumbnail is one such
+delay against $w$.
+
 \paragraph{Key findings}
 \begin{itemize}
 	\item \ps{157} FWHM coincidence time resolution, with \mm{1.5} FWHM spatial
 		resolution, \mm{3} FWHM DOI resolution and \qty{9}{\percent} FWHM energy
 		resolution at \keV{511}, on \mm{15} long crystals.
+	\item The \ps{157} is the central crystals of the 8 x 8 module after
+		correction (\ps{166} over all crystals; the 4 x 4 gives 159 and 165).
+		Before correction the same modules give \ps{307} (8 x 8) and \ps{233}
+		(4 x 4), against \ps{154}--\ps{162} for the polished references.
 	\item Extracting the DOI coordinate was shown not to deteriorate the
 		module's timing performance.
 	\item The readout's own contribution is \ps{16} FWHM, so the quoted CTR is
@@ -3000,13 +3045,18 @@ readout with \ps{16} FWHM intrinsic timing resolution was built for it.
 \end{itemize}
 
 \paragraph{The claim to be substantiated}
-That DOI extraction is free in timing terms. If it holds for a scattering bulk
-as well, the standard objection --- that light spent on depth is light taken from
-the timestamp --- does not apply, and this is the citation that says so first.
-\gap{Abstract only. Needed: whether the \ps{157} and the \mm{3} DOI were
-measured on the same module and the same events, since the abstract reports the
-spatial and DOI figures as ``already demonstrated'' rather than as new
-measurements.}
+That DOI extraction is free in timing terms. The full text says something more
+precise and more useful. The light-sharing module's raw timing is twice the
+reference's --- sharing the light \emph{does} cost the timestamp --- and it is
+the depth estimate that buys it back, by telling each SiPM's delay so that all
+16 timestamps can be pooled. Corrected, the depth module matches the polished
+one; so depth is not free, it is the price of recovering what light sharing
+spent. That pooling is a depth-informed combination of per-channel arrival
+times: a first, single-interaction step along the temporal axis.
+
+The figures in the abstract are not one measurement. Timing and energy (8.9\%
+central) are measured here; the \mm{3} DOI is cited from Stringhini et al.\
+2016, and the \mm{1.5} spatial resolution is the crystal pitch.
 
 \end{papernote}
 

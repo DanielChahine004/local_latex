@@ -3160,6 +3160,63 @@ citation on this map for the CRLB chapter.}
 
 \end{programnote}
 
+\begin{programnote}{Geneva HUG -- Zaidi group, PET system design by simulation}{Geneva}
+\location{46.19}{6.15}{Geneva, Switzerland}
+
+\paragraph{What it is}
+Habib Zaidi's Division of Nuclear Medicine and Molecular Imaging at Geneva
+University Hospital, with Tehran University of Medical Sciences (Mohammad Reza
+Ay) on the instrumentation. Monte Carlo design studies of whole scanners, and
+deep-learning work across PET; on this map for its monolithic system design.
+
+\paragraph{People}
+Habib Zaidi (lead), Amirhossein Sanaat, Hossein Arabi; Mohammad Reza Ay
+(Tehran).
+\gap{Sanaat's later monolithic positioning work --- the multilayer perceptron
+for DOI on a 12 x 12 SiPM array that \ref{note:Shen2025} cites --- is not this
+paper; find and note it.}
+
+\begin{papernote}{Sanaat et al.\ 2020 -- Novel preclinical PET geometrical concept using a monolithic scintillator crystal offering concurrent enhancement in spatial resolution and detection sensitivity: a simulation study}{Sanaat2020}
+\thumb{img/sanaat2020.png}
+Phys.\ Med.\ Biol.\ 65(4):045013, \doi{10.1088/1361-6560/ab63ef}. Sanaat,
+Arabi, Ay, Zaidi.
+
+\paragraph{Summary}
+Mix thin and thick monoliths in one small-animal ring: \mm{2} blocks for
+resolution, \mm{10} blocks for sensitivity, either facing their own kind or
+facing each other, with rotating variants to even out the resolution. Rings of
+10 or 12 blocks (bores \mm{154} and \mm{187}), each a
+\qtyproduct{50.2 x 50.2}{\mm} LYSO monolith in BaSO$_4$ on a 12 x 12 SiPM array
+at \mm{4.2} pitch. GEANT4 with full optical transport --- UNIFIED, ``ground''
+surfaces, 25{,}000 photons per MeV --- validated against the group's prototype
+scanner, and positioned by an analytic row-and-column method (correlated signal
+enhancement). No DOI, no learning, simulation only.
+
+\paragraph{Key Findings}
+\begin{itemize}
+	\item All-\mm{2} rings: 0.6--\mm{0.75} radial, but 1.6--2.6\% sensitivity;
+		all-\mm{10}: up to 4.3\%, resolution no better than about \mm{1}.
+	\item Mixed rings beat a uniform \mm{6} compromise: \mm{0.6}--\mm{0.9}
+		against 0.8--\mm{1.2}, at similar or higher sensitivity (2.8\% for 12
+		blocks against 2.45\%), with 40\% less LYSO.
+	\item Peak NECR 16--20 kcps, lower than the uniform rings and judged
+		irrelevant at mouse activities.
+\end{itemize}
+
+\paragraph{Why it matters here}
+A system-level answer to the same thickness trade a monolith faces --- depth
+blurs the thick crystal --- solved by geometry rather than by recovering depth:
+the thin side of each line of response pins it. That is the alternative to
+measuring DOI, and a reason a thick-monolith thesis has to show its depth
+estimate is worth more than simply mixing thicknesses. Two cautions: depth is
+ignored outright, which flatters the thick blocks' parallax, and the surfaces
+are the UNIFIED ``ground'' model that \ref{note:Roncali2013} shows
+overestimates collected light.
+
+\end{papernote}
+
+\end{programnote}
+
 \begin{programnote}{QST Chiba -- Yamaya group, layered DOI and the X'tal cube}{QST}
 \location{35.63}{140.11}{Chiba, Japan}
 
@@ -3193,6 +3250,19 @@ structured optically. That is closer to a scattering bulk than it first looks.}
 \paragraph{People}
 Taiga Yamaya (PI), Han Gyu Kang, Eiji Yoshida, Fumihiko Nishikido, Go Akamatsu.
 
+\paragraph{Off the map: Kang et al.\ 2026}
+Kang et al.\ 2026, ``Design optimization using GATE Monte Carlo simulations for a
+sub-0.5 mm resolution PET scanner with 3-layer DOI detectors'', Phys.\ Med.\
+Biol.\ 71:035001 (doi 10.1088/1361-6560/ae3b02), was noted here and taken off:
+it is a layered, not monolithic, detector, and its GATE model has optical
+processes switched off --- gamma interactions only, inter-crystal scatter
+collapsed to an energy-weighted centroid per layer and then the highest-energy
+hit. Its one result worth keeping: the gamma-only model matched measured radial
+resolution to \mm{0.03} out to \mm{10} off centre, but missed by \mm{0.3} at
+\mm{15}, which the authors put down to crystal-decoding errors in the real
+light-sharing readout. A model without optics fails exactly where the light
+distribution decides the answer.
+
 \paragraph{To read}
 \gap{The X'tal cube line itself is unread. Yamaya et al.\ 2011, ``A SiPM-based
 isotropic-3D PET detector X'tal cube with a three-dimensional array of 1 mm3
@@ -3203,47 +3273,6 @@ the VRAIN system paper, Akamatsu et al.\ 2022, Phys.\ Med.\ Biol.\
 67(22):225011, \doi{10.1088/1361-6560/ac9e87}, which reports \mm{2.2} rods and
 \ps{229} TOF with one-to-one coupling and no DOI --- worth recording as the
 commercial outcome even though it is off this map's theme.}
-
-\begin{papernote}{Kang et al.\ 2026 -- Design optimization using GATE Monte Carlo simulations for a sub-0.5 mm resolution PET scanner with 3-layer DOI detectors}{Kang2026}
-Phys.\ Med.\ Biol.\ 71(3):035001, \doi{10.1088/1361-6560/ae3b02}.
-
-\paragraph{Summary}
-A GATE study optimising the crystal layer design of a rodent brain scanner
-built from 3-layer DOI detectors. Their previous submillimetre scanner used
-\mm{1} crystal pitch and did not reach \mm{0.5}, which they attribute to the
-pitch and to an unoptimised layer design; here three layer thickness splits are
-compared in simulation and checked against experiment.
-
-\paragraph{Detector}
-Two rings of 16 DOI detectors, \mm{23.4} axial coverage; each detector three
-layers of LYSO at \mm{0.8} crystal pitch. Layer designs compared, front to back: A
-(4 + 4 + \mm{7}), B (3 + 4 + \mm{4}) and C (3 + 3 + \mm{5}).
-
-\paragraph{Key findings}
-\begin{itemize}
-	\item Design C gave the most uniform spatial resolution out to \mm{15}
-		radial offset.
-	\item \mm{0.45} diameter rods were clearly resolved with design C using an
-		iterative algorithm.
-	\item GATE agreed with measured radial resolution except at \mm{15} radial
-		offset.
-\end{itemize}
-
-\paragraph{Why it matters here}
-A GATE-based design optimisation of a DOI detector published by the group with
-the longest DOI record, which makes it the natural methodological comparison
-for this thesis's own GATE studies --- same toolkit, same question, segmented
-geometry instead of monolithic. The reported disagreement between GATE and
-experiment at \mm{15} radial offset is the interesting part and should be
-chased, since it is exactly the regime where optical modelling and oblique
-incidence both start to matter.
-\gap{Abstract only. Needed: whether optical photon transport was simulated at
-all or only gamma interactions, which is the difference between this being a
-geometry study and an optics study. Compare their GATE configuration against
-\ref{prog:OpenGATE}.}
-
-\end{papernote}
-
 \end{programnote}
 
 \begin{programnote}{MODE Collaboration -- differentiable detector design}{MODE}

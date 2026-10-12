@@ -21,7 +21,7 @@ rows = [
 	["i3M", "AnnPET", "HUST", "Delft", "machinery"],    # the annulus cluster and what it cites
 	["cMiCE", "Ghent", "WTPET", "Molecubes", "UTOFPET", "Aachen", "J-PET", "SIAT"],   # neural localisation and its precursors, plus the semi-monolithic branch
 	["Davis", "LBNL", "CrystalClear", "PrismPET", "QST"],        # light transport, light sharing and layered DOI
-	["MODE", "OpenGATE", "UTS", "Penn"],                # tooling stubs and history
+	["MODE", "OpenGATE", "UTS", "Penn", "Geneva"],                # tooling stubs and history
 	["NSSMIC2026", "NSSMIC2027"],                       # conferences, with their countdowns
 ]
 # cross-references that are a shared citation, not a relationship

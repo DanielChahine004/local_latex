@@ -1325,6 +1325,7 @@ means by its ``existing monolithic detector''.
 \end{papernote}
 
 \begin{papernote}{Decuyper et al.\ 2021 -- Artificial neural networks for positioning of gamma interactions in monolithic PET detectors}{Decuyper2021}
+\thumb{img/decuyper2021.png}
 Phys.\ Med.\ Biol.\ 66:075001, \doi{10.1088/1361-6560/abebfc}. Decuyper,
 Stockhoff, Vandenberghe, Van Holen.
 
@@ -1333,22 +1334,51 @@ A network of three hidden layers of 256 neurons maps the light distribution to
 the first interaction position --- Compton or photoelectric --- in a
 \qtyproduct{50 x 50 x 16}{\mm} LYSO monolith read out by a photodetector
 array, trained on optical simulation where that first position is known.
+\textbf{Simulation only:} GATE 8.0 with the measured-surface \texttt{LUT
+Davis} model (\ref{note:Roncali2013}), an 8 x 8 array of \mm{6.07} SiPMs
+at an idealised 75\% PDE, the 16 row and column sums as input. Training on a
+49 x 49 grid at \mm{1} steps, 1000 events per position, L1 loss, with a
+second grid offset by \mm{0.5} to catch the network snapping to training
+positions --- which the larger networks do.
 
 \paragraph{Key Findings}
 Median 3D positioning error \mm{0.77} and 2D FWHM \mm{0.46}, a
 \qty{17}{\percent} improvement in FWHM on nearest neighbour; restricted to
-non-Compton events, \mm{0.40} and \mm{0.42}.
-\gap{The abstract reports optical simulation only, while this node's summary
-had it as sim-to-real transfer. Either a companion paper carries the
-experimental transfer or that claim is wrong --- resolve before citing it as
-evidence that simulation-trained networks survive real data.}
+non-Compton events, \mm{0.40} and \mm{0.42}. Continuous DOI comes from one
+more output neuron, about 46\% better than nearest neighbour's six layers;
+inference runs at 21 million events per second on one RTX 2080 Ti.
+
+\textbf{Compton scatter.} About 60\% of
+events scatter in the crystal before absorption, and for them the median 3D
+error rises from \mm{0.40} to \mm{1.59} (means \mm{0.49} and \mm{2.29}),
+the DOI error FWHM from \mm{0.71} to \mm{1.80}, and the position spread
+grows long tails: 93\% more error overall than unscattered events alone. The
+error has a direction --- most scatter is small-angle and forward, so the
+light comes from nearer the sensor and the network places the event too
+deep. The authors' remedy is in the discussion and not done: train networks to
+recognise scattered events and position them separately.
+
+No measured data: the authors say testing on real data is future work, and
+that their DOI training has no counterpart in the lab, where the true depth of
+the first interaction is unknown.\aside{ This note previously had it
+transferring from simulation to measurement; it does not.}
 
 \paragraph{Why it matters here}
 Kill (g): the strongest published claim that a network beats nearest
 neighbour on a monolith, and the one an annulus positioning argument has to
 better or explain. Its ceiling is the first-interaction position, which only
-simulation knows, so the gap above decides how much the number is worth
-against a real detector such as \ref{note:Stockhoff2021}.
+simulation knows, and the paper never leaves simulation, so its \mm{0.46} is
+a ceiling at an idealised PDE, not a measurement to set against a real
+detector such as \ref{note:Stockhoff2021}.
+
+It is also the cleanest published number for the multi-interaction problem in
+a monolith: the majority of events, 60\% in \mm{16} of LYSO, are
+multi-site, they carry most of the positioning error, and that error is
+biased in depth. The authors name the next step --- detect the scattered
+events, then treat them separately --- and stop there, which is the step this
+thesis takes up.
+\gap{Check whether Ghent later built the scatter-aware networks the
+discussion proposes.}
 
 \end{papernote}
 

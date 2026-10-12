@@ -3697,12 +3697,14 @@ that one dataset serves several cards.
 \paragraph{The idea}
 For events that deposit in two places, estimate which came first from the
 joint pattern of per-channel arrival times and counts, in a continuous crystal.
+
 \paragraph{To beat}
 Energy-only layer sequencing, 69.2\% by closest layer and 81.3\% with the
 backscatter swap for two-layer events (\ref{note:Peng2019}); the experiment
 gave up sequencing for a max-energy rule (\ref{note:Peng2019a}). First crystal
 recovered for 88\% of multi-crystal events with a fixed-pattern decomposition
 (\ref{note:Petersen2020}). Both need optical isolation; neither uses time.
+
 \paragraph{Simulation}
 Thick LYSO slab or monolith, ground-truth interaction order from GATE, a
 classifier on (time, count) per channel against the same classifier on counts
@@ -3713,11 +3715,13 @@ alone --- the difference is the value of time.
 \paragraph{The idea}
 Rerun the one-, two-, three-plus-deposit classifier with per-channel first
 photon times as extra inputs.
+
 \paragraph{To beat}
 Counts-only: 90.1--91.4\%, 77.6--81.7\% and 66.4--68.4\%, with multi-deposit
 events mostly misread as fewer (\ref{note:Shen2025}). The photon-counting data
 the timing input would look like exists in hardware (\ref{note:Lee2026},
 \ref{note:Cates2024}).
+
 \paragraph{Simulation}
 The same materials and slabs as \ref{note:Shen2025}, plus LYSO, with timing
 recorded; report the confusion matrix with and without it.
@@ -3728,6 +3732,7 @@ recorded; report the confusion matrix with and without it.
 The bound chapter proper: the information about two vertices, from a likelihood
 over photon arrival times \emph{and} where they land, with Poisson counts and
 the gamma arrival time profiled rather than aligned away.
+
 \paragraph{To beat}
 The single-vertex, time-only depth bound of \ref{note:LoignonHoule2021}, which
 treats photons as i.i.d., fixes the count and removes $\theta$ by alignment;
@@ -3735,6 +3740,7 @@ its transport density comes from \ref{note:Cates2015}, whose measured
 counterpart is the per-voxel first-photon delay of \ref{note:Lee2026}. The
 resolution limit for two point sources in \ref{note:Ram2006} is the template
 for the two-vertex form.
+
 \paragraph{Simulation}
 Analytic or Monte Carlo transport densities per voxel; compute the bound as a
 function of vertex separation and crystal thickness, and check estimators
@@ -3745,11 +3751,13 @@ against it.
 \paragraph{The idea}
 Classify the event first, then position with a network trained for that class,
 and measure how much of the scatter penalty comes back.
+
 \paragraph{To beat}
 In \mm{16} of LYSO, about 60\% of events scatter, and their median 3D error is
 \mm{1.59} against \mm{0.40} unscattered (\ref{note:Decuyper2021}), which names
 this step as future work. Multi-crystal depth \mm{2.1} against \mm{1.0}
 single (\ref{note:Petersen2020}).
+
 \paragraph{Simulation}
 Decuyper's detector (\qtyproduct{50 x 50 x 16}{\mm}, 8 x 8 SiPMs) with a
 class-conditional network; report per-class median error and the overall FWHM.
@@ -3760,6 +3768,7 @@ class-conditional network; report per-class median error and the overall FWHM.
 Forward scatter brings the light nearer the sensor, so scattered events are
 placed too deep (\ref{note:Decuyper2021}). Model and remove that bias, in
 depth and in the timing correction that depends on depth.
+
 \paragraph{To beat}
 The DOI error FWHM of \mm{1.80} for scattered events against \mm{0.71}
 unscattered (\ref{note:Decuyper2021}); the energy--depth confusion in
@@ -3771,6 +3780,7 @@ timestamps that \ref{note:LoignonHoule2021} warns of.
 Hold the LYSO volume fixed and compare one thick monolith with depth
 estimation, stacked thin slabs, and rings mixing thin and thick blocks, on
 resolution, sensitivity and multi-interaction recovery.
+
 \paragraph{To beat}
 Four \mm{3.16} layers: \mm{0.40} simulated, \mm{1.1} measured
 (\ref{note:Peng2019}, \ref{note:Peng2019a}). Mixed 2 and \mm{10} rings:
@@ -3783,6 +3793,7 @@ Four \mm{3.16} layers: \mm{0.40} simulated, \mm{1.1} measured
 \paragraph{The idea}
 A benchmark protocol rather than a result: every learned positioner reported
 on an offset grid as well as the training grid, as standard.
+
 \paragraph{To beat}
 \ref{note:Kinyanjui2025} tests on its own 27 x 5 calibration points;
 \ref{note:Decuyper2021} shows larger networks snap to the training grid unless
@@ -3795,6 +3806,7 @@ the gap.
 \paragraph{The idea}
 Rerun any arrival-time estimator from the cards above under different surface
 models and interface defects, against the same estimator on counts.
+
 \paragraph{To beat}
 A \mm{0.05} overhang of crystal past the SiPM degraded oTOF depth by 2.6 times
 and energy depth by only 1.35 (\ref{note:Zeng2024}). UNIFIED overestimates

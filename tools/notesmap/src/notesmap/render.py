@@ -183,7 +183,9 @@ class Board:
                 if name.endswith("_leader"):
                     continue
                 a, _, b = name.partition("->")
-                want = self.why.get(name, "") if key in (a, b) else ""
+                # an unfolded card's own arrows (open_arrows) keep their captions
+                pinned = a in self.cfg.open_arrows
+                want = self.why.get(name, "") if pinned or key in (a, b) else ""
                 if self.shown.get(name, "") != want:
                     self.shown[name] = want
                     try:
@@ -592,7 +594,12 @@ class Board:
             # the map shows these one node at a time, on hover, so they can run
             # longer than a board label that has to sit among all the others
             self.why[name] = self._caption(why, 140 if self.map_mode else 80)
-            text = None if self.map_mode else (self.why[name] or None)
+            # an open_arrows programme draws one card's few arrows at a time, so on
+            # the map those keep their captions standing instead of only on hover
+            standing = not self.map_mode or a in gated
+            text = (self.why[name] or None) if standing else None
+            if standing:
+                self.shown[name] = self.why[name]
             self._connect(name, a, b, text=text, color="grey", dash="dashed", size="s",
                           bend=bend, arrowhead_start="arrow" if both else "none")
         for name in [n for n in self.arrows if not n.endswith("_leader") and n not in wanted]:

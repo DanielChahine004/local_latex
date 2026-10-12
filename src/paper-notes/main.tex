@@ -2401,8 +2401,62 @@ template for the bounds; the 2026 paper measures that PDF per voxel and channel.
 
 \paragraph{People}
 Joshua W.\ Cates (lead), Woon-Seng Choong, Seungeun Lee, Ryan Heller; Erik
-Brubaker on the 2024 monolithic prototype. Cates's earlier work with Levin
-is \ref{note:Cates2015}.
+Brubaker on the 2024 monolithic prototype. Cates's 2015 bound, from his
+time with Levin at Stanford, opens the line (\ref{note:Cates2015}).
+
+\begin{papernote}{Cates, Vinke and Levin 2015 -- Analytical calculation of the lower bound on timing resolution for PET scintillation detectors comprising high-aspect-ratio crystal elements}{Cates2015}
+Phys.\ Med.\ Biol.\ 60(13):5141--5161, \doi{10.1088/0031-9155/60/13/5141}.
+Written at Stanford in Levin's group, before Cates was at LBNL; filed here
+for the line it starts, which \ref{note:Cates2024} and \ref{note:Lee2026}
+carry on.
+
+\paragraph{Summary}
+A Cramér--Rao lower bound on coincidence timing resolution for long crystals,
+derived with an analytical probability density function for the optical transit
+time inside the crystal rather than a Monte Carlo photon transport
+distribution. The point is that in a high-aspect-ratio element the spread in
+optical path length is no longer negligible against the other terms, so the
+bound has to carry the optics explicitly.
+
+\paragraph{Detector}
+LYSO:Ce pairs, \qtyproduct{3 x 3 x 5}{\milli\metre} and
+\qtyproduct{3 x 3 x 20}{\milli\metre}, on Hamamatsu S12572-50C analogue SiPMs,
+wrapped in ESR or in Teflon tape.
+
+\paragraph{Key findings}
+\begin{itemize}
+	\item Calculated bound \ps{152 \pm 8} for the
+		\qtyproduct{3 x 3 x 20}{\milli\metre} crystals and
+		\ps{125 \pm 8} for \qtyproduct{3 x 3 x 5}{\milli\metre}.
+	\item Measured CTR \ps{162 \pm 1} FWHM (ESR) and
+		\ps{165 \pm 1} (Teflon) at \mm{20}, and
+		\ps{135 \pm 1} at \mm{5} --- within \qty{6.5}{\percent}
+		of the bound for ESR and \qty{8.6}{\percent} for Teflon.
+	\item The analytically calculated optical transport PDF agreed well with
+		detailed light transport simulation, so the analytical route avoids the
+		Monte Carlo step entirely.
+	\item The arrival-time variance is largest for interactions close to the
+		photosensor and decreases with distance from it.
+\end{itemize}
+
+\paragraph{Why it stays in the file}
+The methodological template for this thesis's bound work, and the reason the
+bound chapter cannot treat the optics as a nuisance. Cates derives an analytic
+PDF for the optical observable and puts it inside the Fisher information; the
+same construction is what a scattering bulk needs, with a transit-time-and-
+position PDF in place of a transit-time one. The last finding is the one to
+keep in view --- the optical contribution to the bound is itself depth-dependent,
+which is why a single scalar ``timing resolution'' for a long crystal is
+already an approximation.
+It is the clear precursor of \ref{note:LoignonHoule2021}, which takes the same idea
+from a bound on timing to a bound on depth.
+\gap{Arithmetic to check: measured minus bound is \ps{10} at \mm{20} and
+\ps{10} at \mm{5}, so the absolute excess over the bound is roughly constant
+while the percentage is not. Confirm against the paper whether they comment on
+that, because a constant excess points at an electronics term outside the
+bound.}
+
+\end{papernote}
 
 \begin{papernote}{Cates, Choong and Brubaker 2024 -- Scintillation and Cherenkov photon counting detectors with analog silicon photomultipliers for TOF-PET}{Cates2024}
 \thumb{img/cates2024.png}
@@ -3134,56 +3188,6 @@ or an equivalent treatment of resolution thresholds. This is the machinery that
 makes the readout-rank claim rigorous rather than intuitive.}
 \end{papernote}
 
-\begin{papernote}{Cates, Vinke and Levin 2015 -- Analytical calculation of the lower bound on timing resolution for PET scintillation detectors comprising high-aspect-ratio crystal elements}{Cates2015}
-Phys.\ Med.\ Biol.\ 60(13):5141--5161, \doi{10.1088/0031-9155/60/13/5141}.
-
-\paragraph{Summary}
-A Cramér--Rao lower bound on coincidence timing resolution for long crystals,
-derived with an analytical probability density function for the optical transit
-time inside the crystal rather than a Monte Carlo photon transport
-distribution. The point is that in a high-aspect-ratio element the spread in
-optical path length is no longer negligible against the other terms, so the
-bound has to carry the optics explicitly.
-
-\paragraph{Detector}
-LYSO:Ce pairs, \qtyproduct{3 x 3 x 5}{\milli\metre} and
-\qtyproduct{3 x 3 x 20}{\milli\metre}, on Hamamatsu S12572-50C analogue SiPMs,
-wrapped in ESR or in Teflon tape.
-
-\paragraph{Key findings}
-\begin{itemize}
-	\item Calculated bound \ps{152 \pm 8} for the
-		\qtyproduct{3 x 3 x 20}{\milli\metre} crystals and
-		\ps{125 \pm 8} for \qtyproduct{3 x 3 x 5}{\milli\metre}.
-	\item Measured CTR \ps{162 \pm 1} FWHM (ESR) and
-		\ps{165 \pm 1} (Teflon) at \mm{20}, and
-		\ps{135 \pm 1} at \mm{5} --- within \qty{6.5}{\percent}
-		of the bound for ESR and \qty{8.6}{\percent} for Teflon.
-	\item The analytically calculated optical transport PDF agreed well with
-		detailed light transport simulation, so the analytical route avoids the
-		Monte Carlo step entirely.
-	\item The arrival-time variance is largest for interactions close to the
-		photosensor and decreases with distance from it.
-\end{itemize}
-
-\paragraph{Why it stays in the file}
-The methodological template for this thesis's bound work, and the reason the
-bound chapter cannot treat the optics as a nuisance. Cates derives an analytic
-PDF for the optical observable and puts it inside the Fisher information; the
-same construction is what a scattering bulk needs, with a transit-time-and-
-position PDF in place of a transit-time one. The last finding is the one to
-keep in view --- the optical contribution to the bound is itself depth-dependent,
-which is why a single scalar ``timing resolution'' for a long crystal is
-already an approximation.
-It is the clear precursor of \ref{note:LoignonHoule2021}, which takes the same idea
-from a bound on timing to a bound on depth.
-\gap{Arithmetic to check: measured minus bound is \ps{10} at \mm{20} and
-\ps{10} at \mm{5}, so the absolute excess over the bound is roughly constant
-while the percentage is not. Confirm against the paper whether they comment on
-that, because a constant excess points at an electronics term outside the
-bound.}
-
-\end{papernote}
 
 
 

@@ -2797,13 +2797,14 @@ the most common and hardest case. A uniform light guide, or a monolith, gives
 no fixed pattern to decompose against --- which is the difficulty this thesis
 takes on. Yet both the scanner and the oTOF papers reject inter-crystal
 scatter rather than use it.
-\gap{The decomposition paper itself: Petersen, LaBella, Howansky, Zhao and
-Goldan 2020, ``Compton decomposition and recovery in a Prism-PET detector
-module'', IEEE NSS/MIC 2020, pp.\ 1--4. Read for the method, its accuracy,
-and whether it orders the interactions or only separates them. Also LaBella
-2020's Supplemental Note 2, and the reference both build on, Makek et al.\
-2019, ``Scintillator pixel detectors for measurement of Compton scattering'',
-Condens.\ Matter 4:24.}
+The decomposition is \ref{note:Petersen2020}: it separates the interactions
+and recovers the first, but never orders them.
+\gap{Still unread: LaBella 2020's Supplemental Note 2; Makek et al.\ 2019,
+``Scintillator pixel detectors for measurement of Compton scattering'',
+Condens.\ Matter 4:24; and Peng, Judenhofer and Cherry 2019, ``Compton PET: a
+layered structure PET detector with high performance'', Phys.\ Med.\ Biol.\
+64(10), the Davis-side layered detector decoded by machine learning that
+Petersen cites as the costly alternative.}
 
 \paragraph{Detector lineage}
 Polished LYSO arrays coupled 4-to-1 or 9-to-1 to \qtyproduct{3 x 3}{\milli\metre}
@@ -2958,6 +2959,52 @@ timestamps always come from one interaction.
 
 \end{papernote}
 
+\begin{papernote}{Petersen et al.\ 2020 -- Compton decomposition and recovery in a Prism-PET detector module}{Petersen2020}
+\thumb{img/petersen2020.png}
+IEEE NSS/MIC 2020, \doi{10.1109/NSS/MIC42677.2020.9507898}. Petersen, LaBella,
+Howansky, Zhao, Goldan.
+
+\paragraph{Summary}
+The multi-interaction paper of the programme, in simulation. A 16 x 16 array of
+\qtyproduct{1.4 x 1.4 x 20}{\mm} LYSO on an 8 x 8 SiPM array with the prismatoid
+guide; GATE for the gammas, TracePro for the optics. Hits are grouped by
+crystal, crystals under \keV{30} dropped, and each firing crystal mapped to its
+own SiPM pattern from its energy-averaged depth; the readout is the sum of
+those patterns. Two decoders. An analytic one, for central events inside one
+prism (about half the photopeak): the ratios of the brightest SiPM signals count
+the firing crystals, and a linear system, closed with empirical light-sharing
+ratios, splits the pattern into per-crystal energies. And a U-Net-style CNN
+that maps the whole 8 x 8 readout to the first interaction position: crystal
+index in $x$, $y$ and continuous depth.
+
+\paragraph{Key Findings}
+\begin{itemize}
+	\item Only 37\% of photopeak events are single-crystal at \mm{1.4} pitch.
+	\item Analytic: firing crystals identified 99.3\% correctly (99.7\% one,
+		98.9\% two, 88.0\% three or four); decomposed crystal energy off by
+		\keV{0.7}, \keV{29.7} and \keV{25.7} on average.
+	\item CNN: first-interaction crystal right for about 98\% of single- and
+		88\% of multi-crystal events; depth error \mm{1.0} FWHM single,
+		\mm{2.1} multi.
+	\item Central beam at normal incidence only; edges, corners and oblique
+		angles are future work. No timing, no measured data.
+\end{itemize}
+
+\paragraph{Why it matters here}
+The closest prior art to the multi-interaction half of this thesis, and the
+contrast is exact. It separates and counts interactions and recovers the first,
+but only because the light guide gives every crystal a fixed, known pattern and
+the readout is a linear sum of them --- a dictionary to decompose against. The
+first position comes out of the CNN directly; no order is ever estimated, and
+energies and patterns are all it uses. A monolith or a scattering bulk has no
+such dictionary: each interaction's pattern depends continuously on where it
+is, so the decomposition becomes a joint estimate of positions, which is where
+arrival times and a bound earn their place. Within one crystal it also merges
+all hits to one energy-averaged depth, so it cannot see the multi-site events
+inside a crystal that a monolith is made of.
+
+\end{papernote}
+
 \end{programnote}
 
 \begin{programnote}{Crystal Clear and Milano-Bicocca -- light sharing, recirculation and the timing limit}{CrystalClear}
@@ -2976,11 +3023,14 @@ the same group then pushed the coincidence timing of such modules towards the
 limit and derived what the timing signal itself can say about depth.
 
 \paragraph{Why it matters here}
-Three things this thesis needs come from here. The light-sharing-and-
-recirculation mechanism is the conceptual ancestor of every single-ended DOI
-design including \ref{prog:PrismPET}'s prismatoids. The \ps{157} result settles
-that DOI extraction and good timing are not in conflict, which removes the
-standard objection to spending light on depth. And \ref{note:LoignonHoule2021}
+Three things this thesis needs come from here. The
+light-sharing-and-recirculation mechanism is the conceptual ancestor of every
+single-ended DOI design including \ref{prog:PrismPET}'s prismatoids. The
+\ps{157} result answers the standard objection to spending light on depth, but
+not the way the abstract suggests: sharing the light doubles the raw timing,
+and it is the depth estimate that wins it back by pooling every SiPM's
+corrected timestamp (\ref{note:Pizzichemi2019}) --- depth pays for itself
+rather than coming free. And \ref{note:LoignonHoule2021}
 derives a Cramér--Rao lower bound for time-based DOI estimation, which is the
 closest published relative of this thesis's own bound work and has to be cited
 as prior art rather than discovered late.

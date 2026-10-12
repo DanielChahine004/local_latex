@@ -2253,18 +2253,23 @@ where this thesis sits, and it should be stated in exactly those terms rather
 than as a claim of novelty.}
 
 \paragraph{People}
-Emilie Roncali, Simon R. Cherry. Junwei Du and Silin Ren on the dual-ended
-detector papers.
+Emilie Roncali, Simon R. Cherry. Silin Ren, Yongfeng Yang and Junwei Du on the
+dual-ended detector papers.
 \gap{Confirm who now runs the optical-transport line and whether Roncali's
 group maintains the GATE implementation; also whether Nadig or Kratochwil, who
 appear on recent Davis-affiliated detector papers, belong to this programme or
 are visiting from \ref{prog:Aachen} and Crystal Clear.}
 
 \paragraph{To record}
-\gap{The LUT model reaches GATE as the \texttt{LUT Davis} optical surface
-option. Check its status in GATE 10 against \ref{prog:OpenGATE} before citing
-it --- the 2013 paper lists the GATE implementation as future work, so the
-version that shipped needs its own reference.}
+The LUT model reached GATE as the \texttt{LUT Davis} optical surface option
+in Stockhoff, Jan, Dubois, Cherry and Roncali 2017, ``Advanced optical
+simulation of scintillation detectors in GATE V8.0: first implementation of a
+reflectance model based on measured data'', Phys.\ Med.\ Biol.\ 62:L1--L8,
+\doi{10.1088/1361-6560/aa7007} --- the shipped version's own reference, cited
+by \ref{note:Roncali2017}. Its first author is the Stockhoff of
+\ref{note:Stockhoff2021}, so Davis and Ghent share a person.
+\gap{Check its status in GATE 10 against \ref{prog:OpenGATE} before citing
+it.}
 
 \begin{papernote}{Roncali and Cherry 2013 -- Simulation of light transport in scintillators based on 3D characterization of crystal surfaces}{Roncali2013}
 \thumb{img/roncali2013.png}
@@ -2334,7 +2339,8 @@ is optimistic.
 
 \end{papernote}
 
-\begin{papernote}{Ren, Du and Cherry 2014 -- Effects of reflector and crystal surface on the performance of a depth-encoding PET detector with dual-ended readout}{Ren2014}
+\begin{papernote}{Ren, Yang and Cherry 2014 -- Effects of reflector and crystal surface on the performance of a depth-encoding PET detector with dual-ended readout}{Ren2014}
+\thumb{img/ren2014.png}
 Med.\ Phys.\ 41(7):072503, \doi{10.1118/1.4881097}.
 
 \paragraph{Summary}
@@ -2344,23 +2350,36 @@ both ends by position-sensitive avalanche photodiodes and compared on flood
 histogram, energy resolution and DOI resolution.
 
 \paragraph{Detector}
-LSO arrays of \mm{1.5} crystals, dual-ended PSAPD readout, reflectors enhanced
-specular reflector (ESR), Toray and Crystal Wrap, surfaces polished or
-unpolished.
+Five LSO arrays of 5 x 5 crystals, \qtyproduct{1.5 x 1.5 x 20}{\mm}, read at
+both ends by position-sensitive avalanche photodiodes (PSAPDs): unpolished
+(saw-cut, about \um{4} peak to valley by AFM) or polished (about \um{0.1}),
+with ESR, Toray Lumirror E60 or Crystal Wrap (ePTFE) between crystals. Depth
+is measured with a slab-collimated \mm{0.6} beam at five depths. The two
+polished arrays were also read single-ended for comparison.
 
 \paragraph{Key findings}
 \begin{itemize}
 	\item Every array except the polished-ESR one gave DOI resolution in
 		\qtyrange{1.9}{2.9}{\milli\metre}; the polished ESR array was the
-		outlier.
+		outlier at \mm{16.4}, essentially no depth information, its GLCED
+		(change in the end-to-end signal ratio per cm of depth) only 0.023.
+	\item GLCED and DOI resolution by array: unpolished ESR 0.172 and
+		\mm{2.9}; polished Toray 0.231 and \mm{2.3}; unpolished Toray 0.328
+		and \mm{1.9}; unpolished Crystal Wrap 0.470 and \mm{1.9}.
 	\item DOI resolution improved as the gradient in light collection
 		efficiency with depth (GLCED) increased --- the paper's own
 		single-figure explanation of why surface finish controls DOI.
 	\item The ESR arrays gave the best energy resolution and Crystal Wrap the
-		worst, with ESR and Toray giving comparable flood histograms.
+		worst, with ESR and Toray giving comparable flood histograms: summed
+		energy 16.5\% polished ESR, 19.4\% unpolished ESR, about 30\% with
+		Toray and 54.6\% with Crystal Wrap. The price of depth is light.
 	\item The geometric mean of the two end energies gives a more uniform
 		photopeak position with depth than the conventional sum, so a
-		depth-independent energy window becomes possible.
+		depth-independent energy window becomes possible; with Toray it
+		brings the energy resolution from about 30\% to about 21\%.
+	\item Their recommendations: unpolished Toray for small-animal scanners,
+		where energy resolution matters less; unpolished ESR for breast and
+		brain, where it matters more; polished ESR for single-ended readout.
 \end{itemize}
 
 \paragraph{Why it matters here}
@@ -2374,6 +2393,7 @@ crystal with a clear one.
 \end{papernote}
 
 \begin{papernote}{Roncali, Mosleh-Shirazi and Badano 2017 -- Modelling the transport of optical photons in scintillation detectors for diagnostic and radiotherapy imaging}{Roncali2017}
+\thumb{img/roncali2017.png}
 Phys.\ Med.\ Biol.\ 62(20):R207--R235, \doi{10.1088/1361-6560/aa8b31}.
 
 \paragraph{Summary}
@@ -2385,12 +2405,41 @@ modelling ionising radiation transport while light transport is often ignored
 or modelled coarsely, and that the complexity of the tools plus the spread of
 private user codes has kept optical studies from being fully exploited.
 
+\paragraph{Key findings}
+\begin{itemize}
+	\item \textbf{Bulk scattering as a loss:} ``Self-absorption and bulk
+		scattering should be limited to ensure high light output. Bulk
+		scattering is mainly due to changes in refractive index created by
+		impurities. Other types such as Rayleigh scattering \ldots\ are
+		typically negligible.'' The field's default view, stated plainly.
+	\item \textbf{Where scattering is the physics:} granular phosphor screens
+		for X-ray imaging, whose light transport is ``largely dominated'' by
+		the grains and modelled with Mie theory --- the nearest existing
+		treatment of a deliberately scattering scintillator.
+	\item \textbf{Package table} (its Table 2, the open-source codes):
+		MANTIS, hybridMANTIS, cartesianDETECT2 and GEANT4 all model bulk
+		absorption, surface reflection and roughness, but only MANTIS and
+		GEANT4 model Rayleigh scattering, wavelength effects and
+		polarisation; the GPU code that buys a 627-fold speed-up drops them.
+		GATE inherits GEANT4's optics and adds the measured-surface LUTs
+		(\ref{note:Roncali2013}).
+	\item \textbf{Validation is the weak point:} for scintillators the
+		measurable quantities are few --- light output for given sizes,
+		finishes and reflectors, and timing --- so models with adjustable
+		parameters are easy to fit and hard to test.
+	\item \textbf{Outlook:} folding optical codes into GEANT4 and GATE is
+		the most promising route to a common tool, with shared formats for
+		geometry and output.
+\end{itemize}
+\aside{The first two points are the framing: this thesis treats as signal
+the bulk scattering the review treats as a loss, and the nearest model for
+it comes from phosphor screens, not PET crystals. The table gives the
+statement of which optical model it uses and why: GEANT4 or GATE, the
+only open codes here that keep Rayleigh scattering.}
+
 \paragraph{Why it matters here}
 The citation for ``nobody models the light properly'' --- the sentence the
 introduction needs and which is otherwise hard to source without editorialising.
-\gap{Abstract and skim only. The table of packages and what each can and cannot
-do is the part to extract; it is the natural basis for the thesis's own
-statement of which optical model it uses and why.}
 
 \end{papernote}
 

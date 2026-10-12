@@ -2405,6 +2405,7 @@ Brubaker on the 2024 monolithic prototype. Cates's 2015 bound, from his
 time with Levin at Stanford, opens the line (\ref{note:Cates2015}).
 
 \begin{papernote}{Cates, Vinke and Levin 2015 -- Analytical calculation of the lower bound on timing resolution for PET scintillation detectors comprising high-aspect-ratio crystal elements}{Cates2015}
+\thumb{img/cates2015.png}
 Phys.\ Med.\ Biol.\ 60(13):5141--5161, \doi{10.1088/0031-9155/60/13/5141}.
 Written at Stanford in Levin's group, before Cates was at LBNL; filed here
 for the line it starts, which \ref{note:Cates2024} and \ref{note:Lee2026}
@@ -2419,9 +2420,10 @@ optical path length is no longer negligible against the other terms, so the
 bound has to carry the optics explicitly.
 
 \paragraph{Detector}
-LYSO:Ce pairs, \qtyproduct{3 x 3 x 5}{\milli\metre} and
-\qtyproduct{3 x 3 x 20}{\milli\metre}, on Hamamatsu S12572-50C analogue SiPMs,
-wrapped in ESR or in Teflon tape.
+LYSO:Ce pairs, \qtyproduct{3 x 3 x 5}{\milli\metre} (Teflon) and
+\qtyproduct{3 x 3 x 20}{\milli\metre} (ESR or Teflon), on Hamamatsu
+S12572-50C analogue SiPMs, leading-edge timing. The bound takes the
+manufacturer's single-photon time resolution, \ps{250} FWHM.
 
 \paragraph{Key findings}
 \begin{itemize}
@@ -2436,25 +2438,37 @@ wrapped in ESR or in Teflon tape.
 		detailed light transport simulation, so the analytical route avoids the
 		Monte Carlo step entirely.
 	\item The arrival-time variance is largest for interactions close to the
-		photosensor and decreases with distance from it.
+		photosensor and decreases with distance from it: light reflected back
+		from the far end arrives late and thins out the early photons.
+	\item The bound falls linearly as the crystal shortens from \mm{20} to
+		\mm{5}, then flattens where the photosensor dominates; at \mm{5} it
+		matches Seifert's bound without optical transport to within 1\%.
+	\item Photon statistics still dominate: scaling the photon count by
+		0.05--2 moves the bound by up to \ps{600}, while lengths of
+		3--\mm{40} move it by about \ps{20}. A 20--30\% change in
+		the assumed single-photon resolution moves it by 10--\ps{15}.
+	\item With better light extraction and 50\% PDE, about \ps{100} CTR
+		is within the bound for \mm{20} LYSO read from one end.
 \end{itemize}
 
 \paragraph{Why it stays in the file}
 The methodological template for this thesis's bound work, and the reason the
 bound chapter cannot treat the optics as a nuisance. Cates derives an analytic
 PDF for the optical observable and puts it inside the Fisher information; the
-same construction is what a scattering bulk needs, with a transit-time-and-
-position PDF in place of a transit-time one. The last finding is the one to
+same construction is what a scattering bulk needs, with a
+transit-time-and-position PDF in place of a transit-time one. The last finding is the one to
 keep in view --- the optical contribution to the bound is itself depth-dependent,
 which is why a single scalar ``timing resolution'' for a long crystal is
 already an approximation.
 It is the clear precursor of \ref{note:LoignonHoule2021}, which takes the same idea
 from a bound on timing to a bound on depth.
-\gap{Arithmetic to check: measured minus bound is \ps{10} at \mm{20} and
-\ps{10} at \mm{5}, so the absolute excess over the bound is roughly constant
-while the percentage is not. Confirm against the paper whether they comment on
-that, because a constant excess points at an electronics term outside the
-bound.}
+The near-constant excess over the bound, \ps{10} at both lengths (\ps{13}
+with Teflon at \mm{20}), is one they do comment on: they take the equal
+margin as evidence the optical transport is modelled right, and put the
+margin itself down to noise and to the bound's assumption that every
+detected photon is timestamped, which analogue SiPMs with one leading-edge
+trigger do not provide. That assumption is the one \ref{note:Cates2024}
+sets out to meet in hardware, a photon-counting monolith on analogue SiPMs.
 
 \end{papernote}
 

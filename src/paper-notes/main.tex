@@ -27,6 +27,8 @@
 %  - A paper's key is its references.bib key (AuthorYear, a/b for a second
 %    paper), which also names its PDF, papers/<Key>.pdf. A programme's key is
 %    a short name; notesmap.toml lays the board out by it.
+%  - Cards in the Ideas programme are experiment ideas, not papers: keys start
+%    with Idea and they carry no year.
 %  - An image is img/<key in lower case>.png; a second one adds a suffix,
 %    img/freire2026-table2.png.
 %  - A paper outside any programme is a top-level papernote, and the map
@@ -2584,9 +2586,43 @@ from the segmented side: optical isolation, by layer or by prism, makes
 interactions separable; a continuous bulk is the case neither attempts, and
 the energy-only sequencing here, about 81\% for two sites, is a baseline
 any arrival-time method has to beat.
-\gap{The experimental companion, Peng, Judenhofer and Cherry 2019, ``Compton
-PET: a layered structure PET detector with high performance'', Phys.\ Med.\
-Biol.\ 64(10), is unread.}
+The module was built and measured in \ref{note:Peng2019a}.
+
+\end{papernote}
+
+\begin{papernote}{Peng et al.\ 2019 -- Compton PET: a layered structure PET detector with high performance}{Peng2019a}
+\thumb{img/peng2019a.png}
+Phys.\ Med.\ Biol.\ 64(10):10LT01, \doi{10.1088/1361-6560/ab1ba0}. Peng,
+Judenhofer, Cherry.
+
+\paragraph{Summary}
+The module of \ref{note:Peng2019}, built. Four LYSO slabs of
+\qtyproduct{13.34 x 13.34 x 2.76}{\mm} at \mm{3.36} pitch, ESR glued between, read
+on four sides by 4 x 4 SensL arrays (64 channels, TOFPET2). A one-layer CNN
+trained on a \mm{0.6} pencil beam stepped on a \mm{1} grid, tested on
+\mm{0.25} steps between the training points.
+
+\paragraph{Key Findings}
+\begin{itemize}
+	\item \mm{1.1 \pm 0.1} FWHM averaged over centre, edges and corners
+		(0.90--\mm{1.18} for one-layer events), 10.3\% energy resolution after
+		a saturation and position calibration, \ps{348} timing from an
+		amplitude-weighted average of all 64 channel timestamps.
+	\item Two-layer events are 4.8--13.7\% of the photopeak (most at the
+		centre; at the edges the scattered photon escapes) and resolve worse,
+		1.07--\mm{1.49}, with wider tails.
+	\item For them the experiment does not sequence: of closest layer,
+		furthest layer and the layer with most energy, the last positions best,
+		so it is used --- higher signal-to-noise, and forward scatter keeps the
+		error small.
+\end{itemize}
+
+\paragraph{Why it matters here}
+The reality check on \ref{note:Peng2019}: \mm{0.40} simulated became \mm{1.1}
+measured, a factor of nearly three, and the energy-based sequencing of the
+simulation was dropped for a max-energy rule once real data arrived. It is
+the clearest sim-to-measurement gap on the map for a multi-interaction claim,
+and the honest benchmark for anything this thesis proposes from simulation.
 
 \end{papernote}
 
@@ -3641,6 +3677,134 @@ The realistic first submission target for this thesis's own monolithic work.
 %     These are what turn "nobody states a bound" into a contribution.
 % ===========================================================================
  
+% ===========================================================================
+% Experiment ideas: papers and simulations this map suggests, each with the
+% numbers it has to beat and the notes they come from. Cards are ideas, not
+% papers, so their keys start with Idea and they carry no year.
+% ===========================================================================
+
+\begin{programnote}{Experiment ideas -- simulations, benchmarks and papers this map suggests}{Ideas}
+\location{-33.88}{151.20}{Sydney, Australia}
+
+\paragraph{What it is}
+Studies the literature on this map points to and leaves undone, each pinned to
+the published numbers it would have to beat and the papers they come from.
+Most share one setup: a GATE optical simulation of a thick LYSO monolith or
+semi-monolith with per-channel photon counts and arrival times recorded, so
+that one dataset serves several cards.
+
+\begin{papernote}{Idea -- order two-site events from photon arrival times}{IdeaOrdering}
+\paragraph{The idea}
+For events that deposit in two places, estimate which came first from the
+joint pattern of per-channel arrival times and counts, in a continuous crystal.
+\paragraph{To beat}
+Energy-only layer sequencing, 69.2\% by closest layer and 81.3\% with the
+backscatter swap for two-layer events (\ref{note:Peng2019}); the experiment
+gave up sequencing for a max-energy rule (\ref{note:Peng2019a}). First crystal
+recovered for 88\% of multi-crystal events with a fixed-pattern decomposition
+(\ref{note:Petersen2020}). Both need optical isolation; neither uses time.
+\paragraph{Simulation}
+Thick LYSO slab or monolith, ground-truth interaction order from GATE, a
+classifier on (time, count) per channel against the same classifier on counts
+alone --- the difference is the value of time.
+\end{papernote}
+
+\begin{papernote}{Idea -- add arrival times to multiplicity classification}{IdeaMultiplicity}
+\paragraph{The idea}
+Rerun the one-, two-, three-plus-deposit classifier with per-channel first
+photon times as extra inputs.
+\paragraph{To beat}
+Counts-only: 90.1--91.4\%, 77.6--81.7\% and 66.4--68.4\%, with multi-deposit
+events mostly misread as fewer (\ref{note:Shen2025}). The photon-counting data
+the timing input would look like exists in hardware (\ref{note:Lee2026},
+\ref{note:Cates2024}).
+\paragraph{Simulation}
+The same materials and slabs as \ref{note:Shen2025}, plus LYSO, with timing
+recorded; report the confusion matrix with and without it.
+\end{papernote}
+
+\begin{papernote}{Idea -- a Fisher-information bound on separating two interactions}{IdeaBound}
+\paragraph{The idea}
+The bound chapter proper: the information about two vertices, from a likelihood
+over photon arrival times \emph{and} where they land, with Poisson counts and
+the gamma arrival time profiled rather than aligned away.
+\paragraph{To beat}
+The single-vertex, time-only depth bound of \ref{note:LoignonHoule2021}, which
+treats photons as i.i.d., fixes the count and removes $\theta$ by alignment;
+its transport density comes from \ref{note:Cates2015}, whose measured
+counterpart is the per-voxel first-photon delay of \ref{note:Lee2026}. The
+resolution limit for two point sources in \ref{note:Ram2006} is the template
+for the two-vertex form.
+\paragraph{Simulation}
+Analytic or Monte Carlo transport densities per voxel; compute the bound as a
+function of vertex separation and crystal thickness, and check estimators
+against it.
+\end{papernote}
+
+\begin{papernote}{Idea -- scatter-aware positioning in a monolith}{IdeaScatterAware}
+\paragraph{The idea}
+Classify the event first, then position with a network trained for that class,
+and measure how much of the scatter penalty comes back.
+\paragraph{To beat}
+In \mm{16} of LYSO, about 60\% of events scatter, and their median 3D error is
+\mm{1.59} against \mm{0.40} unscattered (\ref{note:Decuyper2021}), which names
+this step as future work. Multi-crystal depth \mm{2.1} against \mm{1.0}
+single (\ref{note:Petersen2020}).
+\paragraph{Simulation}
+Decuyper's detector (\qtyproduct{50 x 50 x 16}{\mm}, 8 x 8 SiPMs) with a
+class-conditional network; report per-class median error and the overall FWHM.
+\end{papernote}
+
+\begin{papernote}{Idea -- correct the depth bias of forward scatter}{IdeaDepthBias}
+\paragraph{The idea}
+Forward scatter brings the light nearer the sensor, so scattered events are
+placed too deep (\ref{note:Decuyper2021}). Model and remove that bias, in
+depth and in the timing correction that depends on depth.
+\paragraph{To beat}
+The DOI error FWHM of \mm{1.80} for scattered events against \mm{0.71}
+unscattered (\ref{note:Decuyper2021}); the energy--depth confusion in
+timestamps that \ref{note:LoignonHoule2021} warns of.
+\end{papernote}
+
+\begin{papernote}{Idea -- monolith, layers or mixed thickness at equal crystal volume}{IdeaGeometry}
+\paragraph{The idea}
+Hold the LYSO volume fixed and compare one thick monolith with depth
+estimation, stacked thin slabs, and rings mixing thin and thick blocks, on
+resolution, sensitivity and multi-interaction recovery.
+\paragraph{To beat}
+Four \mm{3.16} layers: \mm{0.40} simulated, \mm{1.1} measured
+(\ref{note:Peng2019}, \ref{note:Peng2019a}). Mixed 2 and \mm{10} rings:
+0.6--\mm{0.9} with 40\% less crystal than uniform \mm{10}
+(\ref{note:Sanaat2020}). A \mm{16} monolith: \mm{1.14} measured
+(\ref{note:Stockhoff2021}).
+\end{papernote}
+
+\begin{papernote}{Idea -- test between the calibration points}{IdeaOffGrid}
+\paragraph{The idea}
+A benchmark protocol rather than a result: every learned positioner reported
+on an offset grid as well as the training grid, as standard.
+\paragraph{To beat}
+\ref{note:Kinyanjui2025} tests on its own 27 x 5 calibration points;
+\ref{note:Decuyper2021} shows larger networks snap to the training grid unless
+an offset grid catches it; \ref{note:Peng2019a} tests at \mm{0.25} steps
+between \mm{1} training points. Report the same estimator three ways and show
+the gap.
+\end{papernote}
+
+\begin{papernote}{Idea -- how fragile are time-domain features to the optics?}{IdeaOpticsRobust}
+\paragraph{The idea}
+Rerun any arrival-time estimator from the cards above under different surface
+models and interface defects, against the same estimator on counts.
+\paragraph{To beat}
+A \mm{0.05} overhang of crystal past the SiPM degraded oTOF depth by 2.6 times
+and energy depth by only 1.35 (\ref{note:Zeng2024}). UNIFIED overestimates
+light by up to 38\% against measured-surface LUTs (\ref{note:Roncali2013}),
+and a gamma-only model missed by \mm{0.3} where light-sharing decoding errors
+dominate (\ref{prog:QST}).
+\end{papernote}
+
+\end{programnote}
+
 \begin{papernote}{Ram, Ward \& Ober 2006 -- Fisher information limits on resolving two point sources}{Ram2006}
 \gap{PNAS. Unread. The closest existing analogue to the two-vertex separation
 limit: an information-theoretic treatment of when two point sources become

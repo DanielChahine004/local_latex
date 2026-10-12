@@ -2378,6 +2378,103 @@ statement of which optical model it uses and why.}
 
 \end{programnote}
 
+\begin{programnote}{LBNL -- Cates group, Cherenkov and scintillation photon counting}{LBNL}
+\location{37.88}{-122.25}{Berkeley, California, USA}
+\thumb{img/lbnl.png}
+
+\paragraph{What it is}
+Applied Nuclear Physics Program, Nuclear Science Division, Lawrence Berkeley
+National Laboratory. Joshua W.\ Cates leads a line on TOF-PET detectors that
+count optical photons one at a time: low-noise high-frequency SiPM readout
+fast enough to resolve single-photon pulses, an optical bandpass filter that
+absorbs SiPM crosstalk so the arrays run at high overvoltage, and BGO, whose
+few prompt Cherenkov photons carry its timing. The crystal is a monolith or
+semi-monolith on purpose: spreading the light over many channels makes the
+photon arrivals sparse enough in space and time to timestamp individually.
+
+\paragraph{Why it matters here}
+The one group whose detectors already record what the temporal axis needs ---
+per-channel, per-photon arrival times from a thick monolithic crystal --- and
+they use it for timing, not for counting interactions. Cates is also the author
+of \ref{note:Cates2015}, the analytic transit-time PDF this thesis takes as its
+template for the bounds; the 2026 paper measures that PDF per voxel and channel.
+
+\paragraph{People}
+Joshua W.\ Cates (lead), Woon-Seng Choong, Seungeun Lee, Ryan Heller; Erik
+Brubaker on the 2024 monolithic prototype. Cates's earlier work with Levin
+is \ref{note:Cates2015}.
+\gap{The precursor, Cates, Choong and Brubaker 2024, ``Scintillation and
+Cherenkov photon counting detectors with analog silicon photomultipliers for
+TOF-PET'', Phys.\ Med.\ Biol.\ 69:045025: a \qtyproduct{12 x 12 x 15}{\mm}
+BGO monolith on a 4 x 4 array. Unread; note it next.}
+
+\begin{papernote}{Lee et al.\ 2026 -- Exploring spatiotemporal information in a Cherenkov and scintillation photon counting BGO TOF-PET semi-monolithic detector concept}{Lee2026}
+\thumb{img/lee2026.png}
+Phys.\ Med.\ Biol.\ 71(1):015032, \doi{10.1088/1361-6560/ae2db7}.
+
+\paragraph{Summary}
+A single BGO slab, \qtyproduct{42.68 x 2 x 20}{\mm}, all faces polished, read
+out along its long edge by a 16 x 1 row of \qtyproduct{2 x 2}{\mm} Broadcom
+SiPMs at \mm{2.68} pitch through a \mm{1} BG40 bandpass filter. Each channel
+has a fast comparator, so the output is a train of digital single-photon
+pulses with a timestamp on each rising edge, and pileup read from the pulse
+width. Position across the slab comes from a small CNN on the 16 channel
+amplitudes, trained with a fan beam in \mm{1} steps; depth is binned four
+ways by the max-to-mean ratio of the amplitudes. For each of the 42 x 4
+voxels and each of the 16 channels they fit a first-photon delay distribution
+(FPDD): a Cherenkov delta plus a scintillation bi-exponential, convolved with
+the detector response. Its offset $\theta$ corrects each event's first-photon
+timestamp for where the interaction was, and its Cherenkov share gives a
+per-event probability that the first photon was Cherenkov.
+Authors: Lee, Heller, Choong, Cates --- all LBNL.
+
+\paragraph{Key Findings}
+\begin{itemize}
+	\item \textbf{First photon resolved:} 77\% of events have a uniquely
+		timestamped first photon (69\% single-width pulses, plus those whose
+		only extra width is crosstalk).
+	\item \textbf{Readout:} single-photon time resolution \ps{60 \pm 7} FWHM
+		per channel; crosstalk 7.8\% against the SiPM's 30\%, thanks to the
+		filter.
+	\item \textbf{Timing:} CTR against a \ps{45} LYSO reference \ps{197}
+		FWHM from the first photon, \ps{172} after FPDD position correction;
+		about \ps{186} estimated for two such BGO slabs. Binning events by
+		Cherenkov probability gives \ps{103} FWHM for the most Cherenkov-like
+		20\%, and about \ps{100} for the best 40\%.
+	\item \textbf{Positioning:} \mm{3.17} FWHM across the slab, bias
+		\mm{0.69}, worse at the ends; DOI in four bins, not measured as a
+		resolution.
+	\item \textbf{Energy:} 21\% FWHM.
+\end{itemize}
+
+\begin{center}
+\includegraphics[width=0.9\linewidth]{img/lee2026-bitstream.png}
+\end{center}
+
+\paragraph{Why it matters here}
+The temporal axis is the direction the notes keep marking as open after
+\ref{note:Thull2026} and \ref{note:Carra2022}: cardinality and interaction
+order from the joint pattern of per-channel arrival times. This detector
+produces exactly that pattern --- their Figure 10 calls it ``video-like
+frames of photon arrivals'' --- and the paper spends it on one number, the
+interaction time. Every event is assumed to be one interaction; Compton
+scatter inside the slab is never mentioned, and the FPDDs are calibrated with
+the same assumption, so a two-site event is fitted as one voxel. Position
+again informs timing, the direction \ref{note:Carra2022} runs; nobody runs
+the arrival pattern back into position or cardinality.
+
+The FPDD is also the measured counterpart of the \ref{note:Cates2015} PDF: an
+arrival-time density per interaction voxel and per channel, with the
+Cherenkov and scintillation parts separated. That is the likelihood a Fisher
+information calculation needs, so this group has built the ingredients of
+both the temporal-axis estimator and its bound without assembling either.
+\aside{Their stated next steps are a stacked-slab module and a fully
+time-based readout; a multi-interaction analysis is not among them.}
+
+\end{papernote}
+
+\end{programnote}
+
 \begin{programnote}{Prism-PET -- Stony Brook and Weill Cornell, Goldan group}{PrismPET}
 \location{40.91}{-73.12}{Stony Brook, New York, USA}
 

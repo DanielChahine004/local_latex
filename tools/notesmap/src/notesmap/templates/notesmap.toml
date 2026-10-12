@@ -27,6 +27,8 @@ overview_sections = ["what it is", "summary", "why it matters"]
 [board]
 # rows for the board view (keys of programmes); anything unlisted goes last
 rows = []
+# programmes whose arrows show only from a card while it is unfolded
+# open_arrows = ["Ideas"]
 # cross-references not to draw, as [source, target]
 prune = []
 loose_key = "loose"

@@ -191,7 +191,7 @@ annotated copy.
 |---|---|
 | `[source]` | where the notes are, how often to poll, lock file names, the parser |
 | `[latex]` | environment names, the heading used for the lead line, your macros and units, plugins |
-| `[board]` | rows for the non-map view, links not to draw, the shelf for loose papers |
+| `[board]` | rows for the non-map view, links not to draw, programmes whose links show only from an unfolded card, the shelf for loose papers |
 | `[publish]` | what the map leaves out: sections, gaps, programmes, loose papers |
 | `[check]` | the bibliography `notesmap check` cross-checks `\doi{}` against |
 | `[pdfs]` | a folder of `<key>.pdf` and the URL a card's PDF link opens |

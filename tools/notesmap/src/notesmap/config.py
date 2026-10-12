@@ -29,6 +29,7 @@ class Config:
     prune: list[list[str]] = field(default_factory=list)
     loose_key: str = "loose"
     loose_title: str = "Papers without a programme"
+    open_arrows: list[str] = field(default_factory=list)   # programmes whose arrows show only from an unfolded card
     # [publish]
     hide_sections: list[str] = field(default_factory=list)
     hide_gaps: bool = False
@@ -70,7 +71,7 @@ _SECTIONS = {
               "ref_prefixes": "ref_prefixes", "overview_sections": "overview_sections",
               "units": "units", "macros": "macros", "plugins": "plugins"},
     "board": {"rows": "rows", "prune": "prune", "loose_key": "loose_key",
-              "loose_title": "loose_title"},
+              "loose_title": "loose_title", "open_arrows": "open_arrows"},
     "publish": {"hide_sections": "hide_sections", "hide_gaps": "hide_gaps", "show_loose": "show_loose",
                 "hide_programmes": "hide_programmes"},
     "check": {"bib": "bib"},

@@ -26,6 +26,9 @@ rows = [
 ]
 # cross-references that are a shared citation, not a relationship
 prune = [["i3M", "machinery"], ["Delft", "machinery"]]
+# programmes whose arrows appear only from the card that is unfolded: the ideas
+# panel refers to most of the map, and drawn at once its arrows bury it
+open_arrows = ["Ideas"]
 loose_key = "machinery"
 loose_title = "Machinery (no programme)"
 

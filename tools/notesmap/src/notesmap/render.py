@@ -45,6 +45,7 @@ class Board:
         self.shown: dict[str, str] = {}           # arrow name -> the caption on it now
         self.arrow_objs: dict[str, object] = {}
         self.rows: list[list[str]] = []
+        self.notes: Notes | None = None           # the last notes applied, for redrawing arrows
         self.images: dict[tuple[str, str], str] = {}
         self._tick = 0
         self.query = ""                           # the search box's words
@@ -160,6 +161,7 @@ class Board:
                     if props != self.props[key]:
                         self.props[key] = props
                         self.panels[key].update(**props)
+            self.notes = notes
             self._arrows(notes)
             self._match()                         # the box learns the new notes
             self.settle()
@@ -198,6 +200,8 @@ class Board:
             pr["open"] = None if pr["open"] == note else note
             self.panels[key].update(**pr)
             self.panels[key].to_front()
+            if key in self.cfg.open_arrows and self.notes is not None:
+                self._arrows(self.notes)          # this panel's arrows follow its open card
             self.later(self.settle, 1.0, 3.0)
 
     def resize(self, key: str, w) -> None:
@@ -551,10 +555,14 @@ class Board:
         # every \ref between two panels is an edge, captioned by the sentence that
         # makes it; a pair referring to each other becomes one double-headed arrow
         prefixes = self.cfg.ref_prefixes
+        gated = set(self.cfg.open_arrows)
         edges: dict[tuple[str, str], str] = {}
         for e in notes.all_entries():
             src = self.owner.get(e.key)
             if src is None:
+                continue
+            # a gated programme draws a card's arrows only while that card is unfolded
+            if src in gated and self.props.get(src, {}).get("open") != e.key:
                 continue
             reasons = e.ref_reasons(self.conv, prefixes)
             for r in e.refs(prefixes):

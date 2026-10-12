@@ -173,10 +173,13 @@ REACT_CSS = """
         background: linear-gradient(135deg, transparent 45%, var(--pc-accent, #3b82f6) 45% 52%, transparent 52% 64%,
                     var(--pc-accent, #3b82f6) 64% 71%, transparent 71% 83%, var(--pc-accent, #3b82f6) 83% 90%, transparent 90%); }
 .grip:hover { opacity: 1; }
-/* danvas's move handle on a frameless panel: larger and visible, so a panel can be found and dragged */
-.pc-drag-handle { width: 22px !important; height: 22px !important; opacity: .7 !important; border-radius: 6px;
+/* danvas's move handle on a frameless panel, stretched into a bar across the top so a panel is easy to grab;
+   .fit leaves headroom for it outside the content's zoom, so the bar never covers the title */
+.pc-drag-handle { left: 4px !important; right: 4px !important; top: 4px !important; width: auto !important;
+                  height: 18px !important; opacity: .55 !important; border-radius: 6px;
                   background: var(--pc-accent, #3b82f6) !important; }
 .pc-drag-handle:hover { opacity: 1 !important; }
+.fit { padding-top: 26px; }
 .prog { box-sizing: border-box; font: 14px/1.45 system-ui, sans-serif; color: var(--pc-text, #ddd); padding: 12px 14px 14px;
         border: 1px solid rgba(127,127,127,.45); border-radius: 10px; background: rgba(127,127,127,.07); }
 /* a conference reads as a different kind of thing at a glance: amber, not grey */

@@ -2267,6 +2267,7 @@ it --- the 2013 paper lists the GATE implementation as future work, so the
 version that shipped needs its own reference.}
 
 \begin{papernote}{Roncali and Cherry 2013 -- Simulation of light transport in scintillators based on 3D characterization of crystal surfaces}{Roncali2013}
+\thumb{img/roncali2013.png}
 Phys.\ Med.\ Biol.\ 58(7):2185--2198, \doi{10.1088/0031-9155/58/7/2185}.
 
 \paragraph{Summary}
@@ -2281,7 +2282,28 @@ compared against measurements of the same crystals.
 \paragraph{Detector}
 Single LSO elements, \qtyproduct{2 x 2 x 20}{\milli\metre} and
 \qtyproduct{5 x 5 x 20}{\milli\metre}, each either mechanically polished or
-coarse ground, simulated and measured with and without reflector.
+coarse ground (saw cut, then \um{30} grit), simulated and measured with and
+without a Teflon reflector, not attached, modelled as diffuse with
+$R = 0.97$. Only the \mm{2} crystals were scanned; the \mm{5} crystals
+reuse their tables.
+
+\paragraph{Method}
+AFM in contact mode over \qtyproduct{90 x 90}{\micro\metre} patches,
+\um{0.175} pixels (about \qty{100}{\nano\metre} resolution), two
+patches per ground crystal and four in all; the patches agree closely, so a
+patch that small stands for the whole face. Each table is built by ray
+tracing on the measured height map: incidence $\theta$ from \degs{0} to
+\degs{90} in \degs{2.25} steps, azimuth in \degs{9} steps pooled, about
+2000 photons per beam, Fresnel reflection off the local normal (LSO
+$n = 1.82$ against air, or grease at 1.5 on the readout face), and repeat
+reflections followed until the photon leaves. Two tables per surface: the
+probability of reflection, and the distribution of reflected directions,
+sampled per photon during transport. The paper describes no interpolation
+between the tabulated angles. The model runs no slower than UNIFIED, and
+\qty{10}{\percent} faster for the bare \mm{2} crystal.
+\aside{Those are the numbers a bulk-scattering equivalent would have to
+match: a \um{90} patch, sub-micrometre pixels, \degs{2.25} in incidence,
+and a table pair per surface finish.}
 
 \paragraph{Key findings}
 \begin{itemize}
@@ -2309,10 +2331,6 @@ thesis works --- the narrow, long element whose light has to bounce many times
 before it arrives --- and the direction of the error is always an overestimate of
 collected light, so any positioning or DOI bound computed on a UNIFIED surface
 is optimistic.
-\gap{Read the full paper for the LUT construction itself: how many incidence
-angles are tabulated, how the tables are interpolated, and what AFM scan area
-and resolution were used. Those are the parameters a bulk-scattering equivalent
-would have to match.}
 
 \end{papernote}
 

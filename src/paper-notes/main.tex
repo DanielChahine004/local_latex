@@ -2540,6 +2540,56 @@ introduction needs and which is otherwise hard to source without editorialising.
 
 \end{papernote}
 
+\begin{papernote}{Peng et al.\ 2019 -- Compton PET: a simulation study for a PET module with novel geometry and machine learning for position decoding}{Peng2019}
+\thumb{img/peng2019.png}
+Biomed.\ Phys.\ Eng.\ Express 5(1):015018, \doi{10.1088/2057-1976/aaef03}.
+Peng, Judenhofer, Jones, Cherry.
+
+\paragraph{Summary}
+Stack thin monolithic slabs instead of building one thick crystal: four LYSO
+layers of \qtyproduct{13.24 x 13.24 x 3.16}{\mm}, separated by ESR, each read on
+all four sides by 4 x 4 SiPM arrays (64 channels). Depth is the layer that
+fired, so DOI resolution is the layer thickness by construction; side readout
+recovers light a top or bottom face would trap, giving 9.3\% energy resolution
+after a position calibration. GATE with full optics, simulation only. A small
+CNN classifies the first layer's 16 side signals onto a \mm{0.5} grid, trained
+on normal incidence and tested on an isotropic source.
+
+\paragraph{Key Findings}
+\begin{itemize}
+	\item \textbf{Sequencing.} The first interaction layer is chosen from the
+		layer energies with Compton kinematics in mind: 82\% of photopeak events
+		touch one layer, 17\% two, 1\% three or more. For two, ``closest layer''
+		(forward scatter) is right 69.2\% of the time; calling it the other way
+		when the near layer holds 162--\keV{238}, where 65\% are backscatter,
+		lifts it to 81.3\%. Three and four layers: 93.4\% and 96.8\%. Overall
+		96.6\% land in the right \mm{3.36} layer.
+	\item Energy only: positions are not used, because forward and backward
+		scatter can give the same positions and energies and finite resolution
+		and multiple scatter blur the kinematics.
+	\item \textbf{Positioning} in the first layer: \mm{0.40} FWHM over the
+		module, 0.26--\mm{0.31} in local regions, with up to \mm{0.2} bias
+		at the edges from oblique incidence and the classifier's grid.
+		Scatter inside a layer is not separated. 5\% electronic noise costs
+		\mm{0.07}. Timing not studied.
+\end{itemize}
+
+\paragraph{Why it matters here}
+The other answer to the multi-interaction problem, and the one nearest a
+monolith: each layer is a monolithic slab, and it does order interactions ---
+but only across layers, where the ESR keeps each interaction's light separate,
+and only from energies. Inside a layer, where light from two interactions
+mixes, it does not try. So it and \ref{note:Petersen2020} bracket the problem
+from the segmented side: optical isolation, by layer or by prism, makes
+interactions separable; a continuous bulk is the case neither attempts, and
+the energy-only sequencing here, about 81\% for two sites, is a baseline
+any arrival-time method has to beat.
+\gap{The experimental companion, Peng, Judenhofer and Cherry 2019, ``Compton
+PET: a layered structure PET detector with high performance'', Phys.\ Med.\
+Biol.\ 64(10), is unread.}
+
+\end{papernote}
+
 \end{programnote}
 
 \begin{programnote}{LBNL -- Cates group, Cherenkov and scintillation photon counting}{LBNL}
@@ -2801,10 +2851,8 @@ The decomposition is \ref{note:Petersen2020}: it separates the interactions
 and recovers the first, but never orders them.
 \gap{Still unread: LaBella 2020's Supplemental Note 2; Makek et al.\ 2019,
 ``Scintillator pixel detectors for measurement of Compton scattering'',
-Condens.\ Matter 4:24; and Peng, Judenhofer and Cherry 2019, ``Compton PET: a
-layered structure PET detector with high performance'', Phys.\ Med.\ Biol.\
-64(10), the Davis-side layered detector decoded by machine learning that
-Petersen cites as the costly alternative.}
+Condens.\ Matter 4:24. Petersen cites the Davis layered detector as the
+costly alternative; its simulation study is \ref{note:Peng2019}.}
 
 \paragraph{Detector lineage}
 Polished LYSO arrays coupled 4-to-1 or 9-to-1 to \qtyproduct{3 x 3}{\milli\metre}

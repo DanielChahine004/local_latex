@@ -2100,6 +2100,7 @@ costs, which is the same choice an annulus faces at its ends.
 \end{papernote}
 
 \begin{papernote}{Zhang et al.\ 2021 -- A thick semi-monolithic scintillator detector for clinical PET scanners}{Zhang2021}
+\thumb{img/zhang2021.png}
 Phys.\ Med.\ Biol.\ 66:065023, \doi{10.1088/1361-6560/abe761}. C.\ Zhang, Wang,
 Sun, Kuang, X.\ Zhang, Ren, Wu, Sang, Sun, Hu, Yang, Liu. First author at
 Shenzhen Technology University with SIAT.
@@ -2110,7 +2111,16 @@ between them --- \mm{20} thick, twice the rest of the line, for detection
 efficiency at clinical energies. Read out both ways for comparison: single-ended
 and dual-ended, each end a 16 x 4 SiPM array of \qtyproduct{3.0 x 3.0}{\mm}
 pixels at \mm{3.2} pitch, every one of the 64 channels through its own TOFPET2
-ASIC channel.
+ASIC channel, each array behind a \mm{1} glass light guide. The two end faces
+of the stack are painted black and taped to cut reflections at the slab ends.
+Only half the detector is scanned: 13 $y$ by 9 depth positions, \mm{2} apart.
+
+\paragraph{Method}
+Analytic throughout, no learning. Depth from each array is the share of the
+light in its three brightest columns; dual-ended, depth is the difference of
+the two shares and $y$ a depth-weighted mix of the two arrays' estimates. The
+measured depth is non-linear in the true one, so it is mapped through a cubic
+fitted to the scan before resolutions are taken.
 \aside{The published abstract expands ESR as ``erythrocyte sedimentation rate
 foils''. It means enhanced specular reflector; do not quote that sentence.}
 
@@ -2122,9 +2132,16 @@ halves the depth error and does little else. All but the edge slices resolve.
 The paper says plainly that its energy and timing are worse than a segmented
 array's and need work, and claims only cost against the array and a smaller
 edge effect against a full monolith.
-\gap{Unread beyond the abstract. Which edge slices fail and why, and whether
-the \mm{20} thickness or the \mm{1.37} slab width costs the \mm{2.43}
-single-ended $y$.}
+Single-ended depth resolution collapses beyond \mm{10} from the array.
+The edge slices fail for an electronic reason, not an optical one: the
+TOFPET2 lower thresholds were set high, so for an edge slice only a few SiPMs
+in the edge row cross them, and the slice smears into a bright line.
+The authors put the loss against their \mm{10} detector --- $y$ \mm{1.44} to
+\mm{2.43}, depth \mm{1.86} to \mm{4.72} --- down to thickness, and the worse
+energy resolution (25.7\% against 18.8\%) to the ASIC's thresholds dropping
+small signals. But slab width, length and electronics all changed between
+the two, so thickness alone is not isolated; the comparison is suggestive,
+not controlled.
 
 \paragraph{Why it matters here}
 The line's one attempt at clinical rather than preclinical scale, and the

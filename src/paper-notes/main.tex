@@ -2009,9 +2009,10 @@ them one at a time --- longer slabs in \ref{note:Zhang2019}, thicker ones in
 \ref{note:Zhang2021}, better positioning in \ref{note:Kinyanjui2025}, a
 different crystal in \ref{note:Kuang2026}, a scanner in
 \ref{note:Kuang2026a}.
-\gap{All six are read as abstracts only. The two that need the PDF are
-\ref{note:Zhang2021}, for the clinical argument, and
-\ref{note:Kuang2026a}, for what the 20-detector ring actually assumes.}
+\gap{\ref{note:Zhang2017}, \ref{note:Zhang2019}, \ref{note:Zhang2021} and
+\ref{note:Kinyanjui2025} are read in full; \ref{note:Kuang2026} and
+\ref{note:Kuang2026a} are still abstracts, and the second matters most, for
+what the 20-detector ring actually assumes.}
 
 \paragraph{People}
 Yongfeng Yang (professor at SIAT since 2015) and Zheng Liu lead; Zhonghua Kuang
@@ -2034,6 +2035,7 @@ group that has carried it furthest, and the second Chinese group on the map
 after \ref{prog:HUST}.
 
 \begin{papernote}{Zhang et al.\ 2017 -- Performance of a SiPM based semi-monolithic scintillator PET detector}{Zhang2017}
+\thumb{img/zhang2017.png}
 Phys.\ Med.\ Biol.\ 62(19):7889--7904, \doi{10.1088/1361-6560/aa898a}. Zhang,
 Wang, Ren, Kuang, Deng, Fu, Wu, Sang, Hu, Liang, Liu, Zheng, Yang.
 
@@ -2056,12 +2058,23 @@ once multiple-scatter events are rejected. Centre of gravity gives a different
 $y$ for the same $y$ at different depths --- a depth-dependent edge effect ---
 and both a least-squares and a maximum-likelihood estimator fix part of it at
 the slab edges.
+By estimator, mean absolute error without and with the rejection: least
+squares \mm{1.10}/\mm{1.14} to \mm{0.69}/\mm{0.70} in $y$/$z$, maximum
+likelihood \mm{1.13}/\mm{1.17} to \mm{0.68}/\mm{0.67}. The authors note that
+multiple scatter barely moves the FWHM but strongly moves the mean absolute
+error --- the tails carry it, which is why the two measures disagree.
+
+How the multiple-scatter events are found: for each calibration position, a
+2D histogram of the light's centroid against its spread (standard
+deviation), and events outside a contour at 40\% of the peak are called
+multiple scatter and dropped --- Ling et al.'s 2007 method for monoliths.
+The mask is built per known beam position, so it needs the true position;
+it is a bench cut, not a classifier a scanner could run on unknown events.
+The fraction it removes is not reported (the paper's 70\% is the
+calibration/test split, not the survivors).
 \aside{Mean absolute error is not FWHM, so \mm{0.7} here and the FWHM figures
-of the later papers are not the same quantity. The rejection is also a cut:
-\mm{0.7} is conditional on throwing events away, and the abstract does not say
-how many.}
-\gap{Unread beyond the abstract. What fraction survives the multiple-scatter
-rejection, and how it is identified from the light alone.}
+of the later papers are not the same quantity, and \mm{0.7} is conditional on
+an unreported cut.}
 
 \paragraph{Why it matters here}
 The programme's first paper, and it names its own next three: longer slabs to
@@ -2074,14 +2087,18 @@ one of the papers.
 \end{papernote}
 
 \begin{papernote}{Zhang et al.\ 2019 -- Performance of long rectangular semi-monolithic scintillator PET detectors}{Zhang2019}
+\thumb{img/zhang2019.png}
 Med.\ Phys.\ 46(4):1608--1619, \doi{10.1002/mp.13432}. Zhang, Wang, Ren, Hu,
 Ding, Kuang, Wu, Sang, Hu, Du, Liang, Liu, Zheng, Yang. SIAT with Lanzhou
 University.
 
 \paragraph{Detector}
 Eleven polished LYSO slabs of \qtyproduct{1 x 37.6 x 10}{\mm} with enhanced
-specular reflector between them, read out at one end by a SiPM array, scanned
-with a collimated \keV{511} beam.
+specular reflector glued between them, read out from the bottom face by a
+4 x 12 SiPM array through a \mm{1.5} light guide, grouped into 4 row signals
+(slice identity) and 12 column signals ($y$ and depth). Two detectors: one
+with the top and both end faces painted black, one bare. Scanned with an
+electronically collimated \keV{511} beam about \mm{0.5} wide.
 
 \paragraph{Key Findings}
 Black paint on the front and both end surfaces gives \mm{1.07} FWHM in the
@@ -2089,8 +2106,15 @@ monolithic direction and \mm{1.55} DOI, at the cost of \qty{24.9}{\percent}
 energy resolution and \ps{788} coincidence timing. The trade is the whole
 result: painting the surfaces kills the reflections that smear position, and
 with them the light the energy and timing need.
-\gap{Unread beyond the abstract. The unpainted numbers, and whether \ps{788}
-is the painted detector against itself or against a reference crystal.}
+Unpainted, the same detector gives \mm{1.77} in $y$ (squared centroid),
+\mm{2.71} in depth (standard deviation), 15.8\% energy and \ps{596}
+timing. The \ps{788} is against a reference --- a \qtyproduct{20 x 12 x
+10}{\mm} LYSO block on a single-channel PMT, NIM electronics --- not the
+detector against itself. Resolutions are quoted only for positions more than
+\mm{5} from the slab ends, where $y$ is still linear; the ends are left out.
+By estimator (painted): $y$ \mm{1.44} by plain centroid, \mm{1.07} squared;
+depth \mm{1.55} by standard deviation, \mm{1.86} by max-to-sum, \mm{1.69} by
+sum of squares. \ref{note:Zhang2021}'s comparison quotes the \mm{1.44}.
 
 \paragraph{Why it matters here}
 The baseline the later papers move: analytic positioning, one slab thickness,

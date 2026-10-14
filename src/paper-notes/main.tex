@@ -2160,6 +2160,21 @@ the direct precedent for the CRLB study, and the contrast to the UTOFPET scope
 boundary (\ref{prog:UTOFPET}), where no bound appears anywhere in the lineage.
 Also the origin of the sensor-on-entrance-surface (SES) idea.
 
+\paragraph{Reading order}
+Joung, Miyaoka and Lewellen 2002 NIM A 489 (cMiCE concept and SBP)
+$\rightarrow$ Ling, Lewellen and Miyaoka 2007 PMB 52 (DOI decoding by ML
+clustering) $\rightarrow$ Miyaoka et al.\ 2010 TNS 57(3) (SES versus
+conventional readout) $\rightarrow$ \ref{note:Li2012} (CRLB evaluation). Adjacent: Li et al.\ 2011 TNS 58(3) on SiPM parameters and readout
+schemes; Hunter, Barrett and Furenlid 2009 TNS 56(1) on ML calibration of 3D
+interaction position, the Arizona method Hunter brought with him.
+\gap{Only Li 2012 has been read. Give Joung 2002 and Ling 2007 nested papernotes
+once read; confirm the first three citations against the PDFs.}
+
+\begin{papernote}{Li et al.\ 2012 -- Use of Cramer--Rao lower bound for performance evaluation of different monolithic crystal PET detector designs}{Li2012}
+IEEE Trans.\ Nucl.\ Sci.\ 59(1):3--12, \doi{10.1109/TNS.2011.2165968}. Li,
+Hunter, Lewellen, Miyaoka. An NIH author manuscript is free in PubMed Central
+(PMC3368804).
+
 \paragraph{Detectors}
 \begin{itemize}
 	\item \textbf{Conventional:} \qtyproduct{50 x 50 x 15}{\milli\metre} LYSO on a
@@ -2206,16 +2221,13 @@ linear-Gaussian problem, none strictly met. It does rank-order detector designs
 and is a quick guide when comparing geometries. \aside{That is exactly the use the
 thesis makes of it, and the caveats are the ones the CRLB chapter has to carry.}
 
-\paragraph{Reading order}
-Joung, Miyaoka and Lewellen 2002 NIM A 489 (cMiCE concept and SBP)
-$\rightarrow$ Ling, Lewellen and Miyaoka 2007 PMB 52 (DOI decoding by ML
-clustering) $\rightarrow$ Miyaoka et al.\ 2010 TNS 57(3) (SES versus
-conventional readout) $\rightarrow$ Li et al.\ 2012 TNS 59(1) (CRLB evaluation,
-above). Adjacent: Li et al.\ 2011 TNS 58(3) on SiPM parameters and readout
-schemes; Hunter, Barrett and Furenlid 2009 TNS 56(1) on ML calibration of 3D
-interaction position, the Arizona method Hunter brought with him.
-\gap{Only Li 2012 has been read. Give Joung 2002 and Ling 2007 nested papernotes
-once read; confirm the first three citations against the PDFs.}
+\paragraph{Why it matters here}
+The precedent for the bound chapter: Fisher information used to compare
+monolithic designs, with the measured detector 15--25\% off the bound in
+position and over twice it in depth --- and the warning that a bound computed
+from clustered calibration tables is not a bound on the detector.
+
+\end{papernote}
 
 \end{programnote}
 
@@ -4559,7 +4571,7 @@ Pizzichemi 2019 & LYSO 1.53 mm, sharing & single & 15 & 3 & 20 & 1.5 p & 8.9 & 1
 Kinyanjui 2026 & LYSO 0.96 mm slabs, painted & single & 10 & 2.14 & 21 & 1.68 & 17.4 & 3340 r \\
 Kuang 2026 & GAGG 0.96 mm slabs & single & 10 & 2.33 & 23 & 1.59 & 14.7 & 4300 r \\
 Zhang 2021 & LYSO 1.37 mm slabs & single & 20 & 4.77 & 24 & 2.43 & 25.7 & 779 \\
-cMiCE & LYSO monolith, 50 mm & single & 15 & 3.69 & 25 & 1.55 & -- & -- \\
+Li 2012 & LYSO monolith, 50 mm, cMiCE & single & 15 & 3.69 & 25 & 1.55 & -- & -- \\
 Cucarella 2026 & LYSO 0.97 mm slabs, 25.6 mm & single & 12 & 3.08 & 26 & 1.7 & 16.4 & 252 \\
 Pizzichemi 2016 & LYSO 1.53 mm, sharing & single & 15 & 4.1 & 27 & 1.5 p & 12.7 & 353 \\
 Freire 2026 & LYSO curved monolith & single & 12.5 & 3.6 & 29 & -- & 19 & -- \\
@@ -4592,7 +4604,7 @@ rather than a result it is marked i.
 Build & Detector & Readout & Depth mm & DOI mm & DOI/d \% & Transv. mm & Energy \% & CTR ps \\
 \hline
 Decuyper 2021 & LYSO monolith, 50 mm, NN & single & 16 & 0.71 & 4 & 0.42 & -- & -- \\
-cMiCE (SES) & LYSO monolith, 49 mm & entrance face & 15 & 1.52 & 10 & 0.91 & -- & -- \\
+Li 2012 & LYSO monolith, 49 mm, cMiCE SES & entrance face & 15 & 1.52 & 10 & 0.91 & -- & -- \\
 Razdevšek 2025 & LSO 3 mm pixels, 8 layers & ideal & 20 & 1.7 e & 9 & 3 p & 10 i & 70 i \\
 Decuyper 2021 & LYSO monolith, 50 mm, scattered events & single & 16 & 1.80 & 11 & 0.66 & -- & -- \\
 Petersen 2020 & LYSO 1.4 mm, Prism, multi-crystal & single & 20 & 2.1 & 11 & 1.4 p & -- & -- \\

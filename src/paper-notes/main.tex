@@ -4785,6 +4785,23 @@ by time of flight across \mm{30} (\ref{note:Ilisie2018}); at a measured
 Thick LYSO slab or monolith, ground-truth interaction order from GATE, a
 classifier on (time, count) per channel against the same classifier on counts
 alone --- the difference is the value of time.
+
+\paragraph{Head to head with Prism-PET}
+The competitor that matters. Prism-PET discards inter-crystal scatter, which
+its authors say halves sensitivity; if recovery matures it becomes the best
+all-rounder in the Design fit panel (its sensitivity rating 3 to 4 lifts its
+mean fit from 88 to 91\%). Its case is structural: discrete crystals and a
+fixed light guide make a scattered event close to a sum of known patterns,
+so decomposition is tractable (\ref{note:Petersen2020}). Its weakness is the
+same structure at fine pitch, where 4-to-1 patterns overlap and learned
+selection degrades (\ref{note:Lee2021}). The monolith's counter is continuous
+position, more light per channel, and arrival times. Test it directly: same
+LYSO thickness (\mm{20}) and photosensor budget, a Prism-PET array with
+pattern decomposition against a monolith with time-and-count estimation, both
+scored on first-interaction recovery for multi-site events, then on the
+effective sensitivity it buys once mis-ordered lines are counted as blur, not
+signal (\ref{note:Gillam2014} found recovered events worth 5--10\%, not their
+number). Sweep crystal pitch to find where, if anywhere, the monolith wins.
 \end{papernote}
 
 \begin{papernote}{Idea -- add arrival times to multiplicity classification}{IdeaMultiplicity}

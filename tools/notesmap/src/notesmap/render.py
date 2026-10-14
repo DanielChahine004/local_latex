@@ -20,7 +20,7 @@ from pathlib import Path
 
 from .config import Config
 from .latex import Converter
-from .layout import PANEL_W, Rect, auto_place, estimate_height, panel_w, project, push_out
+from .layout import PANEL_W, Rect, auto_place, centre, estimate_height, panel_w, project, push_out, tangles
 from .parse import Entry, Notes
 from .redact import redact
 from .source import Source
@@ -46,6 +46,7 @@ class Board:
         self.arrow_objs: dict[str, object] = {}
         self.rows: list[list[str]] = []
         self.notes: Notes | None = None           # the last notes applied, for redrawing arrows
+        self.crossed: list[tuple[str, str]] = []  # leader pairs last reported as crossing
         self.images: dict[tuple[str, str], str] = {}
         self._tick = 0
         self.query = ""                           # the search box's words
@@ -468,8 +469,16 @@ class Board:
                     if n and n.location else None, round(size[k][0]), round(size[k][1]))
                 for k, (_, n, _) in groups.items()}
         staying = {k for k in groups if k in self.where and self.where[k][0] == sigs[k]}
-        taken += [Rect(self.where[k][1], self.where[k][2], *size[k]) for k in staying]
-        for key, (title, node, papers) in groups.items():
+        boxes = {k: Rect(self.where[k][1], self.where[k][2], *size[k]) for k in staying}
+        taken += list(boxes.values())
+        pins = {k: project(n.location.lat, n.location.lon, self.map_w)
+                for k, (_, n, _) in groups.items() if n and n.location and k not in fixed}
+        # hand offsets first: they are decisions, so the automatic panels are the
+        # ones that give way, steering their leaders clear of these
+        order = sorted(groups, key=lambda k: not (k in fixed or (groups[k][1] and groups[k][1].location
+                                                                  and groups[k][1].location.offset)))
+        for key in order:
+            title, node, papers = groups[key]
             if key in staying:
                 continue
             loc = node.location if node else None
@@ -497,9 +506,11 @@ class Board:
                                   f"slid it out by {nx - x:+.0f},{ny - y:+.0f}", flush=True)
                             x, y = nx, ny
                 else:
-                    x, y = auto_place((px, py), w, h, taken)
+                    leaders = [(pins[k], centre(b)) for k, b in boxes.items() if k in pins]
+                    x, y = auto_place((px, py), w, h, taken, leaders, list(boxes.values()))
                 self._set_pin(key, px, py)
             taken.append(Rect(x, y, w, h))
+            boxes[key] = Rect(x, y, w, h)
             if key in self.panels:
                 self.panels[key].set_layout(x=x, y=y)
             else:
@@ -515,6 +526,13 @@ class Board:
             if loc is not None:
                 self._connect(f"{key}_leader", f"{key}_pin", key,
                               color="red", size="m", arrowhead_end="none")
+        # what is left crossing is between hand-placed panels: say so once, with
+        # the pair, so a \location offset can be changed by hand
+        crossed = tangles({k: (pins[k], boxes[k]) for k in pins if k in boxes})
+        if crossed != self.crossed:
+            self.crossed = crossed
+            for a, b in crossed:
+                print(f"[notesmap] leaders cross: {a} and {b}", flush=True)
 
     def _set_pin(self, key: str, px: float, py: float) -> None:
         if key in self.pins:

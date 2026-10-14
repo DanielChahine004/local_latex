@@ -691,9 +691,10 @@ crystals for breast (\ref{note:Freire2026}).
 \paragraph{Commercial and funding}
 Spin-off Oncovision (Benlloch); preclinical line acquired by Bruker. The
 Albira preclinical scanner is, as far as known, the first commercial PET built on
-monolithic crystals\aside{, and the review cites it as such}. \gap{Confirm Albira's
-detector (monolithic LYSO, truncated-pyramid blocks?) and first-sale year; and
-MINDView's monolithic brain-insert detector paper.}
+monolithic crystals\aside{, and the review cites it as such}: truncated-pyramid
+LYSO blocks, \mm{10} deep, on multi-anode PMTs (\ref{note:Pajak2016}); its SiPM
+successor is the Bruker 7\,T insert (\ref{note:Gsell2020}). \gap{Albira's
+first-sale year; and MINDView's monolithic brain-insert detector paper.}
 Benlloch holds an ERC Advanced Grant (4D-PET) with an OPEN-IMAGING proof of
 concept for in-beam flat-panel PET in protontherapy. González is co-PI on an NIH
 R01. He also coordinated the EU projects MAMMI (FP6) and MINDView (FP7).
@@ -1022,23 +1023,178 @@ Aachen's 24-block one in \ref{note:Thull2026} contests that.}
 Of the monolithic entries, the map holds DigiPET (\ref{note:Espana2014}) and the
 $\beta$-CUBE (\ref{note:Krishnamoorthy2018}) --- whose 12.4\% at
 255--\keV{765} the table quotes as about 8\%, read off a plot for a narrower
-window. Albira is only named under \ref{prog:i3M}, and the KU Leuven 7\,T insert
-(Gsell et al.\ 2020, \mm{0.90}, about 11\%) is absent. Of the pixelated ones,
-the DOI systems are the honest comparators: QST's SR-PET (Kang et al.\ 2023,
-\mm{0.65}, 4.4\%, four-layer DOI) and SIAT's dual-ended aPET (\mm{0.82}, 16\%
-at 250--\keV{750}); neither is on the map.
+window. Albira is \ref{note:Pajak2016} and the KU Leuven 7\,T insert
+\ref{note:Gsell2020}. Of the pixelated ones, the DOI systems are the honest
+comparators: QST's SR-PET (\ref{note:Kang2023}, three staggered layers) and
+SIAT's dual-ended aPET (\ref{note:Kuang2020}). The rest are pixelated without
+DOI and off this map's theme.
 
 \paragraph{Why it matters here}
 The measured semi-monolithic preclinical system that \ref{note:Kuang2026a} only
 simulates, and a lower one than its simulation: 3.5\% against 5.45\%, \mm{1.6}
 against sub-\mm{1}. Two things carry over. One network for every module is the
 calibration economy a monolithic annulus needs. And the scanner is built as the
-absorber of a Compton-PET with a thin scatter ring inside it (Valladares et
-al.\ 2024; Ilisie et al.\ 2018, ``time sequence photon interaction
-discrimination'') --- i3M taking the multi-interaction problem to two layers,
-where this thesis takes it into one thick bulk.
+absorber of a Compton-PET with a thin scatter ring inside it
+(\ref{note:Valladares2024}, on the plan of \ref{note:Ilisie2018}) --- i3M
+taking the multi-interaction problem to two layers, where this thesis takes it
+into one thick bulk.
 
 \end{papernote}
+
+\begin{papernote}{Pajak et al.\ 2016 -- NEMA NU4-2008 performance evaluation of Albira: a two-ring small-animal PET system using continuous LYSO crystals}{Pajak2016}
+\thumb{img/pajak2016.png}
+Open Med.\ J.\ 3:12--26, \doi{10.2174/1874220301603010012}. Pajak, Volgyes,
+Pimlott, Salvador, Asensi, McKeown, Waldeck, Anderson --- Beatson Institute and
+Glasgow, with Oncovision, i3M and Bruker. Open access (CC BY-NC).
+
+\paragraph{Summary}
+An independent NEMA evaluation of the first commercial monolithic PET. Two
+octagonal rings of eight blocks, each one LYSO crystal shaped as a truncated
+pyramid (\qtyproduct{50 x 50}{\mm} at the base, \qtyproduct{40 x 40}{\mm} at
+the face, \mm{10} deep), on multi-anode PMTs with shared readout; \mm{111}
+ring, \mm{94.4} axial. The tapering leaves a \mm{14.4} gap between the rings
+at the front, right at the axial centre. Nothing is said about how position,
+depth or energy are estimated; the paper refers back to the vendor.
+
+\paragraph{Key Findings}
+\begin{itemize}
+	\item Resolution (MLEM, 30\% window): 1.72/1.70/\mm{2.45} radial/tangential/
+		axial at the centre; 1.52/1.69/\mm{1.45} at a quarter of the axial field.
+		Filtered back-projection cannot be done at the centre, in the gap.
+	\item Peak sensitivity 5.3\% (255--\keV{767}), 4.2\% (358--\keV{664}).
+	\item NECR 72 kcps at \MBq{7.1} (mouse), scatter fraction 9.8\%: low, from
+		the shared readout saturating early.
+	\item Image quality: uniformity 4.9\%, RC 0.05--0.90 for 1--\mm{5} rods,
+		spill-over 0.22 water, 0.14 air.
+	\item The authors argue NEMA NU 4 penalises such geometries: the best
+		resolution sits at the centre of each ring, not of the scanner.
+\end{itemize}
+
+\paragraph{Why it matters here}
+The baseline a monolithic preclinical scanner started from in 2016: about
+\mm{1.7} in plane, 5\% sensitivity, and a count rate set by the electronics,
+not the crystal. No detector-level figure at all --- not DOI, not energy ---
+so the monolith is only visible through its images.
+
+\end{papernote}
+
+\begin{papernote}{Gsell et al.\ 2020 -- Characterization of a preclinical PET insert in a 7 tesla MRI scanner: beyond NEMA testing}{Gsell2020}
+\thumb{img/gsell2020.png}
+Phys.\ Med.\ Biol.\ 65(24):245016, \doi{10.1088/1361-6560/aba08c}. Gsell,
+Molinos, Correcher, Belderbos, Wouters, Junge, Heidenreich, Vande Velde,
+Rezaei, Nuyts, Cawthorne, Cleeren, Nannan, Deroose, Himmelreich, González ---
+KU Leuven with Bruker and i3M.
+
+\paragraph{Summary}
+The Bruker PET insert for a 7\,T MRI, the Albira line moved to SiPMs: three
+rings of eight \qtyproduct{50 x 50 x 10}{\mm} monolithic LYSO blocks on 12 x 12
+SiPM arrays at \mm{4.2} pitch, row-and-column readout; \mm{80} transaxial and
+\mm{150} axial field. Mostly an MR-compatibility study, run under five MRI
+sequences; positioning and DOI estimation are not described (refers to
+González et al.\ 2016).
+
+\paragraph{Key Findings}
+\begin{itemize}
+	\item Resolution (MLEM): 0.68/0.86/\mm{1.10} radial/tangential/axial at the
+		centre and about \mm{0.92} on average out to \mm{35} off centre --- flat,
+		which the authors credit to DOI.
+	\item DOI about \mm{1.6} FWHM at \mm{10} thick, but fitted from flood data
+		with no collimated beam; energy 16.6\% at low activity, 18.5\% at high,
+		blamed on pile-up. No timing.
+	\item Peak sensitivity 11.0\% (window not stated); NECR 486 kcps (mouse);
+		\mm{0.7} Derenzo rods resolved; RC 0.14--0.94, uniformity 6.5\%.
+	\item The MRI sequences change almost nothing: DOI worsens to about
+		\mm{2.1} only under FLASH.
+\end{itemize}
+
+\paragraph{Why it matters here}
+What the monolithic preclinical line reached commercially: sub-millimetre and
+flat to \mm{35} off centre, at 11\% sensitivity, against Albira's \mm{1.7} and
+5\% four years before (\ref{note:Pajak2016}). Thin crystals and continuous DOI
+do it; nothing about multiple interactions, and no TOF.
+
+\end{papernote}
+
+\begin{papernote}{Ilisie et al.\ 2018 -- Building blocks of a multi-layer PET with time sequence photon interaction discrimination and double Compton camera}{Ilisie2018}
+\thumb{img/ilisie2018.png}
+Nucl.\ Instrum.\ Methods A 895:74--83, \doi{10.1016/j.nima.2018.03.076}.
+Ilisie, Giménez-Alventosa, Moliner, Sánchez, González, Rodríguez-Álvarez,
+Benlloch --- i3M. Simulation (PENELOPE and GATE, agreeing within 1\%).
+
+\paragraph{Summary}
+The plan behind i3M's 4D-PET. A 511\,keV photon in LYSO is about as likely to
+Compton scatter as to be absorbed (48.8 against 45.5\%; LaBr$_3$ 65.2 against
+29.2\%), and a scattered event inside the photopeak is reduced to an
+energy-weighted centroid. If every interaction and its order were known, the
+first one gives the true line --- the thumbnail's top row against the centroid
+images below. To use the scatter instead of averaging it: a ``double Compton
+camera'', where the two photons' Compton cones must both contain the line, which
+reduces to comparing the cosine of each geometric angle with the Compton angle
+from the energies. That rejects randoms, patient scatter and wrong pairings in
+multiple coincidences.
+
+\paragraph{Key Findings}
+\begin{itemize}
+	\item Doppler broadening makes the Compton-angle error sharply non-Gaussian;
+		treating it as Gaussian overstates it, so they propagate it by Monte
+		Carlo.
+	\item The stated premise: monolithic blocks on SiPMs \emph{cannot}
+		separate several interactions well enough, so the design is
+		multi-layer --- thin \mm{3}--5 LaBr$_3$ scatterers, a \mm{20} LYSO
+		absorber, about \mm{30} apart so that \ps{100} TOF can order the hits.
+	\item A \mm{3} LaBr$_3$ layer interacts with 21\% of photons; 41.5\% of
+		those are one clean forward Compton, so 8.8\% of all photons (11.7\% at
+		\mm{5}).
+	\item The full matching algorithm and system simulation are deferred.
+\end{itemize}
+
+\paragraph{Why it matters here}
+The clearest statement of the opposite bet to this thesis: separate the
+interactions by building layers far apart and ordering them by time of flight,
+because a single monolith cannot. \ref{note:Valladares2024} then measures
+\ps{192} and finds the layers are too close for that. A thick bulk that
+resolves its own interactions would make the layers unnecessary --- and this
+paper's ideal-first-interaction Derenzo is the picture of what is at stake.
+
+\end{papernote}
+
+\begin{papernote}{Valladares et al.\ 2024 -- Detector characterization of a high-resolution ring for PET imaging of mice heads with sub-200-ps TOF}{Valladares2024}
+\thumb{img/valladares2024.png}
+IEEE Trans.\ Radiat.\ Plasma Med.\ Sci.\ 8(8):876--885,
+\doi{10.1109/TRPMS.2024.3432194}. Valladares, Barrio, Cucarella, Freire, Vidal,
+Benlloch, González --- i3M. Open access.
+
+\paragraph{Summary}
+The inner scatter layer of the 4D-PET: four flat detectors around a \mm{29}
+square bore, eight modules of 24 x 24 Ca-codoped LYSO pixels
+\qtyproduct{0.95 x 0.95 x 3}{\mm}, nine pixels to each \qtyproduct{3 x 3}{\mm}
+SiPM with no light guide, every channel read by PETsys TOFPET2. The absorber
+outside it is \ref{note:Cucarella2026}. Detector characterisation only: no
+images, no DOI (\mm{3} thick), and no Compton events processed.
+
+\paragraph{Key Findings}
+\begin{itemize}
+	\item CTR \ps{229} with skew correction, \ps{196} with time walk, \ps{192}
+		with a within-SiPM transit-time correction; pixels 155--\ps{240}.
+	\item Timing worsens at low energy: \ps{230} at 300--\keV{400}, \ps{286} at
+		200--\keV{300}, over \ps{500} below \keV{200} --- the energies of the
+		scattered deposits a Compton scheme needs.
+	\item Energy 10.8\% after gain equalisation, 19.9\% after calibration to
+		keV: nine pixels share one SiPM, which saturates.
+	\item The authors' own conclusion: \ps{192} needs the layers about \mm{58}
+		apart to tell which was hit first; they are \mm{38.5}. So TOF cannot
+		order the interactions, and the ring is repurposed as a magnifying
+		insert.
+\end{itemize}
+
+\paragraph{Why it matters here}
+The measured answer to \ref{note:Ilisie2018}: even at a sub-\ps{200} CTR, time
+of flight does not order two interactions centimetres apart. Ordering inside a
+thick monolith, millimetres apart, cannot come from one timestamp per event; it
+has to come from the photon arrival pattern --- which is the thesis.
+
+\end{papernote}
+
 
  
 \end{programnote}
@@ -2115,7 +2271,8 @@ them one at a time --- longer slabs in \ref{note:Zhang2019}, thicker ones in
 \ref{note:Zhang2021}, finer ones and the surface treatment in
 \ref{note:Kinyanjui2026}, better positioning in \ref{note:Kinyanjui2025}, a
 different crystal in \ref{note:Kuang2026}, a scanner in
-\ref{note:Kuang2026a}.
+\ref{note:Kuang2026a}. Beside them sits the group's pixelated dual-ended
+scanner, \ref{note:Kuang2020} --- the yardstick the slabs are meant to beat.
 All seven are read in full. The scanner's ring is simulated with Gaussian
 detectors, so the line has yet to show a measured system; i3M has
 (\ref{note:Cucarella2026}).
@@ -2226,6 +2383,31 @@ sum of squares. \ref{note:Zhang2021}'s comparison quotes the \mm{1.44}.
 The baseline the later papers move: analytic positioning, one slab thickness,
 and a timing figure far outside TOF. Read it for what the surface treatment
 costs, which is the same choice an annulus faces at its ends.
+
+\end{papernote}
+
+\begin{papernote}{Kuang et al.\ 2020 -- Design and performance of SIAT aPET: a uniform high-resolution small animal PET scanner using dual-ended readout detectors}{Kuang2020}
+\thumb{img/kuang2020.png}
+Phys.\ Med.\ Biol.\ 65(23):235013, \doi{10.1088/1361-6560/abbc83}. Kuang,
+Wang, Ren, Wu, Gao, Zeng, Gao, Zhang, Sang, Hu, Du, Liang, Liu, Zheng, Yang.
+
+\paragraph{Summary}
+The group's pixelated scanner, beside the slab line rather than in it: 48
+modules of 23 x 23 polished LYSO crystals \qtyproduct{1 x 1 x 20}{\mm}, read at
+both ends by 8 x 8 SiPM arrays, each end multiplexed to four signals; \mm{111}
+ring, \mm{105.6} axial. Depth from the ratio of the two ends' energies.
+Detector: DOI \mm{1.96}, energy 19.1\%, timing \ns{1.2} against a reference.
+System: \mm{0.82} averaged out to \mm{30} off centre (OSEM with a PSF model,
+1\% warm background), flat with radius; sensitivity 16.0\% at 250--\keV{750}
+(11.9\% at 350--\keV{750}); NECR 324 kcps; \mm{1.0} rods resolved. Inter-crystal
+scatter is not discussed.
+
+\paragraph{Why it matters here}
+The pixelated yardstick a monolithic or slab preclinical scanner has to meet:
+\mm{20} crystals with \mm{2} DOI buy both sensitivity and flat resolution, at
+the price of two photosensors per module and no timing. The sensitivity is not
+measured to NEMA, and the resolution sits in a warm background with a PSF
+model, so set it against others with care.
 
 \end{papernote}
 
@@ -3699,6 +3881,36 @@ dimensions, at the price of 96 photosensors for a \mm{16} cube and nearly half
 the events mispositioned by scatter it does not try to separate.
 \end{papernote}
 
+\begin{papernote}{Kang et al.\ 2023 -- Submillimeter-resolution PET for high-sensitivity mouse brain imaging}{Kang2023}
+\thumb{img/kang2023.png}
+J.\ Nucl.\ Med.\ 64(6):978--985, \doi{10.2967/jnumed.122.264433}. Kang,
+Tashima, Wakizaka, Nishikido, Higuchi, Takahashi, Yamaya. Open access.
+
+\paragraph{Summary}
+SR-PET: a \mm{52.5} ring of 64 detectors, each three staggered layers of
+\qtyproduct{0.9 x 0.9}{\mm} LYSO crystals (4, 4 and \mm{7}; \mm{15} in all),
+offset half a pitch so each layer lands at its own spot in one flood map; four
+signals per SiPM array. Depth is three discrete bins. Energy 24.3\% system-wide;
+timing \ns{9.5}.
+\begin{itemize}
+	\item Resolution: about \mm{0.6} with 3D OSEM, about \mm{1.0} with FBP,
+		at the centre; \mm{0.55} rods resolved at 50 iterations, \mm{0.75}
+		rods at 10 (the Inveon resolves neither).
+	\item Peak sensitivity 8.66\% at 250--\keV{750}, falling to 2.84\% at
+		400--\keV{600} and 1.56\% at 440--\keV{560}: inter-crystal scatter is
+		only rejected by narrowing the window.
+	\item Parallax still degrades radial resolution at 10--\mm{15} off centre:
+		three layers do not remove it.
+\end{itemize}
+
+\paragraph{Why it matters here}
+The best pixelated DOI preclinical system on this map, and the clearest price
+list for it: a 5.5-fold sensitivity loss to keep scatter out, per-crystal
+calibration, a 72-hour normalisation. That sensitivity cost is exactly what
+recovering multi-interaction events in a continuous crystal would bid for.
+
+\end{papernote}
+
 \end{programnote}
 
 \begin{programnote}{MODE Collaboration -- differentiable detector design}{MODE}
@@ -4169,8 +4381,9 @@ FWHM, ranked by DOI as a share of crystal depth, so thin and thick detectors
 compare fairly; then builds with depth only in bins or layers. Depth, DOI and
 transverse are in mm, DOI/d is DOI over depth. Transverse is
 the measured intrinsic FWHM where there is one, otherwise the crystal pitch
-(marked p). CTR is between two such detectors unless marked r (against a fast
-reference crystal). Prism-PET figures reject inter-crystal scatter first;
+(marked p). DOI marked f is fitted from flood data, with no collimated beam.
+CTR is between two such detectors unless marked r (against a fast reference
+crystal). Prism-PET figures reject inter-crystal scatter first;
 monolith figures mostly do not. Simulations have their own table below; builds
 quoting only a mean absolute error (Zhang 2017, Freire 2022, Thull 2026) are
 left out.
@@ -4185,12 +4398,14 @@ Build & Detector & Readout & Depth & DOI & DOI/d & Transv. & Energy & CTR \\
 Xie 2026 & LYSO 0.44 mm pixels & dual & 20 & 1.78 & 9\% & 0.5 p & 22\% & 1100 ps \\
 LaBella 2021 & LYSO 1.4 mm, Prism + CNN & single & 20 & 1.84 & 9\% & 1.4 p & -- & -- \\
 Ren 2014 & LYSO 1.5 mm, unpolished & dual & 20 & 1.9 & 10\% & 1.5 p & 22\% & -- \\
+Kuang 2020 & LYSO 1 mm pixels, aPET & dual & 20 & 1.96 & 10\% & 1 p & 19.1\% & 1.2 ns r \\
 Zeng 2024 & LYSO 1.5 mm, tapered Prism & single & 20 & 2.25 & 11\% & 1.5 p & 8.9\% & 243 ps \\
 LaBella 2020 & LYSO 1.4 mm, Prism & single & 20 & 2.5 & 13\% & 1.4 p & 9\% & -- \\
 Zhang 2021 & LYSO 1.37 mm slabs & dual & 20 & 2.60 & 13\% & 1.97 & 21.7\% & 718 ps \\
 Zeng 2023 & LYSO 1.5 mm, Prism scanner & single & 20 & 2.85 & 14\% & 1.22 & 12.6\% & 271 ps \\
 Carra 2022 & LYSO monolith & single & 8 & 1.2 & 15\% & 0.78 & -- & 156 ps \\
 Zhang 2019 & LYSO 1 mm slabs, painted & single & 10 & 1.55 & 16\% & 1.07 & 24.9\% & 788 ps r \\
+Gsell 2020 & LYSO monolith, 50 mm & single & 10 & 1.6 f & 16\% & -- & 16.6\% & -- \\
 Kinyanjui 2025 & LYSO 0.96 mm slabs, XGBoost & single & 10 & 1.67 & 17\% & 0.92 & -- & -- \\
 Borghi 2016 & LYSO monolith, 32 mm & single & 22 & 3.73 & 17\% & 1.68 & 9.9\% & 214 ps \\
 Pizzichemi 2019 & LYSO 1.53 mm, sharing & single & 15 & 3 & 20\% & 1.5 p & 8.9\% & 157 ps \\
@@ -4206,6 +4421,7 @@ Peng 2019 & LYSO 4 slabs & 4 sides & 4x2.76 & layer & -- & 1.1 & 10.3\% & 348 ps
 Stockhoff 2021 & LYSO monolith, 50 mm & single & 16 & 6 layers & -- & 1.14 & 11.0\% & -- \\
 Yamaya 2011 & LYSO 1 mm cubes, X'tal cube & 6 faces & 16 & 1 p & -- & 1 p & 12.7\% & -- \\
 Gillam 2014 & LYSO 3 mm axial + WLS, AX-PET & SiPM & 6 layers & layer & -- & 3 p & 11.8\% & -- \\
+Kang 2023 & LYSO 0.9 mm, 3 staggered layers & SiPM & 15 & 3 layers & -- & 1 p & 24.3\% & 9.5 ns \\
 Lee 2026 & BGO semi-monolith & single & 20 & 4 bins & -- & 3.17 & 21\% & 172 ps r \\
 Cates 2024 & BGO monolith & single & 15 & relative & -- & relative & 17.6\% & 237 ps r \\
 Xu 2019 & LYSO ring monolith & 2 rings & 5 & -- & -- & 0.94 & 10.7\% & -- \\
@@ -4288,7 +4504,10 @@ Learned crystal-pair selection on plain light sharing falls from 91\% to
 35\% as pitch shrinks (\ref{note:Lee2021}); Klein--Nishina selection did no
 better than random on AX-PET, where including both candidate lines beat
 choosing (\ref{note:Gillam2014}) --- the reconstruction baseline an order has
-to beat.
+to beat. The two-layer alternative assumes a monolith cannot do this and orders
+by time of flight across \mm{30} (\ref{note:Ilisie2018}); at a measured
+\ps{192} that needs \mm{58}, so it fails at \mm{38.5}
+(\ref{note:Valladares2024}).
 
 \paragraph{Simulation}
 Thick LYSO slab or monolith, ground-truth interaction order from GATE, a

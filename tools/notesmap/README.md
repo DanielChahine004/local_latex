@@ -60,6 +60,13 @@ Journal 1:2, \doi{10.xxxx/yyyy}.                               % the card's link
 \end{confnote}
 ```
 
+A panel without `[dx,dy]` is placed for you, near its pin. Its red leader is
+kept from crossing another programme's leader, or running under another panel,
+even when that means sitting a few rings further out. Panels with a hand
+offset are placed first and never moved, so the board prints any leaders that
+still cross (`leaders cross: A and B`), and the fix is to change one of those
+offsets.
+
 A conference panel ticks down to its deadline, then to the meeting, and says
 so when both have passed. Dates are ISO; one without an offset is read as UTC,
 so a deadline worth trusting to the hour carries the conference's own

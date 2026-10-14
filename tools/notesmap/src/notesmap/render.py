@@ -507,7 +507,8 @@ class Board:
                             x, y = nx, ny
                 else:
                     leaders = [(pins[k], centre(b)) for k, b in boxes.items() if k in pins]
-                    x, y = auto_place((px, py), w, h, taken, leaders, list(boxes.values()))
+                    x, y = auto_place((px, py), w, h, taken, leaders, list(boxes.values()),
+                                      Rect(0, 0, self.map_w, self.map_w / 2))
                 self._set_pin(key, px, py)
             taken.append(Rect(x, y, w, h))
             boxes[key] = Rect(x, y, w, h)

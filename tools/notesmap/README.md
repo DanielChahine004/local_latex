@@ -62,7 +62,8 @@ Journal 1:2, \doi{10.xxxx/yyyy}.                               % the card's link
 
 A panel without `[dx,dy]` is placed for you, near its pin. Its red leader is
 kept from crossing another programme's leader, or running under another panel,
-even when that means sitting a few rings further out. Panels with a hand
+even when that means sitting a few rings further out, and it never hangs off
+the edge of the map. Panels with a hand
 offset are placed first and never moved, so the board prints any leaders that
 still cross (`leaders cross: A and B`), and the fix is to change one of those
 offsets.

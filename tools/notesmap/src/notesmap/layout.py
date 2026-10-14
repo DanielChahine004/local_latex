@@ -99,10 +99,12 @@ def leader_cost(pin: Point, r: Rect, leaders: list[Segment], panels: list[Rect])
 
 
 def auto_place(pin: Point, w: float, h: float, taken: list[Rect],
-               leaders: list[Segment] = (), panels: list[Rect] = ()) -> tuple[float, float]:
+               leaders: list[Segment] = (), panels: list[Rect] = (),
+               bounds: Rect | None = None) -> tuple[float, float]:
     """The cheapest free spot on rings around the pin: nearest first, but one whose
     leader would cross another programme's, or run under a panel, gives way to
-    one a few rings further out. Ties go to the first found, up and to the right."""
+    one a few rings further out. Ties go to the first found, up and to the right.
+    With bounds (the map), a spot that hangs off its edge is not free."""
     px, py = pin
     best, best_cost, limit = None, math.inf, 6000
     for radius in range(300, 6000, 250):
@@ -114,6 +116,9 @@ def auto_place(pin: Point, w: float, h: float, taken: list[Rect],
             cx, cy = px + radius * math.cos(a), py + radius * math.sin(a)
             r = Rect(cx - w / 2, cy - h / 2, w, h)
             if any(r.overlaps(t) for t in taken):
+                continue
+            if bounds and not (bounds.x <= r.x and bounds.y <= r.y and r.x + r.w <= bounds.x + bounds.w
+                               and r.y + r.h <= bounds.y + bounds.h):
                 continue
             if best is None:
                 limit = radius + WIDEN

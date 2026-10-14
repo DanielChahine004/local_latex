@@ -111,6 +111,8 @@ pixi exec --spec poppler -- pdftoppm -r 130 -f <page> -l <page> -png build/thesi
 `papers/<BibKey>.pdf`, a git-ignored clone of the private `thesis-papers` repo;
 `pixi run papers-pull` fetches it. Read a paper there before asking for it, and
 file any PDF you are given under its bibliography key, then `papers-push`.
+Every entry in `references.bib` should have its PDF in the store, for checking
+citations against the source; `pixi run papers-status` lists the gaps.
 Never copy a PDF into this repo, which is public.
 
 For a paywalled paper, use the UTS Library through Claude in Chrome. Open each

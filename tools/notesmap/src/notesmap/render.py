@@ -23,6 +23,7 @@ from .latex import Converter
 from .layout import PANEL_W, Rect, auto_place, centre, estimate_height, panel_w, project, push_out, tangles
 from .parse import Entry, Notes
 from .redact import redact
+from . import tables
 from .source import Source
 from .web import MAP_CSS, PIN_JSX, REACT_CSS, REACT_SRC, SEARCH_CSS, SEARCH_SRC, edit_jsx
 
@@ -35,6 +36,7 @@ class Board:
         self.canvas, self.cfg, self.src, self.conv, self.map_mode = canvas, cfg, source, conv, map_mode
         self.lock = threading.RLock()
         self.panels: dict[str, object] = {}       # group key -> panel
+        self.table_panels: dict[str, tuple] = {}  # [tables] key -> (table panel, its rows)
         self.owner: dict[str, str] = {}           # any entry key -> its group key
         self.props: dict[str, dict] = {}
         self.pins: dict[str, object] = {}
@@ -162,6 +164,7 @@ class Board:
                     if props != self.props[key]:
                         self.props[key] = props
                         self.panels[key].update(**props)
+            self._tables(groups)
             self.notes = notes
             self._arrows(notes)
             self._match()                         # the box learns the new notes
@@ -374,7 +377,7 @@ class Board:
                     else (key if key in self.cfg.open_default else None),
             "place": self.conv.to_md(loc.place) if loc else "",
             "figures": [{"src": thumb, "caption": ""}] if thumb else [],
-            "html": self._html(node.full(self.conv)) if node else "",
+            "html": self._html(self._own_text(key, node)) if node else "",
             "lead": self._snippet(node) if node else "",
             "link": node.link if node else None,
             "papers": [{"key": p.key, "title": self.conv.to_md(p.title), "year": str(p.year) if p.year else "",
@@ -416,6 +419,27 @@ class Board:
             if self._tick == mine:
                 self.settle()
         threading.Thread(target=go, daemon=True).start()
+
+    def _own_text(self, key: str, node: Entry) -> str:
+        md = node.full(self.conv)
+        return tables.strip(md) if key in self.cfg.tables else md
+
+    def _tables(self, groups) -> None:
+        """A table panel for each [tables] programme, at its fixed spot, refreshed in place."""
+        for key, spec in self.cfg.tables.items():
+            node = groups[key][1] if key in groups else None
+            data = tables.rows(node.full(self.conv), spec) if node else []
+            have = self.table_panels.get(key)
+            if not data:
+                if have is not None:
+                    self.canvas.remove(self.table_panels.pop(key)[0])
+                continue
+            if have is None:
+                x, y, w, h = spec["at"]
+                self.table_panels[key] = (self.canvas.table(data, name=f"{key}_table", x=x, y=y, w=w, h=h), data)
+            elif have[1] != data:
+                have[0].update(data)
+                self.table_panels[key] = (have[0], data)
 
     def _remove(self, key: str) -> None:
         for name in [n for n, (a, b, _) in self.arrows.items() if key in (a, b)]:

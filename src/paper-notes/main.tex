@@ -1656,8 +1656,8 @@ Elke Dhaenens, Florence Muller, Christian Vanhove.
 \paragraph{Key outputs}
 Six papers, and they are one argument rather than six results:
 \begin{itemize}
-	\item \ref{note:Vandenberghe2018} (2018) --- the cost-efficient total-body target the
-		rest inherits.
+	\item \ref{note:Vandenberghe2020} --- the cost-efficient total-body target the
+		rest inherits, and the group's own case against monolithic readout cost.
 	\item \ref{note:Vandenberghe2023} --- the walk-through design itself.
 	\item \ref{note:Dadgar2023} --- panels against a cylinder, in BGO.
 	\item \ref{note:AbiAkl2023} --- the same block wrapped into a ring instead.
@@ -1689,28 +1689,41 @@ This node is system geometry. Detector physics, including the \mm{1.14} the
 whole campaign assumes, is \ref{prog:Ghent}; the productised preclinical
 scanner is \ref{prog:Molecubes}.
 
-\begin{papernote}{Vandenberghe et al.\ 2018 -- PET20.0: a cost-efficient, 2 mm spatial resolution total body PET with point sensitivity up to 22\% and adaptive axial FOV of maximum 2.00 m}{Vandenberghe2018}
-Abstract, 33rd International Austrian Winter Symposium; EJNMMI Res.\ 8(Suppl 1):5,
-\doi{10.1186/s13550-017-0354-4}. Vandenberghe, Mikhaylova, Borys, Viswanath,
-Stockhoff, Efthimiou, Caribe, Van Holen, Karp.
+\begin{papernote}{Vandenberghe et al.\ 2020 -- State of the art in total body PET}{Vandenberghe2020}
+\thumb{img/vandenberghe2020.png}
+EJNMMI Phys.\ 7:35, \doi{10.1186/s40658-020-00290-2}. Vandenberghe, Moskal, Karp.
+Review, open access.
 
 \paragraph{Summary}
-The design that starts the total-body line: monolithic detectors scaled up
-from small-animal systems to clinical size, the block doubled in both
-transverse and axial dimensions and repeated 36 times in a ring of
-\qty{65}{\centi\metre} inner diameter, giving uniform \mm{2} resolution,
-point sensitivity to 22\% and an adaptive axial FOV up to \qty{2.00}{\metre}.
-It asks for three to four times the scintillator and readout of a clinical
-system and returns 15--20x sensitivity on extended sources.
-\gap{This is a conference abstract, not a full paper --- the collection DOI
-is the whole symposium, so find the abstract number, and check whether a
-full PET20.0 paper was ever published. Cite it as an abstract until then.}
+The group's own survey of long-axial-field PET, and the citable home of their
+PET20.0 design, which otherwise exists only as conference abstracts (EANM 2017;
+Austrian Winter Symposium 2018): a compact total-body scanner with ``only 3--4
+times the detector material of a current PET-CT'', using high-resolution
+monolithic detectors to take ``a large step in spatial resolution'' as well as
+sensitivity. Around it: sensitivity gains of 2.5--3.5x for a single organ
+(saturating at \qty{70}{\centi\metre}) against up to 40x for a \qty{2}{\metre}
+object; component cost dominated by crystal volume, photodetector area and
+electronics.
+
+\paragraph{On monolithic detectors}
+\begin{itemize}
+	\item Monolithic blocks cost about the same as pixelated ones at clinical
+		pixel sizes (2--\mm{4}); the readout and positioning are what is ``more
+		complex and costly'', and they call that ``a major limitation'' for
+		total-body systems --- hoping faster FPGAs fix it.
+	\item Timing is the hardest parameter, because the light spreads over more
+		photodetectors; fast, accurate TOF estimators still have to be
+		developed.
+	\item Very good detector results in the lab, ``not yet \ldots realised in
+		full systems''.
+\end{itemize}
 
 \paragraph{Why it matters here}
-The cost argument in its original form, and the one place the group states
-the scintillator multiple outright: monolithic buys resolution and
-sensitivity at three to four times the crystal. The walk-through design is
-the answer to that cost, trading the ring for two panels.
+The cost and timing objections to a clinical monolith, stated by the group
+most committed to building one: not the crystal but the readout and the
+positioning, and not resolution but time. Those are the two things a thick
+monolith with learned positioning has to answer. The walk-through panels
+(\ref{note:Vandenberghe2023}) are their answer to the cost.
 
 \end{papernote}
 
@@ -4376,55 +4389,69 @@ if it beats simply including both lines.
 \begin{programnote}{Leaderboard -- measured detector builds, ranked by DOI against thickness}{Leaderboard}
 
 \paragraph{What it is}
-Every measured detector build on this map that reports a depth-of-interaction
-FWHM, ranked by DOI as a share of crystal depth, so thin and thick detectors
-compare fairly; then builds with depth only in bins or layers. Depth, DOI and
-transverse are in mm, DOI/d is DOI over depth. Transverse is
-the measured intrinsic FWHM where there is one, otherwise the crystal pitch
-(marked p). DOI marked f is fitted from flood data, with no collimated beam.
-CTR is between two such detectors unless marked r (against a fast reference
-crystal). Prism-PET figures reject inter-crystal scatter first;
-monolith figures mostly do not. Simulations have their own table below; builds
-quoting only a mean absolute error (Zhang 2017, Freire 2022, Thull 2026) are
-left out.
+Every detector build on this map with a figure for depth of interaction,
+ranked by DOI as a share of crystal depth (DOI/d), so thin and thick detectors
+compare fairly. Every cell is a number; a letter after it says what kind:
+unmarked is a measured FWHM, and
+\begin{itemize}
+	\item p --- the crystal pitch, where the build resolves crystals rather than
+		positions;
+	\item L, b --- the layer or bin width, for builds that resolve depth only in
+		steps (a uniform step of width $w$ is Gaussian-equivalent to a
+		$0.68\,w$ FWHM, so these flatter a little less than they look);
+	\item f --- fitted from flood data, with no collimated beam;
+	\item e --- a Gaussian equivalent the authors computed;
+	\item r --- a CTR against a fast reference crystal, not between two such
+		detectors; it flatters by about $\sqrt{2}$;
+	\item i --- an input to a simulation, not a result.
+\end{itemize}
+A dash is not reported. Prism-PET figures reject inter-crystal scatter first;
+monolith figures mostly do not. Builds quoting only a mean absolute error (Zhang
+2017, Freire 2022, Thull 2026) are left out. On the map the two tables are one
+sortable, filterable panel beside this one.
+
+\paragraph{Measured builds}
+Builds that resolve depth continuously first, then those that resolve it in
+steps.
 
 \begin{center}
 \begin{scriptsize}
-\setlength{\tabcolsep}{3.5pt}
+\setlength{\tabcolsep}{2.5pt}
 \begin{tabular}{lllllllll}
 \hline
-Build & Detector & Readout & Depth & DOI & DOI/d & Transv. & Energy & CTR \\
+Build & Detector & Readout & Depth mm & DOI mm & DOI/d \% & Transv. mm & Energy \% & CTR ps \\
 \hline
-Xie 2026 & LYSO 0.44 mm pixels & dual & 20 & 1.78 & 9\% & 0.5 p & 22\% & 1100 ps \\
-LaBella 2021 & LYSO 1.4 mm, Prism + CNN & single & 20 & 1.84 & 9\% & 1.4 p & -- & -- \\
-Ren 2014 & LYSO 1.5 mm, unpolished & dual & 20 & 1.9 & 10\% & 1.5 p & 22\% & -- \\
-Kuang 2020 & LYSO 1 mm pixels, aPET & dual & 20 & 1.96 & 10\% & 1 p & 19.1\% & 1.2 ns r \\
-Zeng 2024 & LYSO 1.5 mm, tapered Prism & single & 20 & 2.25 & 11\% & 1.5 p & 8.9\% & 243 ps \\
-LaBella 2020 & LYSO 1.4 mm, Prism & single & 20 & 2.5 & 13\% & 1.4 p & 9\% & -- \\
-Zhang 2021 & LYSO 1.37 mm slabs & dual & 20 & 2.60 & 13\% & 1.97 & 21.7\% & 718 ps \\
-Zeng 2023 & LYSO 1.5 mm, Prism scanner & single & 20 & 2.85 & 14\% & 1.22 & 12.6\% & 271 ps \\
-Carra 2022 & LYSO monolith & single & 8 & 1.2 & 15\% & 0.78 & -- & 156 ps \\
-Zhang 2019 & LYSO 1 mm slabs, painted & single & 10 & 1.55 & 16\% & 1.07 & 24.9\% & 788 ps r \\
-Gsell 2020 & LYSO monolith, 50 mm & single & 10 & 1.6 f & 16\% & -- & 16.6\% & -- \\
-Kinyanjui 2025 & LYSO 0.96 mm slabs, XGBoost & single & 10 & 1.67 & 17\% & 0.92 & -- & -- \\
-Borghi 2016 & LYSO monolith, 32 mm & single & 22 & 3.73 & 17\% & 1.68 & 9.9\% & 214 ps \\
-Pizzichemi 2019 & LYSO 1.53 mm, sharing & single & 15 & 3 & 20\% & 1.5 p & 8.9\% & 157 ps \\
-Kinyanjui 2026 & LYSO 0.96 mm slabs, painted & single & 10 & 2.14 & 21\% & 1.68 & 17.4\% & 3.3 ns r \\
-Kuang 2026 & GAGG 0.96 mm slabs & single & 10 & 2.33 & 23\% & 1.59 & 14.7\% & 4.3 ns r \\
-Zhang 2021 & LYSO 1.37 mm slabs & single & 20 & 4.77 & 24\% & 2.43 & 25.7\% & 779 ps \\
-cMiCE & LYSO monolith, 50 mm & single & 15 & 3.69 & 25\% & 1.55 & -- & -- \\
-Cucarella 2026 & LYSO 0.97 mm slabs, 25.6 mm & single & 12 & 3.08 & 26\% & 1.7 & 16.4\% & 252 ps \\
-Pizzichemi 2016 & LYSO 1.53 mm, sharing & single & 15 & 4.1 & 27\% & 1.5 p & 12.7\% & 353 ps \\
-Freire 2026 & LYSO curved monolith & single & 12.5 & 3.6 & 29\% & -- & 19\% & no TOF \\
-Moliner 2012 & LYSO monolith, MAMMI & single & 10 & 4 & 40\% & 1.6 & 18\% & -- \\
-Peng 2019 & LYSO 4 slabs & 4 sides & 4x2.76 & layer & -- & 1.1 & 10.3\% & 348 ps \\
-Stockhoff 2021 & LYSO monolith, 50 mm & single & 16 & 6 layers & -- & 1.14 & 11.0\% & -- \\
-Yamaya 2011 & LYSO 1 mm cubes, X'tal cube & 6 faces & 16 & 1 p & -- & 1 p & 12.7\% & -- \\
-Gillam 2014 & LYSO 3 mm axial + WLS, AX-PET & SiPM & 6 layers & layer & -- & 3 p & 11.8\% & -- \\
-Kang 2023 & LYSO 0.9 mm, 3 staggered layers & SiPM & 15 & 3 layers & -- & 1 p & 24.3\% & 9.5 ns \\
-Lee 2026 & BGO semi-monolith & single & 20 & 4 bins & -- & 3.17 & 21\% & 172 ps r \\
-Cates 2024 & BGO monolith & single & 15 & relative & -- & relative & 17.6\% & 237 ps r \\
-Xu 2019 & LYSO ring monolith & 2 rings & 5 & -- & -- & 0.94 & 10.7\% & -- \\
+Xie 2026 & LYSO 0.44 mm pixels & dual & 20 & 1.78 & 9 & 0.5 p & 22 & 1100 \\
+LaBella 2021 & LYSO 1.4 mm, Prism + CNN & single & 20 & 1.84 & 9 & 1.4 p & -- & -- \\
+Ren 2014 & LYSO 1.5 mm, unpolished & dual & 20 & 1.9 & 10 & 1.5 p & 22 & -- \\
+Kuang 2020 & LYSO 1 mm pixels, aPET & dual & 20 & 1.96 & 10 & 1 p & 19.1 & 1200 r \\
+Zeng 2024 & LYSO 1.5 mm, tapered Prism & single & 20 & 2.25 & 11 & 1.5 p & 8.9 & 243 \\
+LaBella 2020 & LYSO 1.4 mm, Prism & single & 20 & 2.5 & 13 & 1.4 p & 9 & -- \\
+Zhang 2021 & LYSO 1.37 mm slabs & dual & 20 & 2.60 & 13 & 1.97 & 21.7 & 718 \\
+Zeng 2023 & LYSO 1.5 mm, Prism scanner & single & 20 & 2.85 & 14 & 1.22 & 12.6 & 271 \\
+Carra 2022 & LYSO monolith & single & 8 & 1.2 & 15 & 0.78 & -- & 156 \\
+Zhang 2019 & LYSO 1 mm slabs, painted & single & 10 & 1.55 & 16 & 1.07 & 24.9 & 788 r \\
+Gsell 2020 & LYSO monolith, 50 mm & single & 10 & 1.6 f & 16 & -- & 16.6 & -- \\
+Kinyanjui 2025 & LYSO 0.96 mm slabs, XGBoost & single & 10 & 1.67 & 17 & 0.92 & -- & -- \\
+Borghi 2016 & LYSO monolith, 32 mm & single & 22 & 3.73 & 17 & 1.68 & 9.9 & 214 \\
+Pizzichemi 2019 & LYSO 1.53 mm, sharing & single & 15 & 3 & 20 & 1.5 p & 8.9 & 157 \\
+Kinyanjui 2026 & LYSO 0.96 mm slabs, painted & single & 10 & 2.14 & 21 & 1.68 & 17.4 & 3340 r \\
+Kuang 2026 & GAGG 0.96 mm slabs & single & 10 & 2.33 & 23 & 1.59 & 14.7 & 4300 r \\
+Zhang 2021 & LYSO 1.37 mm slabs & single & 20 & 4.77 & 24 & 2.43 & 25.7 & 779 \\
+cMiCE & LYSO monolith, 50 mm & single & 15 & 3.69 & 25 & 1.55 & -- & -- \\
+Cucarella 2026 & LYSO 0.97 mm slabs, 25.6 mm & single & 12 & 3.08 & 26 & 1.7 & 16.4 & 252 \\
+Pizzichemi 2016 & LYSO 1.53 mm, sharing & single & 15 & 4.1 & 27 & 1.5 p & 12.7 & 353 \\
+Freire 2026 & LYSO curved monolith & single & 12.5 & 3.6 & 29 & -- & 19 & -- \\
+Moliner 2012 & LYSO monolith, MAMMI & single & 10 & 4 & 40 & 1.6 & 18 & -- \\
+\hline
+Yamaya 2011 & LYSO 1 mm cubes, X'tal cube & 6 faces & 16 & 1 L & 6 & 1 p & 12.7 & -- \\
+Stockhoff 2021 & LYSO monolith, 50 mm & single & 16 & 2.67 L & 17 & 1.14 & 11.0 & -- \\
+Gillam 2014 & LYSO 3 mm axial, 6 layers + WLS & SiPM & 18 & 3 L & 17 & 3 p & 11.8 & -- \\
+Peng 2019 & LYSO monolith, 4 stacked layers & 4 sides & 13.4 & 3.36 L & 25 & 1.1 & 10.3 & 348 \\
+Lee 2026 & BGO semi-monolith & single & 20 & 5 b & 25 & 3.17 & 21 & 172 r \\
+Kang 2023 & LYSO 0.9 mm, 3 staggered layers & SiPM & 15 & 5 L & 33 & 1 p & 24.3 & 9500 \\
+Cates 2024 & BGO monolith & single & 15 & -- & -- & -- & 17.6 & 237 r \\
+Xu 2019 & LYSO ring monolith & 2 rings & 5 & -- & -- & 0.94 & 10.7 & -- \\
 \hline
 \end{tabular}
 \end{scriptsize}
@@ -4438,17 +4465,17 @@ rather than a result it is marked i.
 
 \begin{center}
 \begin{scriptsize}
-\setlength{\tabcolsep}{3.5pt}
+\setlength{\tabcolsep}{2.5pt}
 \begin{tabular}{lllllllll}
 \hline
-Build & Detector & Readout & Depth & DOI & DOI/d & Transv. & Energy & CTR \\
+Build & Detector & Readout & Depth mm & DOI mm & DOI/d \% & Transv. mm & Energy \% & CTR ps \\
 \hline
-Decuyper 2021 & LYSO monolith, 50 mm, NN & single & 16 & 0.71 & 4\% & 0.42 & -- & -- \\
-cMiCE (SES) & LYSO monolith, 49 mm & entrance face & 15 & 1.52 & 10\% & 0.91 & -- & -- \\
-Razdevšek 2025 & LSO 3 mm pixels, 8 layers & ideal & 20 & 1.7 eq. & 9\% & 3 p & 10\% i & 70 ps i \\
-Decuyper 2021 & same, scattered events & single & 16 & 1.80 & 11\% & 0.66 & -- & -- \\
-Petersen 2020 & LYSO 1.4 mm, Prism, multi-crystal & single & 20 & 2.1 & 11\% & 1.4 p & -- & -- \\
-Peng 2019 & LYSO 4 slabs, side readout & 4 sides & 4x3.16 & layer & -- & 0.40 & 9.3\% & -- \\
+Decuyper 2021 & LYSO monolith, 50 mm, NN & single & 16 & 0.71 & 4 & 0.42 & -- & -- \\
+cMiCE (SES) & LYSO monolith, 49 mm & entrance face & 15 & 1.52 & 10 & 0.91 & -- & -- \\
+Razdevšek 2025 & LSO 3 mm pixels, 8 layers & ideal & 20 & 1.7 e & 9 & 3 p & 10 i & 70 i \\
+Decuyper 2021 & LYSO monolith, 50 mm, scattered events & single & 16 & 1.80 & 11 & 0.66 & -- & -- \\
+Petersen 2020 & LYSO 1.4 mm, Prism, multi-crystal & single & 20 & 2.1 & 11 & 1.4 p & -- & -- \\
+Peng 2019 & LYSO monolith, 4 stacked layers & 4 sides & 12.6 & 3.16 L & 25 & 0.40 & 9.3 & -- \\
 \hline
 \end{tabular}
 \end{scriptsize}
@@ -4467,9 +4494,9 @@ its authors call the best reported for a single-ended module. Measured monoliths
 sit lower: their best DOI comes from thin blocks (Carra, \mm{8}), and at
 15--\mm{16} they report 3--\mm{4} or layers. Footnotes the table cannot carry:
 Pizzichemi 2019's \mm{3} DOI is cited from earlier work, Freire 2026's and Xu
-2019's figures are partly system-level, Peng's DOI is the layer thickness
-(\mm{3.36}), and CTRs against a reference flatter a detector by about
-$\sqrt{2}$.
+2019's figures are partly system-level, Freire 2026 has no TOF, Stockhoff's six
+layers are unequal (\mm{2.67} is their mean), and Kang 2023's \ns{9.5} is the
+whole system's timing resolution, an order of magnitude outside TOF.
 
 \end{programnote}
 

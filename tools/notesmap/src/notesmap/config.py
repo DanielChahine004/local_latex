@@ -41,6 +41,8 @@ class Config:
     map_width: int = 9000
     unplaced: list[int] = field(default_factory=lambda: [400, 3500])
     map_fixed: dict[str, list] = field(default_factory=dict)  # key -> [x, y] or [x, y, width], no pin
+    # [tables]
+    tables: dict[str, dict] = field(default_factory=dict)  # key -> {at, flags, plain, derive}: a table panel
     # [check]
     bib: str = ""                                # BibTeX file to cross-check \doi{} against
     # [pdfs]
@@ -98,7 +100,13 @@ def load(path: Path | None) -> Config:
         for key, attr in keys.items():
             if key in table:
                 setattr(cfg, attr, table[key])
-    extra = set(data) - set(_SECTIONS)
+    # [tables.<Key>]: one table panel per programme, so the keys are the notes' own
+    for key, spec in data.get("tables", {}).items():
+        unknown = set(spec) - {"at", "flags", "plain", "derive"}
+        if unknown:
+            raise SystemExit(f"{path}: unknown key(s) in [tables.{key}]: {', '.join(sorted(unknown))}")
+        cfg.tables[key] = spec
+    extra = set(data) - set(_SECTIONS) - {"tables"}
     if extra:
         raise SystemExit(f"{path}: unknown section(s): {', '.join(sorted(extra))}")
     return cfg

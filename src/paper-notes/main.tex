@@ -2242,15 +2242,15 @@ pair can land in the same crystal, and their light overlaps.
 The promised NEMA study never appeared. The line ends in conference
 proceedings: a second-generation scanner of twelve thin ``semi-monolithic''
 rings for axial resolution (Xie et al., NSS/MIC 2018), a stack of sliced rings
-read on the outer surface (Zhang et al., NSS/MIC 2019,
-doi 10.1109/NSS/MIC42101.2019.9059816), and a GATE comparison of end against
+read on the outer surface (\ref{note:Zhang2019a}), and a GATE comparison of end against
 inner-surface readout (Yang et al., NSS/MIC 2020,
 doi 10.1109/NSS/MIC42677.2020.9508071); then a ring as a portable radiation
 sensor (Zhang et al., Sensors 21:3376, 2021). The group has since moved to
 pixelated and wearable brain PET; Peng is at LBNL, Xie at Shenzhen Bay
 Laboratory.
-\gap{The 2019 and 2020 proceedings, both paywalled: sliced rings read on the
-outer surface, and inner-surface readout, are the two ways a ring gets depth.}
+\gap{The 2018 and 2020 proceedings: the twelve-ring design, and the
+simulation of inner-surface readout --- the one way left for a ring to get
+depth, since \ref{note:Zhang2019a} never measures it.}
 
 \begin{papernote}{Xu et al.\ 2019 -- A preclinical PET detector constructed with a monolithic scintillator ring}{Xu2019}
 \thumb{img/xu2019.png}
@@ -2299,6 +2299,31 @@ centroid is the multi-interaction problem in its plainest form. It also shows
 how an intrinsic resolution can be flattered --- a half-difference between two
 readouts hides every error they share, and a Compton-scattered event shifts
 both ends together.
+
+\end{papernote}
+
+\begin{papernote}{Zhang et al.\ 2019 -- A novel preclinical PET scanner constructed with stacks of sliced monolithic scintillator rings}{Zhang2019a}
+\thumb{img/zhang2019a.png}
+IEEE NSS/MIC 2019, \doi{10.1109/NSS/MIC42101.2019.9059816}. Zhang, Ye, Xie,
+Xie, Huang, Xu, Peng. Two-page proceedings.
+
+\paragraph{Summary}
+The second-generation ring: twelve LYSO slices, each the \mm{5} wall of
+\ref{note:Xu2019} but only \mm{1} long, glued with \mm{0.1} of BaSO$_4$ in
+epoxy, so the ring is now segmented axially. Read on the \emph{outer}
+surface instead of the ends, by 25 arrays of 2 x 4 SiPMs (98 channels after
+row-and-column summing); inner surface and ends under aluminium foil. Light
+spreads 9.5--\mm{12.6} around the ring, as before, and stays within one or two
+SiPMs axially. Energy 10.6\% for a test crystal. The twelve slices do not
+resolve in the flood map, worst at the ends, put down to uneven SiPM assembly
+and too little light spread; a light guide is the proposed fix.
+
+\paragraph{Why it matters here}
+Reading the outer surface is how a ring could get depth, but this paper never
+measures it --- the wall is still \mm{5}, and only the axial slices are tested.
+It also trades the unbroken ring for slices, giving back continuity along the
+axis to fix the axial resolution. The thick-walled, surface-read ring is still
+untried here.
 
 \end{papernote}
 

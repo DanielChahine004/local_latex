@@ -3729,6 +3729,17 @@ and randoms are simulated and counted for NECR, but only trues are
 reconstructed. Dead time and pileup are ignored, positron range is not
 simulated.
 
+\textbf{Detector figures.} Because the detector is ideal, its resolutions are
+bin widths rather than measured spreads: \mm{3} across the panel (the crystal
+pitch; positions come out per crystal), and in depth the layer thickness ---
+\mm{10}, 5, 2.5 or \mm{1.25} for 2, 4, 8 or 16 layers in \mm{20}. Energy
+resolution 10\% FWHM (\qtyrange{435}{585}{\kilo\electronvolt}), timing
+\ps{200} or \ps{70} FWHM CTR as Gaussian noise; the reference gets the same
+10\% and \ps{214}. A box-shaped bin's FWHM is its full width, while monolith
+papers quote Gaussian FWHMs: matched by standard deviation, a \mm{3} pixel is
+about \mm{2.0} Gaussian FWHM and a \mm{2.5} layer about \mm{1.7}, which is
+the fairer number to set against a monolith's DOI.
+
 Compared with a simulated Siemens Biograph Vision (78 cm ring, 26.3 cm axial,
 \qtyproduct{3.2 x 3.2 x 20}{\mm} LSO, \ps{214}, no DOI) on system metrics ---
 sensitivity, NECR at 5 kBq/mL, scatter fraction and relative crystal volume ---

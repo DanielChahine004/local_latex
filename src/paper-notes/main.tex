@@ -2235,26 +2235,60 @@ monolithic scintillator ring.
 
 \paragraph{Why it matters here}
 The third group with an annular monolith, after \ref{prog:AnnPET} and
-\ref{prog:i3M}, and the one that positions with centre of gravity and a
-neural network side by side on the same ring --- so the positioning-method
-comparison the other two only allow between scanners is made within one.
-\gap{Whether a full scanner followed the detector paper, and who leads the
-line now.}
+\ref{prog:i3M}, and the thinnest: a \mm{5} wall read only at its two ends, so
+the ring gives angle and axial position but no depth. It is also the one paper
+that measures what an unbroken ring does to coincidences --- both photons of a
+pair can land in the same crystal, and their light overlaps.
+\gap{Whether the NEMA study and the multi-ring scanner the paper promises were
+ever published, and who leads the line now (Peng is at LBNL).}
 
 \begin{papernote}{Xu et al.\ 2019 -- A preclinical PET detector constructed with a monolithic scintillator ring}{Xu2019}
 \thumb{img/xu2019.png}
-Phys.\ Med.\ Biol.\ 64, \doi{10.1088/1361-6560/ab2ca4}.
+Phys.\ Med.\ Biol.\ 64(15):155009, \doi{10.1088/1361-6560/ab2ca4}. Xu, Xie,
+Zhang, Tao, Yang, Zhao, Weng, Huang, Yi, Peng --- HUST, Shanghai Jiao Tong and
+LBNL.
 
-\paragraph{Summary}
-A monolithic scintillator ring, \mm{48.5} inner and \mm{58.5} outer diameter,
-\mm{25.1} long, coupled to two rings of 46 SiPMs. Position decoding by centre
-of gravity and by an artificial neural network, circumferential and axial:
-intrinsic resolution \mm{0.94} FWHM circumferential and \mm{2.45} axial,
-energy resolution 10.7\% at \keV{511}. Authors: Xu, Xie, Zhang, Tao, Yang,
-Zhao, Weng, Huang, Yi, Peng.
-\gap{Unread. Which method gave which number; crystal material and whether
-the ring is one piece; the axial figure is poor and the paper's explanation
-matters for the thin-ring argument.}
+\paragraph{Detector}
+One LYSO ring core-drilled from a single boule: \mm{48.5} inner and \mm{58.5}
+outer diameter (a \mm{5} wall), \mm{25.1} long, inner and outer faces polished
+under ESR. Each end is air-coupled to a ring of 46 SiPMs
+(\qtyproduct{3 x 3}{\mm}, \degs{7.83} apart), all 92 channels read
+individually; the SiPMs cover only 63\% of the \mm{5} end face. Angle by centre
+of gravity over the nine SiPMs around the peak at each end, the two ends
+averaged; axial position by a small neural network (27 inputs, one hidden
+layer of 20) trained on a slit scan in \mm{1} steps. No depth: at \mm{5} the
+authors judge it unnecessary.
+
+\paragraph{Key Findings}
+\begin{itemize}
+	\item Angle: the averaged position measures \mm{1.44} FWHM (MAE \mm{0.65})
+		with a \mm{0.5} slit not subtracted. The headline \mm{0.94}
+		``intrinsic'' is half the difference between the two ends' angles, which
+		assumes their errors are independent and so cancels anything both ends
+		share --- including where scattered light really lands.
+	\item Axial: \mm{2.45} FWHM (MAE \mm{1.08}), linear to within \mm{0.8}.
+	\item Energy: 10.7\% at \keV{511}; 12.3\% in the phantom, and 11.4\% for
+		the \keV{1022} peak of coincidences caught whole inside the one ring.
+	\item Both photons of a pair can land in the ring at once, and their light
+		overlaps. Simulated by adding two measured single events: below a
+		\degs{70} separation the line of response is visibly wrong; above it
+		the overlap still adds \mm{0.65}, taking the angle to \mm{1.14}.
+	\item Derenzo rods of \mm{1.2} resolved, \mm{1.0} barely, reconstructed from
+		the \keV{1022} coincidence peak (950--\keV{1300}) with no correction for
+		the overlap.
+	\item Limits the authors name: a LYSO boule allows a ring of at most about
+		\mm{80} by \mm{240} at \mm{10} thick; one shared crystal lowers the
+		maximum count rate by $N/2$ against $N$ blocks; overlapping light also
+		corrupts timing.
+\end{itemize}
+
+\paragraph{Why it matters here}
+The one place two simultaneous light sources in a single monolith are
+measured, even if by adding events after the fact: the overlap that ruins a
+centroid is the multi-interaction problem in its plainest form. It also shows
+how an intrinsic resolution can be flattered --- a half-difference between two
+readouts hides every error they share, and a Compton-scattered event shifts
+both ends together.
 
 \end{papernote}
 
@@ -4451,7 +4485,7 @@ Peng 2019 & LYSO monolith, 4 stacked layers & 4 sides & 13.4 & 3.36 L & 25 & 1.1
 Lee 2026 & BGO semi-monolith & single & 20 & 5 b & 25 & 3.17 & 21 & 172 r \\
 Kang 2023 & LYSO 0.9 mm, 3 staggered layers & SiPM & 15 & 5 L & 33 & 1 p & 24.3 & 9500 \\
 Cates 2024 & BGO monolith & single & 15 & -- & -- & -- & 17.6 & 237 r \\
-Xu 2019 & LYSO ring monolith & 2 rings & 5 & -- & -- & 0.94 & 10.7 & -- \\
+Xu 2019 & LYSO ring monolith & 2 rings & 5 & -- & -- & 1.44 & 10.7 & -- \\
 \hline
 \end{tabular}
 \end{scriptsize}
@@ -4493,8 +4527,9 @@ Dual-ended readout and Prism-PET's deterministic light guide hold the top at
 its authors call the best reported for a single-ended module. Measured monoliths
 sit lower: their best DOI comes from thin blocks (Carra, \mm{8}), and at
 15--\mm{16} they report 3--\mm{4} or layers. Footnotes the table cannot carry:
-Pizzichemi 2019's \mm{3} DOI is cited from earlier work, Freire 2026's and Xu
-2019's figures are partly system-level, Freire 2026 has no TOF, Stockhoff's six
+Pizzichemi 2019's \mm{3} DOI is cited from earlier work, Freire 2026's figures
+are partly system-level, Xu 2019's transverse is the angle FWHM before its
+authors' half-difference correction (\mm{0.94} after) and it has no depth at all, Freire 2026 has no TOF, Stockhoff's six
 layers are unequal (\mm{2.67} is their mean), and Kang 2023's \ns{9.5} is the
 whole system's timing resolution, an order of magnitude outside TOF.
 

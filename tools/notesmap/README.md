@@ -204,6 +204,7 @@ annotated copy.
 | `[check]` | the bibliography `notesmap check` cross-checks `\doi{}` against |
 | `[pdfs]` | a folder of `<key>.pdf` and the URL a card's PDF link opens |
 | `[map]` | the map image (any equirectangular image), its width, where unplaced panels go |
+| `[tables.<Key>]` | turns that programme's tabulars into one sortable, filterable table panel at `at`; `flags` spells out a letter after a number (`1.4 p`) as a basis column, `derive` adds category columns from keywords |
 | `[server]` | port, and the companion editor the map links to |
 
 ### Your own parser

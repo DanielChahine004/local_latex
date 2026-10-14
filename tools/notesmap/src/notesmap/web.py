@@ -441,3 +441,102 @@ TABLE_CSS = """
 .lbt .links a:hover { text-decoration: underline; }
 .lbt .legend { font-size: 11px; opacity: .65; margin-top: 8px; }
 """
+
+# Demand against supply on shared axes: one row set rates what each use asks for,
+# another what each design gives. A radar for the chosen pair, a fit grid for all.
+RADAR_SRC = r"""
+function Component({ props }) {
+  const p = props, axes = p.axes || [], dem = p.demand || [], sup = p.supply || [];
+  const [a, setA] = React.useState(0), [b, setB] = React.useState(0);
+  const keep = { onPointerDown: e => e.stopPropagation(), onMouseDown: e => e.stopPropagation(),
+                 onWheel: e => e.stopPropagation() };
+  const fit = (d, s) => {
+    let num = 0, den = 0;
+    d.forEach((v, i) => { num += v * Math.min(s[i], v); den += v * v; });
+    return den ? Math.round(100 * num / den) : 0;
+  };
+  const short = (d, s) => axes.map((x, i) => [x, d[i] - s[i], d[i]]).filter(t => t[1] > 0)
+                              .sort((u, v) => v[1] * v[2] - u[1] * u[2]);
+  const N = axes.length, R = 150, cx = 230, cy = 190, top = 5;
+  const pt = (v, i) => { const t = -Math.PI / 2 + 2 * Math.PI * i / N, r = R * v / top;
+                         return [cx + r * Math.cos(t), cy + r * Math.sin(t)]; };
+  const poly = vals => vals.map((v, i) => pt(v, i).join(",")).join(" ");
+  const D = dem[a] ? dem[a].values : [], S = sup[b] ? sup[b].values : [];
+  const tone = f => f >= 90 ? "#1baf7a" : f >= 80 ? "#7fb069" : f >= 70 ? "#eda100" : "#e34948";
+  return (
+    <div className="dfit" style={{ zoom: p.scale }} {...keep}>
+      <div className="bar">
+        <label>Application <select value={a} onChange={e => setA(+e.target.value)}>
+          {dem.map((r, i) => <option key={i} value={i}>{r.name}</option>)}</select></label>
+        <label>Detector <select value={b} onChange={e => setB(+e.target.value)}>
+          {sup.map((r, i) => <option key={i} value={i}>{r.name}</option>)}</select></label>
+        <span className="score" style={{ color: tone(fit(D, S)) }}>fit {fit(D, S)}%</span>
+      </div>
+      <div className="row">
+        <svg viewBox="0 0 460 380" className="radar">
+          {[1, 2, 3, 4, 5].map(k => <polygon key={k} points={poly(axes.map(() => k))} className="ring" />)}
+          {axes.map((x, i) => { const [u, v] = pt(top, i), [lx, ly] = pt(top + 0.95, i);
+            return <g key={i}><line x1={cx} y1={cy} x2={u} y2={v} className="spoke" />
+              <text x={lx} y={ly} className="lab" textAnchor={lx < cx - 5 ? "end" : lx > cx + 5 ? "start" : "middle"}
+                    dominantBaseline="middle">{x}</text></g>; })}
+          <polygon points={poly(D)} className="dem" />
+          <polygon points={poly(S)} className="sup" />
+          {S.map((v, i) => v < D[i] ? <circle key={i} cx={pt(v, i)[0]} cy={pt(v, i)[1]} r="5" className="gap" /> : null)}
+        </svg>
+        <div className="side">
+          <div className="key"><span className="sw dem" /> what {dem[a] && dem[a].name} asks for</div>
+          <div className="key"><span className="sw sup" /> what {sup[b] && sup[b].name} gives</div>
+          <div className="key"><span className="sw gap" /> shortfall</div>
+          <div className="gaps">
+            {short(D, S).length ? short(D, S).map(([x, g, w]) =>
+              <div key={x}>{x}: short by {g} (weight {w})</div>) : <div>No axis falls short.</div>}
+          </div>
+        </div>
+      </div>
+      <table>
+        <thead><tr><th></th>{sup.map((r, j) => <th key={j} className={j === b ? "on" : ""}>{r.name}</th>)}</tr></thead>
+        <tbody>{dem.map((r, i) => (
+          <tr key={i}><th className={i === a ? "on" : ""}>{r.name}</th>
+            {sup.map((c, j) => { const f = fit(r.values, c.values);
+              return <td key={j} onClick={() => { setA(i); setB(j); }}
+                         className={i === a && j === b ? "sel" : ""}
+                         style={{ background: tone(f) + "33" }}>{f}</td>; })}</tr>))}
+        </tbody>
+      </table>
+      <div className="note">Fit = sum of demand x min(supply, demand) over sum of demand squared. Ratings 1-5, first principles; edit them in the notes.</div>
+    </div>
+  );
+}
+"""
+
+RADAR_CSS = """
+.dfit { font: 13px system-ui, sans-serif; color: var(--pc-text, #ddd); background: #12151c; padding: 12px 14px;
+        border-radius: 10px; border: 1px solid rgba(127,127,127,.45); }
+.dfit .bar { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; margin-bottom: 6px; }
+.dfit select { font: 13px system-ui, sans-serif; color: inherit; background: #1b1f29; border: 1px solid rgba(127,127,127,.5);
+               border-radius: 6px; padding: 3px 6px; margin-left: 4px; }
+.dfit .score { margin-left: auto; font-size: 18px; font-weight: 600; }
+.dfit .row { display: flex; gap: 10px; align-items: flex-start; }
+.dfit .radar { width: 62%; height: auto; }
+.dfit .ring { fill: none; stroke: rgba(127,127,127,.25); }
+.dfit .spoke { stroke: rgba(127,127,127,.3); }
+.dfit .lab { fill: #c3c2b7; font-size: 11px; }
+.dfit .dem { fill: rgba(42,120,214,.22); stroke: #3987e5; stroke-width: 2; }
+.dfit .sup { fill: none; stroke: #eb6834; stroke-width: 2.5; stroke-dasharray: 7 4; }
+.dfit .gap { fill: #e34948; }
+.dfit .side { flex: 1; font-size: 12px; padding-top: 10px; }
+.dfit .key { display: flex; align-items: center; gap: 6px; margin-bottom: 4px; }
+.dfit .sw { width: 14px; height: 10px; border-radius: 2px; display: inline-block; }
+.dfit .sw.dem { background: rgba(42,120,214,.5); border: 1px solid #3987e5; }
+.dfit .sw.sup { border: 2px dashed #eb6834; }
+.dfit .sw.gap { background: #e34948; border-radius: 50%; width: 10px; }
+.dfit .gaps { margin-top: 10px; line-height: 1.6; opacity: .9; }
+.dfit table { border-collapse: collapse; width: 100%; margin-top: 8px; font-size: 12px; }
+.dfit th, .dfit td { padding: 3px 6px; border-bottom: 1px solid rgba(127,127,127,.2); text-align: center; }
+.dfit th { font-weight: 500; opacity: .8; }
+.dfit tbody th { text-align: left; }
+.dfit th.on { opacity: 1; color: var(--pc-accent, #60a5fa); }
+.dfit td { cursor: pointer; font-variant-numeric: tabular-nums; }
+.dfit td.sel { outline: 2px solid #f0efec; outline-offset: -2px; }
+.dfit .note { font-size: 11px; opacity: .6; margin-top: 8px; }
+"""

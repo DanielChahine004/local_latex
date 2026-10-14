@@ -25,7 +25,7 @@ from .parse import Entry, Notes
 from .redact import redact
 from . import tables
 from .source import Source
-from .web import MAP_CSS, PIN_JSX, REACT_CSS, REACT_SRC, SEARCH_CSS, SEARCH_SRC, TABLE_CSS, TABLE_SRC, edit_jsx
+from .web import MAP_CSS, PIN_JSX, REACT_CSS, REACT_SRC, SEARCH_CSS, SEARCH_SRC, RADAR_CSS, RADAR_SRC, TABLE_CSS, TABLE_SRC, edit_jsx
 
 PITCH, ROW_GAP = PANEL_W + 40, 100
 PIN_D = 38                   # the marker's size, and the room a panel leaves it
@@ -440,6 +440,9 @@ class Board:
                 if have is not None:
                     self.canvas.remove(self.table_panels.pop(key)[0])
                 continue
+            if spec.get("view") == "radar":
+                self._radar(key, spec, data, have)
+                continue
             first = next(iter(data[0]))
             first = next(c for c in data[0] if c != "Set") if first == "Set" else first
             for r in data:
@@ -458,6 +461,23 @@ class Board:
             elif have[1] != props:
                 have[0].update(**props)
                 self.table_panels[key] = (have[0], props)
+
+    def _radar(self, key: str, spec: dict, data: list[dict], have) -> None:
+        """Two row sets on shared numeric axes, drawn as demand against supply."""
+        label = lambda r: next(v for c, v in r.items() if c != "Set")   # each set names its own first column
+        axes = [c for c in data[0] if c != "Set" and not c.endswith(" basis")
+                and not c.startswith("_") and isinstance(data[0][c], float)]
+        pick = lambda s: [{"name": label(r), "values": [r.get(c) or 0 for c in axes]} for r in data if r["Set"] == s]
+        props = {"axes": axes, "demand": pick(spec["demand"]), "supply": pick(spec["supply"]),
+                 "scale": self.map_w / 4500 if self.map_mode else 1.0}
+        if have is None:
+            x, y, w, _ = spec["at"]
+            panel = self.canvas.react(RADAR_SRC, css=RADAR_CSS, name=re.sub(r"\W+", "_", key) + "_radar",
+                                      props=props, w=w, x=x, y=y, frame=False)
+            self.table_panels[key] = (panel, props)
+        elif have[1] != props:
+            have[0].update(**props)
+            self.table_panels[key] = (have[0], props)
 
     def _remove(self, key: str) -> None:
         for name in [n for n, (a, b, _) in self.arrows.items() if key in (a, b)]:

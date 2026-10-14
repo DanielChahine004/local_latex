@@ -205,6 +205,7 @@ annotated copy.
 | `[pdfs]` | a folder of `<key>.pdf` and the URL a card's PDF link opens |
 | `[map]` | the map image (any equirectangular image), its width, where unplaced panels go |
 | `[tables.<Key>]` | turns that programme's tabulars into one sortable, filterable table panel at `at`; `flags` spells out a letter after a number (`1.4 p`) as a basis column, `derive` adds category columns from keywords; each row links to its paper's DOI and PDF, found from its first cell read as "Surname Year" (`keys` maps any other first cell to a note key) |
+| `[tables.<Key>] view = "radar"` | instead of a table: two row sets on shared numeric axes (`demand`, `supply` name their headings) drawn as a radar for a chosen pair, with a fit grid for every pair |
 | `[server]` | port, and the companion editor the map links to |
 
 ### Your own parser

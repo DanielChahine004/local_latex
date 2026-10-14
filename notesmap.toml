@@ -78,7 +78,7 @@ unplaced = [400, 3250]    # the machinery panel: no institution, so the Southern
                           # (clear of danvas's own buttons at the viewport's lower left)
 # panels at a fixed spot off the map, as [x, y] or [x, y, width]; no pin.
 # The leaderboard sits to the right of the map (which is width wide).
-fixed = { Leaderboard = [9150, 0, 1500] }
+fixed = { Leaderboard = [9150, 0, 1500], DesignFit = [9150, 3300, 1500] }
 
 [server]
 port = 8000
@@ -103,3 +103,11 @@ derive.Crystal = { from = "Detector", rules = [["LYSO", "LYSO"], ["BGO", "BGO"],
 at = [10710, 2350, 2700, 900]
 sets = ["Scanners"]
 derive.Type = { from = "Detector", rules = [["semi-monolithic", "semi-monolith", "slabs"], ["layered", "layers"], ["monolithic", "monolith", "annulus"], ["pixelated"]] }
+
+# Demand against supply: what each clinical use asks of a scanner, what each
+# detector design gives, on the same axes; a radar per pair and a fit grid.
+[tables.DesignFit]
+at = [10710, 3300, 2700, 1600]
+view = "radar"
+demand = "Application demand"
+supply = "Architecture supply"

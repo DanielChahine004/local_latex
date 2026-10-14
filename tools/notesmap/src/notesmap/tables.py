@@ -6,7 +6,9 @@ letter ("1.4 p", "1200 r") splits into the number, which sorts, and the letter,
 spelt out by `flags` into a "<column> basis" column, which filters. Unmarked
 numbers take the basis `plain`. The paragraph a tabular sits under becomes the
 `Set` column, so a measured and a simulated table stay apart after a sort.
-`derive` adds category columns from keywords in another column's text: the
+`sets` limits a panel to the tables under the named headings, so one programme
+can show differently shaped tables as separate panels (key "Prog/Name" in the
+config). `derive` adds category columns from keywords in another column's text: the
 first rule whose keyword appears wins, and a rule with no keywords is the
 default.
 
@@ -47,6 +49,10 @@ def rows(md: str, spec: dict) -> list[dict]:
     # a column is numeric when every filled cell is a number; one stray word keeps it text
     numeric = {c for c in numeric if all(NUMBER.match(r[c]) or r[c] in MISSING for _, r in raw if c in r)}
     flagged = {c for _, r in raw for c, v in r.items() if c in numeric and (m := NUMBER.match(v)) and m.group(2)}
+    sets = spec.get("sets")
+    if sets:                      # a panel can take some headings' tables only
+        raw = [(sec, r) for sec, r in raw if sec in sets]
+        numeric = {c for c in numeric if any(c in r for _, r in raw)}
     out = []
     for section, r in raw:
         rec: dict = {"Set": section}

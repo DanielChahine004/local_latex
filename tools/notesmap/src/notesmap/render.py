@@ -432,7 +432,8 @@ class Board:
         entries = {e.key: e for g in groups.values() for e in ([g[1]] if g[1] else []) + g[2]}
         pdfs = self.cfg.pdf_keys()
         for key, spec in self.cfg.tables.items():
-            node = groups[key][1] if key in groups else None
+            prog = key.split("/")[0]          # "Prog/Name": a second panel from one programme
+            node = groups[prog][1] if prog in groups else None
             data = tables.rows(node.full(self.conv), spec) if node else []
             have = self.table_panels.get(key)
             if not data:
@@ -451,7 +452,7 @@ class Board:
                      "plain": spec.get("plain", "measured"), "scale": scale}
             if have is None:
                 x, y, w, _ = spec["at"]
-                panel = self.canvas.react(TABLE_SRC, css=TABLE_CSS, name=f"{key}_table", props=props,
+                panel = self.canvas.react(TABLE_SRC, css=TABLE_CSS, name=re.sub(r"\W+", "_", key) + "_table", props=props,
                                           w=w, x=x, y=y, frame=False)
                 self.table_panels[key] = (panel, props)
             elif have[1] != props:

@@ -1301,19 +1301,38 @@ Phys.\ Med.\ Biol.\ 66:155014, \doi{10.1088/1361-6560/ac1459}. Stockhoff,
 Decuyper, Van Holen, Vandenberghe.
 
 \paragraph{Detector}
-A \qtyproduct{50 x 50 x 16}{\mm} LYSO monolith on backside SiPM readout, with
-DOI read from the shape of the light distribution rather than from a layered
-build. Measured, not simulated: calibrated in singles mode against a
-collimated beam.
+A \qtyproduct{50 x 50 x 16}{\mm} LYSO monolith (Epic Crystal), sides rough and
+black-painted, top polished under a black-painted specular reflector, on an
+8 x 8 array of \qtyproduct{6 x 6}{\mm} onsemi MicroFJ-60035 SiPMs at \mm{6}
+pitch; a resistor network sums rows and columns, 64 pixels to 16 channels,
+digitised free-running at 64 MHz. Measured, not simulated: a collimated
+$^{68}$Ge beam of 0.6 or \mm{1.0}, 49 x 49 positions, with a 10 x 10 grid
+offset by \mm{0.5} for validation.
+
+\paragraph{Method}
+Mean nearest neighbour (MNN) against a shallow network (three hidden layers of
+256). The six ``virtual DOI layers'' are not measured depths: each event's
+light is normalised, events at a position are sorted by the variance across
+the 16 channels, and cut into six quantiles sized to Beer--Lambert
+attenuation (29.5 / 23.0 / 17.9 / 13.9 / 10.8 / 4.9\% for MNN). DOI is
+checked only as the share of events landing in each layer --- no side
+irradiation, no DOI FWHM; the authors reject side irradiation because events
+pile up at the edge. No Compton rejection beyond a 20\% energy window; about
+60\% of events scatter.
 
 \paragraph{Key Findings}
 Intrinsic resolution \mm{1.14} FWHM over the whole face with a neural
 network and \mm{1.17} with mean nearest neighbour; \mm{1.02} and \mm{1.13}
 respectively over the central \qtyproduct{30 x 30}{\mm}. The stated target is
 the \mm{1.3} intrinsic needed for \mm{2} at system level in whole-body PET.
-\gap{Unread beyond the abstract. Read for how the six DOI layers are defined
-and measured, the energy and timing figures, and how much of the
-network-over-MNN gain survives off centre.}
+2D bias falls from \mm{0.59} (MNN) to \mm{0.20} (network) over the face.
+Energy resolution 11.0\% (10.7\% centre, up to 18\% in corners); no timing
+reported. Bar phantom resolves 0.6--\mm{1.2} slits with both algorithms.
+The network's gain is a centre gain: 9.7\% better FWHM in the central
+\qtyproduct{30 x 30}{\mm} but 2.6\% over the whole face, so near the edges
+it is roughly nil on FWHM, though its bias advantage survives. The paper's
+own figures disagree in places (1.13 against 1.14, a ``1.5'' that Table 2 gives
+as 1.15).
 
 \paragraph{Why it matters here}
 This is the block the walk-through work scales up from
@@ -1803,10 +1822,34 @@ Phys.\ Med.\ Biol.\ 61(13):4904, \doi{10.1088/0031-9155/61/13/4904}.
 \paragraph{Summary}
 The TOF-capable, calibration-focused phase of the Delft line: practical
 methods for calibrating and operating monolithic scintillator detectors in a
-TOF-PET system.
-\gap{Unread. The calibration procedure and its cost in events and time,
-the CTR reached, and how DOI is obtained --- this is the baseline the
-calibration-burden argument in the review has to quote.}
+TOF-PET system. A \qtyproduct{32 x 32 x 22}{\mm} polished LYSO monolith (ESR on
+the sides, Teflon on top) on a Philips digital photon counter, 64 light pixels
+and 16 timestamps, at $-25\,^\circ$C. All results measured.
+
+\paragraph{Method}
+Calibration in about 9 hours instead of about 8 days of pencil-beam scanning:
+a \mm{0.5} fan beam stepped at \mm{0.25} along $x$ then $y$ (12{,}800 events
+per step, 6--7 h), and an uncollimated flood against a fast reference for
+timing (about 2 million events, 2 h). Position by a $k$-nearest-neighbour
+search restricted to pre-selected references (200 times fewer comparisons,
+about 5 ms an event); DOI from a look-up of the summed squared pixel intensities
+per $(x,y)$ bin, built from the same fan-beam data with Monte Carlo depth
+fractions --- no side beam needed; time by maximum-likelihood interaction-time
+estimation over the 16 timestamps. Events with up to four dark dies are filled
+in from average light distributions, which lifts the usable share from 68\%
+to about 96\%.
+
+\paragraph{Key Findings}
+\begin{itemize}
+	\item $x$/$y$ \mm{1.68}/\mm{1.70} FWHM with the fast method (\mm{1.45}/\mm{1.49}
+		with the standard one), degrading within 4--\mm{5} of each edge.
+	\item DOI \mm{3.73} FWHM, measured with a side pencil beam; MAE \mm{2.23}.
+	\item Energy resolution 10.25\%, 9.9\% corrected; CTR \ps{176} against the
+		reference, \ps{214} extrapolated for two such detectors.
+	\item At \degs{60} incidence, using DOI keeps the total error within 17\% of
+		normal incidence, against 75\% without it.
+	\item Compton events are left in and set the tails; not separated.
+\end{itemize}
 
 \end{papernote}
  
@@ -3445,8 +3488,9 @@ on this map.
 DOI by segmentation rather than by positioning. The group's long-running answer
 is to build the depth information into the crystal block itself --- staggered
 multi-layer arrays, and in the X'tal cube a three-dimensional array of
-\qtyproduct{1 x 1 x 1}{\milli\metre} crystals laser-processed inside a
-monolithic block and read out on multiple faces --- so that depth is recovered by
+\qtyproduct{1 x 1 x 1}{\milli\metre} crystals read out on all six faces
+(\ref{note:Yamaya2011}), glued in 2011 and laser-engraved inside a monolithic
+block in the versions that followed --- so that depth is recovered by
 crystal identification instead of from a continuous light distribution. The
 programme also ships: their hemispherical brain scanner is sold in Japan as
 VRAIN.
@@ -3459,8 +3503,8 @@ from the optics of a single piece of crystal. A literature review that does not
 state that trade-off explicitly has not engaged with the field. The X'tal cube
 is the sharpest case, because it starts from a monolith and then removes the
 very continuity this thesis depends on.
-\aside{Note the irony and use it: the X'tal cube is laser-processed inside a
-monolithic block, so it is a demonstration that the bulk of a monolith can be
+\aside{Note the irony and use it: the X'tal cube's successors are laser-engraved
+inside a monolithic block, a demonstration that the bulk of a monolith can be
 structured optically. That is closer to a scattering bulk than it first looks.}
 
 \paragraph{People}
@@ -3480,15 +3524,44 @@ light-sharing readout. A model without optics fails exactly where the light
 distribution decides the answer.
 
 \paragraph{To read}
-\gap{The X'tal cube line itself is unread. Yamaya et al.\ 2011, ``A SiPM-based
-isotropic-3D PET detector X'tal cube with a three-dimensional array of 1 mm3
-crystals'', Phys.\ Med.\ Biol.\ 56(21):6793--6807,
-\doi{10.1088/0031-9155/56/21/003} --- paywalled, not reachable open access, needs
-a library copy. Also the laser-processing papers (2012 NSS/MIC, 2013 TNS) and
+\gap{The laser-processing papers (2012 NSS/MIC, 2013 TNS) and
 the VRAIN system paper, Akamatsu et al.\ 2022, Phys.\ Med.\ Biol.\
 67(22):225011, \doi{10.1088/1361-6560/ac9e87}, which reports \mm{2.2} rods and
 \ps{229} TOF with one-to-one coupling and no DOI --- worth recording as the
 commercial outcome even though it is off this map's theme.}
+
+\begin{papernote}{Yamaya et al.\ 2011 -- A SiPM-based isotropic-3D PET detector X'tal cube with a three-dimensional array of 1 mm\textsuperscript{3} crystals}{Yamaya2011}
+\thumb{img/yamaya2011.png}
+Phys.\ Med.\ Biol.\ 56(21):6793--6807, \doi{10.1088/0031-9155/56/21/003}.
+Yamaya, Mitsuhashi, Matsumoto, Inadama, Nishikido, Yoshida, Murayama, Kawai,
+Suga, Watanabe --- NIRS, Chiba University, Hamamatsu.
+
+\paragraph{Summary}
+A 16 x 16 x 16 block of 4096 LYSO cubes, \mm{0.993} on a side, polished and glued
+with no reflector inside, read out on all six faces by 96 Hamamatsu MPPCs (a
+4 x 4 array of \qtyproduct{3 x 3}{\mm} per face). Position is one 3D Anger
+centroid over all 96 signals; each spot in the 3D flood is a crystal. The
+chosen design adds \mm{1} light guides and a thin reflector belt at the edges.
+(The abstract says LGSO; the text and tables say LYSO.)
+
+\paragraph{Key Findings}
+\begin{itemize}
+	\item Almost all 4096 crystals identified; edge planes partly merged.
+	\item Energy resolution 12.7\% FWHM; no timing, and no resolution in mm
+		--- the isotropic \mm{1} is the crystal pitch.
+	\item Inter-crystal scatter is not handled: in simulation 43.6\% of
+		events scatter between crystals and are mispositioned, mean error
+		\mm{1.49}; maximum-likelihood recovery is proposed, not done.
+	\item Next: laser-engraved grids inside a monolithic block, to cut the
+		assembly cost and the faces read out.
+\end{itemize}
+
+\paragraph{Why it matters here}
+The far end of segmentation: depth by construction at \mm{1} in three
+dimensions, at the price of 96 photosensors for a \mm{16} cube and nearly half
+the events mispositioned by scatter it does not try to separate.
+\end{papernote}
+
 \end{programnote}
 
 \begin{programnote}{MODE Collaboration -- differentiable detector design}{MODE}
@@ -3843,6 +3916,108 @@ timing and DOI buy in an image.
 
 \end{programnote}
 
+\begin{programnote}{Seoul SNU -- Jae Sung Lee group, inter-crystal scatter recovery}{Seoul}
+\location{37.46}{126.95}{Seoul, South Korea}
+
+\paragraph{What it is}
+Jae Sung Lee's group in Nuclear Medicine at Seoul National University (with the
+spin-off Brightonix Imaging): light-sharing PET detectors and learned decoding,
+here for events that scatter between crystals.
+
+\paragraph{People}
+Jae Sung Lee; Seungeun Lee --- by name and topic very likely the Seungeun Lee
+now at \ref{prog:LBNL}, first author of \ref{note:Lee2026}.
+
+\begin{papernote}{Lee and Lee 2021 -- Inter-crystal scattering recovery of light-sharing PET detectors using convolutional neural networks}{Lee2021}
+\thumb{img/lee2021.png}
+Phys.\ Med.\ Biol.\ 66(18):185004, \doi{10.1088/1361-6560/ac215d}.
+
+\paragraph{Summary}
+Simulation (GATE with optical transport) of four \mm{20} LSO arrays on one
+8 x 8 SiPM array through a glass window: pitches 3.2, 2.1, 1.6 and \mm{1.2},
+so crystal-to-sensor ratios from 1:1 to 2.6:1. Two CNNs on the 8 x 8 map:
+one regresses the energy in every crystal and then picks the event's one or two
+crystals, the other classifies the first-interacted crystal directly. Within a
+crystal, multiple hits are summed; events in three or more crystals are set
+aside. No timing.
+
+\paragraph{Key Findings}
+\begin{itemize}
+	\item Inter-crystal scatter grows as crystals shrink: two-crystal events
+		28.6\% at \mm{3.2} pitch, 33.5\% at \mm{1.2}; photoelectric
+		66.3 to 56.5\%.
+	\item The energy network separates events correctly 97, 92, 90 and 77\%
+		of the time and picks the right crystal pair 91, 78, 62 and 35\%,
+		roughly matching a constrained-optimisation baseline at coarse pitch
+		and beating it at fine.
+	\item The classifier finds the first crystal about twice as often as no
+		recovery for scattered events.
+	\item In a simulated ring, centre radial FWHM \mm{1.88} to \mm{1.69}
+		(\mm{3.2} pitch) and \mm{0.94} to \mm{0.73} (\mm{1.2}); off centre,
+		parallax dominates.
+\end{itemize}
+
+\paragraph{Why it matters here}
+The learned version of the decomposition \ref{note:Petersen2020} does with
+fixed patterns, on ordinary light sharing --- and it degrades exactly as the
+patterns overlap, 91\% to 35\% for the crystal pair. It never orders, and
+cannot be trained on measured data, since true per-crystal energies are
+unknown; the authors suggest transfer from simulation.
+\end{papernote}
+
+\end{programnote}
+
+\begin{programnote}{IFIC Valencia -- Rafecas group and the AX-PET collaboration}{AXPET}
+\location{39.51}{-0.42}{Paterna, Valencia, Spain}
+
+\paragraph{What it is}
+Magdalena Rafecas's image-reconstruction group at IFIC (CSIC--University of
+Valencia), working with CERN and ETH on AX-PET, a demonstrator with long axial
+LYSO crystals and orthogonal wavelength-shifting strips: crystal layers for
+depth, strips for the axial coordinate.
+
+\paragraph{People}
+John Gillam (later University of Sydney), Paola Solevi, Josep Oliver, Magdalena
+Rafecas (IFIC, later Lübeck); Christian Joram, Matthieu Heller (CERN); Chiara
+Casella (ETH Zurich).
+
+\begin{papernote}{Gillam et al.\ 2014 -- Sensitivity recovery for the AX-PET prototype using inter-crystal scattering events}{Gillam2014}
+\thumb{img/gillam2014.png}
+Phys.\ Med.\ Biol.\ 59(15):4065--4083, \doi{10.1088/0031-9155/59/15/4065}.
+
+\paragraph{Summary}
+Two heads of six layers of eight \qtyproduct{3 x 3 x 100}{\mm} axial LYSO
+crystals interleaved with WLS strips, all on SiPMs; energy resolution 11.8\%
+for one crystal. Inter-crystal scatter enters as ``triples'': three resolved
+hits, two in one head, which give two candidate lines of response. Four ways
+to use them in list-mode MLEM: as two separate events, by selecting one (by the
+Klein--Nishina cross-section or at random), or by inclusion --- one system-matrix
+row that is the half-and-half sum of both candidates, a ``V-projection''. The
+interaction order is deliberately not determined. Measured data, NEMA NU 4
+phantom and rats.
+
+\paragraph{Key Findings}
+\begin{itemize}
+	\item Triples are about 22\% of the data.
+	\item Klein--Nishina selection was no better than random.
+	\item Only inclusion improved every figure of merit: SNR 12.7 to 13.3,
+		spill-over 89.8 to 82.9 (\num{e-3}), resolution unchanged; with 90\%
+		of the data it matched the full data without triples. A 5--10\% gain,
+		less than 20\% more clean events would give, because a V-projection is
+		about twice as long as a line.
+	\item The literature it cites puts first-interaction identification below
+		70\%.
+\end{itemize}
+
+\paragraph{Why it matters here}
+The reconstruction-side answer to multi-interaction events: if the order
+cannot be told, carry both candidates and let the reconstruction weigh them.
+It sets the bar from the other end --- an ordering method is only worth having
+if it beats simply including both lines.
+\end{papernote}
+
+\end{programnote}
+
 % ===========================================================================
 % Leaderboard: measured detector builds on this map, side by side. Placed to
 % the right of the map by [map] fixed in notesmap.toml, and open by default.
@@ -3859,8 +4034,9 @@ transverse are in mm, DOI/d is DOI over depth. Transverse is
 the measured intrinsic FWHM where there is one, otherwise the crystal pitch
 (marked p). CTR is between two such detectors unless marked r (against a fast
 reference crystal). Prism-PET figures reject inter-crystal scatter first;
-monolith figures mostly do not. Simulations, and builds quoting only a mean
-absolute error (Zhang 2017, Freire 2022, Thull 2026), are left out.
+monolith figures mostly do not. Simulations have their own table below; builds
+quoting only a mean absolute error (Zhang 2017, Freire 2022, Thull 2026) are
+left out.
 
 \begin{center}
 \begin{scriptsize}
@@ -3879,6 +4055,7 @@ Zeng 2023 & LYSO 1.5 mm, Prism scanner & single & 20 & 2.85 & 14\% & 1.22 & 12.6
 Carra 2022 & LYSO monolith & single & 8 & 1.2 & 15\% & 0.78 & -- & 156 ps \\
 Zhang 2019 & LYSO 1 mm slabs, painted & single & 10 & 1.55 & 16\% & 1.07 & 24.9\% & 788 ps r \\
 Kinyanjui 2025 & LYSO 0.96 mm slabs, XGBoost & single & 10 & 1.67 & 17\% & 0.92 & -- & -- \\
+Borghi 2016 & LYSO monolith, 32 mm & single & 22 & 3.73 & 17\% & 1.68 & 9.9\% & 214 ps \\
 Pizzichemi 2019 & LYSO 1.53 mm, sharing & single & 15 & 3 & 20\% & 1.5 p & 8.9\% & 157 ps \\
 Kuang 2026 & GAGG 0.96 mm slabs & single & 10 & 2.33 & 23\% & 1.59 & 14.7\% & 4.3 ns \\
 Zhang 2021 & LYSO 1.37 mm slabs & single & 20 & 4.77 & 24\% & 2.43 & 25.7\% & 779 ps \\
@@ -3887,7 +4064,9 @@ Pizzichemi 2016 & LYSO 1.53 mm, sharing & single & 15 & 4.1 & 27\% & 1.5 p & 12.
 Freire 2026 & LYSO curved monolith & single & 12.5 & 3.6 & 29\% & -- & 19\% & no TOF \\
 Moliner 2012 & LYSO monolith, MAMMI & single & 10 & 4 & 40\% & 1.6 & 18\% & -- \\
 Peng 2019 & LYSO 4 slabs & 4 sides & 4x2.76 & layer & -- & 1.1 & 10.3\% & 348 ps \\
-Stockhoff 2021 & LYSO monolith, 50 mm & single & 16 & 6 layers & -- & 1.14 & -- & -- \\
+Stockhoff 2021 & LYSO monolith, 50 mm & single & 16 & 6 layers & -- & 1.14 & 11.0\% & -- \\
+Yamaya 2011 & LYSO 1 mm cubes, X'tal cube & 6 faces & 16 & 1 p & -- & 1 p & 12.7\% & -- \\
+Gillam 2014 & LYSO 3 mm axial + WLS, AX-PET & SiPM & 6 layers & layer & -- & 3 p & 11.8\% & -- \\
 Lee 2026 & BGO semi-monolith & single & 20 & 4 bins & -- & 3.17 & 21\% & 172 ps r \\
 Cates 2024 & BGO monolith & single & 15 & relative & -- & relative & 17.6\% & 237 ps r \\
 Xu 2019 & LYSO ring monolith & 2 rings & 5 & -- & -- & 0.94 & 10.7\% & -- \\
@@ -3895,6 +4074,36 @@ Xu 2019 & LYSO ring monolith & 2 rings & 5 & -- & -- & 0.94 & 10.7\% & -- \\
 \end{tabular}
 \end{scriptsize}
 \end{center}
+
+\paragraph{Simulated detectors}
+Not builds: simulation results, on the same columns and the same ranking, kept
+apart so they are never read as measurements. Most model no electronics, ideal
+or near-ideal photodetection, and often no noise; where a column is an input
+rather than a result it is marked i.
+
+\begin{center}
+\begin{scriptsize}
+\setlength{\tabcolsep}{3.5pt}
+\begin{tabular}{lllllllll}
+\hline
+Build & Detector & Readout & Depth & DOI & DOI/d & Transv. & Energy & CTR \\
+\hline
+Decuyper 2021 & LYSO monolith, 50 mm, NN & single & 16 & 0.71 & 4\% & 0.42 & -- & -- \\
+cMiCE (SES) & LYSO monolith, 49 mm & entrance face & 15 & 1.52 & 10\% & 0.91 & -- & -- \\
+Razdevšek 2025 & LSO 3 mm pixels, 8 layers & ideal & 20 & 1.7 eq. & 9\% & 3 p & 10\% i & 70 ps i \\
+Decuyper 2021 & same, scattered events & single & 16 & 1.80 & 11\% & 0.66 & -- & -- \\
+Petersen 2020 & LYSO 1.4 mm, Prism, multi-crystal & single & 20 & 2.1 & 11\% & 1.4 p & -- & -- \\
+Peng 2019 & LYSO 4 slabs, side readout & 4 sides & 4x3.16 & layer & -- & 0.40 & 9.3\% & -- \\
+\hline
+\end{tabular}
+\end{scriptsize}
+\end{center}
+
+Decuyper's first row is unscattered events only (0.42 transverse is its
+non-Compton FWHM); its scattered events, about 60\% of the total, follow
+further down. Razdevšek's DOI is the 2.5 mm layer as a Gaussian-equivalent
+FWHM; Petersen's is the multi-crystal events of a CNN, 1.0 mm for
+single-crystal ones.
 
 \paragraph{Reading it}
 Dual-ended readout and Prism-PET's deterministic light guide hold the top at
@@ -3936,6 +4145,11 @@ backscatter swap for two-layer events (\ref{note:Peng2019}); the experiment
 gave up sequencing for a max-energy rule (\ref{note:Peng2019a}). First crystal
 recovered for 88\% of multi-crystal events with a fixed-pattern decomposition
 (\ref{note:Petersen2020}). Both need optical isolation; neither uses time.
+Learned crystal-pair selection on plain light sharing falls from 91\% to
+35\% as pitch shrinks (\ref{note:Lee2021}); Klein--Nishina selection did no
+better than random on AX-PET, where including both candidate lines beat
+choosing (\ref{note:Gillam2014}) --- the reconstruction baseline an order has
+to beat.
 
 \paragraph{Simulation}
 Thick LYSO slab or monolith, ground-truth interaction order from GATE, a

@@ -979,6 +979,67 @@ centre-of-gravity events filtered out). That is the multi-vertex problem this
 thesis takes up, on the one built scanner where the geometry most invites it.
 
 \end{papernote}
+
+\begin{papernote}{Cucarella et al.\ 2026 -- Development of a preclinical PET scanner with DOI capabilities using semi-monolithic detectors}{Cucarella2026}
+\thumb{img/cucarella2026.png}
+IEEE Trans.\ Radiat.\ Plasma Med.\ Sci.\ 10(7):1143--1151,
+\doi{10.1109/TRPMS.2025.3648052}. Cucarella, Freire, González, Sánchez,
+Gonzalez-Montoro, Jiménez-Serrano, Loignon-Houle, Moliner, Valladares,
+Bruyndonckx, Correcher, Benlloch --- i3M with Bruker BioSpin. Open access.
+
+\paragraph{Detector}
+Two rings of 14 blocks, \mm{106} bore, \mm{52} axial, \mm{1.26} between the
+rings. Each block is 22 LYSO slabs of \qtyproduct{0.97 x 25.6 x 12}{\mm}, the
+long side axial, with a retroreflector on the entrance face, ESR between the
+slabs and the narrow faces rough and black; glued to an 8 x 8 Hamamatsu array
+at \mm{3.2} pitch, every one of the 1792 channels read by PETsys TOFPET2. Slab
+from the centroid; position along the slab by one small network on the eight
+summed signals, trained on a slit scan of a single module and used unchanged on
+all 28; depth from $E/I_{\max}$, converted to mm by fitting its distribution in
+flood data --- so only the network needs a collimated scan, and only once.
+
+\paragraph{Key Findings}
+\begin{itemize}
+	\item Detector: \mm{1.7} FWHM along the slab, DOI \mm{3.08} at \mm{12}
+		thick (side slit), slabs resolved with peak-to-valley 4.64; energy
+		16.4\% (13.5\% centre) before a saturation correction they estimate
+		would worsen it by about 30\%; CTR \ps{252} at detector level, but no
+		system time-skew correction yet, so no TOF in the images.
+	\item System, NEMA NU 4: \mm{1.61} mean at the centre (1.2/0.95/2.7
+		radial/tangential/axial --- the gap between rings spoils the axial),
+		\mm{1.0} at a quarter of the axial field; peak sensitivity 3.5\%
+		(350--\keV{650}); NECR 106.9 kcps at \MBq{11.7}; CRC 0.20--0.85 for
+		1--\mm{5} rods; \mm{1} Derenzo rods resolved.
+	\item DOI correction improves radial resolution off centre, with residual
+		degradation the authors put down to the DOI calibration.
+	\item Table IV sets it against 17 preclinical scanners; it sits mid-pack,
+		equal to the pixelated systems of its size.
+\end{itemize}
+\aside{The paper calls itself the first semi-monolithic preclinical scanner;
+Aachen's 24-block one in \ref{note:Thull2026} contests that.}
+
+\paragraph{Table IV against this map}
+Of the monolithic entries, the map holds DigiPET (\ref{note:Espana2014}) and the
+$\beta$-CUBE (\ref{note:Krishnamoorthy2018}) --- whose 12.4\% at
+255--\keV{765} the table quotes as about 8\%, read off a plot for a narrower
+window. Albira is only named under \ref{prog:i3M}, and the KU Leuven 7\,T insert
+(Gsell et al.\ 2020, \mm{0.90}, about 11\%) is absent. Of the pixelated ones,
+the DOI systems are the honest comparators: QST's SR-PET (Kang et al.\ 2023,
+\mm{0.65}, 4.4\%, four-layer DOI) and SIAT's dual-ended aPET (\mm{0.82}, 16\%
+at 250--\keV{750}); neither is on the map.
+
+\paragraph{Why it matters here}
+The measured semi-monolithic preclinical system that \ref{note:Kuang2026a} only
+simulates, and a lower one than its simulation: 3.5\% against 5.45\%, \mm{1.6}
+against sub-\mm{1}. Two things carry over. One network for every module is the
+calibration economy a monolithic annulus needs. And the scanner is built as the
+absorber of a Compton-PET with a thin scatter ring inside it (Valladares et
+al.\ 2024; Ilisie et al.\ 2018, ``time sequence photon interaction
+discrimination'') --- i3M taking the multi-interaction problem to two layers,
+where this thesis takes it into one thick bulk.
+
+\end{papernote}
+
  
 \end{programnote}
  
@@ -2048,18 +2109,16 @@ the slab. Nine years on one geometry, from a first SiPM demonstration in 2017
 to a prototype scanner in 2026.
 
 \paragraph{Literature}
-Six papers that read as one argument. \ref{note:Zhang2017} shows a stack of
+Seven papers that read as one argument. \ref{note:Zhang2017} shows a stack of
 slabs can encode depth and names its own next steps; the programme then takes
 them one at a time --- longer slabs in \ref{note:Zhang2019}, thicker ones in
-\ref{note:Zhang2021}, better positioning in \ref{note:Kinyanjui2025}, a
+\ref{note:Zhang2021}, finer ones and the surface treatment in
+\ref{note:Kinyanjui2026}, better positioning in \ref{note:Kinyanjui2025}, a
 different crystal in \ref{note:Kuang2026}, a scanner in
 \ref{note:Kuang2026a}.
-All six are read in full. The scanner's ring is simulated with Gaussian
-detectors, so the line has yet to show a measured system.
-\gap{Kinyanjui et al.\ 2026, ``Performance of high-resolution PET detectors
-based on long semi-monolithic scintillator slabs'', Nucl.\ Sci.\ Tech.\ 37:96,
-\doi{10.1007/s41365-026-01920-7} --- the LYSO detector both 2026 papers build
-on and compare against; unread.}
+All seven are read in full. The scanner's ring is simulated with Gaussian
+detectors, so the line has yet to show a measured system; i3M has
+(\ref{note:Cucarella2026}).
 
 \paragraph{People}
 Yongfeng Yang (professor at SIAT since 2015) and Zheng Liu lead; Zhonghua Kuang
@@ -2225,6 +2284,50 @@ preclinical.
 
 \end{papernote}
 
+\begin{papernote}{Kinyanjui et al.\ 2026 -- Performance of high-resolution PET detectors based on long semi-monolithic scintillator slabs}{Kinyanjui2026}
+\thumb{img/kinyanjui2026.png}
+Nucl.\ Sci.\ Tech.\ 37(6):96, \doi{10.1007/s41365-026-01920-7}. Kinyanjui,
+Kuang, Liu, Ren, Yang. Submitted July 2024, so the hardware paper behind
+\ref{note:Kinyanjui2025} despite the later date.
+
+\paragraph{Detector}
+Four long LYSO detectors on the same 4 x 16 SiPM array, \mm{1.5} glass light
+guide and row-and-column readout as \ref{note:Kuang2026}: 12 slabs of
+\qtyproduct{0.96 x 56 x 10}{\mm} with BaSO$_4$, ends and front black-painted
+(1) or left bare (2); the same with ESR (3); and 14 slabs of
+\qtyproduct{0.81 x 56 x 10}{\mm} with BaSO$_4$, painted (4). Measured against
+a single-crystal reference through a \mm{1} tungsten hole, 2200 s a position
+at \qty{14}{\celsius}; the \mm{1} beam width is not subtracted.
+
+\paragraph{Key Findings}
+\begin{itemize}
+	\item All \mm{0.96} slabs resolve; with \mm{0.81} the second and third slabs
+		from each edge do not.
+	\item Over the whole detector (1 and 4): $y$ \mm{1.68} and \mm{1.67} FWHM by
+		squared centroid, about 30\% better than plain centroid (\mm{2.15});
+		DOI \mm{2.14} and \mm{2.28}; energy 17.4\% and 17.6\%; CTR about
+		\ns{3.4} against the reference, blamed on the pick-off circuit.
+	\item Black paint on the ends and front costs energy (14.7 to 15.8\%) and
+		buys position: $y$ \mm{1.87} to \mm{1.66}, DOI \mm{3.41} to
+		\mm{1.92} on the centre line. Reflections from those faces are what
+		blur depth.
+	\item ESR loses light but keeps the photopeak flat with depth and gives the
+		clearest flood --- the reason \ref{note:Kuang2026} and the scanner use
+		it.
+	\item The authors claim the longest (\mm{56}) and thinnest (\mm{0.81})
+		semi-monolithic detectors measured to date.
+\end{itemize}
+
+\paragraph{Why it matters here}
+The LYSO baseline the rest of the line is measured against, and a clean
+demonstration that a monolith's DOI comes from killing reflections, not from
+collecting light: painting the faces black throws photons away and nearly
+halves the DOI FWHM. The data are public (Science Data Bank,
+\doi{10.57760/sciencedb.35988}) --- a measured semi-monolithic set with
+known beam positions that a positioning or bound study could use as is.
+
+\end{papernote}
+
 \begin{papernote}{Kinyanjui et al.\ 2025 -- Machine learning positioning algorithms for long semi-monolithic scintillator PET detectors}{Kinyanjui2025}
 \thumb{img/kinyanjui2025.png}
 Phys.\ Med.\ Biol.\ 70(11):115018, \doi{10.1088/1361-6560/addbbe}. Kinyanjui,
@@ -2319,8 +2422,7 @@ MAE.
 	\item CTR \ns{4.30} and \ns{4.76} against the reference crystal, which the
 		authors put down to the timing pick-off and the summed readout, not the
 		detector; GAGG's \ns{150} decay rules out TOF regardless.
-	\item Against the same build in LYSO (Kinyanjui et al.\ 2026, Nucl.\ Sci.\
-		Tech.\ 37:96): $y$ \mm{1.68}, DOI \mm{2.14}, energy 17.4\%, CTR
+	\item Against the same build in LYSO (\ref{note:Kinyanjui2026}): $y$ \mm{1.68}, DOI \mm{2.14}, energy 17.4\%, CTR
 		\ns{3.34} --- so GAGG is equal in position, a little better in energy
 		and flood, worse in time.
 \end{itemize}
@@ -2371,9 +2473,11 @@ blurred by Gaussians of \mm{1.7} along the slab and \mm{2.1} in depth, with
 		applied to.
 	\item Simulated ring: peak sensitivity 5.45\% at 350--\keV{650}; \mm{0.75}
 		rods resolved at centre and \mm{15} off centre, with PSF modelling.
-	\item Against the only other semi-monolithic preclinical scanner, i3M's
-		(\mm{25.6} slabs; Cucarella et al.\ 2025): 0.81/0.86/\mm{2.43} and 3.5\%
-		sensitivity. The long slab is what buys the axial figure.
+	\item Against i3M's measured semi-monolithic scanner (\mm{25.6} slabs,
+		\ref{note:Cucarella2026}), as the authors quote it: 0.81/0.86/\mm{2.43}
+		and 3.5\% sensitivity. The long slab is what buys the axial figure.
+		They call that the only other one; Aachen's (\ref{note:Thull2026}) is a
+		third.
 \end{itemize}
 
 \paragraph{Why it matters here}
@@ -4090,9 +4194,11 @@ Zhang 2019 & LYSO 1 mm slabs, painted & single & 10 & 1.55 & 16\% & 1.07 & 24.9\
 Kinyanjui 2025 & LYSO 0.96 mm slabs, XGBoost & single & 10 & 1.67 & 17\% & 0.92 & -- & -- \\
 Borghi 2016 & LYSO monolith, 32 mm & single & 22 & 3.73 & 17\% & 1.68 & 9.9\% & 214 ps \\
 Pizzichemi 2019 & LYSO 1.53 mm, sharing & single & 15 & 3 & 20\% & 1.5 p & 8.9\% & 157 ps \\
+Kinyanjui 2026 & LYSO 0.96 mm slabs, painted & single & 10 & 2.14 & 21\% & 1.68 & 17.4\% & 3.3 ns r \\
 Kuang 2026 & GAGG 0.96 mm slabs & single & 10 & 2.33 & 23\% & 1.59 & 14.7\% & 4.3 ns r \\
 Zhang 2021 & LYSO 1.37 mm slabs & single & 20 & 4.77 & 24\% & 2.43 & 25.7\% & 779 ps \\
 cMiCE & LYSO monolith, 50 mm & single & 15 & 3.69 & 25\% & 1.55 & -- & -- \\
+Cucarella 2026 & LYSO 0.97 mm slabs, 25.6 mm & single & 12 & 3.08 & 26\% & 1.7 & 16.4\% & 252 ps \\
 Pizzichemi 2016 & LYSO 1.53 mm, sharing & single & 15 & 4.1 & 27\% & 1.5 p & 12.7\% & 353 ps \\
 Freire 2026 & LYSO curved monolith & single & 12.5 & 3.6 & 29\% & -- & 19\% & no TOF \\
 Moliner 2012 & LYSO monolith, MAMMI & single & 10 & 4 & 40\% & 1.6 & 18\% & -- \\

@@ -120,3 +120,7 @@ paper in its own tab through the EZproxy prefix, e.g.
 already signed in, presses PDF and drops the files back here. Chrome blocks a
 page from starting several downloads at once, and the PDFs land on the
 user's machine, not this server, so pre-opened tabs beat scripted downloads.
+Resolve each DOI to its publisher URL first (`curl -sI https://doi.org/<doi>`):
+a bare doi.org link leaves the proxy. IOP sometimes shows a CAPTCHA, which is
+the user's to tick; J Nucl Med is not on the proxy but is free on its own site.
+Check each returned PDF against its DOI before filing it.

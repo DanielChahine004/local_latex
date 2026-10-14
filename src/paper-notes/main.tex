@@ -2031,7 +2031,7 @@ matters for the thin-ring argument.}
 \end{programnote}
 
 % ===========================================================================
-% 7d. SIAT Shenzhen -- the semi-monolithic slab line. Abstracts read; PDFs not.
+% 7d. SIAT Shenzhen -- the semi-monolithic slab line. All six read in full.
 % ===========================================================================
 
 \begin{programnote}{SIAT Shenzhen -- long semi-monolithic slabs with DOI}{SIAT}
@@ -2054,10 +2054,12 @@ them one at a time --- longer slabs in \ref{note:Zhang2019}, thicker ones in
 \ref{note:Zhang2021}, better positioning in \ref{note:Kinyanjui2025}, a
 different crystal in \ref{note:Kuang2026}, a scanner in
 \ref{note:Kuang2026a}.
-\gap{\ref{note:Zhang2017}, \ref{note:Zhang2019}, \ref{note:Zhang2021} and
-\ref{note:Kinyanjui2025} are read in full; \ref{note:Kuang2026} and
-\ref{note:Kuang2026a} are still abstracts, and the second matters most, for
-what the 20-detector ring actually assumes.}
+All six are read in full. The scanner's ring is simulated with Gaussian
+detectors, so the line has yet to show a measured system.
+\gap{Kinyanjui et al.\ 2026, ``Performance of high-resolution PET detectors
+based on long semi-monolithic scintillator slabs'', Nucl.\ Sci.\ Tech.\ 37:96,
+\doi{10.1007/s41365-026-01920-7} --- the LYSO detector both 2026 papers build
+on and compare against; unread.}
 
 \paragraph{People}
 Yongfeng Yang (professor at SIAT since 2015) and Zheng Liu lead; Zhonghua Kuang
@@ -2264,13 +2266,7 @@ What it does not test: positions between the calibrated points, since test
 and training share them --- the grid-snapping \ref{note:Decuyper2021} checks for
 with an offset grid --- and inter-crystal scatter, which is filtered out.
 The authors call recovering scattered events future work and cite two papers
-that already attempt it: Lee and Lee 2021, ``Inter-crystal scattering recovery
-of light-sharing PET detectors using convolutional neural networks'',
-Phys.\ Med.\ Biol.\ 66:185004, and Gillam et al.\ 2014, ``Sensitivity
-recovery for the AX-PET prototype using inter-crystal scattering events'',
-Phys.\ Med.\ Biol.\ 59:4065.
-\gap{Read both: they are prior art for the multi-interaction problem that
-this map does not yet hold.}
+that already attempt it, \ref{note:Lee2021} and \ref{note:Gillam2014}.
 
 \paragraph{Why it matters here}
 The like-for-like that \ref{note:Decuyper2021} cannot give: same detector, same
@@ -2288,37 +2284,54 @@ EJNMMI Phys.\ 13:31, \doi{10.1186/s40658-026-00856-6}. Kuang, Kinyanjui, Zhang,
 Ren, Liu, Tan, Huang, Hu, Yang. Xiangnan University with SIAT.
 
 \paragraph{Detector}
-Twelve GAGG slabs of \qtyproduct{0.96 x 56 x 10}{\mm} --- the geometry of
-\ref{note:Kinyanjui2025} in a different crystal --- with BaSO$_4$ (detector 1)
-or ESR (detector 2) between the slabs and black ink on the front and both end
-surfaces. Single-ended readout by a 4 x 16 SiPM array of
-\qtyproduct{3 x 3}{\mm} pixels at \mm{3.65} pitch, with a row-and-column
-summing circuit reducing 64 signals to 4 + 16. Positions are selected by
-electronic collimation (a \mm{0.3} $^{22}$Na source against a single
-\qtyproduct{1 x 1 x 20}{\mm} LYSO reference) plus a \mm{1} hole in \mm{5} of
-tungsten.
+Twelve GAGG slabs of \qtyproduct{0.96 x 56 x 10}{\mm} (Epic GAGG-HL, about
+54{,}000 photons/MeV) --- the geometry of \ref{note:Kinyanjui2025} in a
+different crystal --- with BaSO$_4$ (detector 1) or ESR (detector 2) between
+the slabs, \mm{0.08} a layer with glue. Large faces and the SiPM face polished;
+front and both ends rough and black-inked. A \mm{1.5} glass light guide, with
+two cuts near the long edges to separate the outer slabs, on a 4 x 16 array of
+Hamamatsu S14160-3050HS SiPMs (\qtyproduct{3 x 3}{\mm} active at \mm{3.65}
+pitch); rows and columns summed, 64 signals to 4 + 16, with one timestamp from
+the summed rows by leading edge. Measured at \qty{14}{\celsius}.
+
+\paragraph{Method}
+Positions selected by electronic collimation (a \mm{0.3} $^{22}$Na source in
+coincidence with a single \qtyproduct{1 x 1 x 20}{\mm} LYSO crystal) plus a
+\mm{1} hole in \mm{5} of tungsten, on a 27 x 5 grid at \mm{2} steps in $y$ and
+depth, 600 s each. Slab from the row centroid; $y$ from the centroid or the
+squared centroid of the 16 columns; depth from the inverse standard deviation
+of the normalised columns, calibrated to mm with polynomial fits. Energy window
+350--\keV{650}; scattered events are only trimmed (below 5\% of peak) for the
+MAE.
 
 \paragraph{Key Findings}
-All \mm{0.96} slabs resolve in both flood histograms. Peak-to-valley 3.96
-(BaSO$_4$) against 3.55 (ESR); energy resolution
-\qty{15.6 \pm 1.8}{\percent} against \qty{14.7 \pm 1.2}{\percent}; squared
-centre of gravity \mm{1.60 \pm 0.32} against \mm{1.59 \pm 0.26} in $y$; DOI
-\mm{2.33 \pm 0.68} against \mm{2.37 \pm 0.58}. The reflector barely matters:
-ESR buys a little energy resolution and loses a little flood quality.
-Against the same detector in LYSO, GAGG gives the same position and DOI
-resolution, better energy resolution and a better flood histogram, and much
-worse timing --- \qty{4.30 \pm 0.57}{\nano\second} and
-\qty{4.76 \pm 0.56}{\nano\second}.
-\gap{Unread beyond the abstract. Which LYSO detector the comparison is
-against, and whether the \qtyrange{4}{5}{\nano\second} timing is the
-scintillator's rise time or the summing circuit.}
+\begin{itemize}
+	\item All \mm{0.96} slabs resolve in both detectors; peak-to-valley 4.08
+		(BaSO$_4$) against 3.54 (ESR) --- 3.96 and 3.55 in the abstract.
+	\item $y$: \mm{2.2} FWHM by centroid, \mm{1.60} and \mm{1.59} by squared
+		centroid (MAE \mm{0.79}, \mm{0.77}); worse at the slab ends and far
+		from the SiPMs.
+	\item DOI \mm{2.33} and \mm{2.37} FWHM (MAE \mm{1.13}, \mm{1.16}), best at
+		mid-depth and mid-slab.
+	\item Energy resolution 15.6\% and 14.7\%. ESR gives a 30\% lower photopeak
+		but one flat with depth, so no depth-dependent energy calibration;
+		BaSO$_4$'s varies with depth. The authors prefer ESR for a scanner.
+	\item CTR \ns{4.30} and \ns{4.76} against the reference crystal, which the
+		authors put down to the timing pick-off and the summed readout, not the
+		detector; GAGG's \ns{150} decay rules out TOF regardless.
+	\item Against the same build in LYSO (Kinyanjui et al.\ 2026, Nucl.\ Sci.\
+		Tech.\ 37:96): $y$ \mm{1.68}, DOI \mm{2.14}, energy 17.4\%, CTR
+		\ns{3.34} --- so GAGG is equal in position, a little better in energy
+		and flood, worse in time.
+\end{itemize}
 
 \paragraph{Why it matters here}
-The only GAGG entry on this map, and it prices the swap: brighter crystal,
-roughly \qty{15}{\percent} energy resolution instead of \qty{25}{\percent},
-and timing an order of magnitude outside TOF. It also shows what the slab
-geometry cannot buy --- \mm{1.6} in $y$ and \mm{2.3} DOI are set by the light
-spread, not the light yield, since GAGG's extra photons moved neither.
+The only GAGG entry on this map, and the reason its 80\% more light bought
+almost nothing: GAGG emits at \nm{530}, where these SiPMs are far less
+efficient than at LYSO's \nm{420}. The authors say so themselves. The lesson
+is general --- a crystal's light yield only counts once multiplied by the
+sensor's detection efficiency at its wavelength --- and $y$ and DOI are set by
+the light spread and the coarse \mm{3.65} sensor pitch, not by photon count.
 
 \end{papernote}
 
@@ -2329,30 +2342,50 @@ Hu, Yang, Liu.
 
 \paragraph{Detector}
 Two semi-monolithic detectors of 12 LYSO slabs of
-\qtyproduct{0.96 x 56 x 10}{\mm}, one with ESR and one with BaSO$_4$, facing
-each other across a rotation platform; a full ring of 20 such detectors is
-simulated in GATE rather than built.
+\qtyproduct{0.96 x 56 x 10}{\mm}, one with ESR and one with BaSO$_4$, read out
+as in \ref{note:Kuang2026}, \mm{83} apart with a \mm{0.3} $^{22}$Na source on a
+rotation stage between them: ten angles \degs{18} apart, 120 s each. The
+transverse field of view is only \mm{12.4}, so the source is measured at 0 and
+\mm{5} off centre. A full ring of 20 such detectors (\mm{83} diameter, \mm{56}
+axial) is simulated in GATE, not built.
+
+\paragraph{Method}
+Calibration without a collimated beam: 30 minutes of the crystal's own
+$^{176}$Lu background, assumed uniform in the volume, and the $y$ and depth
+profiles split into equal-count bins --- 56 bins of \mm{1} along the slab and 8
+of \mm{1.25} in depth. That is a look-up table the whole scanner can take in
+place, the case \ref{note:Borghi2016} needs a fan beam for. Images by OSEM, with
+and without a point-spread-function model taken from the centred point source.
+The simulated ring does not model light: GATE's interaction positions are
+blurred by Gaussians of \mm{1.7} along the slab and \mm{2.1} in depth, with
+15\% energy resolution.
 
 \paragraph{Key Findings}
-A position calibration that corrects the non-uniform response in both the
-monolithic and the DOI direction, applied at system level. Reconstructed
-spatial resolution better than \mm{0.65} from the two-detector prototype with
-point-spread-function modelling; in simulation the 20-detector ring reaches
-\qty{5.45}{\percent} peak sensitivity and resolves \mm{0.75} rods.
-\aside{\mm{0.65} is a reconstructed figure with PSF modelling on a rotating
-pair, not an intrinsic detector resolution --- against the
-\mm{0.92} intrinsic of \ref{note:Kinyanjui2025} the two are not comparable.}
-\gap{Unread beyond the abstract. Whether the full ring is funded or only
-simulated, and how the 20-detector sensitivity compares with the
-\qty{12.4}{\percent} \ref{prog:Molecubes} sells.}
+\begin{itemize}
+	\item Prototype, no PSF model: \mm{1.14}/\mm{1.10}/\mm{1.40}
+		radial/tangential/axial at centre, \mm{1.08}/\mm{1.06}/\mm{1.35} at
+		\mm{5}.
+	\item With the PSF model: \mm{0.63}/\mm{0.60}/\mm{0.61} and
+		\mm{0.60}/\mm{0.54}/\mm{0.60}. The authors call this a best case and an
+		upper bound, since the PSF was fitted from the very source it is then
+		applied to.
+	\item Simulated ring: peak sensitivity 5.45\% at 350--\keV{650}; \mm{0.75}
+		rods resolved at centre and \mm{15} off centre, with PSF modelling.
+	\item Against the only other semi-monolithic preclinical scanner, i3M's
+		(\mm{25.6} slabs; Cucarella et al.\ 2025): 0.81/0.86/\mm{2.43} and 3.5\%
+		sensitivity. The long slab is what buys the axial figure.
+\end{itemize}
 
 \paragraph{Why it matters here}
-The line reaching a scanner, and the number that gets quoted from it:
-sub-millimetre preclinical resolution from slabs rather than from a monolith
-or a fine pixel array, at 20 detectors and one SiPM array each. Compare it
-with \ref{prog:AnnPET} and \ref{prog:HUST} as the third answer to the same
-preclinical problem --- not a monolithic ring, but a ring of one-dimensional
-monoliths.
+The line reaching a scanner, with its two headline numbers both conditional:
+\mm{0.65} only with a PSF fitted to itself, and \mm{0.75} rods only in a ring
+whose detectors are Gaussian blurs. The honest measured number is about
+\mm{1.1} in-plane without PSF. The 5.45\% simulated sensitivity is under half
+the 12.4\% \ref{prog:Molecubes} sells. What is worth taking is the $^{176}$Lu
+calibration: a monolithic annulus has no outside to aim a beam at, and this
+is a calibration that needs none. Compare with \ref{prog:AnnPET} and
+\ref{prog:HUST} as answers to the same preclinical problem --- not a monolithic
+ring, but a ring of one-dimensional monoliths.
 
 \end{papernote}
 
@@ -4057,7 +4090,7 @@ Zhang 2019 & LYSO 1 mm slabs, painted & single & 10 & 1.55 & 16\% & 1.07 & 24.9\
 Kinyanjui 2025 & LYSO 0.96 mm slabs, XGBoost & single & 10 & 1.67 & 17\% & 0.92 & -- & -- \\
 Borghi 2016 & LYSO monolith, 32 mm & single & 22 & 3.73 & 17\% & 1.68 & 9.9\% & 214 ps \\
 Pizzichemi 2019 & LYSO 1.53 mm, sharing & single & 15 & 3 & 20\% & 1.5 p & 8.9\% & 157 ps \\
-Kuang 2026 & GAGG 0.96 mm slabs & single & 10 & 2.33 & 23\% & 1.59 & 14.7\% & 4.3 ns \\
+Kuang 2026 & GAGG 0.96 mm slabs & single & 10 & 2.33 & 23\% & 1.59 & 14.7\% & 4.3 ns r \\
 Zhang 2021 & LYSO 1.37 mm slabs & single & 20 & 4.77 & 24\% & 2.43 & 25.7\% & 779 ps \\
 cMiCE & LYSO monolith, 50 mm & single & 15 & 3.69 & 25\% & 1.55 & -- & -- \\
 Pizzichemi 2016 & LYSO 1.53 mm, sharing & single & 15 & 4.1 & 27\% & 1.5 p & 12.7\% & 353 ps \\

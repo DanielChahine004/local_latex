@@ -112,3 +112,11 @@ pixi exec --spec poppler -- pdftoppm -r 130 -f <page> -l <page> -png build/thesi
 `pixi run papers-pull` fetches it. Read a paper there before asking for it, and
 file any PDF you are given under its bibliography key, then `papers-push`.
 Never copy a PDF into this repo, which is public.
+
+For a paywalled paper, use the UTS Library through Claude in Chrome. Open each
+paper in its own tab through the EZproxy prefix, e.g.
+`https://ieeexplore-ieee-org.ezproxy.lib.uts.edu.au/document/<id>`, or
+`https://login.ezproxy.lib.uts.edu.au/login?url=<publisher URL>`. The user,
+already signed in, presses PDF and drops the files back here. Chrome blocks a
+page from starting several downloads at once, and the PDFs land on the
+user's machine, not this server, so pre-opened tabs beat scripted downloads.

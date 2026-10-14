@@ -2241,16 +2241,16 @@ that measures what an unbroken ring does to coincidences --- both photons of a
 pair can land in the same crystal, and their light overlaps.
 The promised NEMA study never appeared. The line ends in conference
 proceedings: a second-generation scanner of twelve thin ``semi-monolithic''
-rings for axial resolution (Xie et al., NSS/MIC 2018), a stack of sliced rings
-read on the outer surface (\ref{note:Zhang2019a}), and a GATE comparison of end against
-inner-surface readout (Yang et al., NSS/MIC 2020,
-doi 10.1109/NSS/MIC42677.2020.9508071); then a ring as a portable radiation
+rings for axial resolution (\ref{note:Xie2018}), the stack of sliced rings
+read on the outer surface (\ref{note:Zhang2019a}), and a GATE comparison of end
+against inner-surface readout (\ref{note:Yang2020}); then a ring as a portable radiation
 sensor (Zhang et al., Sensors 21:3376, 2021). The group has since moved to
 pixelated and wearable brain PET; Peng is at LBNL, Xie at Shenzhen Bay
 Laboratory.
-\gap{The 2018 and 2020 proceedings: the twelve-ring design, and the
-simulation of inner-surface readout --- the one way left for a ring to get
-depth, since \ref{note:Zhang2019a} never measures it.}
+All four are read. None of them measures or simulates depth: every ring has
+a \mm{5} wall, and surface readout, which would give it, is shown better and
+then set aside for cost. A thick-walled ring read from its faces is the
+untried case.
 
 \begin{papernote}{Xu et al.\ 2019 -- A preclinical PET detector constructed with a monolithic scintillator ring}{Xu2019}
 \thumb{img/xu2019.png}
@@ -2324,6 +2324,57 @@ measures it --- the wall is still \mm{5}, and only the axial slices are tested.
 It also trades the unbroken ring for slices, giving back continuity along the
 axis to fix the axial resolution. The thick-walled, surface-read ring is still
 untried here.
+
+\end{papernote}
+
+\begin{papernote}{Xie et al.\ 2018 -- PET scanners constructed with a monolithic scintillator ring and semi-monolithic rings}{Xie2018}
+\thumb{img/xie2018.png}
+IEEE NSS/MIC 2018, \doi{10.1109/NSSMIC.2018.8824577}. Xie, Zhang, Peng, Yang,
+Zhao, Huang, Xu, Peng. Proceedings.
+
+\paragraph{Summary}
+The conference version of \ref{note:Xu2019}, with the same figures (\mm{0.94}
+and \mm{2.45} FWHM, 10.7\%), plus two things the journal paper leaves out. How
+the ring is made: turned from the boule with two core drills, milled, then
+polished with a polyurethane pad and CeO$_2$ to a roughness of \qty{1.5}{\nm}
+on the end face and \qty{2.6}{\nm} on the outer wall (atomic force
+microscopy) --- the brittle hollow ring needs it. And the second generation:
+twelve \mm{1} slices of the same ring, BaSO$_4$ between them, read on the outer
+surface (built in \ref{note:Zhang2019a}). A Derenzo phantom here resolves
+\mm{1.4} rods.
+
+\paragraph{Why it matters here}
+A rare measured surface finish on a monolith, in the units \ref{prog:Davis}
+models with: for an optical simulation of a ring, these are the roughness
+numbers to use.
+
+\end{papernote}
+
+\begin{papernote}{Yang et al.\ 2020 -- A simulation study on two readout methods of a monolithic scintillator ring PET}{Yang2020}
+\thumb{img/yang2020.png}
+IEEE NSS/MIC 2020, \doi{10.1109/NSS/MIC42677.2020.9508071}. Yang, Xie, Xie,
+Zhang, Peng, Xu, Xie. Proceedings; simulation only.
+
+\paragraph{Summary}
+GATE with optical transport, the ring of \ref{note:Xu2019} read two ways:
+46 SiPMs on each end (as built), or eight rings of 46 on the inner surface.
+Angle by centre of gravity in both; axial position by a small network for the
+ends, by centre of gravity across the eight rings for the inner surface.
+\begin{itemize}
+	\item Angle: \mm{1.02} FWHM with the ends, \mm{0.61} with the inner surface.
+	\item Axial: \mm{0.68} against \mm{0.38} --- the text does not say whether
+		these are FWHM or MAE.
+	\item A simulated Derenzo resolves \mm{0.5} rods (550 million lines).
+	\item The authors pick end readout anyway, for cost and assembly.
+\end{itemize}
+
+\paragraph{Why it matters here}
+Two lessons, neither the paper's. Surface readout is better on every axis it
+tests, yet the wall is still \mm{5} and depth is never simulated, so the case
+for reading the bulk from its faces is made and then not used. And the
+simulated end readout gives \mm{0.68} axially where the same ring measured
+\mm{2.45} (\ref{note:Xu2019}): a factor of three and a half between an
+optical model and the bench, unremarked.
 
 \end{papernote}
 

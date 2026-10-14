@@ -3677,6 +3677,67 @@ The realistic first submission target for this thesis's own monolithic work.
 %     These are what turn "nobody states a bound" into a contribution.
 % ===========================================================================
  
+\begin{programnote}{Ljubljana JSI -- TOF-DOI panel PET}{Ljubljana}
+\location{46.05}{14.51}{Ljubljana, Slovenia}
+
+\paragraph{What it is}
+Rok Pestotnik's group in the Experimental Particle Physics Department of the
+Jožef Stefan Institute, with the University of Ljubljana, Yale (Georges El
+Fakhri) and FBK: flexible, modular two-panel PET built on fast timing --- they
+cite their own measured \ps{76} CTR as the basis for assuming \ps{70}. On this map for
+the panel geometry it shares with \ref{prog:WTPET} and for what it says a
+panel needs from DOI.
+
+\paragraph{People}
+Gašper Razdevšek, Rok Pestotnik, Rok Dolenec, Matic Orehar; Georges El Fakhri,
+Thibault Marin, Yanis Chemli (Yale); Alberto Gola (FBK); David Gascon
+(Barcelona); Stan Majewski, the same as at \ref{prog:AnnPET}.
+
+\begin{papernote}{Razdevšek et al.\ 2025 -- Flexible and modular PET: evaluating the potential of TOF-DOI panel detectors}{Razdevsek2025}
+\thumb{img/razdevsek2025.png}
+Med.\ Phys.\ 52(5):2845--2860, \doi{10.1002/mp.17741}.
+
+\paragraph{Summary}
+GATE and CASToR study of two facing \qtyproduct{30 x 30}{\cm} panels of
+pixelated \qtyproduct{3 x 3 x 20}{\mm} LSO, at 40--\cm{80} apart, against a
+simulated Siemens Biograph Vision. Timing is 200 or \ps{70}; DOI is modelled by
+cutting each crystal into 2, 4, 8 or 16 layers, a stand-in for any DOI method.
+NEMA, Derenzo, XCAT and brain phantoms, and \qtyproduct{120 x 60}{\cm} panels for
+long axial fields of view. Pixelated and simulated; it names monolithic and
+semi-monolithic crystals as candidate panel detectors and cites the WT-PET
+panels.
+
+\paragraph{Key Findings}
+\begin{itemize}
+	\item Sensitivity rises more than threefold from \cm{80} to \cm{40}
+		apart; NECR matches the reference at about \cm{50}.
+	\item Resolution across the panels, the limited-angle direction, goes
+		from \mm{8.7} to \mm{1.6} with closer panels and \ps{70} plus DOI in
+		place of \ps{200} without.
+	\item \textbf{DOI saturates}: 8 layers (\mm{2.5} in \mm{20}) perform as
+		16; beyond that, other factors limit.
+	\item With \ps{70} and DOI the panels match or beat the reference scanner
+		with about four times less crystal, and extend to long axial fields of
+		view without distortion.
+\end{itemize}
+
+\begin{center}
+\includegraphics[width=0.9\linewidth]{img/razdevsek2025-nema.png}
+\end{center}
+
+\paragraph{Why it matters here}
+Not monolithic, but it answers a question a monolithic panel has to: how good
+does DOI need to be? In a panel at \ps{70}, \mm{2.5} FWHM is enough and more is
+wasted --- a target a thick monolith can be measured against, set by an
+image-level study rather than by detector pride. It is also the high-timing
+end of the panel argument whose monolithic end is \ref{prog:WTPET}
+(\ps{300}, \mm{2.67} DOI): the two together bracket what a monolithic panel's
+timing and DOI buy in an image.
+
+\end{papernote}
+
+\end{programnote}
+
 % ===========================================================================
 % Experiment ideas: papers and simulations this map suggests, each with the
 % numbers it has to beat and the notes they come from. Cards are ideas, not
@@ -3800,6 +3861,23 @@ on an offset grid as well as the training grid, as standard.
 an offset grid catches it; \ref{note:Peng2019a} tests at \mm{0.25} steps
 between \mm{1} training points. Report the same estimator three ways and show
 the gap.
+\end{papernote}
+
+\begin{papernote}{Idea -- is a monolith's DOI enough for a TOF panel?}{IdeaPanelDOI}
+
+\paragraph{The idea}
+Rerun the panel study with a monolithic detector response in place of ideal
+layers: continuous DOI with its real, depth-dependent error and its scatter
+tails, at 70 and \ps{300}.
+
+\paragraph{To beat}
+DOI saturates at \mm{2.5} (8 layers in \mm{20}) for \ps{70} panels
+(\ref{note:Razdevsek2025}); the WT-PET panels assume \mm{2.67} DOI at \ps{300}
+(\ref{prog:WTPET}); a \mm{16} monolith measures 6-layer DOI and
+\mm{1.14} intrinsic (\ref{note:Stockhoff2021}). Ideal layers have no scatter
+tails, so the question is whether a monolith's mean DOI error passes \mm{2.5}
+while its multi-interaction tails (\ref{note:Decuyper2021}) still cost image
+quality.
 \end{papernote}
 
 \begin{papernote}{Idea -- how fragile are time-domain features to the optics?}{IdeaOpticsRobust}

@@ -113,7 +113,8 @@ pixi exec --spec poppler -- pdftoppm -r 130 -f <page> -l <page> -png build/thesi
 file any PDF you are given under its bibliography key, then `papers-push`.
 Every entry in `references.bib` should have its PDF in the store, for checking
 citations against the source; `pixi run papers-status` lists the gaps. Books
-are exempt: an `@book` entry with edition, publisher and ISBN is enough.
+are exempt (edition, publisher and ISBN are enough), and so is any entry
+carrying `nopdf = {reason}`, for sources no library holds online.
 Never copy a PDF into this repo, which is public.
 
 For a paywalled paper, use the UTS Library through Claude in Chrome. Open each

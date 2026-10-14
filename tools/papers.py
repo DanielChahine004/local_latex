@@ -57,13 +57,15 @@ def push():
 
 
 def bib_entries(books=False):
-    """{key: doi or None} for every entry in references.bib. Books are left out
-    unless asked for: an ISBN and edition cite them reliably without a PDF."""
+    """{key: doi or None} for every entry in references.bib. Books, and entries
+    marked `nopdf = {reason}`, are left out unless asked for: a complete reference
+    cites them reliably without a PDF."""
     text = BIB.read_text(encoding="utf-8")
     entries = {}
     for m in re.finditer(r"@(\w+)\{([^,\s]+),(.*?)\n\}", text, re.S):
         kind, key, body = m.group(1).lower(), m.group(2), m.group(3)
-        if kind == "book" and not books:
+        # a book, or an entry marked nopdf = {why}, is cited without a PDF
+        if (kind == "book" or re.search(r"\bnopdf\s*=", body, re.I)) and not books:
             continue
         doi = re.search(r"\bDOI\s*=\s*\{([^}]+)\}", body, re.I)
         entries[key] = doi.group(1).strip() if doi else None

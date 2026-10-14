@@ -25,7 +25,7 @@ from .parse import Entry, Notes
 from .redact import redact
 from . import tables
 from .source import Source
-from .web import MAP_CSS, PIN_JSX, REACT_CSS, REACT_SRC, SEARCH_CSS, SEARCH_SRC, edit_jsx
+from .web import MAP_CSS, PIN_JSX, REACT_CSS, REACT_SRC, SEARCH_CSS, SEARCH_SRC, TABLE_CSS, TABLE_SRC, edit_jsx
 
 PITCH, ROW_GAP = PANEL_W + 40, 100
 PIN_D = 38                   # the marker's size, and the room a panel leaves it
@@ -425,7 +425,12 @@ class Board:
         return tables.strip(md) if key in self.cfg.tables else md
 
     def _tables(self, groups) -> None:
-        """A table panel for each [tables] programme, at its fixed spot, refreshed in place."""
+        """A table panel for each [tables] programme, at its fixed spot, refreshed in place.
+
+        Each row carries its paper's DOI and PDF links, found from the note its
+        first column names, so the table links straight to the sources."""
+        entries = {e.key: e for g in groups.values() for e in ([g[1]] if g[1] else []) + g[2]}
+        pdfs = self.cfg.pdf_keys()
         for key, spec in self.cfg.tables.items():
             node = groups[key][1] if key in groups else None
             data = tables.rows(node.full(self.conv), spec) if node else []
@@ -434,12 +439,24 @@ class Board:
                 if have is not None:
                     self.canvas.remove(self.table_panels.pop(key)[0])
                 continue
+            first = next(iter(data[0]))
+            first = next(c for c in data[0] if c != "Set") if first == "Set" else first
+            for r in data:
+                k = tables.keyof(r.get(first) or "", set(entries), spec.get("keys", {}))
+                link = entries[k].link if k else None
+                r["_doi"] = link
+                r["_pdf"] = self.cfg.pdf_url.format(key=k) if k and k in pdfs else None
+            scale = self.map_w / 4500 if self.map_mode else 1.0
+            props = {"columns": tables.columns(data), "rows": data, "flags": spec.get("flags", {}),
+                     "plain": spec.get("plain", "measured"), "scale": scale}
             if have is None:
-                x, y, w, h = spec["at"]
-                self.table_panels[key] = (self.canvas.table(data, name=f"{key}_table", x=x, y=y, w=w, h=h), data)
-            elif have[1] != data:
-                have[0].update(data)
-                self.table_panels[key] = (have[0], data)
+                x, y, w, _ = spec["at"]
+                panel = self.canvas.react(TABLE_SRC, css=TABLE_CSS, name=f"{key}_table", props=props,
+                                          w=w, x=x, y=y, frame=False)
+                self.table_panels[key] = (panel, props)
+            elif have[1] != props:
+                have[0].update(**props)
+                self.table_panels[key] = (have[0], props)
 
     def _remove(self, key: str) -> None:
         for name in [n for n, (a, b, _) in self.arrows.items() if key in (a, b)]:

@@ -9,10 +9,16 @@ numbers take the basis `plain`. The paragraph a tabular sits under becomes the
 `derive` adds category columns from keywords in another column's text: the
 first rule whose keyword appears wins, and a rule with no keywords is the
 default.
+
+Each row is tied to a note by its first column, read as "Surname Year" and
+matched to the key Surname+Year, accents dropped; `keys` maps a first cell that
+does not read that way ("cMiCE") to a key, or to "" for none. The board uses the
+key for the row's DOI and PDF links.
 """
 from __future__ import annotations
 
 import re
+import unicodedata
 
 NUMBER = re.compile(r"^(-?\d+(?:\.\d+)?)\s*([A-Za-z]+)?\.?$")
 HEADING = re.compile(r"^\*\*(.+?)\*\*$")
@@ -50,6 +56,7 @@ def rows(md: str, spec: dict) -> list[dict]:
                 rec[c] = float(m.group(1)) if m else None
                 if c in flagged:
                     rec[f"{c} basis"] = (flags.get(m.group(2), m.group(2)) if m.group(2) else plain) if m else None
+                    rec[f"_{c} flag"] = (m.group(2) or "") if m else ""
             else:
                 rec[c] = None if v in MISSING else v
         derived = {}
@@ -63,6 +70,30 @@ def rows(md: str, spec: dict) -> list[dict]:
             ordered[c] = v
             ordered.update(derived.get(c, {}))
         out.append(ordered)
+    return out
+
+
+def keyof(cell: str, known: set[str], keys: dict[str, str]) -> str | None:
+    """The note a row belongs to: an explicit `keys` entry, else "Surname Year"."""
+    if cell in keys:
+        return keys[cell] or None
+    m = re.match(r"^(\S+)\s+(\d{4})\b", cell or "")
+    if not m:
+        return None
+    base = unicodedata.normalize("NFKD", m.group(1)).encode("ascii", "ignore").decode() + m.group(2)
+    return base if base in known else None
+
+
+def columns(records: list[dict]) -> list[dict]:
+    """The table's columns: numeric or text, and for a number the basis column
+    whose letter rides beside it rather than taking a column of its own."""
+    names = [c for c in (records[0] if records else {}) if not c.startswith("_")]
+    out = []
+    for c in names:
+        if c.endswith(" basis"):
+            continue
+        num = any(isinstance(r.get(c), float) for r in records)
+        out.append({"name": c, "num": num, "basis": f"{c} basis" if f"{c} basis" in names else None})
     return out
 
 

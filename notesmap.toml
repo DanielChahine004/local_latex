@@ -92,7 +92,8 @@ edit_label = "Edit these notes"
 # "pitch" under "<column> basis". derive adds category columns: the first rule
 # whose keyword is in the "from" column wins; a rule with no keywords is the default.
 [tables.Leaderboard]
-at = [10710, 0, 2300, 1350]
+at = [10710, 0, 2700, 1350]
+keys = { "cMiCE" = "", "cMiCE (SES)" = "" }
 plain = "FWHM"
 flags = { p = "pitch", L = "layer width", b = "bin width", f = "flood fit", e = "Gaussian eq.", r = "vs reference", i = "sim input" }
 derive.Type = { from = "Detector", rules = [["semi-monolithic", "semi-monolith", "slabs"], ["layered", "layers"], ["monolithic", "monolith"], ["pixelated"]] }

@@ -331,3 +331,113 @@ SEARCH_CSS = """
 .find { flex-direction: column; align-items: stretch; }
 .find .row { display: flex; align-items: center; gap: 10px; }
 """
+
+# A [tables] programme's rows as a sortable, filterable table with links to the
+# papers. A number's basis letter (p, r, L...) rides beside it, spelt out on
+# hover and filterable from the bar; text columns with few values get a menu.
+TABLE_SRC = r"""
+function Component({ props }) {
+  const p = props;
+  const cols = p.columns || [], rows = p.rows || [];
+  const [q, setQ] = React.useState("");
+  const [sort, setSort] = React.useState({ col: null, dir: 0 });
+  const [pick, setPick] = React.useState({});
+  const keep = { onPointerDown: e => e.stopPropagation(), onMouseDown: e => e.stopPropagation(),
+                 onWheel: e => e.stopPropagation() };
+  // a menu for every text column with a handful of values, and every basis
+  const menus = [];
+  for (const c of cols) {
+    const field = c.num ? c.basis : c.name;
+    if (!field) continue;
+    const vals = [...new Set(rows.map(r => r[field]).filter(v => v != null))].sort();
+    if (vals.length > 1 && vals.length <= 12) menus.push({ field, label: c.num ? c.name.split(" ")[0] + " basis" : c.name, vals });
+  }
+  const text = r => cols.map(c => r[c.name] == null ? "" : String(r[c.name])).join(" ").toLowerCase();
+  let shown = rows.filter(r => (!q || text(r).includes(q.toLowerCase()))
+                         && Object.entries(pick).every(([f, v]) => !v || r[f] === v));
+  if (sort.col && sort.dir) {
+    const c = cols.find(c => c.name === sort.col);
+    shown = [...shown].sort((a, b) => {
+      const x = a[sort.col], y = b[sort.col];
+      if (x == null && y == null) return 0;
+      if (x == null) return 1;
+      if (y == null) return -1;
+      const d = c && c.num ? x - y : String(x).localeCompare(String(y));
+      return d * sort.dir;
+    });
+  }
+  const cycle = name => setSort(s => s.col !== name ? { col: name, dir: 1 } : { col: name, dir: s.dir === 1 ? -1 : 0 });
+  const fmt = (r, c) => {
+    const v = r[c.name];
+    if (v == null) return <span className="nil">–</span>;
+    if (!c.num) return v;
+    const f = r["_" + c.name + " flag"];
+    const n = Number.isInteger(v) ? String(v) : String(+v.toFixed(2));
+    return <span>{n}{f ? <sup title={p.flags[f] || f}>{f}</sup> : null}</span>;
+  };
+  return (
+    <div className="lbt" style={{ zoom: p.scale }}>
+      <div className="bar" {...keep}>
+        <input className="q" value={q} placeholder="filter rows" spellCheck={false} onChange={e => setQ(e.target.value)} />
+        {menus.map(m => (
+          <select key={m.field} value={pick[m.field] || ""} onChange={e => setPick({ ...pick, [m.field]: e.target.value })}>
+            <option value="">{m.label}: all</option>
+            {m.vals.map(v => <option key={v} value={v}>{v}</option>)}
+          </select>
+        ))}
+        {(q || Object.values(pick).some(Boolean) || sort.dir !== 0) &&
+          <button onClick={() => { setQ(""); setPick({}); setSort({ col: null, dir: 0 }); }}>reset</button>}
+        <span className="n">{shown.length} of {rows.length}</span>
+      </div>
+      <div className="wrap" {...keep}><table>
+        <thead><tr>
+          {cols.map(c => (
+            <th key={c.name} className={c.num ? "num" : ""} onClick={() => cycle(c.name)}>
+              {c.name}{sort.col === c.name && sort.dir ? (sort.dir > 0 ? " ▲" : " ▼") : ""}
+            </th>
+          ))}
+          <th>Paper</th>
+        </tr></thead>
+        <tbody>
+          {shown.map((r, i) => (
+            <tr key={i}>
+              {cols.map(c => <td key={c.name} className={c.num ? "num" : ""}>{fmt(r, c)}</td>)}
+              <td className="links">
+                {r._doi ? <a href={r._doi} target="_blank" rel="noopener">DOI ↗</a> : null}
+                {r._pdf ? <a href={r._pdf} target="_blank" rel="noopener">PDF ↗</a> : null}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table></div>
+      <div className="legend">
+        Superscripts: {Object.entries(p.flags || {}).map(([k, v]) => k + " " + v).join(" · ")}; none = {p.plain}.
+      </div>
+    </div>
+  );
+}
+"""
+
+TABLE_CSS = """
+.lbt { font: 13px system-ui, sans-serif; color: var(--pc-text, #ddd); background: #12151c; padding: 12px 14px;
+       border-radius: 10px; border: 1px solid rgba(127,127,127,.45); }
+.lbt .bar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 10px; }
+.lbt .bar .q { flex: 1 1 220px; font: inherit; color: inherit; padding: 5px 9px; border-radius: 8px;
+               border: 1px solid rgba(127,127,127,.5); background: rgba(127,127,127,.12); }
+.lbt .bar select, .lbt .bar button { font: 12px system-ui, sans-serif; color: inherit; padding: 4px 6px;
+               border-radius: 6px; border: 1px solid rgba(127,127,127,.5); background: #1b1f29; cursor: pointer; }
+.lbt .bar .n { font-size: 12px; opacity: .7; margin-left: auto; }
+.lbt .wrap { overflow-x: auto; }
+.lbt table { border-collapse: collapse; width: 100%; }
+.lbt th, .lbt td { padding: 3px 7px; border-bottom: 1px solid rgba(127,127,127,.25); text-align: left;
+                   white-space: nowrap; }
+.lbt th { cursor: pointer; user-select: none; font-weight: 600; position: sticky; top: 0; background: #12151c; }
+.lbt th:hover { color: var(--pc-accent, #60a5fa); }
+.lbt .num { text-align: right; font-variant-numeric: tabular-nums; }
+.lbt sup { font-size: 9px; color: #f0b429; margin-left: 2px; cursor: help; }
+.lbt .nil { opacity: .4; }
+.lbt tbody tr:hover td { background: rgba(127,127,127,.12); }
+.lbt .links a { color: var(--pc-accent, #60a5fa); text-decoration: none; margin-right: 8px; font-size: 12px; }
+.lbt .links a:hover { text-decoration: underline; }
+.lbt .legend { font-size: 11px; opacity: .65; margin-top: 8px; }
+"""

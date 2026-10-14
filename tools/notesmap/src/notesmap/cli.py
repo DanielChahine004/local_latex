@@ -117,7 +117,7 @@ def cmd_check(args) -> int:
             if r not in keys:
                 problems.append(f"{e.file}:{e.line}: {e.key}: \\ref to unknown key {r!r}")
     for p in notes.programmes:
-        if p.location is None:
+        if p.location is None and p.key not in cfg.map_fixed:
             problems.append(f"{p.file}:{p.line}: {p.key}: no \\location (shelved on the map)")
         if p.kind == "conference":
             d = p.dates
@@ -131,7 +131,8 @@ def cmd_check(args) -> int:
           f"{sum(len(p.papers) for p in notes.programmes)} papers in programmes, {len(notes.loose)} loose")
     for p in notes.programmes:
         loc = p.location
-        where = f"{conv.to_md(loc.place)} ({loc.lat:.2f}, {loc.lon:.2f})" if loc else "no location"
+        where = (f"{conv.to_md(loc.place)} ({loc.lat:.2f}, {loc.lon:.2f})" if loc
+                 else "fixed off the map" if p.key in cfg.map_fixed else "no location")
         print(f"  {p.key:<14} {len(p.papers):>2} papers  {where}")
     bib_problems, bib_summary = _bib_check(cfg, notes) if cfg.bib else ([], [])
     problems += bib_problems

@@ -270,6 +270,13 @@ class Board:
             self.images[key] = url
         return self.images[key]
 
+    def _width(self, key: str, node: Entry | None) -> float:
+        """A panel's width: a [map] fixed entry may give its own, else the kind's."""
+        spec = self.cfg.map_fixed.get(key)
+        if spec and len(spec) > 2:
+            return spec[2]
+        return panel_w(node.kind if node else "programme")
+
     def _html(self, md: str) -> str:
         def inline(s: str) -> str:
             s = html.escape(s, quote=False)
@@ -278,14 +285,29 @@ class Board:
             s = re.sub(r"\*\*(.+?)\*\*", r"<b>\1</b>", s)
             s = re.sub(r"(?<!\*)\*(?!\*)(.+?)(?<!\*)\*(?!\*)", r"<i>\1</i>", s)
             return re.sub(r"`([^`]+)`", r"<code>\1</code>", s)
-        out, items = [], []
+        out, items, rows = [], [], []
 
         def flush():
             if items:
                 out.append("<ul>" + "".join(f"<li>{inline(i)}</li>" for i in items) + "</ul>")
                 items.clear()
+            if rows:
+                head, *body = rows
+                out.append('<table class="lb"><thead><tr>' + "".join(f"<th>{inline(c)}</th>" for c in head)
+                           + "</tr></thead><tbody>"
+                           + "".join("<tr>" + "".join(f"<td>{inline(c)}</td>" for c in r) + "</tr>" for r in body)
+                           + "</tbody></table>")
+                rows.clear()
         for line in md.split("\n"):
             s = line.strip()
+            if s.startswith("|") and s.endswith("|"):
+                if items:
+                    out.append("<ul>" + "".join(f"<li>{inline(i)}</li>" for i in items) + "</ul>")
+                    items.clear()
+                rows.append([c.strip() for c in s[1:-1].split("|")])
+                continue
+            if rows:
+                flush()
             if s.startswith("![](") and s.endswith(")"):
                 flush()
                 url = self._image(s[4:-1])
@@ -347,7 +369,8 @@ class Board:
             "hits": sorted(self.hits),
             "kind": node.kind if node else "programme",
             "dates": self._dates(node),
-            "open": self.props.get(key, {}).get("open"),
+            "open": self.props[key].get("open") if key in self.props
+                    else (key if key in self.cfg.open_default else None),
             "place": self.conv.to_md(loc.place) if loc else "",
             "figures": [{"src": thumb, "caption": ""}] if thumb else [],
             "html": self._html(node.full(self.conv)) if node else "",
@@ -369,7 +392,7 @@ class Board:
         props = self._props(key, title, node, papers)
         css = REACT_CSS + (MAP_CSS if self.map_mode else "")
         panel = self.canvas.react(REACT_SRC, css=css, name=key, props=props,
-                                  w=panel_w(node.kind if node else "programme"),
+                                  w=self._width(key, node),
                                   frame=False, x=x, y=y)
         panel.on_error(lambda msg, key=key: print(f"[notesmap] panel {key}: {msg}", flush=True))
         panel.on("toggle")(lambda msg, key=key: self.set_open(key, msg.get("key")))
@@ -418,7 +441,7 @@ class Board:
 
     def _size(self, key: str, node: Entry | None, papers: list[Entry], geo: dict) -> tuple[float, float]:
         """A panel's width and height: what the browser measured, else the estimate."""
-        w = panel_w(node.kind if node else "programme")
+        w = self._width(key, node)
         g = geo.get(key)
         if g and isinstance(g.get("h"), (int, float)):
             return g.get("w", w), g["h"]
@@ -433,7 +456,8 @@ class Board:
                  for (_, n, _) in groups.values() if n and n.location
                  for px, py in [project(n.location.lat, n.location.lon, self.map_w)]]
         shelf_x, shelf_y = self.cfg.unplaced
-        unplaced = [k for k, (_, n, _) in groups.items() if not (n and n.location)]
+        fixed = self.cfg.map_fixed
+        unplaced = [k for k, (_, n, _) in groups.items() if not (n and n.location) and k not in fixed]
         # the size is part of the signature, not just the location: the first pass
         # has only estimated heights, and a panel that measures taller than its
         # estimate would otherwise keep a position chosen for a shorter one, and
@@ -451,7 +475,11 @@ class Board:
             loc = node.location if node else None
             w, h = size[key]
             sig = sigs[key]
-            if loc is None:
+            if key in fixed:
+                # a fixed spot off the map, set in notesmap.toml, and no pin
+                x, y = fixed[key][0], fixed[key][1]
+                self._drop_pin(key)
+            elif loc is None:
                 # no \location: a shelf of its own, in note order
                 x, y = shelf_x + unplaced.index(key) * PITCH, shelf_y
                 self._drop_pin(key)

@@ -29,6 +29,8 @@ prune = [["i3M", "machinery"], ["Delft", "machinery"]]
 # programmes whose arrows appear only from the card that is unfolded: the ideas
 # panel refers to most of the map, and drawn at once its arrows bury it
 open_arrows = ["Ideas"]
+# programmes whose own note starts unfolded, so their content shows without a click
+open_default = ["Leaderboard"]
 loose_key = "machinery"
 loose_title = "Machinery (no programme)"
 
@@ -74,6 +76,9 @@ hide_programmes = ["MODE", "OpenGATE"]
 width = 9000
 unplaced = [400, 3250]    # the machinery panel: no institution, so the Southern Ocean
                           # (clear of danvas's own buttons at the viewport's lower left)
+# panels at a fixed spot off the map, as [x, y] or [x, y, width]; no pin.
+# The leaderboard sits to the right of the map (which is width wide).
+fixed = { Leaderboard = [9150, 0, 1500] }
 
 [server]
 port = 8000

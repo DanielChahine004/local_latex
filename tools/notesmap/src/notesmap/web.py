@@ -242,6 +242,11 @@ a.chip { text-decoration: none; }
 .note p, .note li { margin: 0 0 8px; }
 .note blockquote { margin: 0 0 8px 12px; opacity: .85; }
 .note code { font-size: 12px; }
+.note table.lb { border-collapse: collapse; width: 100%; font-size: 12px; margin: 6px 0 10px; }
+.note table.lb th, .note table.lb td { padding: 3px 6px; border-bottom: 1px solid rgba(127,127,127,.3);
+                                       text-align: left; vertical-align: top; }
+.note table.lb th { font-weight: 600; border-bottom: 1px solid rgba(127,127,127,.6); }
+.note table.lb tbody tr:nth-child(odd) { background: rgba(127,127,127,.06); }
 """
 
 MAP_CSS = (".prog { background: #12151c; }"                       # opaque over terrain

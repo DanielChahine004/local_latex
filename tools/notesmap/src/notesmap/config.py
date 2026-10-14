@@ -30,6 +30,7 @@ class Config:
     loose_key: str = "loose"
     loose_title: str = "Papers without a programme"
     open_arrows: list[str] = field(default_factory=list)   # programmes whose arrows show only from an unfolded card
+    open_default: list[str] = field(default_factory=list)  # programmes whose own note starts unfolded
     # [publish]
     hide_sections: list[str] = field(default_factory=list)
     hide_gaps: bool = False
@@ -39,6 +40,7 @@ class Config:
     map_image: str = ""                          # empty: the bundled Blue Marble
     map_width: int = 9000
     unplaced: list[int] = field(default_factory=lambda: [400, 3500])
+    map_fixed: dict[str, list] = field(default_factory=dict)  # key -> [x, y] or [x, y, width], no pin
     # [check]
     bib: str = ""                                # BibTeX file to cross-check \doi{} against
     # [pdfs]
@@ -71,12 +73,13 @@ _SECTIONS = {
               "ref_prefixes": "ref_prefixes", "overview_sections": "overview_sections",
               "units": "units", "macros": "macros", "plugins": "plugins"},
     "board": {"rows": "rows", "prune": "prune", "loose_key": "loose_key",
-              "loose_title": "loose_title", "open_arrows": "open_arrows"},
+              "loose_title": "loose_title", "open_arrows": "open_arrows",
+              "open_default": "open_default"},
     "publish": {"hide_sections": "hide_sections", "hide_gaps": "hide_gaps", "show_loose": "show_loose",
                 "hide_programmes": "hide_programmes"},
     "check": {"bib": "bib"},
     "pdfs": {"dir": "pdf_dir", "url": "pdf_url"},
-    "map": {"image": "map_image", "width": "map_width", "unplaced": "unplaced"},
+    "map": {"image": "map_image", "width": "map_width", "unplaced": "unplaced", "fixed": "map_fixed"},
     "server": {"port": "port", "title": "title", "edit_url": "edit_url",
                "edit_label": "edit_label"},
 }

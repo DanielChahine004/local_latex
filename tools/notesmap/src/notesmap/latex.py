@@ -115,6 +115,18 @@ def expand(text: str, macro: str, n: int, fn: Handler) -> str:
     return "".join(out)
 
 
+
+def _table(body: str) -> str:
+    """A tabular as Markdown pipe rows, one per line; the board renders them as a table."""
+    rows = []
+    for row in re.split(r"\\\\(?:\[[^\]]*\])?", body):
+        row = re.sub(r"\\(?:hline|toprule|midrule|bottomrule|cline\{[^}]*\})", "", row).strip()
+        if not row:
+            continue
+        cells = [" ".join(c.split()) for c in re.split(r"(?<!\\)&", row)]
+        rows.append("| " + " | ".join(cells) + " |")
+    return "\n\n" + "\n".join(rows) + "\n\n"
+
 class Converter:
     def __init__(self, units: dict[str, str] | None = None) -> None:
         self.units = dict(UNITS, **(units or {}))
@@ -198,6 +210,12 @@ class Converter:
             t = expand(t, name, nargs, fn)
         t = re.sub(r"\\includegraphics(?:\[[^\]]*\])?\{([^}]*)\}", r"\n\n![](\1)\n\n", t)
         t = expand(t, "paragraph", 1, lambda a: f"\n\n**{a}**\n\n")
+        # layout-only environments carry nothing for the board (they used to leak
+        # their names, "center" around every inline figure)
+        t = re.sub(r"\\(?:begin|end)\{(?:center|flushleft|flushright|small|footnotesize|scriptsize)\}", "\n", t)
+        t = re.sub(r"\\setlength\{[^}]*\}\{[^}]*\}", "", t)       # spacing for the PDF only
+        t = re.sub(r"\\begin\{tabular\}\{[^}]*\}(.*?)\\end\{tabular\}", lambda m: _table(m.group(1)), t,
+                   flags=re.S)
         t = re.sub(r"\\begin\{(?:itemize|enumerate)\}|\\end\{(?:itemize|enumerate)\}", "\n", t)
         t = re.sub(r"\\begin\{quote\}(.*?)\\end\{quote\}",
                    lambda m: "\n> " + " ".join(m.group(1).split()) + "\n", t, flags=re.S)
@@ -228,8 +246,8 @@ class Converter:
             s = line.strip()
             if not s:
                 out.append("")
-            elif out and out[-1] and not s.startswith(("- ", ">", "![")) \
-                    and not out[-1].startswith("!["):
+            elif out and out[-1] and not s.startswith(("- ", ">", "![", "|")) \
+                    and not out[-1].startswith(("![", "|")):
                 out[-1] += " " + s
             else:
                 out.append(s)

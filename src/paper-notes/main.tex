@@ -2936,6 +2936,40 @@ design's sensitivity gains, not shown in the main text.
 
 \end{papernote}
 
+\begin{papernote}{LaBella et al.\ 2021 -- Sub-2 mm depth of interaction localization in PET detectors with prismatoid light guide arrays and single-ended readout using convolutional neural networks}{LaBella2021}
+\thumb{img/labella2021.png}
+Med.\ Phys.\ 48(3):1019--1025, \doi{10.1002/mp.14654}.
+
+\paragraph{Summary}
+The Prism-PET module of \ref{note:LaBella2020} --- a 16 x 16 array of
+\qtyproduct{1.4 x 1.4 x 20}{\mm} polished LYSO, 4-to-1 on 3~mm SiPMs, BaSO$_4$
+between crystals --- with a shallow CNN in place of the ratio estimator for
+depth. Depth-collimated data at 19 depths (\mm{1} steps, \mm{1} pinhole),
+TOFPET2 readout. Inter-crystal Compton events are cut first by the expected
+light-sharing pattern (highest signal over twice the second, second within 1.2
+times the third), leaving about 60\% of photopeak events. The CNN is tested on
+crystals it was not trained on.
+
+\paragraph{Key Findings}
+\begin{itemize}
+	\item DOI \mm{1.84} FWHM averaged over the array with all 64 signals, against
+		\mm{3.04} for the classical max-over-sum ratio; \mm{1.92} from only the
+		four highest signals.
+	\item By region with four signals: \mm{1.84} centre, \mm{2.14} edge,
+		\mm{2.55} corner (classical 2.59, 4.51, 4.38). The CNN is best at both
+		crystal ends, where the ratio estimator is worst.
+	\item No SiPM saturation correction; the authors suggest the CNN learns it.
+		Energy and timing are not reported.
+\end{itemize}
+
+\paragraph{Why it matters here}
+The best reported single-ended DOI at \mm{20}, and the number on the
+leaderboard a thick monolith or scattering bulk has to approach. It is a
+clean-event figure: 40\% of the photopeak, the multi-crystal part, is removed
+before it is measured.
+
+\end{papernote}
+
 \begin{papernote}{Zeng et al.\ 2023 -- A conformal TOF-DOI Prism-PET prototype scanner for high-resolution quantitative neuroimaging}{Zeng2023}
 \thumb{img/zeng2023.png}
 Med.\ Phys.\ 50(6):3401--3417, \doi{10.1002/mp.16223}.
@@ -3806,6 +3840,72 @@ end of the panel argument whose monolithic end is \ref{prog:WTPET}
 timing and DOI buy in an image.
 
 \end{papernote}
+
+\end{programnote}
+
+% ===========================================================================
+% Leaderboard: measured detector builds on this map, side by side. Placed to
+% the right of the map by [map] fixed in notesmap.toml, and open by default.
+% Keep it to measurements; simulations and MAE-only figures stay out.
+% ===========================================================================
+
+\begin{programnote}{Leaderboard -- measured detector builds, ranked by DOI against thickness}{Leaderboard}
+
+\paragraph{What it is}
+Every measured detector build on this map that reports a depth-of-interaction
+FWHM, ranked by DOI as a share of crystal depth, so thin and thick detectors
+compare fairly; then builds with depth only in bins or layers. Depth, DOI and
+transverse are in mm, DOI/d is DOI over depth. Transverse is
+the measured intrinsic FWHM where there is one, otherwise the crystal pitch
+(marked p). CTR is between two such detectors unless marked r (against a fast
+reference crystal). Prism-PET figures reject inter-crystal scatter first;
+monolith figures mostly do not. Simulations, and builds quoting only a mean
+absolute error (Zhang 2017, Freire 2022, Thull 2026), are left out.
+
+\begin{center}
+\begin{scriptsize}
+\setlength{\tabcolsep}{3.5pt}
+\begin{tabular}{lllllllll}
+\hline
+Build & Detector & Readout & Depth & DOI & DOI/d & Transv. & Energy & CTR \\
+\hline
+Xie 2026 & LYSO 0.44 mm pixels & dual & 20 & 1.78 & 9\% & 0.5 p & 22\% & 1100 ps \\
+LaBella 2021 & LYSO 1.4 mm, Prism + CNN & single & 20 & 1.84 & 9\% & 1.4 p & -- & -- \\
+Ren 2014 & LYSO 1.5 mm, unpolished & dual & 20 & 1.9 & 10\% & 1.5 p & 22\% & -- \\
+Zeng 2024 & LYSO 1.5 mm, tapered Prism & single & 20 & 2.25 & 11\% & 1.5 p & 8.9\% & 243 ps \\
+LaBella 2020 & LYSO 1.4 mm, Prism & single & 20 & 2.5 & 13\% & 1.4 p & 9\% & -- \\
+Zhang 2021 & LYSO 1.37 mm slabs & dual & 20 & 2.60 & 13\% & 1.97 & 21.7\% & 718 ps \\
+Zeng 2023 & LYSO 1.5 mm, Prism scanner & single & 20 & 2.85 & 14\% & 1.22 & 12.6\% & 271 ps \\
+Carra 2022 & LYSO monolith & single & 8 & 1.2 & 15\% & 0.78 & -- & 156 ps \\
+Zhang 2019 & LYSO 1 mm slabs, painted & single & 10 & 1.55 & 16\% & 1.07 & 24.9\% & 788 ps r \\
+Kinyanjui 2025 & LYSO 0.96 mm slabs, XGBoost & single & 10 & 1.67 & 17\% & 0.92 & -- & -- \\
+Pizzichemi 2019 & LYSO 1.53 mm, sharing & single & 15 & 3 & 20\% & 1.5 p & 8.9\% & 157 ps \\
+Kuang 2026 & GAGG 0.96 mm slabs & single & 10 & 2.33 & 23\% & 1.59 & 14.7\% & 4.3 ns \\
+Zhang 2021 & LYSO 1.37 mm slabs & single & 20 & 4.77 & 24\% & 2.43 & 25.7\% & 779 ps \\
+cMiCE & LYSO monolith, 50 mm & single & 15 & 3.69 & 25\% & 1.55 & -- & -- \\
+Pizzichemi 2016 & LYSO 1.53 mm, sharing & single & 15 & 4.1 & 27\% & 1.5 p & 12.7\% & 353 ps \\
+Freire 2026 & LYSO curved monolith & single & 12.5 & 3.6 & 29\% & -- & 19\% & no TOF \\
+Moliner 2012 & LYSO monolith, MAMMI & single & 10 & 4 & 40\% & 1.6 & 18\% & -- \\
+Peng 2019 & LYSO 4 slabs & 4 sides & 4x2.76 & layer & -- & 1.1 & 10.3\% & 348 ps \\
+Stockhoff 2021 & LYSO monolith, 50 mm & single & 16 & 6 layers & -- & 1.14 & -- & -- \\
+Lee 2026 & BGO semi-monolith & single & 20 & 4 bins & -- & 3.17 & 21\% & 172 ps r \\
+Cates 2024 & BGO monolith & single & 15 & relative & -- & relative & 17.6\% & 237 ps r \\
+Xu 2019 & LYSO ring monolith & 2 rings & 5 & -- & -- & 0.94 & 10.7\% & -- \\
+\hline
+\end{tabular}
+\end{scriptsize}
+\end{center}
+
+\paragraph{Reading it}
+Dual-ended readout and Prism-PET's deterministic light guide hold the top at
+\mm{20}; the best single-ended figure is Prism-PET with a CNN, \mm{1.84}, which
+its authors call the best reported for a single-ended module. Measured monoliths
+sit lower: their best DOI comes from thin blocks (Carra, \mm{8}), and at
+15--\mm{16} they report 3--\mm{4} or layers. Footnotes the table cannot carry:
+Pizzichemi 2019's \mm{3} DOI is cited from earlier work, Freire 2026's and Xu
+2019's figures are partly system-level, Peng's DOI is the layer thickness
+(\mm{3.36}), and CTRs against a reference flatter a detector by about
+$\sqrt{2}$.
 
 \end{programnote}
 

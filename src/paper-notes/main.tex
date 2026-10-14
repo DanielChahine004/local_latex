@@ -3707,6 +3707,20 @@ long axial fields of view. Pixelated and simulated; it names monolithic and
 semi-monolithic crystals as candidate panel detectors and cites the WT-PET
 panels.
 
+\paragraph{Method}
+A perfect detector, on purpose. GATE ground-truth hits, no optical transport
+and no position estimator: each module's hits collapse to one energy-weighted
+centroid (\texttt{TakeEnergyCentroid}), crystal identification is exact, and
+DOI is the ideal layer that centroid falls in. Timing is the true time of the
+first interaction plus Gaussian noise tuned to the target CTR for a central
+point source, with no depth-dependent bias. Energy is the module's deposit
+blurred to 10\%, \qtyrange{435}{585}{\kilo\electronvolt}. Inter-crystal
+scatter is kept but merged into the centroid, which lands between the hits;
+all valid coincidence pairs are kept (\texttt{takeAllGoods}). Object scatter
+and randoms are simulated and counted for NECR, but only trues are
+reconstructed. Dead time and pileup are ignored, positron range is not
+simulated.
+
 \paragraph{Key Findings}
 \begin{itemize}
 	\item Sensitivity rises more than threefold from \cm{80} to \cm{40}
@@ -3715,7 +3729,14 @@ panels.
 		from \mm{8.7} to \mm{1.6} with closer panels and \ps{70} plus DOI in
 		place of \ps{200} without.
 	\item \textbf{DOI saturates}: 8 layers (\mm{2.5} in \mm{20}) perform as
-		16; beyond that, other factors limit.
+		16; beyond that, crystal size, non-collinearity, positron range, block
+		decoding and reconstruction limit --- for perfectly decoded \mm{3}
+		pixels.
+	\item \textbf{TOF against DOI}: with panels \cm{40} apart and DOI,
+		200 and \ps{70} give nearly the same point-source resolution at the
+		centre. TOF matters more with panels further apart, towards the panel
+		edges, and for noise and contrast; DOI matters most for parallax with
+		close panels.
 	\item With \ps{70} and DOI the panels match or beat the reference scanner
 		with about four times less crystal, and extend to long axial fields of
 		view without distortion.
@@ -3729,7 +3750,11 @@ panels.
 Not monolithic, but it answers a question a monolithic panel has to: how good
 does DOI need to be? In a panel at \ps{70}, \mm{2.5} FWHM is enough and more is
 wasted --- a target a thick monolith can be measured against, set by an
-image-level study rather than by detector pride. It is also the high-timing
+image-level study rather than by detector pride. But it is the saturation
+point of an ideal detector with \mm{3} pixels: no decoding error, no
+depth-dependent timing, scatter merged to a centroid. A monolith with finer
+transverse resolution may keep gaining past \mm{2.5}, and its real DOI error
+and scatter tails are what this study leaves out. It is also the high-timing
 end of the panel argument whose monolithic end is \ref{prog:WTPET}
 (\ps{300}, \mm{2.67} DOI): the two together bracket what a monolithic panel's
 timing and DOI buy in an image.

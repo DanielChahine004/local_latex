@@ -3707,6 +3707,14 @@ long axial fields of view. Pixelated and simulated; it names monolithic and
 semi-monolithic crystals as candidate panel detectors and cites the WT-PET
 panels.
 
+\paragraph{Not a monolith}
+The detector tested is pixelated, not monolithic: \qtyproduct{3 x 3 x 20}{\mm}
+LSO crystals in 16 x 16 modules, given DOI by cutting each crystal into ideal
+layers, which the authors take as achievable with dual-ended readout. The
+monolithic link is only that the paper names monolithic and semi-monolithic
+crystals as candidate panel detectors and cites the monolithic WT-PET panels
+(\ref{prog:WTPET}); no monolith is simulated.
+
 \paragraph{Method}
 A perfect detector, on purpose. GATE ground-truth hits, no optical transport
 and no position estimator: each module's hits collapse to one energy-weighted
@@ -3720,6 +3728,22 @@ all valid coincidence pairs are kept (\texttt{takeAllGoods}). Object scatter
 and randoms are simulated and counted for NECR, but only trues are
 reconstructed. Dead time and pileup are ignored, positron range is not
 simulated.
+
+Compared with a simulated Siemens Biograph Vision (78 cm ring, 26.3 cm axial,
+\qtyproduct{3.2 x 3.2 x 20}{\mm} LSO, \ps{214}, no DOI) on system metrics ---
+sensitivity, NECR at 5 kBq/mL, scatter fraction and relative crystal volume ---
+and on image metrics:
+\begin{itemize}
+	\item point-source spatial resolution, FWHM in $x$ and $y$ ($y$ across
+		the gap between the panels) against MLEM iterations;
+	\item Derenzo rod resolvability, 2--\mm{5} rods, with line profiles
+		through the 2.5 and \mm{4} rods;
+	\item NEMA image quality: percent contrast against background variability
+		for the 13 and \mm{28} hot spheres;
+	\item contrast-to-noise ratio of inserted lesions in the XCAT phantom, as a
+		surrogate for lesion detectability;
+	\item visual quality of XCAT and high-resolution brain phantom images.
+\end{itemize}
 
 \paragraph{Key Findings}
 \begin{itemize}

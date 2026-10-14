@@ -56,13 +56,17 @@ def push():
     print(f"pushed {len(staged)} file(s)" if staged else "nothing new to push")
 
 
-def bib_entries():
-    """{key: doi or None} for every entry in references.bib."""
+def bib_entries(books=False):
+    """{key: doi or None} for every entry in references.bib. Books are left out
+    unless asked for: an ISBN and edition cite them reliably without a PDF."""
     text = BIB.read_text(encoding="utf-8")
     entries = {}
-    for m in re.finditer(r"@\w+\{([^,\s]+),(.*?)\n\}", text, re.S):
-        doi = re.search(r"\bDOI\s*=\s*\{([^}]+)\}", m.group(2), re.I)
-        entries[m.group(1)] = doi.group(1).strip() if doi else None
+    for m in re.finditer(r"@(\w+)\{([^,\s]+),(.*?)\n\}", text, re.S):
+        kind, key, body = m.group(1).lower(), m.group(2), m.group(3)
+        if kind == "book" and not books:
+            continue
+        doi = re.search(r"\bDOI\s*=\s*\{([^}]+)\}", body, re.I)
+        entries[key] = doi.group(1).strip() if doi else None
     return entries
 
 
@@ -73,7 +77,7 @@ def pdfs():
 def status():
     entries, have = bib_entries(), pdfs()
     missing = [k for k in entries if k not in have]
-    stray = sorted(have - entries.keys())
+    stray = sorted(have - bib_entries(books=True).keys())
     print(f"{len(entries) - len(missing)} of {len(entries)} bibliography entries have a PDF")
     for k in missing:
         print(f"  missing  {k}" + ("" if entries[k] else "  (no DOI)"))

@@ -541,26 +541,36 @@ RADAR_CSS = """
 .dfit .note { font-size: 11px; opacity: .6; margin-top: 8px; }
 """
 
-# Detectors from a table panel overlaid on a radar of "lower is better" columns,
-# each axis scored 1-5 on a log scale between the best and worst value present.
+# Detectors from a table panel overlaid on a radar of "lower is better" columns.
+# Each axis is linear in its own units from 0 at the centre to a fixed maximum,
+# so a smaller polygon is better; a value past the rim is pinned there and labelled.
 DETRADAR_SRC = r"""
 function Component({ props }) {
-  const p = props, axes = p.axes || [], rows = p.rows || [];
+  const p = props, axes = p.axes || [], rows = p.rows || [], refs = p.reference || [];
   const pal = ["#3987e5", "#eb6834", "#1baf7a", "#eda100", "#e87ba4", "#9085e9"];
   const [sel, setSel] = React.useState(p.initial || []);
   const [q, setQ] = React.useState("");
   const keep = { onPointerDown: e => e.stopPropagation(), onMouseDown: e => e.stopPropagation(),
                  onWheel: e => e.stopPropagation() };
-  const span = axes.map(a => { const v = rows.map(r => r.v[a.key]).filter(x => x > 0);
-                               return [Math.log(Math.min(...v)), Math.log(Math.max(...v))]; });
-  const score = (r, i) => { const v = r.v[axes[i].key]; if (!(v > 0)) return null;
-                            const [lo, hi] = span[i]; return hi > lo ? 1 + 4 * (hi - Math.log(v)) / (hi - lo) : 5; };
   const N = axes.length, R = 150, cx = 230, cy = 185;
-  const pt = (s, i) => { const t = -Math.PI / 2 + 2 * Math.PI * i / N, r = R * s / 5;
-                         return [cx + r * Math.cos(t), cy + r * Math.sin(t)]; };
+  const at = (f, i) => { const t = -Math.PI / 2 + 2 * Math.PI * i / N;
+                         return [cx + R * f * Math.cos(t), cy + R * f * Math.sin(t)]; };
+  const frac = (r, i) => { const v = r.v[axes[i].key]; return v > 0 ? Math.min(v / axes[i].max, 1) : null; };
+  const over = (r, i) => r.v[axes[i].key] > axes[i].max;
+  const num = v => (+(+v).toFixed(2)).toString();
+  const fmt = (r, a) => { const v = r.v[a.key]; return v > 0 ? num(v) + (r.f[a.key] ? " " + r.f[a.key] : "") : "–"; };
   const toggle = i => setSel(s => s.includes(i) ? s.filter(x => x !== i) : s.length < pal.length ? [...s, i] : s);
   const shown = rows.map((r, i) => [r, i]).filter(([r]) => !q || (r.name + " " + r.detector + " " + r.set).toLowerCase().includes(q.toLowerCase()));
-  const fmt = (r, a) => { const v = r.v[a.key]; return v > 0 ? (+v.toFixed(2)) + (r.f[a.key] ? " " + r.f[a.key] : "") : "–"; };
+  const shape = (r, colour, dash, fill, key) => {
+    const f = axes.map((_, i) => frac(r, i)), pts = f.map((v, i) => at(v == null ? 0 : v, i));
+    return <g key={key}>
+      <polygon points={pts.map(x => x.join(",")).join(" ")} fill={fill} stroke={colour} strokeWidth="2" strokeDasharray={dash} />
+      {pts.map((x, i) => f[i] == null ? null : <g key={i}>
+        <circle cx={x[0]} cy={x[1]} r="4" fill={over(r, i) ? "#12151c" : colour} stroke={colour} strokeWidth="2">
+          <title>{r.name}, {axes[i].label}: {fmt(r, axes[i])}</title></circle>
+        {over(r, i) ? <text x={x[0] + 6} y={x[1] - 6} className="over" fill={colour}>{num(r.v[axes[i].key])}</text> : null}</g>)}
+    </g>;
+  };
   return (
     <div className="drad" style={{ zoom: p.scale }} {...keep}>
       <div className="cols">
@@ -574,26 +584,25 @@ function Component({ props }) {
         </div>
         <div className="plot">
           <svg viewBox="-70 0 600 370">
-            {[1, 2, 3, 4, 5].map(k => <polygon key={k} className="ring" points={axes.map((_, i) => pt(k, i).join(",")).join(" ")} />)}
-            {axes.map((a, i) => { const [u, v] = pt(5, i), [lx, ly] = pt(5.9, i);
+            {[0.25, 0.5, 0.75, 1].map(k => <polygon key={k} className="ring" points={axes.map((_, i) => at(k, i).join(",")).join(" ")} />)}
+            {axes.map((a, i) => { const [u, v] = at(1, i), [lx, ly] = at(1.2, i);
               return <g key={i}><line x1={cx} y1={cy} x2={u} y2={v} className="spoke" />
+                {[0.5, 1].map(k => { const [tx, ty] = at(k, i);
+                  return <text key={k} x={tx + 4} y={ty - 4} className="tick">{num(a.max * k)}</text>; })}
                 <text x={lx} y={ly} className="lab" textAnchor={lx < cx - 5 ? "end" : lx > cx + 5 ? "start" : "middle"}
                       dominantBaseline="middle">{a.label}</text></g>; })}
-            {sel.map((i, k) => { const r = rows[i], s = axes.map((_, j) => score(r, j));
-              const pts = s.map((v, j) => pt(v == null ? 0 : v, j));
-              return <g key={i}>
-                <polygon points={pts.map(x => x.join(",")).join(" ")} fill={pal[k] + "26"} stroke={pal[k]} strokeWidth="2"
-                         strokeDasharray={r.set === p.simSet ? "6 4" : ""} />
-                {pts.map((x, j) => s[j] == null ? null :
-                  <circle key={j} cx={x[0]} cy={x[1]} r="4" fill={pal[k]}><title>{r.name}, {axes[j].label}: {fmt(r, axes[j])}</title></circle>)}
-              </g>; })}
+            {refs.map((r, k) => shape(r, "#a8a69e", "2 4", "rgba(168,166,158,.08)", "ref" + k))}
+            {sel.map((i, k) => shape(rows[i], pal[k], rows[i].set === p.simSet ? "6 4" : "", pal[k] + "22", "s" + i))}
           </svg>
           <table><thead><tr><th></th>{axes.map(a => <th key={a.key}>{a.label}</th>)}</tr></thead>
-            <tbody>{sel.map((i, k) => <tr key={i}><th><span className="sw" style={{ background: pal[k] }} />{rows[i].name}</th>
-              {axes.map(a => <td key={a.key}>{fmt(rows[i], a)}</td>)}</tr>)}</tbody></table>
+            <tbody>
+              {refs.map((r, k) => <tr key={"r" + k} className="ref"><th><span className="sw" style={{ background: "#a8a69e" }} />{r.name} (clinical)</th>
+                {axes.map(a => <td key={a.key}>{fmt(r, a)}</td>)}</tr>)}
+              {sel.map((i, k) => <tr key={i}><th><span className="sw" style={{ background: pal[k] }} />{rows[i].name}</th>
+                {axes.map(a => <td key={a.key}>{fmt(rows[i], a)}</td>)}</tr>)}</tbody></table>
         </div>
       </div>
-      <div className="note">Outer is better. Each axis is scored 1-5 on a log scale between the best and worst value in the table; a missing value sits at the centre. Dashed outlines are simulations. Letters: {Object.entries(p.flags || {}).map(([a, b]) => a + " " + b).join(", ")}.</div>
+      <div className="note">Smaller is better: each axis runs in its own units from 0 at the centre to the rim, ticks at half and full scale. A value past the rim is pinned there, hollow, with its number. Grey dotted: the clinical reference. Dashed: simulations. A missing value sits at the centre. Letters: {Object.entries(p.flags || {}).map(([a, b]) => a + " " + b).join(", ")}.</div>
     </div>
   );
 }
@@ -616,6 +625,9 @@ DETRADAR_CSS = """
 .drad .ring { fill: none; stroke: rgba(127,127,127,.25); }
 .drad .spoke { stroke: rgba(127,127,127,.3); }
 .drad .lab { fill: #c3c2b7; font-size: 12px; }
+.drad .tick { fill: #898781; font-size: 9px; }
+.drad .over { font-size: 10px; font-weight: 600; }
+.drad tr.ref th, .drad tr.ref td { opacity: .75; font-style: italic; }
 .drad table { border-collapse: collapse; width: 100%; font-size: 12px; }
 .drad th, .drad td { padding: 3px 6px; border-bottom: 1px solid rgba(127,127,127,.2); text-align: right; white-space: nowrap; }
 .drad thead th { font-weight: 500; opacity: .8; }

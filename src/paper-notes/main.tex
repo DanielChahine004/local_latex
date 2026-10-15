@@ -4556,7 +4556,8 @@ unmarked is a measured FWHM, and
 	\item e --- a Gaussian equivalent the authors computed;
 	\item r --- a CTR against a fast reference crystal, not between two such
 		detectors; it flatters by about $\sqrt{2}$;
-	\item i --- an input to a simulation, not a result.
+	\item i --- an input to a simulation, not a result;
+	\item n --- no DOI: the whole crystal depth, for the clinical reference.
 \end{itemize}
 A dash is not reported. Prism-PET figures reject inter-crystal scatter first;
 monolith figures mostly do not. Builds quoting only a mean absolute error (Zhang
@@ -4640,6 +4641,26 @@ non-Compton FWHM); its scattered events, about 60\% of the total, follow
 further down. Razdevšek's DOI is the 2.5 mm layer as a Gaussian-equivalent
 FWHM; Petersen's is the multi-crystal events of a CNN, 1.0 mm for
 single-crystal ones.
+
+\paragraph{Clinical reference}
+What the detectors above are measured against: a current clinical scanner's
+detector, the Biograph Vision Quadra's \qtyproduct{3.2 x 3.2 x 20}{\mm} LSO
+pixels (Prenosil et al.\ 2021, J.\ Nucl.\ Med.\ 63:476, NEMA NU 2-2018), with no DOI (marked n: the whole crystal
+depth), its energy resolution at low count rate and its TOF resolution. Older
+photomultiplier systems sat near \ps{540}.
+
+\begin{center}
+\begin{scriptsize}
+\setlength{\tabcolsep}{1.5pt}
+\begin{tabular}{lllllllll}
+\hline
+Build & Detector & Readout & Depth mm & DOI mm & DOI/d \% & Trans. mm & Energy \% & CTR ps \\
+\hline
+Prenosil 2021 & LSO 3.2 mm pixels, Vision Quadra & single & 20 & 20 n & 100 & 3.2 p & 9.8 & 225 \\
+\hline
+\end{tabular}
+\end{scriptsize}
+\end{center}
 
 \paragraph{Scanners}
 The systems on this map built from such detectors, with what a detector table

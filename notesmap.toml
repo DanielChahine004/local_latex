@@ -114,13 +114,16 @@ demand = "Application demand"
 supply = "Architecture supply"
 
 # The leaderboard's detectors on a radar of the columns where lower is better,
-# each scored 1-5 on a log scale between the best and worst value present.
+# each linear in its own units from 0 at the centre to "max" at the rim, with
+# the clinical reference drawn behind every selection.
 [tables."Leaderboard/Radar"]
 at = [13470, 0, 1900, 1300]
 view = "detectors"
-sets = ["Measured builds", "Simulated detectors"]
+sets = ["Measured builds", "Simulated detectors", "Clinical reference"]
+reference = "Clinical reference"
 simulated = "Simulated detectors"
-axes = { "Trans. mm" = "Transverse", "DOI/d %" = "DOI / depth", "Energy %" = "Energy", "CTR ps" = "CTR" }
+axes = { "Trans. mm" = "Transverse (mm)", "DOI/d %" = "DOI / depth (%)", "Energy %" = "Energy (%)", "CTR ps" = "CTR (ps)" }
+max = { "Trans. mm" = 4, "DOI/d %" = 50, "Energy %" = 30, "CTR ps" = 600 }
 initial = ["LaBella 2021", "Borghi 2016", "Carra 2022"]
 flag_from = { "DOI/d %" = "DOI mm" }   # a layer width (L) marks the share it gives too
-flags = { p = "pitch", L = "layer width", b = "bin width", f = "flood fit", e = "Gaussian eq.", r = "vs reference", i = "sim input" }
+flags = { p = "pitch", L = "layer width", b = "bin width", f = "flood fit", e = "Gaussian eq.", r = "vs reference", i = "sim input", n = "no DOI" }

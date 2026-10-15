@@ -485,13 +485,15 @@ class Board:
     def _detector_radar(self, key: str, spec: dict, data: list[dict], have) -> None:
         """Rows of a table panel on a radar of chosen "lower is better" columns."""
         name = next(c for c in data[0] if c != "Set")
-        axes = [{"key": c, "label": l} for c, l in spec["axes"].items()]
+        axes = [{"key": c, "label": l, "max": spec["max"][c]} for c, l in spec["axes"].items()]
         rows = [{"name": r[name], "detector": r.get("Detector") or "", "set": r["Set"],
                  "v": {a["key"]: r.get(a["key"]) for a in axes},
                  "f": {a["key"]: r.get(f"_{spec.get('flag_from', {}).get(a['key'], a['key'])} flag", "")
                        for a in axes}} for r in data]
+        reference = [r for r in rows if r["set"] == spec.get("reference")]
+        rows = [r for r in rows if r["set"] != spec.get("reference")]
         initial = [i for i, r in enumerate(rows) if r["name"] in spec.get("initial", [])]
-        props = {"axes": axes, "rows": rows, "flags": spec.get("flags", {}), "initial": initial,
+        props = {"axes": axes, "rows": rows, "reference": reference, "flags": spec.get("flags", {}), "initial": initial,
                  "simSet": spec.get("simulated", ""), "scale": self.map_w / 4500 if self.map_mode else 1.0}
         if have is None:
             x, y, w, _ = spec["at"]

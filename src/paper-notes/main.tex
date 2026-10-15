@@ -1511,15 +1511,18 @@ Jens Maebe on the positioning-and-timing work.
 		block \ref{prog:Molecubes} ships.
 	\item Decuyper et al.\ 2021 PMB --- the positioning network
 		(\ref{note:Decuyper2021}). Kill (g).
-	\item Maebe \& Vandenberghe 2022 PMB --- joint position/timestamp.
-		\gap{Full citation; distinguish carefully from \ref{note:Carra2022}.}
+	\item Maebe \& Vandenberghe 2022, ``Simulation study on 3D convolutional
+		neural networks for time-of-flight prediction in monolithic PET
+		detectors using digitized waveforms'', PMB 67(12):125016 --- TOF
+		prediction, not joint position and timestamp.
 \end{itemize}
 
 \paragraph{Why it matters here}
-Everything \ref{prog:WTPET} claims at system level rests on two papers from
-this node, and they are measured rather than simulated: a real monolith at
-\mm{1.14} intrinsic over its whole face, and a network that beats nearest
-neighbour on it. If a thesis wants to contest the panel campaign, this is
+Much of what \ref{prog:WTPET} claims at system level rests on this node: a
+real monolith at \mm{1.14} intrinsic over its whole face, with a network that
+slightly beats nearest neighbour on it, both measured
+(\ref{note:Stockhoff2021}, 1.14 against \mm{1.17}); and a simulated ceiling for
+network positioning (\ref{note:Decuyper2021}). If a thesis wants to contest the panel campaign, this is
 where the contestable number actually lives --- not in the system simulations,
 which only inherit it.
 
@@ -1540,14 +1543,14 @@ Marcinkowski, Keereman, Vandenberghe, Van Holen.
 Sub-millimetre small-animal PET from thin monolithic LYSO slabs on digital
 SiPMs: the thin slab trades stopping power for a light distribution narrow
 enough to localise below a millimetre without DOI. The first monolithic
-scanner in the Ghent line, and the preclinical detector that the WT-PET block
-descends from by way of the Pisa block (\ref{note:Carra2022}).
-\gap{Unread. Slab dimensions, the positioning method (nearest-neighbour as at
-Delft, or otherwise), the resolution and sensitivity figures, and whether the
-thin-slab choice is argued as a cost or a resolution decision.} From the
-figure: a \mm{13} thick LYSO slab, \mm{38.5} across the back and \mm{34.5}
-of active face, on a dSiPM array, two opposed detectors on a printed frame
-with a cooling fan each.
+scanner in the Ghent line. Four \qtyproduct{32 x 32 x 2}{\mm} LYSO detectors
+in a square, \mm{34.5} between opposite ones, each on a dSiPM module (the
+figure's \mm{13} and \mm{38.5} label the module, not the crystal), with a fan
+each. Positioning is maximum likelihood. Intrinsic resolution \mm{0.54} FWHM,
+\mm{0.7} at the centre of the field; sensitivity 0.3\% (400--\keV{600}) or
+0.6\% (250--\keV{650}); CRT \ps{680}; energy 18\%; ``no relevant DOI
+effect'' in \mm{2}. The thin slab is argued on cost: thin unpixelated crystals
+are cheap, and fine pixels make systems expensive.
 
 \end{papernote}
 
@@ -1596,8 +1599,9 @@ This is the block the walk-through work scales up from
 \ref{note:Decuyper2021} positions in simulation --- so the lineage's
 detector, measured. Note the size: \qtyproduct{50 x 50 x 16}{\mm} here
 against the \qtyproduct{25.4 x 25.4 x 8}{\mm} block
-\ref{prog:Molecubes} sells, which settles which detector the WT-PET paper
-means by its ``existing monolithic detector''.
+\ref{prog:Molecubes} sells. That smaller block is the one the WT-PET paper
+means by its ``existing preclinical monolithic detectors [18]'' (the
+$\beta$-CUBE, \ref{note:Krishnamoorthy2018}), scaled up by two to this size.
 
 \end{papernote}
 
@@ -1620,7 +1624,9 @@ positions --- which the larger networks do.
 
 \paragraph{Key Findings}
 Median 3D positioning error \mm{0.77} and 2D FWHM \mm{0.46}, a
-\qty{17}{\percent} improvement in FWHM on nearest neighbour; restricted to
+\qty{17}{\percent} improvement in FWHM on nearest neighbour at the detector
+centre with the same 16-channel readout (11\% over the whole detector, against
+a 32-channel network); restricted to
 non-Compton events, \mm{0.40} and \mm{0.42}. Continuous DOI comes from one
 more output neuron, about 46\% better than nearest neighbour's six layers;
 inference runs at 21 million events per second on one RTX 2080 Ti.
@@ -1681,8 +1687,12 @@ patient upright between two flat panels of monolithic detectors instead of
 lying them inside a cylinder, and buy resolution and sensitivity with
 proximity rather than with crystal. Walk-through PET site:
 \url{https://www.wt-pet.org/}. The detector is not its own --- it is the
-\qtyproduct{50 x 50 x 16}{\mm} block of \ref{note:Stockhoff2021}, assumed at
-\ps{300} CTR and \mm{2.67} DOI throughout.
+\qtyproduct{50 x 50 x 16}{\mm} block of \ref{note:Stockhoff2021}, but its
+assumed performance varies by paper: \ref{note:Vandenberghe2023} takes \ps{600}
+for BGO and \ps{300} for LYSO; \ref{note:Dadgar2023} uses \mm{1.3} 2D, \mm{2}
+DOI and \ps{327} cited from Carra 2022; \ref{note:AbiAkl2023} models \ps{200}
+with Stockhoff's blurring; only \ref{note:AbiAkl2025} and
+\ref{note:Dhaenens2026} use \mm{1.14}, \mm{2.67} and \ps{300}.
 \gap{Funding and project status. The site reads like a funded project with a
 named grant; find it, because ``a funded programme'' and ``a series of
 simulation papers'' are different claims and this node currently asserts
@@ -1725,7 +1735,7 @@ rhetorical.
 
 \paragraph{Scope boundary}
 This node is system geometry. Detector physics, including the \mm{1.14} the
-whole campaign assumes, is \ref{prog:Ghent}; the productised preclinical
+later papers assume, is \ref{prog:Ghent}; the productised preclinical
 scanner is \ref{prog:Molecubes}.
 
 \begin{papernote}{Vandenberghe et al.\ 2020 -- State of the art in total body PET}{Vandenberghe2020}
@@ -1798,14 +1808,16 @@ LSO cylinder: spatial resolution, sensitivity, count rate, scatter fraction
 and image quality. The DOI-capable monolithic panels hold resolution below
 \mm{2} in the directions parallel to the panels but reach \mm{3.36}
 perpendicular to them; peak sensitivity \qty{154}{cps\per\kilo\becquerel},
-against a cylinder that is coarser in resolution but more sensitive overall
-and free of the positioning constraint.
-\gap{Unread. The perpendicular \mm{3.36} is the number the panel geometry
-has to defend --- read how they attribute it, DOI layers against panel gap.}
+against a cylinder that is coarser in resolution, more sensitive only with
+no ring-difference cut (179.7 against 154 at MRD 322; 87.0 at MRD 85), and free
+of the positioning constraint. The \mm{3.36} is the worst case, a point near a
+panel at 3/8 of the axial field; the authors put it down to limited projection
+angles. DOI is modelled as continuous Gaussian smearing (about \mm{2} FWHM),
+not layers.
 
 \paragraph{Why it matters here}
 The honest self-assessment of the panel trade, from the group that proposed
-it. Note the authorship: Dadgar leads, Vervenne is fourth --- the reading
+it. Note the authorship: Dadgar and Maebe are joint first, Vervenne is fourth --- the reading
 list had this as ``Vervenne \& Vandenberghe''.
 
 \end{papernote}
@@ -1907,10 +1919,11 @@ to suppress them.
 attenuation, while \ref{note:AbiAkl2025} quotes
 \qty{26}{\kilo cps\per\mega\becquerel} on its own figure of merit. The units
 are interconvertible and the numbers are not; do not put them in one table.}
-\gap{Unread beyond the abstract and the stated geometry. No cost figure and no
-detector-count saving is given anywhere, despite ``low-cost'' in the title ---
-224 modules against the walk-through's count is the comparison the claim needs.
-Also worth reading for what the legs' \qty{0.52}{cps\per\kilo\becquerel}
+Detector count is argued, cost is not: 224 detectors against 225 for a
+standard cylinder, 1008 for the reference flat panels and 560 for the
+original walk-through design, for \cm{190} of coverage; the conclusion claims
+only a ``slightly reduced component cost''.
+\gap{Worth reading for what the legs' \qty{0.52}{cps\per\kilo\becquerel}
 means clinically, and how the lateral sweep is scheduled against tracer
 kinetics.}
 
@@ -1944,7 +1957,7 @@ A Ghent University spin-off selling benchtop preclinical scanners as a family
 of stacking cubes: the $\beta$-CUBE (PET), $\gamma$-CUBE (SPECT) and X-CUBE
 (CT). \url{https://www.molecubes.com/}. The $\beta$-CUBE is the monolithic
 lineage of \ref{prog:Ghent} turned into a product --- monolithic LYSO with
-DOI, neural-network positioning, sold rather than demonstrated. Acquired by
+DOI, maximum-likelihood clustering positioning, sold rather than demonstrated. Acquired by
 Bruker on 19 November 2021 and run inside its BioSpin preclinical imaging
 division; over 70 systems installed by then, on about 5 million euro of
 2020 revenue.
@@ -2007,8 +2020,9 @@ peak sensitivity \qty{10.2}{\percent}.
 
 \paragraph{Why it matters here}
 Two things nothing else gives. First, ``statistical event positioning on a
-GPU'' is the only published word on how the shipped product positions events
---- the calibration question this node keeps asking, answered to one phrase.
+GPU'' --- which \ref{note:Krishnamoorthy2018} spells out as maximum-likelihood
+clustering against a light-spread model per DOI layer, calibrated with a
+\um{400} collimated beam on a 3D robot stage.
 Second, the numbers disagree with the independent measurement a year later:
 \qty{10.2}{\percent} peak sensitivity here against
 \qty{12.4}{\percent} in \ref{note:Krishnamoorthy2018}, uniformity
@@ -2028,7 +2042,7 @@ together: \ref{prog:Penn} measuring the spin-off's scanner.
 
 \paragraph{Detector}
 \mm{8} thick monolithic LYSO read out by an array of \qtyproduct{3 x 3}{\mm}
-Hamamatsu SiPMs, giving DOI; five monolithic blocks
+Hamamatsu SiPMs (\mm{3.2} in the body and Table 1), giving DOI; five monolithic blocks
 (\qtyproduct{25.4 x 25.4 x 8}{\mm} each) to a module.
 \cm{13} axial FOV, \cm{7.6} bore --- total-body mouse in one bed position.
 Nine modules to the ring, \mm{76} inner diameter, \cm{13.3} axial FOV, five
@@ -2036,21 +2050,24 @@ blocks to a module (\ref{note:Mollet2017}); the journal paper rounds the
 axial FOV to \cm{13}.
 
 \paragraph{Key Findings}
-\mm{1} FWHM at the centre with filtered back-projection, and \mm{1}
-volumetric resolution; absolute peak sensitivity \qty{12.4}{\percent} in a
+\mm{1.06} radial FWHM at the centre with filtered back-projection (\mm{1.1}
+averaged there), and \mm{1} volumetric resolution; detector resolution
+\mm{0.78} over the central 80\% of a block, \mm{0.9} over all of it; energy
+resolution 12\%; five DOI layers, \mm{1.6}; absolute peak sensitivity \qty{12.4}{\percent} in a
 \qtyrange{255}{765}{\kilo\electronvolt} window; peak NEC
 \qty{300}{\kilo cps} for the mouse phantom and \qty{160}{\kilo cps} for the
 rat; uniformity \qty{7.4}{\percent}, spill-over ratio \qty{8}{\percent},
 about \qty{70}{\percent} contrast recovery on the \mm{2} rods.
-\gap{Unread beyond the abstract. Read for the positioning method as shipped,
-the energy resolution figure, and how the \mm{1} is defined --- FBP at the
-centre is the friendliest case.}
+Positioning is maximum-likelihood clustering against a light-spread model
+trained per DOI layer, calibrated with a \um{400} collimated \keV{511} beam.
+Peak sensitivity at the default $\pm$15\% window is 5.7\%; the NEC is at
+that window.
 
 \paragraph{Why it matters here}
 The number to beat, and the one a reviewer will reach for: a monolithic
 preclinical PET with \mm{1} resolution and \qty{12.4}{\percent} sensitivity,
-measured by an independent group (Karp and Surti at Penn) rather than by the
-makers.
+measured largely by an outside group (Karp and Surti at Penn), though
+Mollet and Van Holen of MOLECUBES are co-authors.
 
 \end{papernote}
  
@@ -4619,8 +4636,8 @@ if it beats simply including both lines.
 The clinical systems a monolithic or DOI detector has to beat, kept as a
 reference rather than a research line: four NEMA NU 2 evaluations chosen to
 span the field. Siemens Healthineers' Biograph Vision 600 and its long-axial
-Quadra share one LSO detector, the best timing in clinical use; United
-Imaging's uEXPLORER has the finest pitch and the longest field; GE
+Quadra share one LSO detector, the best timing of the four; United
+Imaging's uEXPLORER has the finest pitch of the four and the longest field; GE
 HealthCare's Omni Legend is BGO without TOF. All are pixelated, read out at
 one end, and have no DOI; together they are the \ref{prog:Leaderboard}'s
 clinical reference band.
@@ -4633,8 +4650,9 @@ The detector figures that a new architecture is compared against, from NEMA
 measurements rather than datasheets. Transverse resolution is set by the pitch
 (2.8--\mm{4.1}) and the depth error by the whole crystal (18--\mm{30}), so the
 room a monolith has to win is mostly in depth. On timing the clinical range is
-wide: \ps{210} on the Vision is matched on this map only by the best monoliths,
-\ref{note:Carra2022} and \ref{note:Borghi2016}, while \ps{505} on the
+wide: \ps{210} on the Vision is matched on this map only by
+\ref{note:Carra2022} (\ps{156}), \ref{note:Pizzichemi2019} (\ps{157}, light
+sharing) and \ref{note:Borghi2016} (\ps{214}), while \ps{505} on the
 uEXPLORER is beaten by most of them, and the Omni Legend has no TOF at all.
 
 \begin{papernote}{Prenosil et al.\ 2021 -- Performance characteristics of the Biograph Vision Quadra PET/CT system with a long axial field of view using the NEMA NU 2-2018 standard}{Prenosil2021}
@@ -4660,7 +4678,7 @@ mini block), eight mini blocks to a block, 38 blocks to a ring and 32 rings ---
 	\item TOF \ps{225} at low activity, \ps{228} at peak NECR (MRD 85);
 		energy resolution 9.8\% at low activity, 10.1\% at peak NECR, 8.9\%
 		with a \textsuperscript{68}Ge source and no scatter.
-	\item Contrast recovery 70--87\% at 4:1 and 78--93\% at 8:1 with PSF-TOF;
+	\item Contrast recovery 70--87\% at 4:1 and 75--93\% at 8:1 with PSF-TOF (Table 6; the abstract says 77.7\%);
 		30-second frames still gave readable clinical images.
 \end{itemize}
 
@@ -4676,7 +4694,7 @@ it sits in no detector table.
 \thumb{img/vansluis2019.png}
 J.\ Nucl.\ Med.\ 60(7):1031--1036, \doi{10.2967/jnumed.118.215418}. van Sluis,
 de Jong, Schaar, Noordzij, van Snick, Dierckx, Borra, Willemsen, Boellaard ---
-University Medical Center Groningen, on the first Vision installed.
+University Medical Center Groningen.
 
 \paragraph{Detector}
 The Quadra's detector at standard length: \qtyproduct{3.2 x 3.2 x 20}{\mm} LSO
@@ -4713,8 +4731,8 @@ Jones, Badawi, Cherry --- UC Davis with United Imaging Healthcare.
 Eight PET units, \cm{194} axial and \cm{78.6} across. Blocks of 7 x 6
 \qtyproduct{2.76 x 2.76 x 18.1}{\mm} LYSO crystals read by four
 \qtyproduct{6 x 6}{\mm} SiPMs through a light guide (Anger multiplexing,
-10.5:1) --- 564\,480 crystals on 53\,760 channels. Neighbouring blocks across
-the ring share energy, so a photon that Compton-scatters out of an edge crystal
+10.5:1) --- 564\,480 crystals on 53\,760 channels. Transaxially adjacent
+blocks within a module share energy (axial ones do not), so a photon that Compton-scatters out of an edge crystal
 is recovered rather than lost. Window 430--\keV{645}.
 
 \paragraph{Key Findings}
@@ -4733,8 +4751,8 @@ length. The inter-block scatter recovery is a clinical scanner keeping
 inter-crystal scatter events, the ones Prism-PET discards.}
 
 \paragraph{Why it matters here}
-The opposite corner from the Vision: the finest pitch and the longest field of
-any clinical scanner, with timing a monolithic build already beats. And a
+The opposite corner from the Vision: the finest pitch of these four and the
+longest field of any clinical scanner, with timing a monolithic build already beats. And a
 calibration problem a monolith would make larger: TOF across 564\,480 crystals
 is not yet calibrated, and a monolith calibrates positions as well.
 \end{papernote}
@@ -4822,11 +4840,12 @@ Zeng 2024 & LYSO 1.5 mm, tapered Prism & single & 20 & 2.52 & 13 & 1.6 p & 8.9 &
 LaBella 2020 & LYSO 1.4 mm, Prism & single & 20 & 2.5 & 13 & 1.6 p & 9 & -- \\
 Zhang 2021 & LYSO 1.37 mm slabs & dual & 20 & 2.60 & 13 & 1.97 & 21.7 & 718 r \\
 Zeng 2023 & LYSO 1.5 mm, Prism scanner & single & 20 & 2.85 & 14 & 1.22 & 12.6 & 271 \\
-Carra 2022 & LYSO monolith & single & 8 & 1.55 & 19 & 0.78 & 11 & 156 \\
 Zhang 2019 & LYSO 1 mm slabs, painted & single & 10 & 1.55 & 16 & 1.07 & 24.9 & 788 r \\
 Gsell 2020 & LYSO monolith, 50 mm & single & 10 & 1.6 f & 16 & -- & 16.6 & -- \\
 Kinyanjui 2025 & LYSO 0.96 mm slabs, XGBoost & single & 10 & 1.67 & 17 & 0.92 & -- & -- \\
 Borghi 2016 & LYSO monolith, 32 mm & single & 22 & 3.73 & 17 & 1.68 & 9.9 & 214 \\
+Freire 2022 & LYSO annulus & single & 10 & 1.8 f & 18 & -- & 23.4 & -- \\
+Carra 2022 & LYSO monolith & single & 8 & 1.55 & 19 & 0.78 & 11 & 156 \\
 Pizzichemi 2019 & LYSO 1.53 mm, sharing & single & 15 & 3 & 20 & 1.6 p & 8.9 & 157 \\
 Kinyanjui 2026 & LYSO 0.96 mm slabs, painted & single & 10 & 2.14 & 21 & 1.68 & 17.4 & 3340 r \\
 Kuang 2026 & GAGG 0.96 mm slabs & single & 10 & 2.33 & 23 & 1.60 & 15.6 & 4300 r \\
@@ -4836,16 +4855,15 @@ Cucarella 2026 & LYSO 0.97 mm slabs, 25.6 mm & single & 12 & 3.08 & 26 & 1.7 & 1
 Pizzichemi 2016 & LYSO 1.53 mm, sharing & single & 15 & 4.1 & 27 & 1.6 p & 12.7 & 353 \\
 Freire 2026 & LYSO curved monolith & single & 12.5 & 3.6 & 29 & -- & 19 & -- \\
 Moliner 2012 & LYSO monolith, MAMMI & single & 10 & 4 & 40 & 1.6 & 18 & -- \\
-Freire 2022 & LYSO annulus & single & 10 & 1.8 f & 18 & -- & 23.4 & -- \\
 \hline
 Yamaya 2011 & LYSO 1 mm cubes, X'tal cube & 6 faces & 16 & 1 L & 6 & 1 p & 12.7 & -- \\
 Stockhoff 2021 & LYSO monolith, 50 mm & single & 16 & 2.67 L & 17 & 1.14 & 11.0 & -- \\
 Gillam 2014 & LYSO 3 mm axial, 6 layers & SiPM & 18 & 3 L & 17 & 3 p & 11.8 & -- \\
-β-CUBE & LYSO monolith, 8 mm & single & 8 & 1.6 L & 20 & 0.78 & 12 & -- \\
+Krishnamoorthy 2018 & LYSO monolith, β-CUBE & single & 8 & 1.6 L & 20 & 0.78 & 12 & -- \\
 Peng 2019a & LYSO monolith, 4 stacked layers & 4 sides & 13.4 & 3.36 L & 25 & 1.1 & 10.3 & 348 r \\
 Lee 2026 & BGO semi-monolith & single & 20 & 5 b & 25 & 3.17 & 21 & 172 r \\
 Kang 2023 & LYSO 0.9 mm, 3 layers & SiPM & 15 & 5 L & 33 & 1 p & 24.3 & 9500 \\
-Cates 2024 & BGO monolith & single & 15 & -- & -- & -- & 17.6 & 237 r \\
+Cates 2024 & BGO monolith & single & 15 & -- & -- & -- & 17.6 & 315 \\
 Xu 2019 & LYSO ring monolith & 2 rings & 5 & -- & -- & 1.44 & 10.7 & -- \\
 \hline
 \end{tabular}
@@ -4866,8 +4884,8 @@ rather than a result it is marked i.
 Build & Detector & Readout & Depth mm & DOI mm & DOI/d \% & Trans. mm & Energy \% & CTR ps \\
 \hline
 Decuyper 2021 & LYSO monolith, unscattered & single & 16 & 0.71 & 4 & 0.42 & -- & -- \\
-Li 2012 & LYSO monolith, cMiCE SES & entrance & 15 & 1.52 & 10 & 0.91 & -- & -- \\
 Razdevšek 2025 & LSO 3 mm pixels, 8 layers & ideal & 20 & 1.7 e & 9 & 3 p & 10 i & 70 i \\
+Li 2012 & LYSO monolith, cMiCE SES & entrance & 15 & 1.52 & 10 & 0.91 & -- & -- \\
 Decuyper 2021 & LYSO monolith, scattered & single & 16 & 1.80 & 11 & 0.66 & -- & -- \\
 Petersen 2020 & LYSO 1.4 mm, Prism, ICS & single & 20 & 2.1 & 11 & 1.4 p & 10 i & -- \\
 Peng 2019 & LYSO monolith, 4 stacked layers & 4 sides & 13.4 & 3.36 L & 25 & 0.40 & 9.3 & -- \\
@@ -4982,16 +5000,17 @@ The Vision 600 paper gives a \mm{780} bore rather than the ring.
 
 \paragraph{Reading it}
 Dual-ended readout and Prism-PET's deterministic light guide hold the top at
-\mm{20}; the best single-ended figure is Prism-PET with a CNN, \mm{1.84}, which
+\mm{20}; the best single-ended figure at that depth (and by DOI/d) is Prism-PET
+with a CNN, \mm{1.84}, which
 its authors call the best reported for a single-ended module. Measured monoliths
 sit lower: their best DOI comes from thin blocks (Carra, \mm{8}), and at
 15--\mm{16} they report 3--\mm{4} or layers. Footnotes the table cannot carry:
 Pizzichemi 2019's \mm{3} DOI is cited from earlier work, Freire 2026's figures
 are partly system-level, Xu 2019's transverse is the angle FWHM before its
-authors' half-difference correction (\mm{0.94} after) and it has no depth at all, Freire 2026 has no TOF, Stockhoff's six
-layers are unequal (\mm{2.67} is their mean), and Kang 2023's \ns{9.5} is the
+authors' half-difference correction (\mm{0.94} after) and it has no depth at all, Freire 2026 has no TOF, Stockhoff never states its six layers' thickness (\mm{2.67} is
+16/6, as the later WT-PET papers take it), and Kang 2023's \ns{9.5} is the
 whole system's timing resolution, an order of magnitude outside TOF; its
-three layers are 4, 4 and \mm{7}, so \mm{5} is their mean. The $\beta$-CUBE's depth is five
+three layers are 4, 4 and \mm{7}, so \mm{5} is their mean. Krishnamoorthy 2018's ($\beta$-CUBE) depth is five
 layers in \mm{8} (its \mm{1.6} is the layer width), its \mm{0.78} transverse
 is the paper's average over the central 80\% of the block (\mm{0.9} over all of
 it; the vendor abstract, \ref{note:Mollet2017}, gives \mm{0.76}), and it reports
@@ -5005,9 +5024,10 @@ Prism-PET's transverse is the \mm{1.6} pitch: \mm{1.4} crystals with
 Fig.\ 2, and LaBella 2020's 9\% is after DOI correction (14\% before). Ren
 2014's 22\% is the geometric-mean energy (30\% summed). Moliner 2012's detector
 figures and Gillam 2014's energy are cited from earlier papers, not measured
-there. Cates 2024's \ps{237} is the fast, Cherenkov-carrying half of its
-events against an LYSO reference; between two such detectors the authors
-estimate \ps{315}. No CTR is reported for any row left blank: those papers give a
+there. Cates 2024's \ps{315} is the authors' estimate between two such
+detectors for the fast, Cherenkov-carrying half of its events (\ps{237}
+measured against an LYSO reference), unflagged like Carra's and Borghi's
+reference-corrected figures. No CTR is reported for any row left blank: those papers give a
 coincidence window or nothing.
 
 \end{programnote}
@@ -5075,13 +5095,14 @@ Thick monolith & 4 & 3 & 5 & 3 & 2 & 3 & 3 & 3 \\
 The fit of a detector to a use weights each axis by how much the use cares,
 \[ \mathrm{fit} = \frac{\sum_i d_i \min(s_i, d_i)}{\sum_i d_i^2}, \]
 where $d$ is demand and $s$ supply, so 100\% means no axis falls short and a shortfall costs most where the
-demand is highest. The supply ratings lean on the leaderboard: pixelated
+demand is highest. The supply ratings are judgements informed by the leaderboard, not read off
+it: pixelated
 blocks without DOI are the clinical baseline, fast and cheap to scale but
 blind to depth; Prism-PET buys DOI and energy resolution with the scatter it
-rejects; dual-ended readout has the best DOI and the worst timing and cost;
-monoliths keep the scattered counts and position continuously, but spread
-their light, which costs timing and count rate, and need calibration that
-quantification must trust. A thick monolith that recovered its
+rejects; dual-ended readout has among the best DOI, with poor timing and higher cost;
+monoliths keep the scattered counts and position continuously, but their
+timing and positioning depend on modelling the spread light, and they need
+calibration that quantification must trust. A thick monolith that recovered its
 multi-interaction events and its timing would move its supply polygon
 outward on exactly the axes where it falls short --- which is the thesis.
 
@@ -5112,7 +5133,8 @@ joint pattern of per-channel arrival times and counts, in a continuous crystal.
 Energy-only layer sequencing, 69.2\% by closest layer and 81.3\% with the
 backscatter swap for two-layer events (\ref{note:Peng2019}); the experiment
 gave up sequencing for a max-energy rule (\ref{note:Peng2019a}). First crystal
-recovered for 88\% of multi-crystal events with a fixed-pattern decomposition
+recovered for 88\% of multi-crystal events by a CNN on the readout pattern, in
+simulation; the analytical decomposition only finds which crystals fired (99\%)
 (\ref{note:Petersen2020}). Both need optical isolation; neither uses time.
 Learned crystal-pair selection on plain light sharing falls from 91\% to
 35\% as pitch shrinks (\ref{note:Lee2021}); Klein--Nishina selection did no
@@ -5139,7 +5161,7 @@ same structure at fine pitch, where 4-to-1 patterns overlap and learned
 selection degrades (\ref{note:Lee2021}). The monolith's counter is continuous
 position, more light per channel, and arrival times. Test it directly: same
 LYSO thickness (\mm{20}) and photosensor budget, a Prism-PET array with
-pattern decomposition against a monolith with time-and-count estimation, both
+pattern decoding against a monolith with time-and-count estimation, both
 scored on first-interaction recovery for multi-site events, then on the
 effective sensitivity it buys once mis-ordered lines are counted as blur, not
 signal (\ref{note:Gillam2014} found recovered events worth 5--10\%, not their
@@ -5170,11 +5192,13 @@ the gamma arrival time profiled rather than aligned away.
 
 \paragraph{To beat}
 The single-vertex, time-only depth bound of \ref{note:LoignonHoule2021}, which
-treats photons as i.i.d., fixes the count and removes $\theta$ by alignment;
+treats photons as i.i.d., fixes the count and fixes $\theta$ arbitrarily (it
+shifts every DOI density equally), aligning the densities by a depth-wise onset
+offset;
 its transport density comes from \ref{note:Cates2015}, whose measured
 counterpart is the per-voxel first-photon delay of \ref{note:Lee2026}. The
-resolution limit for two point sources in \ref{note:Ram2006} is the template
-for the two-vertex form.
+Fisher-information resolution limit for two point sources in
+\ref{note:Ram2006} is the template for the two-vertex form.
 
 \paragraph{Simulation}
 Analytic or Monte Carlo transport densities per voxel; compute the bound as a
@@ -5188,9 +5212,13 @@ first's information. Split the question three ways.
 	\item \textbf{One vertex or two?} A detection question, not estimation:
 		bound the error probability with the Bhattacharyya coefficient $B$
 		between the two hypotheses' likelihoods,
-		$P_e \ge \tfrac12\bigl(1-\sqrt{1-B^2}\bigr)$, or a Chernoff bound. This
-		is resolvability in the statistical-resolution sense
-		(\ref{note:Ram2006}).
+		$P_e \ge \tfrac12\bigl(1-\sqrt{1-B^2}\bigr)$ for equal priors (in
+		general $\tfrac12\bigl(1-\sqrt{1-4\pi_0\pi_1B^2}\bigr)$), or a
+		Chernoff bound. This is resolvability in the hypothesis-test sense of
+		Shahram and Milanfar; \ref{note:Ram2006} is the Fisher-information
+		view of the same limit.
+		\gap{Shahram \& Milanfar's statistical-resolution papers, about
+		2004--2006, IEEE TSP/TIP: full citation.}
 	\item \textbf{Which came first?} A binary hypothesis given two vertices;
 		the same error bounds. Feeds the ordering idea
 		(\ref{note:IdeaOrdering}).
@@ -5210,8 +5238,9 @@ first's information. Split the question three ways.
 \paragraph{Against Prism-PET}
 Same bound family on both sides, or the comparison is between different
 objects. Prism-PET's crystal index is discrete, so a CRLB is undefined for it;
-the Ziv--Zakai bound is built from error probabilities and takes discrete and
-continuous parameters together, so it bounds first-interaction MSE,
+the Ziv--Zakai bound is built from error probabilities and, with a discrete
+prior on the crystal index, can take discrete and continuous parameters together
+\gap{source for the mixed discrete--continuous ZZB}, so it bounds first-interaction MSE,
 mis-assignments included, for both detectors (mutual information in bits is
 the alternative currency). One forward model serves both: per-channel Poisson
 counts with means $\sum_k E_k\,\mathrm{LRF}(\mathbf{x}_k)$ and arrival-time
@@ -5244,7 +5273,7 @@ Evaluate the bound per real GATE event and report its distribution by $K$,
 not only a synthetic separation sweep.
 \begin{itemize}
 	\item \textbf{What a site is.} GATE steps must be clustered into sites
-		(recoil-electron range, the \keV{55} Lu K x-ray); the clustering
+		(recoil-electron range, the 54--\keV{63} Lu K x-rays); the clustering
 		radius moves the answer, so report it and its effect.
 	\item \textbf{Validate the sum} against full GATE optics on a few dozen
 		multi-site events: linearity, interpolation, and the SiPM effects
@@ -5305,7 +5334,8 @@ estimation, stacked thin slabs, and rings mixing thin and thick blocks, on
 resolution, sensitivity and multi-interaction recovery.
 
 \paragraph{To beat}
-Four \mm{3.16} layers: \mm{0.40} simulated, \mm{1.1} measured
+Four layers (\mm{3.16} simulated, \mm{2.76} built): \mm{0.40} simulated,
+\mm{1.1} measured
 (\ref{note:Peng2019}, \ref{note:Peng2019a}). Mixed 2 and \mm{10} rings:
 0.6--\mm{0.9} with 40\% less crystal than uniform \mm{10}
 (\ref{note:Sanaat2020}). A \mm{16} monolith: \mm{1.14} measured
@@ -5336,8 +5366,8 @@ tails, at 70 and \ps{300}.
 DOI saturates at \mm{2.5} (8 layers in \mm{20}; about \mm{1.7} as a
 Gaussian FWHM) for \ps{70} panels (\ref{note:Razdevsek2025}); the WT-PET panels assume \mm{2.67} DOI at \ps{300}
 (\ref{prog:WTPET}); a \mm{16} monolith measures 6-layer DOI and
-\mm{1.14} intrinsic (\ref{note:Stockhoff2021}). Ideal layers have no scatter
-tails, so the question is whether a monolith's mean DOI error passes \mm{2.5}
+\mm{1.14} intrinsic (\ref{note:Stockhoff2021}). Ideal layers have no decoding error and place multi-site events at their
+energy centroid, so the question is whether a monolith's mean DOI error passes \mm{2.5}
 while its multi-interaction tails (\ref{note:Decuyper2021}) still cost image
 quality.
 \end{papernote}
@@ -5348,9 +5378,13 @@ Rerun any arrival-time estimator from the cards above under different surface
 models and interface defects, against the same estimator on counts.
 
 \paragraph{To beat}
-A \mm{0.05} overhang of crystal past the SiPM degraded oTOF depth by 2.6 times
-and energy depth by only 1.35 (\ref{note:Zeng2024}). UNIFIED overestimates
-light by up to 38\% against measured-surface LUTs (\ref{note:Roncali2013}),
+The \mm{1.5} cuboid module, whose crystal overhangs the SiPM by \mm{0.05}, has
+2.6 times the tapered module's oTOF depth error and only 1.35 times its energy
+depth error in centre crystals, though taper differs too; the authors put about
+20\% of the DOI loss on the light leak (\ref{note:Zeng2024}). UNIFIED
+overestimates light by up to 38\% against measurement (rough
+\qtyproduct{2 x 2 x 20}{\mm}, no reflector), where measured-surface LUTs agree
+(\ref{note:Roncali2013}),
 and a gamma-only model missed by \mm{0.3} where light-sharing decoding errors
 dominate (\ref{prog:QST}).
 \end{papernote}
@@ -5374,10 +5408,8 @@ rather than pure statistics.}
 \end{papernote}
  
 \begin{papernote}{Barrett \& Myers -- Foundations of Image Science / ideal observer}{BarrettMyers}
-\gap{Reference work, not a paper. Also track down the 2012 application of
-Cramér-Rao bounds to monolithic PET that killed the four-interface taxonomy ---
-full citation needed, and it should be read properly rather than remembered as
-a kill.}
+\gap{Reference work, not a paper.} The 2012 application of Cramér-Rao bounds
+to monolithic PET is \ref{note:Li2012} (cMiCE).
 \end{papernote}
  
 \begin{papernote}{Array processing -- source resolution limits in DOA estimation}{DOAResolution}

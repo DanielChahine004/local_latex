@@ -4756,7 +4756,7 @@ Xie 2026 & LYSO 0.44 mm pixels & dual & 20 & 1.78 & 9 & 0.5 p & 22 & 1100 \\
 LaBella 2021 & LYSO 1.4 mm, Prism + CNN & single & 20 & 1.84 & 9 & 1.6 p & 8.7 & -- \\
 Ren 2014 & LSO 1.5 mm, unpolished & dual & 20 & 1.9 & 10 & 1.5 p & 22 & -- \\
 Kuang 2020 & LYSO 1 mm pixels, aPET & dual & 20 & 1.96 & 10 & 1 p & 19.1 & 1200 r \\
-Zeng 2024 & LYSO 1.5 mm, tapered Prism & single & 20 & 2.25 & 11 & 1.5 p & 8.9 & 243 \\
+Zeng 2024 & LYSO 1.5 mm, tapered Prism & single & 20 & 2.25 & 11 & 1.6 p & 8.9 & 243 \\
 LaBella 2020 & LYSO 1.4 mm, Prism & single & 20 & 2.5 & 13 & 1.6 p & 9 & -- \\
 Zhang 2021 & LYSO 1.37 mm slabs & dual & 20 & 2.60 & 13 & 1.97 & 21.7 & 718 \\
 Zeng 2023 & LYSO 1.5 mm, Prism scanner & single & 20 & 2.85 & 14 & 1.22 & 12.6 & 271 \\
@@ -4778,7 +4778,7 @@ Moliner 2012 & LYSO monolith, MAMMI & single & 10 & 4 & 40 & 1.6 & 18 & -- \\
 Yamaya 2011 & LYSO 1 mm cubes, X'tal cube & 6 faces & 16 & 1 L & 6 & 1 p & 12.7 & -- \\
 Stockhoff 2021 & LYSO monolith, 50 mm & single & 16 & 2.67 L & 17 & 1.14 & 11.0 & -- \\
 Gillam 2014 & LYSO 3 mm axial, 6 layers & SiPM & 18 & 3 L & 17 & 3 p & 11.8 & -- \\
-β-CUBE & LYSO monolith, 8 mm & single & 8 & 1.6 L & 20 & 0.76 & 12 & -- \\
+β-CUBE & LYSO monolith, 8 mm & single & 8 & 1.6 L & 20 & 0.78 & 12 & -- \\
 Peng 2019a & LYSO monolith, 4 stacked layers & 4 sides & 13.4 & 3.36 L & 25 & 1.1 & 10.3 & 348 \\
 Lee 2026 & BGO semi-monolith & single & 20 & 5 b & 25 & 3.17 & 21 & 172 r \\
 Kang 2023 & LYSO 0.9 mm, 3 layers & SiPM & 15 & 5 L & 33 & 1 p & 24.3 & 9500 \\
@@ -4923,11 +4923,12 @@ are partly system-level, Xu 2019's transverse is the angle FWHM before its
 authors' half-difference correction (\mm{0.94} after) and it has no depth at all, Freire 2026 has no TOF, Stockhoff's six
 layers are unequal (\mm{2.67} is their mean), and Kang 2023's \ns{9.5} is the
 whole system's timing resolution, an order of magnitude outside TOF. The $\beta$-CUBE's depth is five
-layers in \mm{8} (its \mm{1.6} is the layer width), its \mm{0.76} transverse
-is from the vendor abstract (\ref{note:Mollet2017}), and it reports a \ns{5}
-coincidence window but no CTR.
-Prism-PET's transverse is the \mm{1.6} pitch of \mm{1.4} crystals with
-\mm{0.2} BaSO$_4$ between them; LaBella 2021's 8.7\% energy is read off its
+layers in \mm{8} (its \mm{1.6} is the layer width), its \mm{0.78} transverse
+is the paper's average over the central 80\% of the block (\mm{0.9} over all of
+it; the vendor abstract, \ref{note:Mollet2017}, gives \mm{0.76}), and it reports
+a \ns{5} coincidence window but no CTR.
+Prism-PET's transverse is the \mm{1.6} pitch: \mm{1.4} crystals with
+\mm{0.2} of BaSO$_4$ between them, or \mm{1.5} with \mm{0.1} in Zeng 2024; LaBella 2021's 8.7\% energy is read off its
 Fig.\ 2, and LaBella 2020's 9\% is after DOI correction (14\% before). Ren
 2014's 22\% is the geometric-mean energy (30\% summed). Moliner 2012's detector
 figures and Gillam 2014's energy are cited from earlier papers, not measured

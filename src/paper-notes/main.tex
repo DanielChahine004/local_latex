@@ -4882,6 +4882,50 @@ both, to see where the CRLB fails; Bhattacharyya bounds on resolvability and
 ordering. The separation at which the monolith's bound crosses Prism-PET's is
 the headline (\ref{note:Petersen2020}, \ref{note:Li2012} for the
 single-vertex precedent).
+
+\paragraph{Forward model and the $K$-site extension}
+Light from separate deposits adds, so an event with $K$ sites
+$(\mathbf{x}_k, E_k, t_k)$ has the per-channel intensity
+\[ \lambda_c(t) = \sum_{k=1}^{K} N(E_k)\, p_c(\mathbf{x}_k)\,
+	f_c(t - t_k \mid \mathbf{x}_k), \]
+with $p_c$ the light-response function and $f_c$ the arrival-time density
+(transport, scintillation rise and decay, sensor jitter). Single-site $p_c$
+and $f_c$ come once from GATE optics on a voxel grid; gamma-only GATE then
+supplies the sites of real events, and any $K$ is a sum of lookups. The Fisher
+information of a Poisson process is
+$\sum_c \int (\partial_\theta \lambda_c)^2 / \lambda_c \, dt$, computed from
+$\lambda$ directly: a $5K \times 5K$ matrix, each site's parameters in its own
+term, and the first site's information with the other $K-1$ as nuisance
+generalises the two-site analysis. Poisson realisations are needed only to
+test estimators and for the Monte Carlo error probabilities in Ziv--Zakai.
+Evaluate the bound per real GATE event and report its distribution by $K$,
+not only a synthetic separation sweep.
+\begin{itemize}
+	\item \textbf{What a site is.} GATE steps must be clustered into sites
+		(recoil-electron range, the \keV{55} Lu K x-ray); the clustering
+		radius moves the answer, so report it and its effect.
+	\item \textbf{Validate the sum} against full GATE optics on a few dozen
+		multi-site events: linearity, interpolation, and the SiPM effects
+		that break it (saturation, crosstalk, dark counts).
+	\item \textbf{Storage.} Voxels $\times$ channels $\times$ time bins grows
+		fast; parameterise $f_c$ as transport delay convolved with the pulse.
+	\item \textbf{Timing is the crux.} Sites millimetres apart differ by
+		10--\ps{30}, against a scintillation rise near \ps{70}; whether
+		arrival patterns resolve that is the result, negative or not.
+	\item \textbf{Identifiability.} $K!$ symmetric modes, a singular Fisher
+		matrix where sites meet, and $K$ itself unknown ($K$ against $K+1$).
+	\item \textbf{Physics priors.} Energies summing to \keV{511} and Compton
+		kinematics constrain the parameters (constrained CRLB, or a prior via
+		Weiss--Weinstein); Prism-style decomposition and Klein--Nishina
+		ordering use them, so the monolith should too.
+	\item \textbf{Cost.} Ziv--Zakai is expensive in many dimensions (a vector
+		form exists); use the CRLB with nuisance sites for $K \ge 3$ and keep
+		Ziv--Zakai for the two-site threshold.
+\end{itemize}
+Ladder: single-site CRLB, checked against the cMiCE bound
+(\ref{note:Li2012}); two sites, information lost against separation with the
+Ziv--Zakai threshold; the $K$-site population from GATE; the same pipeline on
+a Prism-PET geometry.
 \end{papernote}
 
 \begin{papernote}{Idea -- scatter-aware positioning in a monolith}{IdeaScatterAware}

@@ -78,7 +78,7 @@ unplaced = [400, 3250]    # the machinery panel: no institution, so the Southern
                           # (clear of danvas's own buttons at the viewport's lower left)
 # panels at a fixed spot off the map, as [x, y] or [x, y, width]; no pin.
 # The leaderboard sits to the right of the map (which is width wide).
-fixed = { Leaderboard = [9150, 0, 1500], DesignFit = [9150, 3500, 1500], Clinical = [13470, 1100, 900] }
+fixed = { Leaderboard = [9150, 0, 1500], DesignFit = [9150, 3500, 1500], Clinical = [13530, 1100, 900] }
 
 [server]
 port = 8000
@@ -92,7 +92,7 @@ edit_label = "Edit these notes"
 # "pitch" under "<column> basis". derive adds category columns: the first rule
 # whose keyword is in the "from" column wins; a rule with no keywords is the default.
 [tables.Leaderboard]
-at = [10710, 0, 2700, 1350]
+at = [10710, 0, 2760, 1350]
 sets = ["Measured builds", "Simulated detectors", "Clinical reference"]
 plain = "FWHM"
 panel = ["What it is"]   # the programme panel shows only these paragraphs; the row notes stay in the PDF
@@ -119,7 +119,7 @@ supply = "Architecture supply"
 # the "selector" table panel, which also gets a Star column (size on these axes).
 [tables."Leaderboard/Radar"]
 selector = "Leaderboard"
-at = [13470, 0, 1900, 1300]
+at = [13530, 0, 1900, 1300]
 view = "detectors"
 sets = ["Measured builds", "Simulated detectors", "Clinical reference"]
 reference = "Clinical reference"

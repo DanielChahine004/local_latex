@@ -102,7 +102,7 @@ def load(path: Path | None) -> Config:
                 setattr(cfg, attr, table[key])
     # [tables.<Key>]: one table panel per programme, so the keys are the notes' own
     for key, spec in data.get("tables", {}).items():
-        unknown = set(spec) - {"at", "flags", "plain", "derive", "keys", "sets", "view", "demand", "supply", "axes", "initial", "simulated", "flag_from", "max", "reference", "alternates"}
+        unknown = set(spec) - {"at", "flags", "plain", "derive", "keys", "sets", "view", "demand", "supply", "axes", "initial", "simulated", "flag_from", "max", "reference", "alternates", "selector", "panel"}
         if unknown:
             raise SystemExit(f"{path}: unknown key(s) in [tables.{key}]: {', '.join(sorted(unknown))}")
         cfg.tables[key] = spec

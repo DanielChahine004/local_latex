@@ -106,3 +106,16 @@ def columns(records: list[dict]) -> list[dict]:
 def strip(md: str) -> str:
     """md without its pipe tables, for the panel that now sits beside a table panel."""
     return "\n".join(l for l in md.split("\n") if not (l.strip().startswith("|") and l.strip().endswith("|")))
+
+
+def only(md: str, keep: list[str]) -> str:
+    """md cut to the paragraphs headed by one of keep (and anything before the
+    first heading): a panel can show its key and leave the row notes to the PDF."""
+    out, on = [], True
+    for line in md.split("\n"):
+        m = HEADING.match(line.strip())
+        if m:
+            on = m.group(1) in keep
+        if on:
+            out.append(line)
+    return "\n".join(out)

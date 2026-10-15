@@ -31,6 +31,22 @@ PITCH, ROW_GAP = PANEL_W + 40, 100
 PIN_D = 38                   # the marker's size, and the room a panel leaves it
 
 
+
+def _row_id(r: dict, first: str) -> str:
+    """A table row's identity across panels: its set, first column and detector."""
+    return f"{r.get('Set', '')}|{r.get(first) or ''}|{r.get('Detector') or ''}"
+
+
+def _sel_initial(data: list[dict], spec: dict, first: str) -> list[str]:
+    """What a star chart starts with: the named builds (first match, outside the
+    reference set) and every reference row."""
+    ref, out = spec.get("reference"), []
+    for name in spec.get("initial", []):
+        r = next((r for r in data if r.get(first) == name and r["Set"] != ref), None)
+        if r:
+            out.append(_row_id(r, first))
+    return out + [_row_id(r, first) for r in data if r["Set"] == ref]
+
 class Board:
     def __init__(self, canvas, cfg: Config, source: Source, conv: Converter, map_mode: bool) -> None:
         self.canvas, self.cfg, self.src, self.conv, self.map_mode = canvas, cfg, source, conv, map_mode
@@ -422,7 +438,10 @@ class Board:
 
     def _own_text(self, key: str, node: Entry) -> str:
         md = node.full(self.conv)
-        return tables.strip(md) if key in self.cfg.tables else md
+        if key not in self.cfg.tables:
+            return md
+        keep = self.cfg.tables[key].get("panel")
+        return tables.strip(tables.only(md, keep) if keep else md)
 
     def _tables(self, groups) -> None:
         """A table panel for each [tables] programme, at its fixed spot, refreshed in place.
@@ -456,6 +475,14 @@ class Board:
             scale = self.map_w / 4500 if self.map_mode else 1.0
             props = {"columns": tables.columns(data), "rows": data, "flags": spec.get("flags", {}),
                      "plain": spec.get("plain", "measured"), "scale": scale}
+            chart = next(((k, s) for k, s in self.cfg.tables.items() if s.get("selector") == key), None)
+            if chart:                         # this table picks what a star chart draws
+                ck, cs = chart
+                for r in data:
+                    r["_id"] = _row_id(r, first)
+                props["select"] = {"bus": ck, "initial": _sel_initial(data, cs, first),
+                                   "refs": [r["_id"] for r in data if r["Set"] == cs.get("reference")],
+                                   "axes": [{"key": c, "max": cs["max"][c]} for c in cs["axes"]]}
             if have is None:
                 x, y, w, _ = spec["at"]
                 panel = self.canvas.react(TABLE_SRC, css=TABLE_CSS, name=re.sub(r"\W+", "_", key) + "_table", props=props,
@@ -490,13 +517,13 @@ class Board:
             if a["key"] in spec.get("alternates", {}):
                 a["alt"] = dict(spec["alternates"][a["key"]])
         keys = [a["key"] for a in axes] + [a["alt"]["key"] for a in axes if "alt" in a]
-        rows = [{"name": r[name], "detector": r.get("Detector") or "", "set": r["Set"],
+        rows = [{"id": _row_id(r, name), "name": r[name], "detector": r.get("Detector") or "", "set": r["Set"],
                  "v": {k: r.get(k) for k in keys},
                  "f": {k: r.get(f"_{spec.get('flag_from', {}).get(k, k)} flag", "") for k in keys}} for r in data]
         reference = [r for r in rows if r["set"] == spec.get("reference")]
         rows = [r for r in rows if r["set"] != spec.get("reference")]
-        initial = [i for i, r in enumerate(rows) if r["name"] in spec.get("initial", [])]
-        props = {"axes": axes, "rows": rows, "reference": reference, "flags": spec.get("flags", {}), "initial": initial,
+        props = {"axes": axes, "rows": rows, "reference": reference, "flags": spec.get("flags", {}),
+                 "bus": key, "selInitial": _sel_initial(data, spec, name),
                  "simSet": spec.get("simulated", ""), "scale": self.map_w / 4500 if self.map_mode else 1.0}
         if have is None:
             x, y, w, _ = spec["at"]

@@ -305,6 +305,53 @@ def edit_jsx(url: str, label: str, scale: float = 1.0) -> str:
 # --- the search box ------------------------------------------------------------------
 
 SEARCH_SRC = r"""
+// Shared by the table and chart panels (one copy rides in each source).
+// Scaled: the panel content laid out at its own width and shrunk by a transform,
+// with the box sized explicitly. CSS zoom is not honoured everywhere, and a
+// browser that ignores it reports a full-size height to the board.
+function Scaled({ scale, className, children, ...rest }) {
+  const outer = React.useRef(null), inner = React.useRef(null);
+  const [W, setW] = React.useState(0), [H, setH] = React.useState(0);
+  React.useEffect(() => {
+    const o = outer.current, i = inner.current;
+    if (!o || !i) return;
+    const m = () => { setW(o.clientWidth); setH(i.offsetHeight); };
+    m();
+    const ro = new ResizeObserver(m);
+    ro.observe(o); ro.observe(i);
+    return () => ro.disconnect();
+  }, []);
+  const s = scale || 1;
+  return <div ref={outer} style={{ width: "100%", height: H * s, overflow: "hidden" }}>
+    <div ref={inner} className={className} {...rest}
+         style={{ boxSizing: "border-box", width: W ? W / s : undefined, transform: "scale(" + s + ")", transformOrigin: "0 0" }}>
+      {children}</div></div>;
+}
+// useSel: a selection several panels share, by row id, kept on the page so a
+// panel scrolled out of view and remounted finds it again.
+function useSel(bus, initial) {
+  const [, bump] = React.useReducer(x => x + 1, 0);
+  React.useEffect(() => {
+    if (!bus) return;
+    const h = () => bump();
+    window.addEventListener("sel:" + bus, h);
+    return () => window.removeEventListener("sel:" + bus, h);
+  }, [bus]);
+  const all = (window.__sel = window.__sel || {});
+  if (bus && !all[bus]) all[bus] = (initial || []).slice();
+  const set = f => { all[bus] = f(all[bus] || []); window.dispatchEvent(new Event("sel:" + bus)); };
+  return [bus ? all[bus] : [], set];
+}
+const SEL_PAL = ["#3987e5", "#eb6834", "#1baf7a", "#eda100", "#e87ba4", "#9085e9",
+                 "#e34948", "#5ec4e8", "#c9d64a", "#b07a4f", "#f2a7c3", "#8fd694"];
+const SEL_REF = ["#94a3b8", "#d4b483", "#b5838d", "#8a9a5b", "#7d8597", "#c9ada7"];
+// a reference row keeps its own muted colour; the others take the palette in pick order
+function selColour(picked, id, refIds) {
+  const k = refIds.indexOf(id);
+  if (k >= 0) return SEL_REF[k % SEL_REF.length];
+  const j = picked.filter(x => !refIds.includes(x)).indexOf(id);
+  return j < 0 ? null : SEL_PAL[j % SEL_PAL.length];
+}
 function Component({ canvas, props }) {
   const p = props;
   const [q, setQ] = React.useState(p.q || "");
@@ -316,7 +363,7 @@ function Component({ canvas, props }) {
   }, [q]);
   const keep = { onPointerDown: e => e.stopPropagation(), onMouseDown: e => e.stopPropagation() };
   return (
-    <div className="find" style={{ zoom: p.scale }}>
+    <Scaled scale={p.scale} className="find">
       <div className="row">
         <input className="box" value={q} placeholder="find a word in the notes" spellCheck={false}
                onChange={e => setQ(e.target.value)} {...keep} />
@@ -328,7 +375,7 @@ function Component({ canvas, props }) {
       {q && p.hits && p.hits.length > 0 && (
         <div className="where" {...keep}>{p.hits.map(h => h.title).join(" · ")}</div>
       )}
-    </div>
+    </Scaled>
   );
 }
 """
@@ -352,6 +399,53 @@ SEARCH_CSS = """
 # papers. A number's basis letter (p, r, L...) rides beside it, spelt out on
 # hover and filterable from the bar; text columns with few values get a menu.
 TABLE_SRC = r"""
+// Shared by the table and chart panels (one copy rides in each source).
+// Scaled: the panel content laid out at its own width and shrunk by a transform,
+// with the box sized explicitly. CSS zoom is not honoured everywhere, and a
+// browser that ignores it reports a full-size height to the board.
+function Scaled({ scale, className, children, ...rest }) {
+  const outer = React.useRef(null), inner = React.useRef(null);
+  const [W, setW] = React.useState(0), [H, setH] = React.useState(0);
+  React.useEffect(() => {
+    const o = outer.current, i = inner.current;
+    if (!o || !i) return;
+    const m = () => { setW(o.clientWidth); setH(i.offsetHeight); };
+    m();
+    const ro = new ResizeObserver(m);
+    ro.observe(o); ro.observe(i);
+    return () => ro.disconnect();
+  }, []);
+  const s = scale || 1;
+  return <div ref={outer} style={{ width: "100%", height: H * s, overflow: "hidden" }}>
+    <div ref={inner} className={className} {...rest}
+         style={{ boxSizing: "border-box", width: W ? W / s : undefined, transform: "scale(" + s + ")", transformOrigin: "0 0" }}>
+      {children}</div></div>;
+}
+// useSel: a selection several panels share, by row id, kept on the page so a
+// panel scrolled out of view and remounted finds it again.
+function useSel(bus, initial) {
+  const [, bump] = React.useReducer(x => x + 1, 0);
+  React.useEffect(() => {
+    if (!bus) return;
+    const h = () => bump();
+    window.addEventListener("sel:" + bus, h);
+    return () => window.removeEventListener("sel:" + bus, h);
+  }, [bus]);
+  const all = (window.__sel = window.__sel || {});
+  if (bus && !all[bus]) all[bus] = (initial || []).slice();
+  const set = f => { all[bus] = f(all[bus] || []); window.dispatchEvent(new Event("sel:" + bus)); };
+  return [bus ? all[bus] : [], set];
+}
+const SEL_PAL = ["#3987e5", "#eb6834", "#1baf7a", "#eda100", "#e87ba4", "#9085e9",
+                 "#e34948", "#5ec4e8", "#c9d64a", "#b07a4f", "#f2a7c3", "#8fd694"];
+const SEL_REF = ["#94a3b8", "#d4b483", "#b5838d", "#8a9a5b", "#7d8597", "#c9ada7"];
+// a reference row keeps its own muted colour; the others take the palette in pick order
+function selColour(picked, id, refIds) {
+  const k = refIds.indexOf(id);
+  if (k >= 0) return SEL_REF[k % SEL_REF.length];
+  const j = picked.filter(x => !refIds.includes(x)).indexOf(id);
+  return j < 0 ? null : SEL_PAL[j % SEL_PAL.length];
+}
 function Component({ props }) {
   const p = props;
   const cols = p.columns || [], rows = p.rows || [];
@@ -360,6 +454,18 @@ function Component({ props }) {
   const [pick, setPick] = React.useState({});
   const keep = { onPointerDown: e => e.stopPropagation(), onMouseDown: e => e.stopPropagation(),
                  onWheel: e => e.stopPropagation() };
+  // tick a row to draw it on the star chart (props.select names the shared selection)
+  const S = p.select || null;
+  const [picked, setPicked] = useSel(S && S.bus, S && S.initial);
+  const pickRow = id => setPicked(s => s.includes(id) ? s.filter(x => x !== id) : [...s, id]);
+  // the star's size on the chart's axes as a share of the rim, and how many axes it lacks
+  const star = r => {
+    if (!S) return null;
+    const f = S.axes.map(a => { const v = r[a.key]; if (!(v > 0)) return null;
+      return v <= a.max ? v / a.max : 1 + 0.3 * Math.min(1, Math.log(v / a.max) / Math.log(20)); });
+    const g = f.map(v => v || 0);
+    return { miss: f.filter(v => v == null).length, area: g.reduce((s, v, i) => s + v * g[(i + 1) % g.length], 0) / g.length };
+  };
   // a menu for every text column with a handful of values, and every basis
   const menus = [];
   for (const c of cols) {
@@ -371,7 +477,10 @@ function Component({ props }) {
   const text = r => cols.map(c => r[c.name] == null ? "" : String(r[c.name])).join(" ").toLowerCase();
   let shown = rows.filter(r => (!q || text(r).includes(q.toLowerCase()))
                          && Object.entries(pick).every(([f, v]) => !v || r[f] === v));
-  if (sort.col && sort.dir) {
+  if (sort.col === "Star" && sort.dir) {
+    shown = [...shown].sort((a, b) => { const x = star(a), y = star(b);
+      return ((x.miss - y.miss) || (x.area - y.area)) * sort.dir; });
+  } else if (sort.col && sort.dir) {
     const c = cols.find(c => c.name === sort.col);
     shown = [...shown].sort((a, b) => {
       const x = a[sort.col], y = b[sort.col];
@@ -392,7 +501,7 @@ function Component({ props }) {
     return <span>{n}{f ? <sup title={p.flags[f] || f}>{f}</sup> : null}</span>;
   };
   return (
-    <div className="lbt" style={{ zoom: p.scale }}>
+    <Scaled scale={p.scale} className="lbt">
       <div className="bar" {...keep}>
         <input className="q" value={q} placeholder="filter rows" spellCheck={false} onChange={e => setQ(e.target.value)} />
         {menus.map(m => (
@@ -407,17 +516,25 @@ function Component({ props }) {
       </div>
       <div className="wrap" {...keep}><table>
         <thead><tr>
+          {S ? <th className="pk" title="Draw on the star chart">Star chart</th> : null}
           {cols.map(c => (
             <th key={c.name} className={c.num ? "num" : ""} onClick={() => cycle(c.name)}>
               {c.name}{sort.col === c.name && sort.dir ? (sort.dir > 0 ? " ▲" : " ▼") : ""}
             </th>
           ))}
+          {S ? <th className="num" onClick={() => cycle("Star")} title={"Size of the star as a share of the rim; rows lacking an axis sort after complete ones"}>
+            Star{sort.col === "Star" && sort.dir ? (sort.dir > 0 ? " ▲" : " ▼") : ""}</th> : null}
           <th>Paper</th>
         </tr></thead>
         <tbody>
           {shown.map((r, i) => (
             <tr key={i}>
+              {S ? (() => { const on = picked.includes(r._id), c = on ? selColour(picked, r._id, S.refs) : null;
+                return <td className="pk"><label><input type="checkbox" checked={on} onChange={() => pickRow(r._id)} />
+                  <span className={"sw" + (S.refs.includes(r._id) ? " sq" : "")} style={{ background: c || "transparent" }} /></label></td>; })() : null}
               {cols.map(c => <td key={c.name} className={c.num ? "num" : ""}>{fmt(r, c)}</td>)}
+              {S ? (() => { const st = star(r);
+                return <td className="num">{Math.round(100 * st.area)}%{st.miss ? <span className="nil"> ({S.axes.length - st.miss}/{S.axes.length})</span> : null}</td>; })() : null}
               <td className="links">
                 {r._doi ? <a href={r._doi} target="_blank" rel="noopener">DOI ↗</a> : null}
                 {r._pdf ? <a href={r._pdf} target="_blank" rel="noopener">PDF ↗</a> : null}
@@ -428,8 +545,9 @@ function Component({ props }) {
       </table></div>
       <div className="legend">
         Superscripts: {Object.entries(p.flags || {}).map(([k, v]) => k + " " + v).join(" · ")}; none = {p.plain}.
+        {S ? <span> Tick a row to draw it on the star chart; Star is its size there as a share of the rim (n/4: axes it has).</span> : null}
       </div>
-    </div>
+    </Scaled>
   );
 }
 """
@@ -456,11 +574,61 @@ TABLE_CSS = """
 .lbt .links a { color: var(--pc-accent, #60a5fa); text-decoration: none; margin-right: 8px; font-size: 12px; }
 .lbt .links a:hover { text-decoration: underline; }
 .lbt .legend { font-size: 11px; opacity: .65; margin-top: 8px; }
+.lbt .pk label { display: flex; align-items: center; gap: 4px; cursor: pointer; }
+.lbt .sw { width: 10px; height: 10px; border-radius: 2px; display: inline-block; border: 1px solid rgba(127,127,127,.5); }
+.lbt .sw.sq { border-radius: 0; }
 """
 
 # Demand against supply on shared axes: one row set rates what each use asks for,
 # another what each design gives. A radar for the chosen pair, a fit grid for all.
 RADAR_SRC = r"""
+// Shared by the table and chart panels (one copy rides in each source).
+// Scaled: the panel content laid out at its own width and shrunk by a transform,
+// with the box sized explicitly. CSS zoom is not honoured everywhere, and a
+// browser that ignores it reports a full-size height to the board.
+function Scaled({ scale, className, children, ...rest }) {
+  const outer = React.useRef(null), inner = React.useRef(null);
+  const [W, setW] = React.useState(0), [H, setH] = React.useState(0);
+  React.useEffect(() => {
+    const o = outer.current, i = inner.current;
+    if (!o || !i) return;
+    const m = () => { setW(o.clientWidth); setH(i.offsetHeight); };
+    m();
+    const ro = new ResizeObserver(m);
+    ro.observe(o); ro.observe(i);
+    return () => ro.disconnect();
+  }, []);
+  const s = scale || 1;
+  return <div ref={outer} style={{ width: "100%", height: H * s, overflow: "hidden" }}>
+    <div ref={inner} className={className} {...rest}
+         style={{ boxSizing: "border-box", width: W ? W / s : undefined, transform: "scale(" + s + ")", transformOrigin: "0 0" }}>
+      {children}</div></div>;
+}
+// useSel: a selection several panels share, by row id, kept on the page so a
+// panel scrolled out of view and remounted finds it again.
+function useSel(bus, initial) {
+  const [, bump] = React.useReducer(x => x + 1, 0);
+  React.useEffect(() => {
+    if (!bus) return;
+    const h = () => bump();
+    window.addEventListener("sel:" + bus, h);
+    return () => window.removeEventListener("sel:" + bus, h);
+  }, [bus]);
+  const all = (window.__sel = window.__sel || {});
+  if (bus && !all[bus]) all[bus] = (initial || []).slice();
+  const set = f => { all[bus] = f(all[bus] || []); window.dispatchEvent(new Event("sel:" + bus)); };
+  return [bus ? all[bus] : [], set];
+}
+const SEL_PAL = ["#3987e5", "#eb6834", "#1baf7a", "#eda100", "#e87ba4", "#9085e9",
+                 "#e34948", "#5ec4e8", "#c9d64a", "#b07a4f", "#f2a7c3", "#8fd694"];
+const SEL_REF = ["#94a3b8", "#d4b483", "#b5838d", "#8a9a5b", "#7d8597", "#c9ada7"];
+// a reference row keeps its own muted colour; the others take the palette in pick order
+function selColour(picked, id, refIds) {
+  const k = refIds.indexOf(id);
+  if (k >= 0) return SEL_REF[k % SEL_REF.length];
+  const j = picked.filter(x => !refIds.includes(x)).indexOf(id);
+  return j < 0 ? null : SEL_PAL[j % SEL_PAL.length];
+}
 function Component({ props }) {
   const p = props, axes = p.axes || [], dem = p.demand || [], sup = p.supply || [];
   const [a, setA] = React.useState(0), [b, setB] = React.useState(0);
@@ -480,7 +648,7 @@ function Component({ props }) {
   const D = dem[a] ? dem[a].values : [], S = sup[b] ? sup[b].values : [];
   const tone = f => f >= 90 ? "#1baf7a" : f >= 80 ? "#7fb069" : f >= 70 ? "#eda100" : "#e34948";
   return (
-    <div className="dfit" style={{ zoom: p.scale }} {...keep}>
+    <Scaled scale={p.scale} className="dfit" {...keep}>
       <div className="bar">
         <label>Application <select value={a} onChange={e => setA(+e.target.value)}>
           {dem.map((r, i) => <option key={i} value={i}>{r.name}</option>)}</select></label>
@@ -520,7 +688,7 @@ function Component({ props }) {
         </tbody>
       </table>
       <div className="note">Fit = sum of demand x min(supply, demand) over sum of demand squared. Ratings 1-5, first principles; edit them in the notes.</div>
-    </div>
+    </Scaled>
   );
 }
 """
@@ -561,17 +729,64 @@ RADAR_CSS = """
 # Each axis is linear in its own units from 0 at the centre to a fixed maximum,
 # so a smaller polygon is better; a value past the rim is pinned there and labelled.
 DETRADAR_SRC = r"""
+// Shared by the table and chart panels (one copy rides in each source).
+// Scaled: the panel content laid out at its own width and shrunk by a transform,
+// with the box sized explicitly. CSS zoom is not honoured everywhere, and a
+// browser that ignores it reports a full-size height to the board.
+function Scaled({ scale, className, children, ...rest }) {
+  const outer = React.useRef(null), inner = React.useRef(null);
+  const [W, setW] = React.useState(0), [H, setH] = React.useState(0);
+  React.useEffect(() => {
+    const o = outer.current, i = inner.current;
+    if (!o || !i) return;
+    const m = () => { setW(o.clientWidth); setH(i.offsetHeight); };
+    m();
+    const ro = new ResizeObserver(m);
+    ro.observe(o); ro.observe(i);
+    return () => ro.disconnect();
+  }, []);
+  const s = scale || 1;
+  return <div ref={outer} style={{ width: "100%", height: H * s, overflow: "hidden" }}>
+    <div ref={inner} className={className} {...rest}
+         style={{ boxSizing: "border-box", width: W ? W / s : undefined, transform: "scale(" + s + ")", transformOrigin: "0 0" }}>
+      {children}</div></div>;
+}
+// useSel: a selection several panels share, by row id, kept on the page so a
+// panel scrolled out of view and remounted finds it again.
+function useSel(bus, initial) {
+  const [, bump] = React.useReducer(x => x + 1, 0);
+  React.useEffect(() => {
+    if (!bus) return;
+    const h = () => bump();
+    window.addEventListener("sel:" + bus, h);
+    return () => window.removeEventListener("sel:" + bus, h);
+  }, [bus]);
+  const all = (window.__sel = window.__sel || {});
+  if (bus && !all[bus]) all[bus] = (initial || []).slice();
+  const set = f => { all[bus] = f(all[bus] || []); window.dispatchEvent(new Event("sel:" + bus)); };
+  return [bus ? all[bus] : [], set];
+}
+const SEL_PAL = ["#3987e5", "#eb6834", "#1baf7a", "#eda100", "#e87ba4", "#9085e9",
+                 "#e34948", "#5ec4e8", "#c9d64a", "#b07a4f", "#f2a7c3", "#8fd694"];
+const SEL_REF = ["#94a3b8", "#d4b483", "#b5838d", "#8a9a5b", "#7d8597", "#c9ada7"];
+// a reference row keeps its own muted colour; the others take the palette in pick order
+function selColour(picked, id, refIds) {
+  const k = refIds.indexOf(id);
+  if (k >= 0) return SEL_REF[k % SEL_REF.length];
+  const j = picked.filter(x => !refIds.includes(x)).indexOf(id);
+  return j < 0 ? null : SEL_PAL[j % SEL_PAL.length];
+}
 function Component({ props }) {
   const p = props, rows = p.rows || [], refs = p.reference || [];
   const [alt, setAlt] = React.useState({});      // axis index -> showing its alternate column
   const axes = (p.axes || []).map((a, i) => alt[i] && a.alt ? a.alt : a);
-  const pal = ["#3987e5", "#eb6834", "#1baf7a", "#eda100", "#e87ba4", "#9085e9",
-               "#e34948", "#5ec4e8", "#c9d64a", "#b07a4f", "#f2a7c3", "#8fd694"];
-  const colour = k => pal[k % pal.length], dashOf = k => k >= pal.length ? "2 3" : "";
-  const [sel, setSel] = React.useState(p.initial || []);
-  const [q, setQ] = React.useState("");
-  const [refOn, setRefOn] = React.useState(refs.map((_, k) => k));   // which clinical scanners are drawn
-  const toggleRef = k => setRefOn(s => s.includes(k) ? s.filter(x => x !== k) : [...s, k].sort((a, b) => a - b));
+  // what is drawn is picked in the leaderboard table (props.bus names the shared selection)
+  const [picked, setPicked] = useSel(p.bus, p.selInitial);
+  const refIds = refs.map(r => r.id);
+  const sel = picked.filter(id => !refIds.includes(id)).map(id => rows.findIndex(r => r.id === id)).filter(i => i >= 0);
+  const refOn = refs.map((r, k) => picked.includes(r.id) ? k : -1).filter(k => k >= 0);
+  const setRefOn = ks => setPicked(s => s.filter(id => !refIds.includes(id)).concat(ks.map(k => refIds[k])));
+  const colour = k => SEL_PAL[k % SEL_PAL.length], dashOf = k => k >= SEL_PAL.length ? "2 3" : "";
   const keep = { onPointerDown: e => e.stopPropagation(), onMouseDown: e => e.stopPropagation(),
                  onWheel: e => e.stopPropagation() };
   const N = axes.length, R = 150, cx = 230, cy = 185;
@@ -583,7 +798,6 @@ function Component({ props }) {
   const over = (r, i) => r.v[axes[i].key] > axes[i].max;
   const num = v => (+(+v).toFixed(2)).toString();
   const fmt = (r, a) => { const v = r.v[a.key]; return v > 0 ? num(v) + (r.f[a.key] ? " " + r.f[a.key] : "") : "–"; };
-  const toggle = i => setSel(s => s.includes(i) ? s.filter(x => x !== i) : [...s, i]);
   // each spoke carries a mirrored density of every measured build along it
   const built = rows.filter(r => r.set !== p.simSet);
   const violin = i => {
@@ -597,13 +811,6 @@ function Component({ props }) {
     const pts = side(1).concat(side(-1).reverse()).map(x => x.join(",")).join(" ");
     return <polygon key={"v" + i} points={pts} className="violin" />;
   };
-  // the list: complete builds first, then by how many axes are missing; within
-  // each, smallest star first (area on the axes as drawn, a missing value at 0)
-  const missing = r => axes.filter((_, i) => frac(r, i) == null).length;
-  const area = r => { const f = axes.map((_, i) => frac(r, i) || 0);
-                      return f.reduce((s, v, i) => s + v * f[(i + 1) % N], 0); };
-  const shown = rows.map((r, i) => [r, i]).filter(([r]) => !q || (r.name + " " + r.detector + " " + r.set).toLowerCase().includes(q.toLowerCase()))
-    .sort(([a], [b]) => missing(a) - missing(b) || area(a) - area(b));
   const shape = (r, colour, dash, fill, key, slot = 0) => {
     const f = axes.map((_, i) => frac(r, i)), pts = f.map((v, i) => at(v == null ? 0 : v, i));
     return <g key={key}>
@@ -621,8 +828,7 @@ function Component({ props }) {
   // clinical scanners: one muted colour each, square markers on a dotted line. An
   // axis a scanner does not report breaks its outline there rather than pulling
   // the point to the centre, so no scanner borrows another's shape.
-  const refPal = ["#94a3b8", "#d4b483", "#b5838d", "#8a9a5b", "#7d8597", "#c9ada7"];
-  const refCol = k => refPal[k % refPal.length];
+  const refCol = k => SEL_REF[k % SEL_REF.length];
   const clinical = (r, k) => {
     const c = refCol(k), f = axes.map((_, i) => frac(r, i)), pts = f.map((v, i) => v == null ? null : at(v, i));
     const whole = pts.every(x => x);
@@ -641,27 +847,16 @@ function Component({ props }) {
     </g>;
   };
   return (
-    <div className="drad" style={{ zoom: p.scale }} {...keep}>
+    <Scaled scale={p.scale} className="drad" {...keep}>
+      <div className="row">
+        {(p.axes || []).map((a, i) => a.alt ? <button key={"alt" + i} onClick={() => setAlt({ ...alt, [i]: !alt[i] })}>
+          {(alt[i] ? a.alt : a).label} &#8644;</button> : null)}
+        {refs.length ? <label className="refbox"><input type="checkbox" checked={refOn.length === refs.length}
+          ref={el => { if (el) el.indeterminate = refOn.length > 0 && refOn.length < refs.length; }}
+          onChange={e => setRefOn(e.target.checked ? refs.map((_, k) => k) : [])} />clinical</label> : null}
+        <button onClick={() => setPicked(s => s.filter(id => refIds.includes(id)))}>clear</button>
+        <span className="n">{sel.length} shown; tick rows in the leaderboard table to draw them</span></div>
       <div className="cols">
-        <div className="pick">
-          <div className="row"><input value={q} placeholder="filter detectors" spellCheck={false} onChange={e => setQ(e.target.value)} />
-            <button onClick={() => setSel([])}>clear</button>
-            {(p.axes || []).map((a, i) => a.alt ? <button key={"alt" + i} onClick={() => setAlt({ ...alt, [i]: !alt[i] })}>
-              {(alt[i] ? a.alt : a).label} &#8644;</button> : null)}
-            {refs.length ? <label className="refbox"><input type="checkbox" checked={refOn.length === refs.length}
-              ref={el => { if (el) el.indeterminate = refOn.length > 0 && refOn.length < refs.length; }}
-              onChange={e => setRefOn(e.target.checked ? refs.map((_, k) => k) : [])} />clinical</label> : null}<span className="n">{sel.length} shown</span></div>
-          <div className="list"><div className="refs">{refs.map((r, k) => [r, k]).filter(([r]) => !q || (r.name + " " + r.detector + " clinical").toLowerCase().includes(q.toLowerCase()))
-            .map(([r, k]) => <label key={"ref" + k} className="ref">
-              <input type="checkbox" checked={refOn.includes(k)} onChange={() => toggleRef(k)} />
-              <span className="sw sq" style={{ background: refOn.includes(k) ? refCol(k) : "transparent" }} />
-              {r.name} <span className="det">{r.detector}</span></label>)}</div>
-            {shown.map(([r, i]) => { const k = sel.indexOf(i);
-            return <label key={i} className={r.set === p.simSet ? "sim" : ""}>
-              <input type="checkbox" checked={k >= 0} onChange={() => toggle(i)} />
-              <span className="sw" style={{ background: k >= 0 ? colour(k) : "transparent" }} />
-              {r.name} <span className="det">{r.detector}</span></label>; })}</div>
-        </div>
         <div className="plot">
           <svg viewBox="-130 -60 720 490">
             {[0.25, 0.5, 0.75, 1].map(k => <polygon key={k} className="ring" points={axes.map((_, i) => at(k, i).join(",")).join(" ")} />)}
@@ -684,8 +879,8 @@ function Component({ props }) {
                 {axes.map(a => <td key={a.key}>{fmt(rows[i], a)}</td>)}</tr>)}</tbody></table>
         </div>
       </div>
-      <div className="note">Smaller is better: each axis runs in its own units from 0 at the centre to the rim, ticks at half and full scale. A value past the rim is drawn hollow in the band outside it (log-scaled up to 20 times the rim), with its number. Square markers on dotted lines: the clinical scanners ticked at the top of the list, each in its own colour; where a scanner reports nothing on an axis its outline breaks there. Shaded on each spoke: how all measured builds spread along it. Dashed: simulations. A missing value sits at the centre. The list runs from builds with all four values to those missing most, smallest star first within each. Letters: {Object.entries(p.flags || {}).map(([a, b]) => a + " " + b).join(", ")}.</div>
-    </div>
+      <div className="note">Smaller is better: each axis runs in its own units from 0 at the centre to the rim, ticks at half and full scale. A value past the rim is drawn hollow in the band outside it (log-scaled up to 20 times the rim), with its number. Square markers on dotted lines: the clinical scanners ticked, each in its own colour; where a scanner reports nothing on an axis its outline breaks there. Shaded on each spoke: how all measured builds spread along it. Dashed: simulations. A missing value sits at the centre. Letters: {Object.entries(p.flags || {}).map(([a, b]) => a + " " + b).join(", ")}.</div>
+    </Scaled>
   );
 }
 """
@@ -693,7 +888,10 @@ function Component({ props }) {
 DETRADAR_CSS = """
 .drad { font: 13px system-ui, sans-serif; color: var(--pc-text, #ddd); background: #12151c; padding: 12px 14px;
         border-radius: 10px; border: 1px solid rgba(127,127,127,.45); }
-.drad .cols { display: flex; gap: 12px; }
+.drad .cols { display: flex; gap: 16px; align-items: flex-start; }
+.drad .row { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; }
+.drad .row button { font: 12px system-ui, sans-serif; color: inherit; background: #1b1f29; border: 1px solid rgba(127,127,127,.5); border-radius: 6px; padding: 3px 8px; cursor: pointer; }
+.drad .row .n { font-size: 11px; opacity: .6; white-space: nowrap; }
 .drad .pick { width: 38%; display: flex; flex-direction: column; gap: 6px; }
 .drad .pick input[type=text], .drad .pick > input { font: inherit; color: inherit; padding: 4px 8px; border-radius: 6px;
         border: 1px solid rgba(127,127,127,.5); background: rgba(127,127,127,.12); }
@@ -705,8 +903,10 @@ DETRADAR_CSS = """
 .drad .list .refs:not(:empty) { border-bottom: 1px solid rgba(127,127,127,.3); padding-bottom: 4px; margin-bottom: 4px; }
 .drad .det { opacity: .55; overflow: hidden; text-overflow: ellipsis; }
 .drad .sw { width: 10px; height: 10px; border-radius: 2px; display: inline-block; flex: none; border: 1px solid rgba(127,127,127,.5); margin-right: 4px; }
-.drad .plot { flex: 1; }
-.drad svg { width: 100%; height: auto; }
+.drad .plot { flex: 1; display: flex; gap: 16px; align-items: flex-start; }
+.drad .plot svg { width: 58%; flex: none; }
+.drad .plot table { flex: 1; }
+.drad svg { height: auto; }
 .drad .ring { fill: none; stroke: rgba(127,127,127,.25); }
 .drad .ring.overflow { stroke-dasharray: 2 4; }
 .drad .violin { fill: rgba(195,194,183,.13); stroke: rgba(195,194,183,.35); stroke-width: .8; }

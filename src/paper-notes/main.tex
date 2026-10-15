@@ -4800,26 +4800,23 @@ parallax of any detector here (17 mm modelled).
 
 \paragraph{What it is}
 Every detector build on this map with a figure for depth of interaction,
-ranked by DOI as a share of crystal depth (DOI/d), so thin and thick detectors
-compare fairly. Every cell is a number; a letter after it says what kind:
-unmarked is a measured FWHM, and
+ranked by DOI as a share of crystal depth (DOI/d), with simulated detectors,
+clinical scanners and scanner-level counts in separate tables. Every cell is a
+number; a letter after it says what kind: unmarked is a measured FWHM, and
 \begin{itemize}
 	\item p --- the crystal pitch, where the build resolves crystals rather than
 		positions;
-	\item L, b --- the layer or bin width, for builds that resolve depth only in
-		steps (a uniform step of width $w$ is Gaussian-equivalent to a
-		$0.68\,w$ FWHM, so these flatter a little less than they look);
+	\item L, b --- the layer or bin width, for builds that resolve depth in
+		steps (a uniform step of width $w$ is Gaussian-equivalent to $0.68\,w$);
 	\item f --- fitted from flood data, with no collimated beam;
 	\item e --- a Gaussian equivalent the authors computed;
-	\item r --- a CTR against a fast reference crystal, not between two such
-		detectors; it flatters by about $\sqrt{2}$;
+	\item r --- a CTR against a reference crystal, not between two such
+		detectors;
 	\item i --- an input to a simulation, not a result;
-	\item m --- modelled here, not reported: the clinical reference's DOI.
+	\item m --- modelled here, not reported.
 \end{itemize}
-A dash is not reported. Prism-PET figures reject inter-crystal scatter first;
-monolith figures mostly do not. Builds quoting only a mean absolute error (Zhang
-2017, Thull 2026) are left out. On the map the detector tables are one
-sortable, filterable panel beside this one, and the scanners another below it.
+A dash is not reported. Builds quoting only a mean absolute error (Zhang 2017,
+Thull 2026) are left out.
 
 \paragraph{Measured builds}
 Builds that resolve depth continuously first, then those that resolve it in
@@ -4916,7 +4913,6 @@ For \mm{20} of LSO ($\mu \approx \qty{0.087}{\per\mm}$) that is \mm{12.6},
 \qty{0.095}{\per\mm}. The Omni Legend's energy resolution is stated in its
 paper, not measured there, and it has no TOF; van Sluis and Spencer report no
 energy resolution.
-Older photomultiplier systems sat near \ps{540}.
 
 \begin{center}
 \begin{scriptsize}
@@ -4998,13 +4994,7 @@ van Sluis 2019 & LSO 3.2 mm, Vision 600 & -- & 261 & 1.64 & -- & 306 & 32.6 \\
 \end{center}
 The Vision 600 paper gives a \mm{780} bore rather than the ring.
 
-\paragraph{Reading it}
-Dual-ended readout and Prism-PET's deterministic light guide hold the top at
-\mm{20}; the best single-ended figure at that depth (and by DOI/d) is Prism-PET
-with a CNN, \mm{1.84}, which
-its authors call the best reported for a single-ended module. Measured monoliths
-sit lower: their best DOI comes from thin blocks (Carra, \mm{8}), and at
-15--\mm{16} they report 3--\mm{4} or layers. Footnotes the table cannot carry:
+\paragraph{Notes on the rows}
 Pizzichemi 2019's \mm{3} DOI is cited from earlier work, Freire 2026's figures
 are partly system-level, Xu 2019's transverse is the angle FWHM before its
 authors' half-difference correction (\mm{0.94} after) and it has no depth at all, Freire 2026 has no TOF, Stockhoff never states its six layers' thickness (\mm{2.67} is

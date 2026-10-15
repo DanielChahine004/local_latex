@@ -554,7 +554,9 @@ function Component({ props }) {
   const colour = k => pal[k % pal.length], dashOf = k => k >= pal.length ? "2 3" : "";
   const [sel, setSel] = React.useState(p.initial || []);
   const [q, setQ] = React.useState("");
-  const [showRef, setShowRef] = React.useState(true);
+  const [refOn, setRefOn] = React.useState(refs.map((_, k) => k));   // which clinical scanners are drawn
+  const onRefs = refs.filter((_, k) => refOn.includes(k));
+  const toggleRef = k => setRefOn(s => s.includes(k) ? s.filter(x => x !== k) : [...s, k].sort((a, b) => a - b));
   const keep = { onPointerDown: e => e.stopPropagation(), onMouseDown: e => e.stopPropagation(),
                  onWheel: e => e.stopPropagation() };
   const N = axes.length, R = 150, cx = 230, cy = 185;
@@ -597,7 +599,7 @@ function Component({ props }) {
   };
   // several clinical scanners: the band between the best and the worst of them on
   // each axis, counting only the axes each one reports, and a dot per scanner
-  const band = () => {
+  const band = refs => {
     const lo = [], hi = [];
     axes.forEach((_, i) => { const f = refs.map(r => frac(r, i)).filter(v => v != null);
       lo.push(f.length ? Math.min(...f) : 0); hi.push(f.length ? Math.max(...f) : 0); });
@@ -616,8 +618,15 @@ function Component({ props }) {
             <button onClick={() => setSel([])}>clear</button>
             {(p.axes || []).map((a, i) => a.alt ? <button key={"alt" + i} onClick={() => setAlt({ ...alt, [i]: !alt[i] })}>
               {(alt[i] ? a.alt : a).label} &#8644;</button> : null)}
-            {refs.length ? <label className="refbox"><input type="checkbox" checked={showRef} onChange={e => setShowRef(e.target.checked)} />clinical</label> : null}<span className="n">{sel.length} shown</span></div>
-          <div className="list">{shown.map(([r, i]) => { const k = sel.indexOf(i);
+            {refs.length ? <label className="refbox"><input type="checkbox" checked={refOn.length === refs.length}
+              ref={el => { if (el) el.indeterminate = refOn.length > 0 && refOn.length < refs.length; }}
+              onChange={e => setRefOn(e.target.checked ? refs.map((_, k) => k) : [])} />clinical</label> : null}<span className="n">{sel.length} shown</span></div>
+          <div className="list"><div className="refs">{refs.map((r, k) => [r, k]).filter(([r]) => !q || (r.name + " " + r.detector + " clinical").toLowerCase().includes(q.toLowerCase()))
+            .map(([r, k]) => <label key={"ref" + k} className="ref">
+              <input type="checkbox" checked={refOn.includes(k)} onChange={() => toggleRef(k)} />
+              <span className="sw" style={{ background: refOn.includes(k) ? "#a8a69e" : "transparent" }} />
+              {r.name} <span className="det">{r.detector}</span></label>)}</div>
+            {shown.map(([r, i]) => { const k = sel.indexOf(i);
             return <label key={i} className={r.set === p.simSet ? "sim" : ""}>
               <input type="checkbox" checked={k >= 0} onChange={() => toggle(i)} />
               <span className="sw" style={{ background: k >= 0 ? colour(k) : "transparent" }} />
@@ -634,18 +643,18 @@ function Component({ props }) {
                 <text x={lx} y={ly} className="lab" textAnchor={lx < cx - 5 ? "end" : lx > cx + 5 ? "start" : "middle"}
                       dominantBaseline="middle">{a.label}</text></g>; })}
             {p.violins !== false ? axes.map((_, i) => violin(i)) : null}
-            {showRef ? (refs.length > 1 ? band() : refs.map((r, k) => shape(r, "#a8a69e", "2 4", "rgba(168,166,158,.08)", "ref" + k, -1))) : null}
+            {onRefs.length > 1 ? band(onRefs) : onRefs.map((r, k) => shape(r, "#a8a69e", "2 4", "rgba(168,166,158,.08)", "ref" + k, -1))}
             {sel.map((i, k) => shape(rows[i], colour(k), rows[i].set === p.simSet ? "6 4" : dashOf(k), colour(k) + "22", "s" + i, k % 6))}
           </svg>
           <table><thead><tr><th></th>{axes.map(a => <th key={a.key}>{a.label}</th>)}</tr></thead>
             <tbody>
-              {(showRef ? refs : []).map((r, k) => <tr key={"r" + k} className="ref"><th><span className="sw" style={{ background: "#a8a69e" }} />{r.name} (clinical)</th>
+              {onRefs.map((r, k) => <tr key={"r" + k} className="ref"><th><span className="sw" style={{ background: "#a8a69e" }} />{r.name} (clinical)</th>
                 {axes.map(a => <td key={a.key}>{fmt(r, a)}</td>)}</tr>)}
               {sel.map((i, k) => <tr key={i}><th><span className="sw" style={{ background: colour(k) }} />{rows[i].name}</th>
                 {axes.map(a => <td key={a.key}>{fmt(rows[i], a)}</td>)}</tr>)}</tbody></table>
         </div>
       </div>
-      <div className="note">Smaller is better: each axis runs in its own units from 0 at the centre to the rim, ticks at half and full scale. A value past the rim is drawn hollow in the band outside it (log-scaled up to 20 times the rim), with its number. Grey: the clinical scanners, as the band from the best to the worst of them on each axis (a scanner that does not report an axis is left out of it). Shaded on each spoke: how all measured builds spread along it. Dashed: simulations. A missing value sits at the centre. Letters: {Object.entries(p.flags || {}).map(([a, b]) => a + " " + b).join(", ")}.</div>
+      <div className="note">Smaller is better: each axis runs in its own units from 0 at the centre to the rim, ticks at half and full scale. A value past the rim is drawn hollow in the band outside it (log-scaled up to 20 times the rim), with its number. Grey: the clinical scanners ticked at the top of the list, as the band from the best to the worst of them on each axis (a scanner that does not report an axis is left out of it). Shaded on each spoke: how all measured builds spread along it. Dashed: simulations. A missing value sits at the centre. Letters: {Object.entries(p.flags || {}).map(([a, b]) => a + " " + b).join(", ")}.</div>
     </div>
   );
 }
@@ -661,6 +670,8 @@ DETRADAR_CSS = """
 .drad .list { max-height: 430px; overflow-y: auto; font-size: 12px; }
 .drad .list label { display: flex; align-items: center; gap: 6px; padding: 2px 0; cursor: pointer; white-space: nowrap; }
 .drad .list label.sim { opacity: .75; font-style: italic; }
+.drad .list label.ref { color: #a8a69e; }
+.drad .list .refs:not(:empty) { border-bottom: 1px solid rgba(127,127,127,.3); padding-bottom: 4px; margin-bottom: 4px; }
 .drad .det { opacity: .55; overflow: hidden; text-overflow: ellipsis; }
 .drad .sw { width: 10px; height: 10px; border-radius: 2px; display: inline-block; flex: none; border: 1px solid rgba(127,127,127,.5); margin-right: 4px; }
 .drad .plot { flex: 1; }

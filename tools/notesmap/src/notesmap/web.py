@@ -555,20 +555,26 @@ function Component({ props }) {
   const N = axes.length, R = 150, cx = 230, cy = 185;
   const at = (f, i) => { const t = -Math.PI / 2 + 2 * Math.PI * i / N;
                          return [cx + R * f * Math.cos(t), cy + R * f * Math.sin(t)]; };
-  const frac = (r, i) => { const v = r.v[axes[i].key]; return v > 0 ? Math.min(v / axes[i].max, 1) : null; };
+  // past the rim, a value moves into a band outside it, log-scaled up to 20x the rim
+  const frac = (r, i) => { const v = r.v[axes[i].key], m = axes[i].max; if (!(v > 0)) return null;
+                           return v <= m ? v / m : 1 + 0.3 * Math.min(1, Math.log(v / m) / Math.log(20)); };
   const over = (r, i) => r.v[axes[i].key] > axes[i].max;
   const num = v => (+(+v).toFixed(2)).toString();
   const fmt = (r, a) => { const v = r.v[a.key]; return v > 0 ? num(v) + (r.f[a.key] ? " " + r.f[a.key] : "") : "–"; };
   const toggle = i => setSel(s => s.includes(i) ? s.filter(x => x !== i) : s.length < pal.length ? [...s, i] : s);
   const shown = rows.map((r, i) => [r, i]).filter(([r]) => !q || (r.name + " " + r.detector + " " + r.set).toLowerCase().includes(q.toLowerCase()));
-  const shape = (r, colour, dash, fill, key) => {
+  const shape = (r, colour, dash, fill, key, slot = 0) => {
     const f = axes.map((_, i) => frac(r, i)), pts = f.map((v, i) => at(v == null ? 0 : v, i));
     return <g key={key}>
       <polygon points={pts.map(x => x.join(",")).join(" ")} fill={fill} stroke={colour} strokeWidth="2" strokeDasharray={dash} />
       {pts.map((x, i) => f[i] == null ? null : <g key={i}>
         <circle cx={x[0]} cy={x[1]} r="4" fill={over(r, i) ? "#12151c" : colour} stroke={colour} strokeWidth="2">
           <title>{r.name}, {axes[i].label}: {fmt(r, axes[i])}</title></circle>
-        {over(r, i) ? <text x={x[0] + 6} y={x[1] - 6} className="over" fill={colour}>{num(r.v[axes[i].key])}</text> : null}</g>)}
+        {over(r, i) ? (() => { const t = -Math.PI / 2 + 2 * Math.PI * i / N, o = 16 * slot;
+          // labels on one spoke step sideways by selection slot, so they never stack
+          const [bx, by] = at(f[i] + 0.07, i), tx = bx - o * Math.sin(t), ty = by + o * Math.cos(t);
+          return <text x={tx} y={ty} className="over" fill={colour} dominantBaseline="middle"
+                       textAnchor={tx < cx - 5 ? "end" : tx > cx + 5 ? "start" : "middle"}>{num(r.v[axes[i].key])}</text>; })() : null}</g>)}
     </g>;
   };
   return (
@@ -583,16 +589,17 @@ function Component({ props }) {
               {r.name} <span className="det">{r.detector}</span></label>; })}</div>
         </div>
         <div className="plot">
-          <svg viewBox="-70 0 600 370">
+          <svg viewBox="-130 -60 720 490">
             {[0.25, 0.5, 0.75, 1].map(k => <polygon key={k} className="ring" points={axes.map((_, i) => at(k, i).join(",")).join(" ")} />)}
-            {axes.map((a, i) => { const [u, v] = at(1, i), [lx, ly] = at(1.2, i);
+            <polygon className="ring overflow" points={axes.map((_, i) => at(1.3, i).join(",")).join(" ")} />
+            {axes.map((a, i) => { const [u, v] = at(1.3, i), [lx, ly] = at(1.55, i);
               return <g key={i}><line x1={cx} y1={cy} x2={u} y2={v} className="spoke" />
                 {[0.5, 1].map(k => { const [tx, ty] = at(k, i);
                   return <text key={k} x={tx + 4} y={ty - 4} className="tick">{num(a.max * k)}</text>; })}
                 <text x={lx} y={ly} className="lab" textAnchor={lx < cx - 5 ? "end" : lx > cx + 5 ? "start" : "middle"}
                       dominantBaseline="middle">{a.label}</text></g>; })}
-            {refs.map((r, k) => shape(r, "#a8a69e", "2 4", "rgba(168,166,158,.08)", "ref" + k))}
-            {sel.map((i, k) => shape(rows[i], pal[k], rows[i].set === p.simSet ? "6 4" : "", pal[k] + "22", "s" + i))}
+            {refs.map((r, k) => shape(r, "#a8a69e", "2 4", "rgba(168,166,158,.08)", "ref" + k, -1))}
+            {sel.map((i, k) => shape(rows[i], pal[k], rows[i].set === p.simSet ? "6 4" : "", pal[k] + "22", "s" + i, k))}
           </svg>
           <table><thead><tr><th></th>{axes.map(a => <th key={a.key}>{a.label}</th>)}</tr></thead>
             <tbody>
@@ -602,7 +609,7 @@ function Component({ props }) {
                 {axes.map(a => <td key={a.key}>{fmt(rows[i], a)}</td>)}</tr>)}</tbody></table>
         </div>
       </div>
-      <div className="note">Smaller is better: each axis runs in its own units from 0 at the centre to the rim, ticks at half and full scale. A value past the rim is pinned there, hollow, with its number. Grey dotted: the clinical reference. Dashed: simulations. A missing value sits at the centre. Letters: {Object.entries(p.flags || {}).map(([a, b]) => a + " " + b).join(", ")}.</div>
+      <div className="note">Smaller is better: each axis runs in its own units from 0 at the centre to the rim, ticks at half and full scale. A value past the rim is drawn hollow in the band outside it (log-scaled up to 20 times the rim), with its number. Grey dotted: the clinical reference. Dashed: simulations. A missing value sits at the centre. Letters: {Object.entries(p.flags || {}).map(([a, b]) => a + " " + b).join(", ")}.</div>
     </div>
   );
 }
@@ -623,6 +630,7 @@ DETRADAR_CSS = """
 .drad .plot { flex: 1; }
 .drad svg { width: 100%; height: auto; }
 .drad .ring { fill: none; stroke: rgba(127,127,127,.25); }
+.drad .ring.overflow { stroke-dasharray: 2 4; }
 .drad .spoke { stroke: rgba(127,127,127,.3); }
 .drad .lab { fill: #c3c2b7; font-size: 12px; }
 .drad .tick { fill: #898781; font-size: 9px; }

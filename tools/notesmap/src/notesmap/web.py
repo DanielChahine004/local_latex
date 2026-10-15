@@ -581,7 +581,13 @@ function Component({ props }) {
     const pts = side(1).concat(side(-1).reverse()).map(x => x.join(",")).join(" ");
     return <polygon key={"v" + i} points={pts} className="violin" />;
   };
-  const shown = rows.map((r, i) => [r, i]).filter(([r]) => !q || (r.name + " " + r.detector + " " + r.set).toLowerCase().includes(q.toLowerCase()));
+  // the list: complete builds first, then by how many axes are missing; within
+  // each, smallest star first (area on the axes as drawn, a missing value at 0)
+  const missing = r => axes.filter((_, i) => frac(r, i) == null).length;
+  const area = r => { const f = axes.map((_, i) => frac(r, i) || 0);
+                      return f.reduce((s, v, i) => s + v * f[(i + 1) % N], 0); };
+  const shown = rows.map((r, i) => [r, i]).filter(([r]) => !q || (r.name + " " + r.detector + " " + r.set).toLowerCase().includes(q.toLowerCase()))
+    .sort(([a], [b]) => missing(a) - missing(b) || area(a) - area(b));
   const shape = (r, colour, dash, fill, key, slot = 0) => {
     const f = axes.map((_, i) => frac(r, i)), pts = f.map((v, i) => at(v == null ? 0 : v, i));
     return <g key={key}>
@@ -662,7 +668,7 @@ function Component({ props }) {
                 {axes.map(a => <td key={a.key}>{fmt(rows[i], a)}</td>)}</tr>)}</tbody></table>
         </div>
       </div>
-      <div className="note">Smaller is better: each axis runs in its own units from 0 at the centre to the rim, ticks at half and full scale. A value past the rim is drawn hollow in the band outside it (log-scaled up to 20 times the rim), with its number. Square markers on dotted lines: the clinical scanners ticked at the top of the list, each in its own colour; where a scanner reports nothing on an axis its outline breaks there. Shaded on each spoke: how all measured builds spread along it. Dashed: simulations. A missing value sits at the centre. Letters: {Object.entries(p.flags || {}).map(([a, b]) => a + " " + b).join(", ")}.</div>
+      <div className="note">Smaller is better: each axis runs in its own units from 0 at the centre to the rim, ticks at half and full scale. A value past the rim is drawn hollow in the band outside it (log-scaled up to 20 times the rim), with its number. Square markers on dotted lines: the clinical scanners ticked at the top of the list, each in its own colour; where a scanner reports nothing on an axis its outline breaks there. Shaded on each spoke: how all measured builds spread along it. Dashed: simulations. A missing value sits at the centre. The list runs from builds with all four values to those missing most, smallest star first within each. Letters: {Object.entries(p.flags || {}).map(([a, b]) => a + " " + b).join(", ")}.</div>
     </div>
   );
 }

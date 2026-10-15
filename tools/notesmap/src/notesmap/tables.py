@@ -83,10 +83,12 @@ def keyof(cell: str, known: set[str], keys: dict[str, str]) -> str | None:
     """The note a row belongs to: an explicit `keys` entry, else "Surname Year"."""
     if cell in keys:
         return keys[cell] or None
-    m = re.match(r"^(\S+)\s+(\d{4}[a-z]?)\b", cell or "")   # "Peng 2019a" for a second paper that year
+    # "Peng 2019a" for a second paper that year; "van Sluis 2019" for a particle
+    m = re.match(r"^(.+?)\s+(\d{4}[a-z]?)\b", cell or "")
     if not m:
         return None
-    base = unicodedata.normalize("NFKD", m.group(1)).encode("ascii", "ignore").decode() + m.group(2)
+    name = re.sub(r"\s+", "", m.group(1))
+    base = unicodedata.normalize("NFKD", name).encode("ascii", "ignore").decode() + m.group(2)
     return base if base in known else None
 
 

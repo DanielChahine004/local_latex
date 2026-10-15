@@ -4534,6 +4534,69 @@ if it beats simply including both lines.
 \end{programnote}
 
 % ===========================================================================
+% Clinical scanners: the commercial systems the detectors on this map would
+% have to displace. A reference, not a research line; the leaderboard's
+% clinical row is read from the paper here. Fixed under the detector radar by
+% [map] fixed in notesmap.toml: a Bern pin sits in the fan of Geneva leaders.
+% ===========================================================================
+
+\begin{programnote}{Clinical scanners -- the commercial yardstick}{Clinical}
+
+\paragraph{What it is}
+The clinical systems a monolithic or DOI detector has to beat, kept as a
+reference rather than a research line. One entry so far: Siemens Healthineers'
+Biograph Vision Quadra, measured at Bern University Hospital, whose detector is
+the \ref{prog:Leaderboard}'s clinical reference row --- pixelated LSO on SiPMs,
+read out at one end, with no DOI.
+\gap{One scanner is a point, not a spread: the uEXPLORER (Spencer et al.\ 2021)
+and a standard-length system such as the Biograph Vision 600 (van Sluis et al.\
+2019), whose detector the Quadra reuses, would show what ``clinical'' covers.}
+
+\paragraph{Why it matters here}
+The detector figures that a new architecture is compared against, from a NEMA
+measurement rather than a datasheet. Its transverse resolution is set by the
+pitch and its depth error by the full crystal, so the room a monolith has to
+win is mostly in depth: on timing, \ps{225} is matched on this map only by the
+best monoliths, \ref{note:Carra2022} and \ref{note:Borghi2016}.
+
+\begin{papernote}{Prenosil et al.\ 2021 -- Performance characteristics of the Biograph Vision Quadra PET/CT system with a long axial field of view using the NEMA NU 2-2018 standard}{Prenosil2021}
+\thumb{img/prenosil2021.png}
+J.\ Nucl.\ Med.\ 63(3):476--484 (2022; online 2021),
+\doi{10.2967/jnumed.121.261972}. Prenosil, Sari, Fürstner, Afshar-Oromieh,
+Shi, Rominger, Hentschel --- Bern University Hospital with Siemens Healthcare.
+
+\paragraph{Detector}
+The Biograph Vision 600's detector, four times over: \qtyproduct{3.2 x 3.2 x
+20}{\mm} LSO crystals, 5 x 5 on a \qtyproduct{16 x 16}{\mm} SiPM array (a
+mini block), eight mini blocks to a block, 38 blocks to a ring and 32 rings ---
+\cm{106} axial, 320 crystals long. Data are taken with every ring pair (MRD
+322); the clinical software reconstructs with ring differences up to 85.
+
+\paragraph{Key Findings}
+\begin{itemize}
+	\item Spatial resolution, NEMA NU 2-2018: 3.3/3.4/\mm{3.8} FWHM radial,
+		tangential, axial --- the pitch shows through.
+	\item Sensitivity 83 cps/kBq at MRD 85 and 176 cps/kBq at MRD 322;
+		peak NECR 1613 and 2956 kcps, both at 27.49 kBq/mL, scatter fraction
+		36\% and 37\%.
+	\item TOF \ps{225} at low activity, \ps{228} at peak NECR (MRD 85);
+		energy resolution 9.8\% at low activity, 10.1\% at peak NECR, 8.9\%
+		with a \textsuperscript{68}Ge source and no scatter.
+	\item Contrast recovery 70--87\% at 4:1 and 78--93\% at 8:1 with PSF-TOF;
+		30-second frames still gave readable clinical images.
+\end{itemize}
+
+\paragraph{Why it matters here}
+The source of the leaderboard's clinical row: transverse \mm{3.2} (the pitch),
+energy 9.8\%, CTR \ps{225}. It reports no DOI because the detector has none;
+the \mm{12.6} the row carries is modelled from the crystal, not measured
+here. The sensitivity is what a long axial field buys, not the detector, so
+it sits in no detector table.
+\end{papernote}
+
+\end{programnote}
+
+% ===========================================================================
 % Leaderboard: measured detector builds on this map, side by side. Placed to
 % the right of the map by [map] fixed in notesmap.toml, and open by default.
 % Keep it to measurements; simulations and MAE-only figures stay out.
@@ -4645,7 +4708,7 @@ single-crystal ones.
 \paragraph{Clinical reference}
 What the detectors above are measured against: a current clinical scanner's
 detector, the Biograph Vision Quadra's \qtyproduct{3.2 x 3.2 x 20}{\mm} LSO
-pixels (Prenosil et al.\ 2021, J.\ Nucl.\ Med.\ 63:476, NEMA NU 2-2018), its
+pixels (\ref{note:Prenosil2021}, NEMA NU 2-2018), its
 energy resolution at low count rate and its TOF resolution. It has no DOI, so
 no DOI resolution is reported; the figure is modelled here (marked m): the
 Gaussian-equivalent FWHM of the depth at which 511 keV photons interact in

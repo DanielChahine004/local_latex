@@ -13,7 +13,7 @@ first rule whose keyword appears wins, and a rule with no keywords is the
 default.
 
 Each row is tied to a note by its first column, read as "Surname Year" and
-matched to the key Surname+Year, accents dropped; `keys` maps a first cell that
+matched to the key Surname+Year (a letter after the year kept), accents dropped; `keys` maps a first cell that
 does not read that way ("cMiCE") to a key, or to "" for none. The board uses the
 key for the row's DOI and PDF links.
 """
@@ -83,7 +83,7 @@ def keyof(cell: str, known: set[str], keys: dict[str, str]) -> str | None:
     """The note a row belongs to: an explicit `keys` entry, else "Surname Year"."""
     if cell in keys:
         return keys[cell] or None
-    m = re.match(r"^(\S+)\s+(\d{4})\b", cell or "")
+    m = re.match(r"^(\S+)\s+(\d{4}[a-z]?)\b", cell or "")   # "Peng 2019a" for a second paper that year
     if not m:
         return None
     base = unicodedata.normalize("NFKD", m.group(1)).encode("ascii", "ignore").decode() + m.group(2)

@@ -4753,11 +4753,11 @@ steps.
 Build & Detector & Readout & Depth mm & DOI mm & DOI/d \% & Trans. mm & Energy \% & CTR ps \\
 \hline
 Xie 2026 & LYSO 0.44 mm pixels & dual & 20 & 1.78 & 9 & 0.5 p & 22 & 1100 \\
-LaBella 2021 & LYSO 1.4 mm, Prism + CNN & single & 20 & 1.84 & 9 & 1.4 p & -- & -- \\
-Ren 2014 & LYSO 1.5 mm, unpolished & dual & 20 & 1.9 & 10 & 1.5 p & 22 & -- \\
+LaBella 2021 & LYSO 1.4 mm, Prism + CNN & single & 20 & 1.84 & 9 & 1.6 p & 8.7 & -- \\
+Ren 2014 & LSO 1.5 mm, unpolished & dual & 20 & 1.9 & 10 & 1.5 p & 22 & -- \\
 Kuang 2020 & LYSO 1 mm pixels, aPET & dual & 20 & 1.96 & 10 & 1 p & 19.1 & 1200 r \\
 Zeng 2024 & LYSO 1.5 mm, tapered Prism & single & 20 & 2.25 & 11 & 1.5 p & 8.9 & 243 \\
-LaBella 2020 & LYSO 1.4 mm, Prism & single & 20 & 2.5 & 13 & 1.4 p & 9 & -- \\
+LaBella 2020 & LYSO 1.4 mm, Prism & single & 20 & 2.5 & 13 & 1.6 p & 9 & -- \\
 Zhang 2021 & LYSO 1.37 mm slabs & dual & 20 & 2.60 & 13 & 1.97 & 21.7 & 718 \\
 Zeng 2023 & LYSO 1.5 mm, Prism scanner & single & 20 & 2.85 & 14 & 1.22 & 12.6 & 271 \\
 Carra 2022 & LYSO monolith & single & 8 & 1.55 & 19 & 0.78 & 11 & 156 \\
@@ -4779,7 +4779,7 @@ Yamaya 2011 & LYSO 1 mm cubes, X'tal cube & 6 faces & 16 & 1 L & 6 & 1 p & 12.7 
 Stockhoff 2021 & LYSO monolith, 50 mm & single & 16 & 2.67 L & 17 & 1.14 & 11.0 & -- \\
 Gillam 2014 & LYSO 3 mm axial, 6 layers & SiPM & 18 & 3 L & 17 & 3 p & 11.8 & -- \\
 β-CUBE & LYSO monolith, 8 mm & single & 8 & 1.6 L & 20 & 0.76 & 12 & -- \\
-Peng 2019 & LYSO monolith, 4 stacked layers & 4 sides & 13.4 & 3.36 L & 25 & 1.1 & 10.3 & 348 \\
+Peng 2019a & LYSO monolith, 4 stacked layers & 4 sides & 13.4 & 3.36 L & 25 & 1.1 & 10.3 & 348 \\
 Lee 2026 & BGO semi-monolith & single & 20 & 5 b & 25 & 3.17 & 21 & 172 r \\
 Kang 2023 & LYSO 0.9 mm, 3 layers & SiPM & 15 & 5 L & 33 & 1 p & 24.3 & 9500 \\
 Cates 2024 & BGO monolith & single & 15 & -- & -- & -- & 17.6 & 237 r \\
@@ -4802,12 +4802,12 @@ rather than a result it is marked i.
 \hline
 Build & Detector & Readout & Depth mm & DOI mm & DOI/d \% & Trans. mm & Energy \% & CTR ps \\
 \hline
-Decuyper 2021 & LYSO monolith, 50 mm, NN & single & 16 & 0.71 & 4 & 0.42 & -- & -- \\
+Decuyper 2021 & LYSO monolith, unscattered & single & 16 & 0.71 & 4 & 0.42 & -- & -- \\
 Li 2012 & LYSO monolith, cMiCE SES & entrance & 15 & 1.52 & 10 & 0.91 & -- & -- \\
 Razdevšek 2025 & LSO 3 mm pixels, 8 layers & ideal & 20 & 1.7 e & 9 & 3 p & 10 i & 70 i \\
 Decuyper 2021 & LYSO monolith, scattered & single & 16 & 1.80 & 11 & 0.66 & -- & -- \\
-Petersen 2020 & LYSO 1.4 mm, Prism, ICS & single & 20 & 2.1 & 11 & 1.4 p & -- & -- \\
-Peng 2019 & LYSO monolith, 4 stacked layers & 4 sides & 12.6 & 3.16 L & 25 & 0.40 & 9.3 & -- \\
+Petersen 2020 & LYSO 1.4 mm, Prism, ICS & single & 20 & 2.1 & 11 & 1.4 p & 10 i & -- \\
+Peng 2019 & LYSO monolith, 4 stacked layers & 4 sides & 13.4 & 3.36 L & 25 & 0.40 & 9.3 & -- \\
 \hline
 \end{tabular}
 \end{scriptsize}
@@ -4817,7 +4817,10 @@ Decuyper's first row is unscattered events only (0.42 transverse is its
 non-Compton FWHM); its scattered events, about 60\% of the total, follow
 further down. Razdevšek's DOI is the 2.5 mm layer as a Gaussian-equivalent
 FWHM; Petersen's is the multi-crystal events of a CNN, 1.0 mm for
-single-crystal ones.
+single-crystal ones, and its 10\% energy resolution is set from experiment.
+Decuyper's DOI for all events is \mm{0.99}, transverse \mm{0.46}. Peng 2019
+is the simulation of the layered block measured as Peng 2019a above; its depth
+is the \mm{3.36} layer pitch, reflector included.
 
 \paragraph{Clinical reference}
 What the detectors above are measured against: the detectors of four current
@@ -4923,6 +4926,15 @@ whole system's timing resolution, an order of magnitude outside TOF. The $\beta$
 layers in \mm{8} (its \mm{1.6} is the layer width), its \mm{0.76} transverse
 is from the vendor abstract (\ref{note:Mollet2017}), and it reports a \ns{5}
 coincidence window but no CTR.
+Prism-PET's transverse is the \mm{1.6} pitch of \mm{1.4} crystals with
+\mm{0.2} BaSO$_4$ between them; LaBella 2021's 8.7\% energy is read off its
+Fig.\ 2, and LaBella 2020's 9\% is after DOI correction (14\% before). Ren
+2014's 22\% is the geometric-mean energy (30\% summed). Moliner 2012's detector
+figures and Gillam 2014's energy are cited from earlier papers, not measured
+there. Cates 2024's \ps{237} is the fast, Cherenkov-carrying half of its
+events against an LYSO reference; between two such detectors the authors
+estimate \ps{315}. No CTR is reported for any row left blank: those papers give a
+coincidence window or nothing.
 
 \end{programnote}
 

@@ -98,17 +98,23 @@ at similar results; they are one programme with a shared detector. Treat the
 consolidated entity as the wall, and its scope boundary as the map.
 
 \paragraph{Detector lineage}
-The scaling is exact and worth stating plainly:
+The scaling is worth stating plainly:
 
 \begin{itemize}
-	\item \textbf{Preclinical / Pisa:} \qtyproduct{25 x 25 x 8}{\milli\metre}
-		LYSO monolith, 64 x \qtyproduct{3 x 3}{\milli\metre} Hamamatsu SiPMs.
+	\item \textbf{Preclinical / Pisa:} \qtyproduct{25.6 x 25.6 x 8}{\milli\metre}
+		LYSO monolith, 64 Hamamatsu S14160-3050 SiPMs at \mm{3.2} pitch.
 		\mm{0.78} 2D FWHM, \mm{1.55} DOI FWHM, \ps{156} CTR at one
 		operating point (\ref{note:Carra2022}).
-	\item \textbf{Ghent parallel:} Stockhoff et al.\ 2021 PMB,
-		high-resolution monolithic LYSO with 6-layer DOI for clinical PET.
-		\gap{Block dimensions --- confirm whether this or the Pisa block is
-		reference [18] in the WT-PET paper.}
+	\item \textbf{Preclinical / Ghent:} the $\beta$-CUBE
+		(\ref{note:Krishnamoorthy2018}), \qtyproduct{25.4 x 25.4 x 8}{\mm}
+		LYSO. This, not the Pisa block, is reference [18] in the WT-PET paper,
+		the detector ``scaled up by a factor of 2''; Pisa's development is cited
+		separately ([22], \ref{note:Carra2022}).
+	\item \textbf{Clinical block, measured:} Stockhoff et al.\ 2021
+		(\ref{note:Stockhoff2021}) is the doubled block itself ---
+		\qtyproduct{50 x 50 x 16}{\mm} LYSO on 8 x 8
+		\qtyproduct{6 x 6}{\mm} SiPMs with 6-layer DOI --- not a parallel
+		design.
 	\item \textbf{Clinical / WT-PET:} \qtyproduct{50 x 50 x 16}{\milli\metre}
 		BGO or LYSO, 8 x 8 array of \qtyproduct{6 x 6}{\milli\metre} SiPMs,
 		6-layer DOI. The WT-PET paper states the detector was developed in
@@ -116,7 +122,7 @@ The scaling is exact and worth stating plainly:
 		preclinical monolithic detectors ``scaled up by a factor of 2''.
 \end{itemize}
 
-Every dimension doubles, and the SiPM pitch doubles with it (\mm{3}
+Every dimension roughly doubles, and the SiPM pitch with it (\mm{3.2}
 $\rightarrow$ \mm{6}), preserving the 8 x 8 channel count. \textbf{The clinical
 block geometry was set by doubling a prototype, not by optimisation} --- stated
 in their own words. \aside{Note this: it is a clean, citable instance of design-by-scaling
@@ -126,9 +132,10 @@ in exactly the place a co-design argument wants one.}
 Two flat panels, each \qtyproduct{70 x 106}{\centi\metre}, \cm{50} apart, patient
 standing upright between them. 14 x 20 = 280 monolithic blocks per panel.
 Detector surface reduced 1.9x and scintillator volume 2.2x versus LAFOV systems
-at comparable sensitivity. Later simulation work reports spatial resolution below
-\mm{2} across the whole imaging volume and sensitivity \qty{154.0}{cps\per\kilo\becquerel}
-against \qty{175.4}{cps\per\kilo\becquerel} for a Quadra-like system. Ghent-led;
+at comparable sensitivity. Its simulations give spatial resolution below
+\mm{2} across the whole imaging volume and NEMA sensitivity
+\qty{152}{kcps\per\mega\becquerel} with BGO (114 with LYSO) against 176.0 for
+the Quadra (its Table 4). Ghent-led;
 Sportelli and Belcari (Pisa) are co-authors. Carra is not on this paper.
 
 \aside{These system numbers are context only --- they do not belong in any chapter of
@@ -185,21 +192,23 @@ this paper despite the consortium relationship (\ref{prog:UTOFPET}).
 Method proceeds in two stages: an event timestamping algorithm based on neural
 networks, which is then integrated into a second network performing simultaneous
 position and timestamp estimation. Validated first in simulation, then on
-experimentally acquired data. Both algorithms are implemented in a low-cost FPGA
-suitable for integration into the detector.
-
-\gap{Which simulation framework --- GATE, or in-house? The abstract says only
-``a simulation framework''. Determines whether the sim-to-real story here
-overlaps Decuyper/van der Laan.}
+experimentally acquired data. The abstract says both algorithms are
+implemented in a low-cost FPGA; the body names no FPGA and reports no measured
+resources or latency, only an estimate (10--90\% of a medium-sized FPGA) and
+training on a GPU. The simulation is in-house, on Geant4 with the LUT Davis
+reflection model and custom SiPM Monte Carlo --- not GATE.
 
 \paragraph{Capsule}
 Carra et al.\ \cite{Carra2022} train a neural network that estimates event position
 \emph{and} timestamp jointly from a monolithic LYSO block, and --- the actual
-contribution --- run it on a low-cost FPGA inside the detector at more than
-$10^{6}$ events per second. Reported on experimental data at a 12 V
-overvoltage (Table 9): \mm{0.78} 2D FWHM in $(x,y)$, \mm{1.55} DOI FWHM,
+contribution --- design it light enough to run on a low-cost FPGA inside the
+detector at more than $10^{6}$ events per second (claimed, not demonstrated in
+the body). Reported on experimental data at a 12 V
+overvoltage (Table 9, in the crystal corners by §3.4, though the same section
+also calls the 2D figure an average): \mm{0.78} 2D FWHM in $(x,y)$, \mm{1.55}
+DOI FWHM,
 \ps{156} CTR, on a
-\qtyproduct{25 x 25 x 8}{\milli\metre} LYSO monolith read out by 64
+\qtyproduct{25.6 x 25.6 x 8}{\milli\metre} LYSO monolith read out by 64
 \qtyproduct{3 x 3}{\milli\metre} Hamamatsu SiPMs. The paper's stated framing is
 that monolithic crystals plus light networks can rival pixellated performance for
 TOF-PET while retaining better spatial and DOI resolution, with on-line
@@ -216,65 +225,65 @@ quadrature and scaled by $\sqrt{2}$ to two identical monoliths, so it is not
 flagged r; and the best figures need simulated events in the training set ---
 on experimental data alone, \ps{194} and \mm{0.88} at the same overvoltage.
 
-Two things matter here beyond the numbers. First, the block is the
-\textbf{half-scale progenitor of the WT-PET clinical detector} --- see
-\ref{prog:UTOFPET}; \qtyproduct{25 x 25 x 8}{\milli\metre} doubled in every
-dimension is the \qtyproduct{50 x 50 x 16}{\milli\metre} WT-PET block. Second,
+Two things matter here beyond the numbers. First, the WT-PET paper cites this
+as the UTOFPET detector development behind its clinical block (see
+\ref{prog:UTOFPET}), though the preclinical detector it says it scaled by two is
+the $\beta$-CUBE. Second,
 this is the paper that closes the naive form of ``use a network for position and
-time together,'' and it does so at the \emph{deployment} level, not just the
-algorithm level.
+time together,'' and it argues for deployment, not just the algorithm.
 
 \paragraph{Key Findings}
 \begin{itemize}
-	\item \textbf{Performance:} \mm{0.78} 2D FWHM in the $(x,y)$ plane,
-		\mm{1.2} FWHM in DOI, \ps{156} coincidence time resolution.
+	\item \textbf{Performance (12 V):} \mm{0.78} 2D FWHM in the $(x,y)$ plane,
+		\mm{1.55} FWHM in DOI, \ps{156} coincidence time resolution.
 		\textbf{Caveat: the crystal is \mm{8} thick.} \aside{These figures do not
-		transfer to the thicknesses relevant to this thesis, and }\mm{1.2} DOI
+		transfer to the thicknesses relevant to this thesis, and }\mm{1.55} DOI
 		FWHM on an \mm{8} block is a large fraction of the available depth.
-	\item \textbf{Readout:} 64 Hamamatsu SiPMs of
-		\qtyproduct{3 x 3}{\milli\metre} --- an 8 x 8 grid,
-		\mm{24} across, under a \mm{25} block.
-	\item \textbf{Real-time on-detector inference at $>10^{6}$ events/s in a
-		low-cost FPGA.} This is the load-bearing claim. The stated motivation is
-		that the best monolithic positioning algorithms could not run in
-		real-time in a detector; the networks are deliberately ``very light'' to
-		fit. \gap{Which FPGA, what resource utilisation, what latency, and what
-		the network actually is --- layer count, width, quantisation. This is
-		the whole contribution and none of it is in the abstract.}
-	\item \textbf{Ordering of the two networks.} Timestamping is solved first,
-		\emph{then} folded into the joint estimator. \gap{Verify the direction
-		of information flow. If the position network consumes the timestamp
-		estimate, the joint model is time-informs-light, not light-informs-time,
-		and the claim in \ref{note:Thull2026} that ``nobody runs it in reverse''
-		needs rewording. This is the single most important thing to check in
-		this paper.}
+		A check at 100 random points gives \ps{155}, \mm{0.80} and \mm{1.52}.
+	\item \textbf{Readout:} 64 Hamamatsu S14160-3050 SiPMs of
+		\qtyproduct{3 x 3}{\milli\metre} at \mm{3.2} pitch --- an 8 x 8 grid
+		\mm{25.6} across, matching the block.
+	\item \textbf{Light enough for real-time inference.} The stated motivation
+		is that the best monolithic positioning algorithms could not run in
+		real time in a detector. The position network has six layers
+		(128/40/30/15/10/3 neurons, about 8000 parameters, 16-bit weights), the
+		first locally connected over 2 x 2 SiPM patches; the joint stage is one
+		20-neuron layer with outputs $(x, y, z, t)$. The \num{e6} events/s is
+		a target; the HRFlexToT ASIC used tops out at \qty{750}{\kilo\hertz}.
+	\item \textbf{Information flows both ways.} The position and timestamp
+		networks are trained, frozen, then joined; the joining layer refines
+		position and time from both. Timing helps position: Table 8 shows 10--20\%
+		better 2D FWHM and over 30\% better DOI at low overvoltage. So this is
+		already a time-informs-position instance in a 64-channel monolith (see
+		\ref{note:Thull2026}).
 \end{itemize}
 
 \paragraph{Methods Worth Noting}
 \begin{itemize}
-	\item \textbf{Engineered features.} Secondary sources (e.g.\ the discussion
-		in later BGO monolithic work) credit this paper, alongside Kuhl et al.\
-		2024, with showing that engineered input features rather than raw
-		channel counts improve positioning accuracy. \gap{Which features.
-		Relevant because it bears directly on what the network is actually
-		given, and therefore on what is and is not foreclosed on the temporal
-		axis.}
-	\item \gap{Training data volume, calibration procedure, and whether
-		labelling was collimator-based. Compare against the several-weeks
-		fan-beam burden in \ref{note:Thull2026}.}
-	\item \gap{Whether per-event uncertainty is produced. Thull's
-		contribution is heteroscedastic $\sigma$; if Carra emits point
-		estimates only, the two are separable on that axis.}
+	\item \textbf{Engineered features.} Two are injected at the last layer:
+		the number of SiPMs reading over 5\% of the charge, and the variance of
+		the charge across the matrix, both for DOI. Inputs are the 8 x 8
+		charges normalised to sum to one, plus per-SiPM timestamps for timing.
+	\item \textbf{Calibration.} Collimator-based: coincidence with a
+		\qtyproduct{3 x 3 x 5}{\mm} LYSO crystal, run perpendicular and then at
+		\ang{45} to label depth; 4000 events at each of 400 points on a
+		\mm{1.2} grid, split 80/20. With about 20\,000 simulated events at each
+		of 2500 points added, 64 measured points suffice. Compare the
+		several-weeks fan-beam burden in \ref{note:Thull2026}.
+	\item \textbf{Point estimates only.} No per-event uncertainty; the loss
+		is Euclidean distance. Thull's heteroscedastic $\sigma$ is separable
+		from this on that axis.
 \end{itemize}
 
 \paragraph{Relevance to This Thesis}
 This is the prior art behind the ``joint NN position + timestamp estimation''
-kill. It is stronger than a typical novelty kill because it is not only
-published but \emph{deployed} --- FPGA, real-time, inside the detector --- and
-patented at the consortium level (\ref{prog:UTOFPET}). Any proposal in this space
-has to clear both the algorithm and the deployment claim.
+kill. It is stronger than a typical novelty kill because it is published,
+designed for real-time use inside the detector (a claim, not a demonstrated
+FPGA implementation), and patented at the consortium level
+(\ref{prog:UTOFPET}). Any proposal in this space has to clear both the
+algorithm and the deployment argument.
 
-What it does \emph{not} do, pending PDF verification:
+What it does \emph{not} do (checked against the PDF):
 \begin{itemize}
 	\item \textbf{No bound.} Performance is demonstrated, not characterised. No
 		Fisher information, no CRLB, no statement of what is achievable versus
@@ -283,8 +292,8 @@ What it does \emph{not} do, pending PDF verification:
 	\item \textbf{Single-vertex only.} Nothing on cardinality, multi-cluster
 		events, or interaction ordering. The temporal-axis question --- can the
 		joint distribution of per-channel arrival times resolve \emph{how many}
-		interactions occurred and in what order --- is not addressed.
-		\gap{Confirm; the abstract does not exclude it.}
+		interactions occurred and in what order --- is not addressed. Compton
+		scatter is in the simulation; pile-up is listed as future work.
 	\item \textbf{Thin crystal.} \mm{8}. The regime where DOI is hard and
 		multi-vertex events are common is not sampled.
 	\item \textbf{Detector fixed.} Geometry, pitch and thickness are inputs, not
@@ -345,7 +354,8 @@ polished LYSO at \mm{0.5} pitch, sweeping bias (\qtyrange{30.0}{33.0}{\volt} in
 100 crystals resolve; flood quality \textbf{4.32} at the best operating point
 against \textbf{2.82} for the same group's LG-SiPM detector on a nominally
 identical array. Temperature effect is negligible. The cost is timing:
-\ps{1152} CTR, and --- unremarked in the discussion --- a position-dependent
+\ps{1152} CTR, and --- noted in the discussion but never compared with the
+CTR --- a position-dependent
 timing offset spanning roughly \textbf{$\pm$\ps{2000}} across the array,
 \emph{larger than the CTR itself}.
  
@@ -381,13 +391,11 @@ that defines this benchmark.
 		\emph{worse} than LG-SiPM --- the intrinsic cost of continuous versus
 		circuit-based encoding. Per-crystal offset calibration is mandatory.
 		\textbf{Under-sold: the spread exceeds the resolution it perturbs.}
-	\item \textbf{Energy and timing maps are spatially anti-correlated.}
-		Edge crystals lose light through the lateral faces, so photopeak and
-		energy resolution degrade; but an edge crystal sits close to one anode,
-		which produces a fast leading edge that dominates the summed timing
-		signal, so CTR \emph{improves}. Two performance maps with opposite
-		spatial structure from one geometry. This is the physically interesting
-		result and the one worth citing.
+	\item \textbf{Claimed: energy and timing maps are anti-correlated.} The
+		discussion argues edge crystals lose light (worse energy) but sit near an
+		anode whose fast leading edge improves CTR. Its own Fig.\ 12 does not
+		bear this out: at every temperature the left-edge column is among the
+		worst crystals for CTR (about 1200--\ps{1300}). Do not cite it.
 	\item \textbf{DOI \mm{\sim1.78}}, slightly better than comparable
 		dual-ended detectors in their Table II. Left-right asymmetry from beam
 		divergence acknowledged but uncorrected.
@@ -491,8 +499,9 @@ of scintillator rather than rings of discrete detectors. Concept introduced by
 Stolin et al.\ in 2016.
  
 \paragraph{Why it matters here}
-This is the primary prior-art contrast for the capstone geometry, and the only
-other group building annular monolithic PET. Note the connection to Valencia
+This is the primary prior-art contrast for the capstone geometry, and one of
+the three groups that have built annular monolithic PET (with \ref{prog:i3M} and
+\ref{prog:HUST}). Note the connection to Valencia
 (\ref{prog:i3M}): Stan Majewski, formerly of WVU and now University of
 Virginia, co-authors i3M's single-tube feasibility study
 (\ref{note:Gonzalez2018}), and i3M has since built its single-tube rodent PET.
@@ -553,9 +562,12 @@ paper (Jaliparthi et al.\ 2021) and the construction and NU4-2008 paper
 \paragraph{Summary}
 The concept paper: a single faceted LYSO annulus in place of a ring of block
 detectors, with a simulation-based design study of the geometry.
-\gap{Unread. Year (2016 concept, 2017 paper?), journal, DOI; the design
-choices it fixes (facet count, thickness, readout pitch) and the resolution it
-predicts.}
+Stolin, Martone, Jaliparthi, Raylman, J.\ Med.\ Imaging 4(1):011007 (2017),
+doi 10.1117/1.JMI.4.1.011007 (as cited by Gonzalez 2018 and Freire 2022).
+Second-hand, via Freire 2022: a LYSO tube with a \mm{50} cylindrical inner face
+and a 12-facet outer face, so the design changed before the 14-facet build.
+\gap{Unread: no PDF or bib entry yet. The resolution it predicts and its
+readout pitch.}
 
 \end{papernote}
 
@@ -619,11 +631,12 @@ does not belong in a monolithic-crystal survey on its own terms.
 \paragraph{Why it stays in the file anyway}
 \textbf{J-PET derives position from timing.} Position along the strip is computed
 from the timestamps at the left and right ends, $t_L$ and $t_R$. That is
-time-informing-position, running in production since the 2009 patent.
+time-informing-position, in use since the patent applications of 2010
+(PCT PL2010/00061 and 00062).
  
-This is the counterexample to the claim in \ref{note:Thull2026} that ``nobody
-appears to run it in reverse''. \textbf{That sentence as written is false and
-must be narrowed.} The defensible version:
+This, with \ref{note:Carra2022}, was the counterexample to an earlier claim
+in \ref{note:Thull2026} that ``nobody appears to run it in reverse''; that
+sentence has been narrowed. The defensible version:
  
 \begin{quote}
 	Position-from-timing is established in 1D along a strip with two-ended
@@ -638,13 +651,14 @@ identifiability question --- but it has to be stated, not assumed. Anyone in a
 confirmation seminar who knows J-PET will raise it.
  
 \paragraph{Timeline and scale}
-Patent 2009. First prototype 2014 (``small barrel'', 24 strips). Full three-layer
+Patent applications 2010. First prototype 2014 (``small barrel'', 24 strips). Full three-layer
 prototype 2016. Modular portable scanner 2021, in hospital use. Total-body J-PET
 under construction on the modular concept. Construction rests on 17
 patent-protected solutions.
  
 Readout: Hamamatsu R9800 PMTs, signals sampled in the voltage domain at four
-thresholds with \ps{30} timing accuracy, triggerless DAQ. A fourth layer uses
+thresholds, triggerless DAQ. \gap{A source for the \ps{30} timing accuracy
+once noted here: Moskal 2021's only \ps{30} is a laboratory Cherenkov CRT.} A fourth layer uses
 SiPMs.
  
 \paragraph{Scope}
@@ -695,7 +709,8 @@ group with a decade of monolithic experience and a commercial pipeline.
  
 The funded output exists: the single-LYSO-tube rodent scanner prototype
 (\ref{note:Freire2022}). So the annular monolithic geometry is occupied at
-preclinical scale by two groups, this one and \ref{prog:AnnPET}, and the
+preclinical scale by three groups, this one, \ref{prog:AnnPET} and
+\ref{prog:HUST}, and the
 question moves from ``is it open'' to ``what did each leave undone''.
 i3M has since taken it to organ scale too, as a glued ring of curved
 crystals for breast (\ref{note:Freire2026}).
@@ -1430,8 +1445,11 @@ arm. The light-distribution version of ICS characterisation should be treated as
 The temporal axis --- cardinality and interaction ordering inferred from the joint
 distribution of per-channel arrival times rather than from photon counts --- and the
 information-theoretic bound on separability are the surviving directions. Note that
-Carra et al.\ 2022 runs light-informs-timing and must be distinguished carefully; nobody
-appears to run it in reverse.
+Carra et al.\ 2022 runs information both ways --- its joint layer uses timing to
+refine position as well as light to refine timing (\ref{note:Carra2022}) --- and
+J-PET positions along a strip from timing (\ref{prog:J-PET}), so ``time informs
+position'' is not new; what is unaddressed is cardinality and ordering from
+per-channel arrival times.
 \end{papernote}
  
 \end{programnote}
@@ -2219,7 +2237,8 @@ calibration data; test data keep them.
 		\mm{0.80}/\mm{1.05}, essentially at the bound.
 \end{itemize}
 X/Y sits 15--25\% above the bound; DOI is over double it experimentally and
-1.5x in simulation. Two causes are isolated by simulation: Compton scatter in the
+about 1.7x in simulation for the SES detector (1.5x for the simulated
+conventional one). Two causes are isolated by simulation: Compton scatter in the
 crystal (removing it improves X/Y by 8\% and DOI by 16\%, DOI worse because
 small-angle scatter dominates) and the ML clustering itself (true-DOI tables
 improve DOI by 22\% and X/Y by 5\%). The clustering also \emph{underestimates} table variance,
@@ -2307,7 +2326,8 @@ authors judge it unnecessary.
 	\item Both photons of a pair can land in the ring at once, and their light
 		overlaps. Simulated by adding two measured single events: below a
 		\degs{70} separation the line of response is visibly wrong; above it
-		the overlap still adds \mm{0.65}, taking the angle to \mm{1.14}.
+		the overlap still adds \mm{0.65} in quadrature, taking the intrinsic \mm{0.94}
+		to \mm{1.14}.
 	\item Derenzo rods of \mm{1.2} resolved, \mm{1.0} barely, reconstructed from
 		the \keV{1022} coincidence peak (950--\keV{1300}) with no correction for
 		the overlap.
@@ -2335,7 +2355,7 @@ Xie, Huang, Xu, Peng. Two-page proceedings.
 \paragraph{Summary}
 The second-generation ring: twelve LYSO slices, each the \mm{5} wall of
 \ref{note:Xu2019} but only \mm{1} long, glued with \mm{0.1} of BaSO$_4$ in
-epoxy, so the ring is now segmented axially. Read on the \emph{outer}
+optical glue, so the ring is now segmented axially. Read on the \emph{outer}
 surface instead of the ends, by 25 arrays of 2 x 4 SiPMs (98 channels after
 row-and-column summing); inner surface and ends under aluminium foil. Light
 spreads 9.5--\mm{12.6} around the ring, as before, and stays within one or two
@@ -2366,7 +2386,7 @@ on the end face and \qty{2.6}{\nm} on the outer wall (atomic force
 microscopy) --- the brittle hollow ring needs it. And the second generation:
 twelve \mm{1} slices of the same ring, BaSO$_4$ between them, read on the outer
 surface (built in \ref{note:Zhang2019a}). A Derenzo phantom here resolves
-\mm{1.4} rods.
+\mm{1.4} rods (this phantom has no \mm{1.2} sector).
 
 \paragraph{Why it matters here}
 A rare measured surface finish on a monolith, in the units \ref{prog:Davis}
@@ -2406,7 +2426,7 @@ optical model and the bench, unremarked.
 \end{programnote}
 
 % ===========================================================================
-% 7d. SIAT Shenzhen -- the semi-monolithic slab line. All six read in full.
+% 7d. SIAT Shenzhen -- the semi-monolithic slab line. All eight read in full.
 % ===========================================================================
 
 \begin{programnote}{SIAT Shenzhen -- long semi-monolithic slabs with DOI}{SIAT}
@@ -2431,7 +2451,7 @@ them one at a time --- longer slabs in \ref{note:Zhang2019}, thicker ones in
 different crystal in \ref{note:Kuang2026}, a scanner in
 \ref{note:Kuang2026a}. Beside them sits the group's pixelated dual-ended
 scanner, \ref{note:Kuang2020} --- the yardstick the slabs are meant to beat.
-All seven are read in full. The scanner's ring is simulated with Gaussian
+All eight cards are read in full. The scanner's ring is simulated with Gaussian
 detectors, so the line has yet to show a measured system; i3M has
 (\ref{note:Cucarella2026}).
 
@@ -2449,8 +2469,8 @@ cheapest published counter-argument to a monolithic annulus --- half the
 positioning problem solved by sawing --- and it is the one this thesis has to
 answer, not dismiss. Two further reasons: this is the only line pushing GAGG
 rather than LYSO (\ref{note:Kuang2026}), and \ref{note:Kinyanjui2025}
-against \ref{note:Zhang2019} is a rare like-for-like of analytic against
-learned positioning on the same hardware. The same technique appears at
+is a rare like-for-like of analytic against learned positioning on the same
+hardware and data. The same technique appears at
 \ref{prog:i3M} (\ref{note:Freire2022a}) and \ref{prog:Aachen}; this is the
 group that has carried it furthest, and the second Chinese group on the map
 after \ref{prog:HUST}.
@@ -2473,7 +2493,7 @@ crystal).
 
 \paragraph{Key Findings}
 All \mm{1} slices resolve, with slice-based energy resolution
-\qty{14.9}{\percent} and \ps{575} timing. Positioning is quoted as mean
+\qty{14.9}{\percent} and \ps{575} timing against a reference PMT. Positioning is quoted as mean
 absolute error, not FWHM: \mm{1.15} in both $y$ and $z$, falling to \mm{0.7}
 once multiple-scatter events are rejected. Centre of gravity gives a different
 $y$ for the same $y$ at different depths --- a depth-dependent edge effect ---
@@ -2597,8 +2617,10 @@ foils''. It means enhanced specular reflector; do not quote that sentence.}
 \paragraph{Key Findings}
 Single-ended: $y$ \mm{2.43}, DOI \mm{4.77}, energy \qty{25.7}{\percent}, timing
 \ps{779}. Dual-ended: $y$ \mm{1.97}, DOI \mm{2.60}, energy
-\qty{21.7}{\percent}, timing \ps{718} --- so the second photodetector nearly
-halves the depth error and does little else. All but the edge slices resolve.
+\qty{21.7}{\percent}, timing \ps{718} --- both timings against a
+\qtyproduct{2 x 2 x 20}{\mm} reference crystal. The second photodetector nearly
+halves the depth error, improves $y$ by a fifth, and barely moves energy and
+timing. All but the edge slices resolve.
 The paper says plainly that its energy and timing are worse than a segmented
 array's and need work, and claims only cost against the array and a smaller
 edge effect against a full monolith.
@@ -2607,7 +2629,8 @@ The edge slices fail for an electronic reason, not an optical one: the
 TOFPET2 lower thresholds were set high, so for an edge slice only a few SiPMs
 in the edge row cross them, and the slice smears into a bright line.
 The authors put the loss against their \mm{10} detector --- $y$ \mm{1.44} to
-\mm{2.43}, depth \mm{1.86} to \mm{4.72} --- down to thickness, and the worse
+\mm{2.43}, depth \mm{1.86} to \mm{4.72} (their figure; Table 1 averages to
+\mm{4.77}) --- down to thickness, and the worse
 energy resolution (25.7\% against 18.8\%) to the ASIC's thresholds dropping
 small signals. But slab width, length and electronics all changed between
 the two, so thickness alone is not isolated; the comparison is suggestive,
@@ -2716,8 +2739,11 @@ The like-for-like that \ref{note:Decuyper2021} cannot give: same detector, same
 data, analytic against learned, and the improvement concentrated at the edges.
 A tree ensemble beating centre of gravity by \qty{33}{\percent} on one axis
 sets the floor any annulus positioning network has to clear before the network
-itself is the interesting part --- with the caveat that it is judged on its own
-calibration points, so the floor is if anything optimistic.
+itself is the interesting part --- with two caveats that make the floor if
+anything optimistic: it is judged on its own calibration points, and on data
+with inter-crystal scatter cut out. Its centre-of-gravity baseline, \mm{1.38},
+is already better than the \mm{1.68} the same detector gets in
+\ref{note:Kinyanjui2026}.
 
 \end{papernote}
 
@@ -2734,8 +2760,8 @@ the slabs, \mm{0.08} a layer with glue. Large faces and the SiPM face polished;
 front and both ends rough and black-inked. A \mm{1.5} glass light guide, with
 two cuts near the long edges to separate the outer slabs, on a 4 x 16 array of
 Hamamatsu S14160-3050HS SiPMs (\qtyproduct{3 x 3}{\mm} active at \mm{3.65}
-pitch); rows and columns summed, 64 signals to 4 + 16, with one timestamp from
-the summed rows by leading edge. Measured at \qty{14}{\celsius}.
+pitch); rows and columns summed, 64 signals to 4 + 16, with three timestamps
+from the summed rows by leading-edge comparators. Measured at \qty{14}{\celsius}.
 
 \paragraph{Method}
 Positions selected by electronic collimation (a \mm{0.3} $^{22}$Na source in
@@ -4752,13 +4778,13 @@ steps.
 \hline
 Build & Detector & Readout & Depth mm & DOI mm & DOI/d \% & Trans. mm & Energy \% & CTR ps \\
 \hline
-Xie 2026 & LYSO 0.44 mm pixels & dual & 20 & 1.78 & 9 & 0.5 p & 22 & 1100 \\
+Xie 2026 & LYSO 0.44 mm pixels & dual & 20 & 1.78 & 9 & 0.5 p & 22.7 & 1152 \\
 LaBella 2021 & LYSO 1.4 mm, Prism + CNN & single & 20 & 1.84 & 9 & 1.6 p & 8.7 & -- \\
 Ren 2014 & LSO 1.5 mm, unpolished & dual & 20 & 1.9 & 10 & 1.5 p & 22 & -- \\
-Kuang 2020 & LYSO 1 mm pixels, aPET & dual & 20 & 1.96 & 10 & 1 p & 19.1 & 1200 r \\
+Kuang 2020 & LYSO 1 mm pixels, aPET & dual & 20 & 1.96 & 10 & 1.07 p & 19.1 & 1200 r \\
 Zeng 2024 & LYSO 1.5 mm, tapered Prism & single & 20 & 2.25 & 11 & 1.6 p & 8.9 & 243 \\
 LaBella 2020 & LYSO 1.4 mm, Prism & single & 20 & 2.5 & 13 & 1.6 p & 9 & -- \\
-Zhang 2021 & LYSO 1.37 mm slabs & dual & 20 & 2.60 & 13 & 1.97 & 21.7 & 718 \\
+Zhang 2021 & LYSO 1.37 mm slabs & dual & 20 & 2.60 & 13 & 1.97 & 21.7 & 718 r \\
 Zeng 2023 & LYSO 1.5 mm, Prism scanner & single & 20 & 2.85 & 14 & 1.22 & 12.6 & 271 \\
 Carra 2022 & LYSO monolith & single & 8 & 1.55 & 19 & 0.78 & 11 & 156 \\
 Zhang 2019 & LYSO 1 mm slabs, painted & single & 10 & 1.55 & 16 & 1.07 & 24.9 & 788 r \\
@@ -4767,8 +4793,8 @@ Kinyanjui 2025 & LYSO 0.96 mm slabs, XGBoost & single & 10 & 1.67 & 17 & 0.92 & 
 Borghi 2016 & LYSO monolith, 32 mm & single & 22 & 3.73 & 17 & 1.68 & 9.9 & 214 \\
 Pizzichemi 2019 & LYSO 1.53 mm, sharing & single & 15 & 3 & 20 & 1.5 p & 8.9 & 157 \\
 Kinyanjui 2026 & LYSO 0.96 mm slabs, painted & single & 10 & 2.14 & 21 & 1.68 & 17.4 & 3340 r \\
-Kuang 2026 & GAGG 0.96 mm slabs & single & 10 & 2.33 & 23 & 1.59 & 14.7 & 4300 r \\
-Zhang 2021 & LYSO 1.37 mm slabs & single & 20 & 4.77 & 24 & 2.43 & 25.7 & 779 \\
+Kuang 2026 & GAGG 0.96 mm slabs & single & 10 & 2.33 & 23 & 1.60 & 15.6 & 4300 r \\
+Zhang 2021 & LYSO 1.37 mm slabs & single & 20 & 4.77 & 24 & 2.43 & 25.7 & 779 r \\
 Li 2012 & LYSO monolith, cMiCE & single & 15 & 3.69 & 25 & 1.55 & -- & -- \\
 Cucarella 2026 & LYSO 0.97 mm slabs, 25.6 mm & single & 12 & 3.08 & 26 & 1.7 & 16.4 & 252 \\
 Pizzichemi 2016 & LYSO 1.53 mm, sharing & single & 15 & 4.1 & 27 & 1.5 p & 12.7 & 353 \\

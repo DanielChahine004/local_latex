@@ -547,7 +547,9 @@ RADAR_CSS = """
 DETRADAR_SRC = r"""
 function Component({ props }) {
   const p = props, axes = p.axes || [], rows = p.rows || [], refs = p.reference || [];
-  const pal = ["#3987e5", "#eb6834", "#1baf7a", "#eda100", "#e87ba4", "#9085e9"];
+  const pal = ["#3987e5", "#eb6834", "#1baf7a", "#eda100", "#e87ba4", "#9085e9",
+               "#e34948", "#5ec4e8", "#c9d64a", "#b07a4f", "#f2a7c3", "#8fd694"];
+  const colour = k => pal[k % pal.length], dashOf = k => k >= pal.length ? "2 3" : "";
   const [sel, setSel] = React.useState(p.initial || []);
   const [q, setQ] = React.useState("");
   const keep = { onPointerDown: e => e.stopPropagation(), onMouseDown: e => e.stopPropagation(),
@@ -561,7 +563,22 @@ function Component({ props }) {
   const over = (r, i) => r.v[axes[i].key] > axes[i].max;
   const num = v => (+(+v).toFixed(2)).toString();
   const fmt = (r, a) => { const v = r.v[a.key]; return v > 0 ? num(v) + (r.f[a.key] ? " " + r.f[a.key] : "") : "–"; };
-  const toggle = i => setSel(s => s.includes(i) ? s.filter(x => x !== i) : s.length < pal.length ? [...s, i] : s);
+  const toggle = i => setSel(s => s.includes(i) ? s.filter(x => x !== i) : [...s, i]);
+  // each spoke carries a mirrored density of every measured build along it
+  const built = rows.filter(r => r.set !== p.simSet);
+  const violin = i => {
+    const f = built.map(r => frac(r, i)).filter(v => v != null);
+    if (f.length < 3) return null;
+    const bw = 0.06, ts = [], d = [];
+    for (let t = 0; t <= 1.3001; t += 0.01) { ts.push(t);
+      d.push(f.reduce((a, x) => a + Math.exp(-0.5 * ((t - x) / bw) ** 2), 0)); }
+    const dmax = Math.max(...d), th = -Math.PI / 2 + 2 * Math.PI * i / N, nx = -Math.sin(th), ny = Math.cos(th);
+    const side = sg => ts.map((t, j) => { const [x, y] = at(t, i), w = 20 * d[j] / dmax; return [x + sg * w * nx, y + sg * w * ny]; });
+    const pts = side(1).concat(side(-1).reverse()).map(x => x.join(",")).join(" ");
+    const sorted = [...f].sort((a, b) => a - b), med = sorted[Math.floor(sorted.length / 2)], [mx, my] = at(med, i);
+    return <g key={"v" + i}><polygon points={pts} className="violin" />
+      <line x1={mx - 22 * nx} y1={my - 22 * ny} x2={mx + 22 * nx} y2={my + 22 * ny} className="median" /></g>;
+  };
   const shown = rows.map((r, i) => [r, i]).filter(([r]) => !q || (r.name + " " + r.detector + " " + r.set).toLowerCase().includes(q.toLowerCase()));
   const shape = (r, colour, dash, fill, key, slot = 0) => {
     const f = axes.map((_, i) => frac(r, i)), pts = f.map((v, i) => at(v == null ? 0 : v, i));
@@ -581,11 +598,12 @@ function Component({ props }) {
     <div className="drad" style={{ zoom: p.scale }} {...keep}>
       <div className="cols">
         <div className="pick">
-          <input value={q} placeholder="filter detectors" spellCheck={false} onChange={e => setQ(e.target.value)} />
+          <div className="row"><input value={q} placeholder="filter detectors" spellCheck={false} onChange={e => setQ(e.target.value)} />
+            <button onClick={() => setSel([])}>clear</button><span className="n">{sel.length} shown</span></div>
           <div className="list">{shown.map(([r, i]) => { const k = sel.indexOf(i);
             return <label key={i} className={r.set === p.simSet ? "sim" : ""}>
               <input type="checkbox" checked={k >= 0} onChange={() => toggle(i)} />
-              <span className="sw" style={{ background: k >= 0 ? pal[k] : "transparent" }} />
+              <span className="sw" style={{ background: k >= 0 ? colour(k) : "transparent" }} />
               {r.name} <span className="det">{r.detector}</span></label>; })}</div>
         </div>
         <div className="plot">
@@ -598,18 +616,19 @@ function Component({ props }) {
                   return <text key={k} x={tx + 4} y={ty - 4} className="tick">{num(a.max * k)}</text>; })}
                 <text x={lx} y={ly} className="lab" textAnchor={lx < cx - 5 ? "end" : lx > cx + 5 ? "start" : "middle"}
                       dominantBaseline="middle">{a.label}</text></g>; })}
+            {p.violins !== false ? axes.map((_, i) => violin(i)) : null}
             {refs.map((r, k) => shape(r, "#a8a69e", "2 4", "rgba(168,166,158,.08)", "ref" + k, -1))}
-            {sel.map((i, k) => shape(rows[i], pal[k], rows[i].set === p.simSet ? "6 4" : "", pal[k] + "22", "s" + i, k))}
+            {sel.map((i, k) => shape(rows[i], colour(k), rows[i].set === p.simSet ? "6 4" : dashOf(k), colour(k) + "22", "s" + i, k % 6))}
           </svg>
           <table><thead><tr><th></th>{axes.map(a => <th key={a.key}>{a.label}</th>)}</tr></thead>
             <tbody>
               {refs.map((r, k) => <tr key={"r" + k} className="ref"><th><span className="sw" style={{ background: "#a8a69e" }} />{r.name} (clinical)</th>
                 {axes.map(a => <td key={a.key}>{fmt(r, a)}</td>)}</tr>)}
-              {sel.map((i, k) => <tr key={i}><th><span className="sw" style={{ background: pal[k] }} />{rows[i].name}</th>
+              {sel.map((i, k) => <tr key={i}><th><span className="sw" style={{ background: colour(k) }} />{rows[i].name}</th>
                 {axes.map(a => <td key={a.key}>{fmt(rows[i], a)}</td>)}</tr>)}</tbody></table>
         </div>
       </div>
-      <div className="note">Smaller is better: each axis runs in its own units from 0 at the centre to the rim, ticks at half and full scale. A value past the rim is drawn hollow in the band outside it (log-scaled up to 20 times the rim), with its number. Grey dotted: the clinical reference. Dashed: simulations. A missing value sits at the centre. Letters: {Object.entries(p.flags || {}).map(([a, b]) => a + " " + b).join(", ")}.</div>
+      <div className="note">Smaller is better: each axis runs in its own units from 0 at the centre to the rim, ticks at half and full scale. A value past the rim is drawn hollow in the band outside it (log-scaled up to 20 times the rim), with its number. Grey dotted: the clinical reference. Shaded on each spoke: how all measured builds spread along it, the bar at their median. Dashed: simulations. A missing value sits at the centre. Letters: {Object.entries(p.flags || {}).map(([a, b]) => a + " " + b).join(", ")}.</div>
     </div>
   );
 }
@@ -631,6 +650,12 @@ DETRADAR_CSS = """
 .drad svg { width: 100%; height: auto; }
 .drad .ring { fill: none; stroke: rgba(127,127,127,.25); }
 .drad .ring.overflow { stroke-dasharray: 2 4; }
+.drad .violin { fill: rgba(195,194,183,.13); stroke: rgba(195,194,183,.35); stroke-width: .8; }
+.drad .median { stroke: rgba(240,239,236,.7); stroke-width: 1.5; }
+.drad .pick .row { display: flex; gap: 6px; align-items: center; }
+.drad .pick .row input { flex: 1; }
+.drad .pick button { font: 12px system-ui, sans-serif; color: inherit; background: #1b1f29; border: 1px solid rgba(127,127,127,.5); border-radius: 6px; padding: 3px 8px; cursor: pointer; }
+.drad .pick .n { font-size: 11px; opacity: .6; white-space: nowrap; }
 .drad .spoke { stroke: rgba(127,127,127,.3); }
 .drad .lab { fill: #c3c2b7; font-size: 12px; }
 .drad .tick { fill: #898781; font-size: 9px; }

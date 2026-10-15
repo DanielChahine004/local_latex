@@ -595,6 +595,19 @@ function Component({ props }) {
                        textAnchor={tx < cx - 5 ? "end" : tx > cx + 5 ? "start" : "middle"}>{num(r.v[axes[i].key])}</text>; })() : null}</g>)}
     </g>;
   };
+  // several clinical scanners: the band between the best and the worst of them on
+  // each axis, counting only the axes each one reports, and a dot per scanner
+  const band = () => {
+    const lo = [], hi = [];
+    axes.forEach((_, i) => { const f = refs.map(r => frac(r, i)).filter(v => v != null);
+      lo.push(f.length ? Math.min(...f) : 0); hi.push(f.length ? Math.max(...f) : 0); });
+    const ring = fs => fs.map((v, i) => at(v, i).join(",")), d = "M" + ring(hi).join("L") + "Z M" + ring(lo).join("L") + "Z";
+    return <g key="band">
+      <path d={d} fillRule="evenodd" fill="rgba(168,166,158,.16)" stroke="#a8a69e" strokeWidth="1.5" strokeDasharray="2 4" />
+      {refs.map((r, k) => axes.map((a, i) => { const v = frac(r, i); if (v == null) return null; const [x, y] = at(v, i);
+        return <circle key={k + "-" + i} cx={x} cy={y} r="3" fill="#a8a69e"><title>{r.name}, {a.label}: {fmt(r, a)}</title></circle>; }))}
+    </g>;
+  };
   return (
     <div className="drad" style={{ zoom: p.scale }} {...keep}>
       <div className="cols">
@@ -621,7 +634,7 @@ function Component({ props }) {
                 <text x={lx} y={ly} className="lab" textAnchor={lx < cx - 5 ? "end" : lx > cx + 5 ? "start" : "middle"}
                       dominantBaseline="middle">{a.label}</text></g>; })}
             {p.violins !== false ? axes.map((_, i) => violin(i)) : null}
-            {showRef ? refs.map((r, k) => shape(r, "#a8a69e", "2 4", "rgba(168,166,158,.08)", "ref" + k, -1)) : null}
+            {showRef ? (refs.length > 1 ? band() : refs.map((r, k) => shape(r, "#a8a69e", "2 4", "rgba(168,166,158,.08)", "ref" + k, -1))) : null}
             {sel.map((i, k) => shape(rows[i], colour(k), rows[i].set === p.simSet ? "6 4" : dashOf(k), colour(k) + "22", "s" + i, k % 6))}
           </svg>
           <table><thead><tr><th></th>{axes.map(a => <th key={a.key}>{a.label}</th>)}</tr></thead>
@@ -632,7 +645,7 @@ function Component({ props }) {
                 {axes.map(a => <td key={a.key}>{fmt(rows[i], a)}</td>)}</tr>)}</tbody></table>
         </div>
       </div>
-      <div className="note">Smaller is better: each axis runs in its own units from 0 at the centre to the rim, ticks at half and full scale. A value past the rim is drawn hollow in the band outside it (log-scaled up to 20 times the rim), with its number. Grey dotted: the clinical reference. Shaded on each spoke: how all measured builds spread along it. Dashed: simulations. A missing value sits at the centre. Letters: {Object.entries(p.flags || {}).map(([a, b]) => a + " " + b).join(", ")}.</div>
+      <div className="note">Smaller is better: each axis runs in its own units from 0 at the centre to the rim, ticks at half and full scale. A value past the rim is drawn hollow in the band outside it (log-scaled up to 20 times the rim), with its number. Grey: the clinical scanners, as the band from the best to the worst of them on each axis (a scanner that does not report an axis is left out of it). Shaded on each spoke: how all measured builds spread along it. Dashed: simulations. A missing value sits at the centre. Letters: {Object.entries(p.flags || {}).map(([a, b]) => a + " " + b).join(", ")}.</div>
     </div>
   );
 }

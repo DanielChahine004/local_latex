@@ -102,7 +102,7 @@ derive.Crystal = { from = "Detector", rules = [["LYSO", "LYSO"], ["BGO", "BGO"],
 
 [tables."Leaderboard/Scanners"]
 at = [10710, 2350, 2700, 900]
-sets = ["Scanners"]
+sets = ["Scanners", "Clinical scanners"]
 derive.Type = { from = "Detector", rules = [["semi-monolithic", "semi-monolith", "slabs"], ["layered", "layers"], ["monolithic", "monolith", "annulus"], ["pixelated"]] }
 
 # Demand against supply: what each clinical use asks of a scanner, what each

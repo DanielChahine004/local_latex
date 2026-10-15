@@ -4544,20 +4544,25 @@ if it beats simply including both lines.
 
 \paragraph{What it is}
 The clinical systems a monolithic or DOI detector has to beat, kept as a
-reference rather than a research line. One entry so far: Siemens Healthineers'
-Biograph Vision Quadra, measured at Bern University Hospital, whose detector is
-the \ref{prog:Leaderboard}'s clinical reference row --- pixelated LSO on SiPMs,
-read out at one end, with no DOI.
-\gap{One scanner is a point, not a spread: the uEXPLORER (Spencer et al.\ 2021)
-and a standard-length system such as the Biograph Vision 600 (van Sluis et al.\
-2019), whose detector the Quadra reuses, would show what ``clinical'' covers.}
+reference rather than a research line: four NEMA NU 2 evaluations chosen to
+span the field. Siemens Healthineers' Biograph Vision 600 and its long-axial
+Quadra share one LSO detector, the best timing in clinical use; United
+Imaging's uEXPLORER has the finest pitch and the longest field; GE
+HealthCare's Omni Legend is BGO without TOF. All are pixelated, read out at
+one end, and have no DOI; together they are the \ref{prog:Leaderboard}'s
+clinical reference band.
+\gap{Philips (Vereos, Vereos Z) is the one major vendor not here; and none of
+these papers measures DOI or parallax, which is the axis the map's detectors
+compete on.}
 
 \paragraph{Why it matters here}
-The detector figures that a new architecture is compared against, from a NEMA
-measurement rather than a datasheet. Its transverse resolution is set by the
-pitch and its depth error by the full crystal, so the room a monolith has to
-win is mostly in depth: on timing, \ps{225} is matched on this map only by the
-best monoliths, \ref{note:Carra2022} and \ref{note:Borghi2016}.
+The detector figures that a new architecture is compared against, from NEMA
+measurements rather than datasheets. Transverse resolution is set by the pitch
+(2.8--\mm{4.1}) and the depth error by the whole crystal (18--\mm{30}), so the
+room a monolith has to win is mostly in depth. On timing the clinical range is
+wide: \ps{210} on the Vision is matched on this map only by the best monoliths,
+\ref{note:Carra2022} and \ref{note:Borghi2016}, while \ps{505} on the
+uEXPLORER is beaten by most of them, and the Omni Legend has no TOF at all.
 
 \begin{papernote}{Prenosil et al.\ 2021 -- Performance characteristics of the Biograph Vision Quadra PET/CT system with a long axial field of view using the NEMA NU 2-2018 standard}{Prenosil2021}
 \thumb{img/prenosil2021.png}
@@ -4587,11 +4592,109 @@ mini block), eight mini blocks to a block, 38 blocks to a ring and 32 rings ---
 \end{itemize}
 
 \paragraph{Why it matters here}
-The source of the leaderboard's clinical row: transverse \mm{3.2} (the pitch),
+The source of the leaderboard's Quadra row: transverse \mm{3.2} (the pitch),
 energy 9.8\%, CTR \ps{225}. It reports no DOI because the detector has none;
 the \mm{12.6} the row carries is modelled from the crystal, not measured
 here. The sensitivity is what a long axial field buys, not the detector, so
 it sits in no detector table.
+\end{papernote}
+
+\begin{papernote}{van Sluis et al.\ 2019 -- Performance characteristics of the digital Biograph Vision PET/CT system}{vanSluis2019}
+\thumb{img/vansluis2019.png}
+J.\ Nucl.\ Med.\ 60(7):1031--1036, \doi{10.2967/jnumed.118.215418}. van Sluis,
+de Jong, Schaar, Noordzij, van Snick, Dierckx, Borra, Willemsen, Boellaard ---
+University Medical Center Groningen, on the first Vision installed.
+
+\paragraph{Detector}
+The Quadra's detector at standard length: \qtyproduct{3.2 x 3.2 x 20}{\mm} LSO
+in 5 x 5 mini blocks on \qtyproduct{16 x 16}{\mm} SiPM arrays, the crystal face
+fully covered by silicon, eight rings of 38 blocks, \cm{26.1} axial, \cm{78}
+bore. Measured to NEMA NU 2-2012, with the 2018 additions, against the
+photomultiplier Biograph mCT Flow it replaced.
+
+\paragraph{Key Findings}
+\begin{itemize}
+	\item Spatial resolution 3.6/\mm{3.5} transverse/axial FWHM at \cm{1}.
+	\item Sensitivity 16.4 kcps/MBq; peak NECR 306 kcps at 32.6 kBq/mL,
+		scatter fraction 38.7\%.
+	\item TOF \ps{210}, \ps{215} by peak NECR --- against \ps{540} on the mCT
+		Flow.
+	\item No energy resolution reported.
+\end{itemize}
+
+\paragraph{Why it matters here}
+The same detector as \ref{note:Prenosil2021} on a short ring, so the pair
+separates what the detector gives from what axial length buys: a tenth of the
+sensitivity, the same timing. \ps{210} against \ps{540} is the size of the step
+SiPMs with full coverage made, the step a monolith's timing is measured
+against.
+\end{papernote}
+
+\begin{papernote}{Spencer et al.\ 2021 -- Performance evaluation of the uEXPLORER total-body PET/CT scanner based on NEMA NU 2-2018}{Spencer2021}
+\thumb{img/spencer2021.png}
+J.\ Nucl.\ Med.\ 62(6):861--870, \doi{10.2967/jnumed.120.250597}. Spencer,
+Berg, Schmall, Omidvari, Leung, Abdelhafez, Tang, Deng, Dong, Lv, Bao, Liu, Li,
+Jones, Badawi, Cherry --- UC Davis with United Imaging Healthcare.
+
+\paragraph{Detector}
+Eight PET units, \cm{194} axial and \cm{78.6} across. Blocks of 7 x 6
+\qtyproduct{2.76 x 2.76 x 18.1}{\mm} LYSO crystals read by four
+\qtyproduct{6 x 6}{\mm} SiPMs through a light guide (Anger multiplexing,
+10.5:1) --- 564\,480 crystals on 53\,760 channels. Neighbouring blocks across
+the ring share energy, so a photon that Compton-scatters out of an edge crystal
+is recovered rather than lost. Window 430--\keV{645}.
+
+\paragraph{Key Findings}
+\begin{itemize}
+	\item Sensitivity 174 kcps/MBq at the centre; peak NECR 1524 kcps at 17.3
+		kBq/mL (36.3\% scatter), 1855 kcps with a \cm{175} phantom.
+	\item Spatial resolution about \mm{3.0} FWHM near the centre (FBP).
+	\item TOF \ps{505} system-wide, \ps{412} averaged over individual lines of
+		response --- the gap the authors put down to an incomplete TOF
+		calibration across half a million crystals.
+	\item No energy resolution reported.
+\end{itemize}
+\aside{The detector is not the uEXPLORER's selling point: finer crystals than
+the Vision's, reached by sharing light, at more than twice its CTR. It wins on
+length. The inter-block scatter recovery is a clinical scanner keeping
+inter-crystal scatter events, the ones Prism-PET discards.}
+
+\paragraph{Why it matters here}
+The opposite corner from the Vision: the finest pitch and the longest field of
+any clinical scanner, with timing a monolithic build already beats. And a
+calibration problem a monolith would make larger: TOF across 564\,480 crystals
+is not yet calibrated, and a monolith calibrates positions as well.
+\end{papernote}
+
+\begin{papernote}{Yamagishi et al.\ 2023 -- Performance characteristics of a new-generation digital BGO PET/CT system, Omni Legend 32, according to NEMA NU 2-2018}{Yamagishi2023}
+\thumb{img/yamagishi2023.png}
+J.\ Nucl.\ Med.\ 64(12):1990--1997, \doi{10.2967/jnumed.123.266140}.
+Yamagishi, Miwa, Kamitaki, Anraku, Sato, Yamao, Kubo, Miyaji, Oguchi ---
+Aizawa Hospital and Fukushima Medical University.
+
+\paragraph{Detector}
+GE HealthCare's digital BGO system: \qtyproduct{4.1 x 4.1 x 30}{\mm} BGO, 72
+crystals on 18 \qtyproduct{6 x 6}{\mm} SiPMs per block, 22 modules,
+\cm{32} axial, \mm{725} ring. Window 435--\keV{580}. No TOF; a network
+trained on TOF images (Precision DL) stands in for it.
+
+\paragraph{Key Findings}
+\begin{itemize}
+	\item Spatial resolution 4.3/5.3/\mm{6.2} at 1/10/\cm{20} (FBP),
+		3.7/4.3/\mm{5.1} with OSEM.
+	\item Sensitivity 47.3 cps/kBq; peak NECR 501.7 kcps at 15.7 kBq/mL,
+		scatter fraction 35.4\%.
+	\item Energy resolution 9.8\%, stated in the discussion, not measured
+		in the paper.
+\end{itemize}
+
+\paragraph{Why it matters here}
+BGO back in a clinical scanner, chosen for stopping power and cost at the price
+of timing: three times the Vision's sensitivity at a similar length, from
+\mm{30} of the densest common scintillator. It is the market's answer to the
+question \ref{note:Cates2024} and the BGO semi-monoliths ask, and the
+comparator a BGO monolith has to beat: \mm{30} with no DOI is the worst
+parallax of any detector here (17 mm modelled).
 \end{papernote}
 
 \end{programnote}
@@ -4706,17 +4809,19 @@ FWHM; Petersen's is the multi-crystal events of a CNN, 1.0 mm for
 single-crystal ones.
 
 \paragraph{Clinical reference}
-What the detectors above are measured against: a current clinical scanner's
-detector, the Biograph Vision Quadra's \qtyproduct{3.2 x 3.2 x 20}{\mm} LSO
-pixels (\ref{note:Prenosil2021}, NEMA NU 2-2018), its
-energy resolution at low count rate and its TOF resolution. It has no DOI, so
-no DOI resolution is reported; the figure is modelled here (marked m): the
-Gaussian-equivalent FWHM of the depth at which 511 keV photons interact in
-\mm{20} of LSO ($\mu \approx \qty{0.087}{\per\mm}$), which is the depth error of
-a detector that assigns every event one depth --- \mm{12.6}, 63\% of the
-crystal. The whole-depth bin would be \mm{20}; a uniform spread would give
-\mm{13.6}. Older
-photomultiplier systems sat near \ps{540}.
+What the detectors above are measured against: the detectors of four current
+clinical scanners (\ref{prog:Clinical}), from their NEMA NU 2 evaluations ---
+energy resolution at low count rate where reported, and TOF. None has DOI, so
+none reports a DOI resolution; the figure is modelled here (marked m) as the
+Gaussian-equivalent FWHM of the depth at which 511 keV photons interact in the
+crystal, the depth error of a detector that assigns every event one depth.
+For \mm{20} of LSO ($\mu \approx \qty{0.087}{\per\mm}$) that is \mm{12.6},
+63\% of the crystal; the whole-depth bin would be \mm{20} and a uniform spread
+\mm{13.6}. LYSO is taken at \qty{0.083}{\per\mm} and BGO at
+\qty{0.095}{\per\mm}. The Omni Legend's energy resolution is stated in its
+paper, not measured there, and it has no TOF; van Sluis and Spencer report no
+energy resolution.
+Older photomultiplier systems sat near \ps{540}.
 
 \begin{center}
 \begin{scriptsize}
@@ -4725,7 +4830,10 @@ photomultiplier systems sat near \ps{540}.
 \hline
 Build & Detector & Readout & Depth mm & DOI mm & DOI/d \% & Trans. mm & Energy \% & CTR ps \\
 \hline
-Prenosil 2021 & LSO 3.2 mm pixels, Vision Quadra & single & 20 & 12.6 m & 63 & 3.2 p & 9.8 & 225 \\
+Prenosil 2021 & LSO 3.2 mm, Vision Quadra & single & 20 & 12.6 m & 63 & 3.2 p & 9.8 & 225 \\
+van Sluis 2019 & LSO 3.2 mm, Vision 600 & single & 20 & 12.6 m & 63 & 3.2 p & -- & 210 \\
+Spencer 2021 & LYSO 2.76 mm, uEXPLORER & single & 18.1 & 11.6 m & 64 & 2.76 p & -- & 505 \\
+Yamagishi 2023 & BGO 4.1 mm, Omni Legend & single & 30 & 17.0 m & 57 & 4.1 p & 9.8 & -- \\
 \hline
 \end{tabular}
 \end{scriptsize}
@@ -4765,6 +4873,30 @@ falls to 2.84\% at 400--\keV{600} once inter-crystal scatter is windowed out;
 Kuang 2020's to 11.9\% at 350--\keV{750}; Pajak's to 4.2\% at 358--\keV{664}.
 Krishnamoorthy's NECR activity is as Cucarella 2026 quotes it. Zeng 2023's
 ring is a decagon, \mm{385} by \mm{291}; the long diameter is given.
+
+\paragraph{Clinical scanners}
+The same counts for the clinical reference, with the NEMA NU 2 body phantom in
+place of the mouse: NECR peaks at an activity concentration, not an activity.
+Ring is the detector diameter face to face. Sensitivity is the line-source
+figure at the centre, in the same percent as above; the Quadra's is with every
+ring pair (MRD 322), 8.3\% as reconstructed clinically (MRD 85).
+
+\begin{center}
+\begin{scriptsize}
+\setlength{\tabcolsep}{2pt}
+\begin{tabular}{llllllll}
+\hline
+Build & Detector & Ring mm & Axial mm & Sens. \% & Window keV & NECR kcps & at kBq/mL \\
+\hline
+Prenosil 2021 & LSO 3.2 mm, Vision Quadra & 820 & 1060 & 17.6 & 435--585 & 2956 & 27.5 \\
+Spencer 2021 & LYSO 2.76 mm, uEXPLORER & 786 & 1940 & 17.4 & 430--645 & 1524 & 17.3 \\
+Yamagishi 2023 & BGO 4.1 mm, Omni Legend & 725 & 320 & 4.73 & 435--580 & 501.7 & 15.7 \\
+van Sluis 2019 & LSO 3.2 mm, Vision 600 & -- & 261 & 1.64 & -- & 306 & 32.6 \\
+\hline
+\end{tabular}
+\end{scriptsize}
+\end{center}
+The Vision 600 paper gives a \mm{780} bore rather than the ring.
 
 \paragraph{Reading it}
 Dual-ended readout and Prism-PET's deterministic light guide hold the top at

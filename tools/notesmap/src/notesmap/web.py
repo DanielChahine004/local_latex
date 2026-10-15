@@ -546,7 +546,9 @@ RADAR_CSS = """
 # so a smaller polygon is better; a value past the rim is pinned there and labelled.
 DETRADAR_SRC = r"""
 function Component({ props }) {
-  const p = props, axes = p.axes || [], rows = p.rows || [], refs = p.reference || [];
+  const p = props, rows = p.rows || [], refs = p.reference || [];
+  const [alt, setAlt] = React.useState({});      // axis index -> showing its alternate column
+  const axes = (p.axes || []).map((a, i) => alt[i] && a.alt ? a.alt : a);
   const pal = ["#3987e5", "#eb6834", "#1baf7a", "#eda100", "#e87ba4", "#9085e9",
                "#e34948", "#5ec4e8", "#c9d64a", "#b07a4f", "#f2a7c3", "#8fd694"];
   const colour = k => pal[k % pal.length], dashOf = k => k >= pal.length ? "2 3" : "";
@@ -599,6 +601,8 @@ function Component({ props }) {
         <div className="pick">
           <div className="row"><input value={q} placeholder="filter detectors" spellCheck={false} onChange={e => setQ(e.target.value)} />
             <button onClick={() => setSel([])}>clear</button>
+            {(p.axes || []).map((a, i) => a.alt ? <button key={"alt" + i} onClick={() => setAlt({ ...alt, [i]: !alt[i] })}>
+              {(alt[i] ? a.alt : a).label} &#8644;</button> : null)}
             {refs.length ? <label className="refbox"><input type="checkbox" checked={showRef} onChange={e => setShowRef(e.target.checked)} />clinical</label> : null}<span className="n">{sel.length} shown</span></div>
           <div className="list">{shown.map(([r, i]) => { const k = sel.indexOf(i);
             return <label key={i} className={r.set === p.simSet ? "sim" : ""}>

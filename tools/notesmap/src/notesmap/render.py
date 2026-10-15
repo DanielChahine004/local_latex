@@ -486,10 +486,13 @@ class Board:
         """Rows of a table panel on a radar of chosen "lower is better" columns."""
         name = next(c for c in data[0] if c != "Set")
         axes = [{"key": c, "label": l, "max": spec["max"][c]} for c, l in spec["axes"].items()]
+        for a in axes:                              # an axis may switch to another column
+            if a["key"] in spec.get("alternates", {}):
+                a["alt"] = dict(spec["alternates"][a["key"]])
+        keys = [a["key"] for a in axes] + [a["alt"]["key"] for a in axes if "alt" in a]
         rows = [{"name": r[name], "detector": r.get("Detector") or "", "set": r["Set"],
-                 "v": {a["key"]: r.get(a["key"]) for a in axes},
-                 "f": {a["key"]: r.get(f"_{spec.get('flag_from', {}).get(a['key'], a['key'])} flag", "")
-                       for a in axes}} for r in data]
+                 "v": {k: r.get(k) for k in keys},
+                 "f": {k: r.get(f"_{spec.get('flag_from', {}).get(k, k)} flag", "") for k in keys}} for r in data]
         reference = [r for r in rows if r["set"] == spec.get("reference")]
         rows = [r for r in rows if r["set"] != spec.get("reference")]
         initial = [i for i, r in enumerate(rows) if r["name"] in spec.get("initial", [])]

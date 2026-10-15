@@ -32,6 +32,20 @@ function Component({ canvas, props }) {
     ro.observe(el);
     return () => ro.disconnect();
   }, []);
+  // scaled by transform, not CSS zoom: a browser without zoom lays the content out
+  // full size, reports that height to the board, and the placement then slides
+  // hand-placed panels off what it takes for overlaps. The box is sized explicitly.
+  const inner = React.useRef(null);
+  const [contentH, setContentH] = React.useState(0);
+  React.useEffect(() => {
+    const el = inner.current;
+    if (!el) return;
+    const measure = () => setContentH(el.offsetHeight);
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
   // a countdown has to move on its own: the board is only redrawn when the notes
   // change, so the panel keeps its own clock rather than asking Python for the time
   const [now, setNow] = React.useState(() => Date.now());
@@ -98,8 +112,9 @@ function Component({ canvas, props }) {
     <div ref={root} className="fit"
          onMouseEnter={() => canvas.send({ event: "focus", on: true })}
          onMouseLeave={() => canvas.send({ event: "focus", on: false })}>
-    <div className={"prog " + (p.kind || "programme") + (!p.filtered ? "" : hit(p.key) ? " hit" : " miss")}
-         style={{ width: DESIGN_W, zoom: scale }}>
+    <div style={{ height: contentH * scale, width: DESIGN_W * scale, overflow: "hidden" }}>
+    <div ref={inner} className={"prog " + (p.kind || "programme") + (!p.filtered ? "" : hit(p.key) ? " hit" : " miss")}
+         style={{ width: DESIGN_W, transform: "scale(" + scale + ")", transformOrigin: "0 0" }}>
       {/* the image sits beside the heading, not above it: a panel is wider than
           it is tall, so the space next to a thumbnail is free */}
       <div className={"top" + (p.figures.length > 0 ? " withfig" : "")}>
@@ -159,6 +174,7 @@ function Component({ canvas, props }) {
           <div className="sel" {...keep} dangerouslySetInnerHTML={{ __html: openNode.html }} />
         </div>
       )}
+    </div>
     </div>
     <div className="grip" title="Drag to resize" {...grip} />
     </div>

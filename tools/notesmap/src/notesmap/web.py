@@ -555,7 +555,6 @@ function Component({ props }) {
   const [sel, setSel] = React.useState(p.initial || []);
   const [q, setQ] = React.useState("");
   const [refOn, setRefOn] = React.useState(refs.map((_, k) => k));   // which clinical scanners are drawn
-  const onRefs = refs.filter((_, k) => refOn.includes(k));
   const toggleRef = k => setRefOn(s => s.includes(k) ? s.filter(x => x !== k) : [...s, k].sort((a, b) => a - b));
   const keep = { onPointerDown: e => e.stopPropagation(), onMouseDown: e => e.stopPropagation(),
                  onWheel: e => e.stopPropagation() };
@@ -597,17 +596,26 @@ function Component({ props }) {
                        textAnchor={tx < cx - 5 ? "end" : tx > cx + 5 ? "start" : "middle"}>{num(r.v[axes[i].key])}</text>; })() : null}</g>)}
     </g>;
   };
-  // several clinical scanners: the band between the best and the worst of them on
-  // each axis, counting only the axes each one reports, and a dot per scanner
-  const band = refs => {
-    const lo = [], hi = [];
-    axes.forEach((_, i) => { const f = refs.map(r => frac(r, i)).filter(v => v != null);
-      lo.push(f.length ? Math.min(...f) : 0); hi.push(f.length ? Math.max(...f) : 0); });
-    const ring = fs => fs.map((v, i) => at(v, i).join(",")), d = "M" + ring(hi).join("L") + "Z M" + ring(lo).join("L") + "Z";
-    return <g key="band">
-      <path d={d} fillRule="evenodd" fill="rgba(168,166,158,.16)" stroke="#a8a69e" strokeWidth="1.5" strokeDasharray="2 4" />
-      {refs.map((r, k) => axes.map((a, i) => { const v = frac(r, i); if (v == null) return null; const [x, y] = at(v, i);
-        return <circle key={k + "-" + i} cx={x} cy={y} r="3" fill="#a8a69e"><title>{r.name}, {a.label}: {fmt(r, a)}</title></circle>; }))}
+  // clinical scanners: one muted colour each, square markers on a dotted line. An
+  // axis a scanner does not report breaks its outline there rather than pulling
+  // the point to the centre, so no scanner borrows another's shape.
+  const refPal = ["#94a3b8", "#d4b483", "#b5838d", "#8a9a5b", "#7d8597", "#c9ada7"];
+  const refCol = k => refPal[k % refPal.length];
+  const clinical = (r, k) => {
+    const c = refCol(k), f = axes.map((_, i) => frac(r, i)), pts = f.map((v, i) => v == null ? null : at(v, i));
+    const whole = pts.every(x => x);
+    const segs = whole ? null : pts.map((x, i) => { const y = pts[(i + 1) % N];
+      return x && y ? <line key={"l" + i} x1={x[0]} y1={x[1]} x2={y[0]} y2={y[1]} stroke={c} strokeWidth="2" strokeDasharray="2 4" /> : null; });
+    return <g key={"ref" + k}>
+      {whole ? <polygon points={pts.map(x => x.join(",")).join(" ")} fill={c + "18"} stroke={c} strokeWidth="2" strokeDasharray="2 4" /> : segs}
+      {pts.map((x, i) => x ? <g key={i}>
+        <rect x={x[0] - 4} y={x[1] - 4} width="8" height="8" fill={over(r, i) ? "#12151c" : c} stroke={c} strokeWidth="2">
+          <title>{r.name}, {axes[i].label}: {fmt(r, axes[i])}</title></rect>
+        {over(r, i) ? (() => { const t = -Math.PI / 2 + 2 * Math.PI * i / N, o = -16 * (k + 1);
+          // the other side of the spoke from the detectors' labels, one step per scanner
+          const [bx, by] = at(f[i] + 0.07, i), tx = bx - o * Math.sin(t), ty = by + o * Math.cos(t);
+          return <text x={tx} y={ty} className="over" fill={c} dominantBaseline="middle"
+                       textAnchor={tx < cx - 5 ? "end" : tx > cx + 5 ? "start" : "middle"}>{num(r.v[axes[i].key])}</text>; })() : null}</g> : null)}
     </g>;
   };
   return (
@@ -624,7 +632,7 @@ function Component({ props }) {
           <div className="list"><div className="refs">{refs.map((r, k) => [r, k]).filter(([r]) => !q || (r.name + " " + r.detector + " clinical").toLowerCase().includes(q.toLowerCase()))
             .map(([r, k]) => <label key={"ref" + k} className="ref">
               <input type="checkbox" checked={refOn.includes(k)} onChange={() => toggleRef(k)} />
-              <span className="sw" style={{ background: refOn.includes(k) ? "#a8a69e" : "transparent" }} />
+              <span className="sw sq" style={{ background: refOn.includes(k) ? refCol(k) : "transparent" }} />
               {r.name} <span className="det">{r.detector}</span></label>)}</div>
             {shown.map(([r, i]) => { const k = sel.indexOf(i);
             return <label key={i} className={r.set === p.simSet ? "sim" : ""}>
@@ -643,18 +651,18 @@ function Component({ props }) {
                 <text x={lx} y={ly} className="lab" textAnchor={lx < cx - 5 ? "end" : lx > cx + 5 ? "start" : "middle"}
                       dominantBaseline="middle">{a.label}</text></g>; })}
             {p.violins !== false ? axes.map((_, i) => violin(i)) : null}
-            {onRefs.length > 1 ? band(onRefs) : onRefs.map((r, k) => shape(r, "#a8a69e", "2 4", "rgba(168,166,158,.08)", "ref" + k, -1))}
+            {refs.map((r, k) => refOn.includes(k) ? clinical(r, k) : null)}
             {sel.map((i, k) => shape(rows[i], colour(k), rows[i].set === p.simSet ? "6 4" : dashOf(k), colour(k) + "22", "s" + i, k % 6))}
           </svg>
           <table><thead><tr><th></th>{axes.map(a => <th key={a.key}>{a.label}</th>)}</tr></thead>
             <tbody>
-              {onRefs.map((r, k) => <tr key={"r" + k} className="ref"><th><span className="sw" style={{ background: "#a8a69e" }} />{r.name} (clinical)</th>
+              {refs.map((r, k) => !refOn.includes(k) ? null : <tr key={"r" + k} className="ref"><th><span className="sw sq" style={{ background: refCol(k) }} />{r.name} (clinical)</th>
                 {axes.map(a => <td key={a.key}>{fmt(r, a)}</td>)}</tr>)}
               {sel.map((i, k) => <tr key={i}><th><span className="sw" style={{ background: colour(k) }} />{rows[i].name}</th>
                 {axes.map(a => <td key={a.key}>{fmt(rows[i], a)}</td>)}</tr>)}</tbody></table>
         </div>
       </div>
-      <div className="note">Smaller is better: each axis runs in its own units from 0 at the centre to the rim, ticks at half and full scale. A value past the rim is drawn hollow in the band outside it (log-scaled up to 20 times the rim), with its number. Grey: the clinical scanners ticked at the top of the list, as the band from the best to the worst of them on each axis (a scanner that does not report an axis is left out of it). Shaded on each spoke: how all measured builds spread along it. Dashed: simulations. A missing value sits at the centre. Letters: {Object.entries(p.flags || {}).map(([a, b]) => a + " " + b).join(", ")}.</div>
+      <div className="note">Smaller is better: each axis runs in its own units from 0 at the centre to the rim, ticks at half and full scale. A value past the rim is drawn hollow in the band outside it (log-scaled up to 20 times the rim), with its number. Square markers on dotted lines: the clinical scanners ticked at the top of the list, each in its own colour; where a scanner reports nothing on an axis its outline breaks there. Shaded on each spoke: how all measured builds spread along it. Dashed: simulations. A missing value sits at the centre. Letters: {Object.entries(p.flags || {}).map(([a, b]) => a + " " + b).join(", ")}.</div>
     </div>
   );
 }
@@ -670,7 +678,8 @@ DETRADAR_CSS = """
 .drad .list { max-height: 430px; overflow-y: auto; font-size: 12px; }
 .drad .list label { display: flex; align-items: center; gap: 6px; padding: 2px 0; cursor: pointer; white-space: nowrap; }
 .drad .list label.sim { opacity: .75; font-style: italic; }
-.drad .list label.ref { color: #a8a69e; }
+.drad .list label.ref { font-style: normal; }
+.drad .sw.sq { border-radius: 0; }
 .drad .list .refs:not(:empty) { border-bottom: 1px solid rgba(127,127,127,.3); padding-bottom: 4px; margin-bottom: 4px; }
 .drad .det { opacity: .55; overflow: hidden; text-overflow: ellipsis; }
 .drad .sw { width: 10px; height: 10px; border-radius: 2px; display: inline-block; flex: none; border: 1px solid rgba(127,127,127,.5); margin-right: 4px; }

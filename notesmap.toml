@@ -127,4 +127,4 @@ max = { "Trans. mm" = 4, "DOI/d %" = 50, "Energy %" = 30, "CTR ps" = 600 }
 initial = ["LaBella 2021", "Borghi 2016", "Carra 2022"]
 flag_from = { "DOI/d %" = "DOI mm" }   # a layer width (L) marks the share it gives too
 alternates = { "DOI/d %" = { key = "DOI mm", label = "DOI (mm)", max = 5 } }   # a button swaps the axis
-flags = { p = "pitch", L = "layer width", b = "bin width", f = "flood fit", e = "Gaussian eq.", r = "vs reference", i = "sim input", n = "no DOI" }
+flags = { p = "pitch", L = "layer width", b = "bin width", f = "flood fit", e = "Gaussian eq.", r = "vs reference", i = "sim input", m = "modelled here" }

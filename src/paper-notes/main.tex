@@ -4557,7 +4557,7 @@ unmarked is a measured FWHM, and
 	\item r --- a CTR against a fast reference crystal, not between two such
 		detectors; it flatters by about $\sqrt{2}$;
 	\item i --- an input to a simulation, not a result;
-	\item n --- no DOI: the whole crystal depth, for the clinical reference.
+	\item m --- modelled here, not reported: the clinical reference's DOI.
 \end{itemize}
 A dash is not reported. Prism-PET figures reject inter-crystal scatter first;
 monolith figures mostly do not. Builds quoting only a mean absolute error (Zhang
@@ -4645,8 +4645,14 @@ single-crystal ones.
 \paragraph{Clinical reference}
 What the detectors above are measured against: a current clinical scanner's
 detector, the Biograph Vision Quadra's \qtyproduct{3.2 x 3.2 x 20}{\mm} LSO
-pixels (Prenosil et al.\ 2021, J.\ Nucl.\ Med.\ 63:476, NEMA NU 2-2018), with no DOI (marked n: the whole crystal
-depth), its energy resolution at low count rate and its TOF resolution. Older
+pixels (Prenosil et al.\ 2021, J.\ Nucl.\ Med.\ 63:476, NEMA NU 2-2018), its
+energy resolution at low count rate and its TOF resolution. It has no DOI, so
+no DOI resolution is reported; the figure is modelled here (marked m): the
+Gaussian-equivalent FWHM of the depth at which 511 keV photons interact in
+\mm{20} of LSO ($\mu \approx \qty{0.087}{\per\mm}$), which is the depth error of
+a detector that assigns every event one depth --- \mm{12.6}, 63\% of the
+crystal. The whole-depth bin would be \mm{20}; a uniform spread would give
+\mm{13.6}. Older
 photomultiplier systems sat near \ps{540}.
 
 \begin{center}
@@ -4656,7 +4662,7 @@ photomultiplier systems sat near \ps{540}.
 \hline
 Build & Detector & Readout & Depth mm & DOI mm & DOI/d \% & Trans. mm & Energy \% & CTR ps \\
 \hline
-Prenosil 2021 & LSO 3.2 mm pixels, Vision Quadra & single & 20 & 20 n & 100 & 3.2 p & 9.8 & 225 \\
+Prenosil 2021 & LSO 3.2 mm pixels, Vision Quadra & single & 20 & 12.6 m & 63 & 3.2 p & 9.8 & 225 \\
 \hline
 \end{tabular}
 \end{scriptsize}

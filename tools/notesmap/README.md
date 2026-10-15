@@ -206,6 +206,7 @@ annotated copy.
 | `[map]` | the map image (any equirectangular image), its width, where unplaced panels go |
 | `[tables.<Key>]` | turns that programme's tabulars into one sortable, filterable table panel at `at`; `flags` spells out a letter after a number (`1.4 p`) as a basis column, `derive` adds category columns from keywords; each row links to its paper's DOI and PDF, found from its first cell read as "Surname Year" (`keys` maps any other first cell to a note key) |
 | `[tables.<Key>] view = "radar"` | instead of a table: two row sets on shared numeric axes (`demand`, `supply` name their headings) drawn as a radar for a chosen pair, with a fit grid for every pair |
+| `[tables.<Key>] view = "detectors"` | the rows of a table panel overlaid on a radar of chosen lower-is-better columns (`axes` maps column to label), each scored 1–5 on a log scale between the best and worst value; `initial` preselects rows, `simulated` names the set drawn dashed |
 | `[server]` | port, and the companion editor the map links to |
 
 ### Your own parser

@@ -112,3 +112,15 @@ at = [10710, 3300, 2700, 1600]
 view = "radar"
 demand = "Application demand"
 supply = "Architecture supply"
+
+# The leaderboard's detectors on a radar of the columns where lower is better,
+# each scored 1-5 on a log scale between the best and worst value present.
+[tables."Leaderboard/Radar"]
+at = [13470, 0, 1900, 1300]
+view = "detectors"
+sets = ["Measured builds", "Simulated detectors"]
+simulated = "Simulated detectors"
+axes = { "Trans. mm" = "Transverse", "DOI/d %" = "DOI / depth", "Energy %" = "Energy", "CTR ps" = "CTR" }
+initial = ["LaBella 2021", "Borghi 2016", "Carra 2022"]
+flag_from = { "DOI/d %" = "DOI mm" }   # a layer width (L) marks the share it gives too
+flags = { p = "pitch", L = "layer width", b = "bin width", f = "flood fit", e = "Gaussian eq.", r = "vs reference", i = "sim input" }

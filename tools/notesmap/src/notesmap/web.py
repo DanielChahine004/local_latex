@@ -540,3 +540,85 @@ RADAR_CSS = """
 .dfit td.sel { outline: 2px solid #f0efec; outline-offset: -2px; }
 .dfit .note { font-size: 11px; opacity: .6; margin-top: 8px; }
 """
+
+# Detectors from a table panel overlaid on a radar of "lower is better" columns,
+# each axis scored 1-5 on a log scale between the best and worst value present.
+DETRADAR_SRC = r"""
+function Component({ props }) {
+  const p = props, axes = p.axes || [], rows = p.rows || [];
+  const pal = ["#3987e5", "#eb6834", "#1baf7a", "#eda100", "#e87ba4", "#9085e9"];
+  const [sel, setSel] = React.useState(p.initial || []);
+  const [q, setQ] = React.useState("");
+  const keep = { onPointerDown: e => e.stopPropagation(), onMouseDown: e => e.stopPropagation(),
+                 onWheel: e => e.stopPropagation() };
+  const span = axes.map(a => { const v = rows.map(r => r.v[a.key]).filter(x => x > 0);
+                               return [Math.log(Math.min(...v)), Math.log(Math.max(...v))]; });
+  const score = (r, i) => { const v = r.v[axes[i].key]; if (!(v > 0)) return null;
+                            const [lo, hi] = span[i]; return hi > lo ? 1 + 4 * (hi - Math.log(v)) / (hi - lo) : 5; };
+  const N = axes.length, R = 150, cx = 230, cy = 185;
+  const pt = (s, i) => { const t = -Math.PI / 2 + 2 * Math.PI * i / N, r = R * s / 5;
+                         return [cx + r * Math.cos(t), cy + r * Math.sin(t)]; };
+  const toggle = i => setSel(s => s.includes(i) ? s.filter(x => x !== i) : s.length < pal.length ? [...s, i] : s);
+  const shown = rows.map((r, i) => [r, i]).filter(([r]) => !q || (r.name + " " + r.detector + " " + r.set).toLowerCase().includes(q.toLowerCase()));
+  const fmt = (r, a) => { const v = r.v[a.key]; return v > 0 ? (+v.toFixed(2)) + (r.f[a.key] ? " " + r.f[a.key] : "") : "–"; };
+  return (
+    <div className="drad" style={{ zoom: p.scale }} {...keep}>
+      <div className="cols">
+        <div className="pick">
+          <input value={q} placeholder="filter detectors" spellCheck={false} onChange={e => setQ(e.target.value)} />
+          <div className="list">{shown.map(([r, i]) => { const k = sel.indexOf(i);
+            return <label key={i} className={r.set === p.simSet ? "sim" : ""}>
+              <input type="checkbox" checked={k >= 0} onChange={() => toggle(i)} />
+              <span className="sw" style={{ background: k >= 0 ? pal[k] : "transparent" }} />
+              {r.name} <span className="det">{r.detector}</span></label>; })}</div>
+        </div>
+        <div className="plot">
+          <svg viewBox="-70 0 600 370">
+            {[1, 2, 3, 4, 5].map(k => <polygon key={k} className="ring" points={axes.map((_, i) => pt(k, i).join(",")).join(" ")} />)}
+            {axes.map((a, i) => { const [u, v] = pt(5, i), [lx, ly] = pt(5.9, i);
+              return <g key={i}><line x1={cx} y1={cy} x2={u} y2={v} className="spoke" />
+                <text x={lx} y={ly} className="lab" textAnchor={lx < cx - 5 ? "end" : lx > cx + 5 ? "start" : "middle"}
+                      dominantBaseline="middle">{a.label}</text></g>; })}
+            {sel.map((i, k) => { const r = rows[i], s = axes.map((_, j) => score(r, j));
+              const pts = s.map((v, j) => pt(v == null ? 0 : v, j));
+              return <g key={i}>
+                <polygon points={pts.map(x => x.join(",")).join(" ")} fill={pal[k] + "26"} stroke={pal[k]} strokeWidth="2"
+                         strokeDasharray={r.set === p.simSet ? "6 4" : ""} />
+                {pts.map((x, j) => s[j] == null ? null :
+                  <circle key={j} cx={x[0]} cy={x[1]} r="4" fill={pal[k]}><title>{r.name}, {axes[j].label}: {fmt(r, axes[j])}</title></circle>)}
+              </g>; })}
+          </svg>
+          <table><thead><tr><th></th>{axes.map(a => <th key={a.key}>{a.label}</th>)}</tr></thead>
+            <tbody>{sel.map((i, k) => <tr key={i}><th><span className="sw" style={{ background: pal[k] }} />{rows[i].name}</th>
+              {axes.map(a => <td key={a.key}>{fmt(rows[i], a)}</td>)}</tr>)}</tbody></table>
+        </div>
+      </div>
+      <div className="note">Outer is better. Each axis is scored 1-5 on a log scale between the best and worst value in the table; a missing value sits at the centre. Dashed outlines are simulations. Letters: {Object.entries(p.flags || {}).map(([a, b]) => a + " " + b).join(", ")}.</div>
+    </div>
+  );
+}
+"""
+
+DETRADAR_CSS = """
+.drad { font: 13px system-ui, sans-serif; color: var(--pc-text, #ddd); background: #12151c; padding: 12px 14px;
+        border-radius: 10px; border: 1px solid rgba(127,127,127,.45); }
+.drad .cols { display: flex; gap: 12px; }
+.drad .pick { width: 38%; display: flex; flex-direction: column; gap: 6px; }
+.drad .pick input[type=text], .drad .pick > input { font: inherit; color: inherit; padding: 4px 8px; border-radius: 6px;
+        border: 1px solid rgba(127,127,127,.5); background: rgba(127,127,127,.12); }
+.drad .list { max-height: 430px; overflow-y: auto; font-size: 12px; }
+.drad .list label { display: flex; align-items: center; gap: 6px; padding: 2px 0; cursor: pointer; white-space: nowrap; }
+.drad .list label.sim { opacity: .75; font-style: italic; }
+.drad .det { opacity: .55; overflow: hidden; text-overflow: ellipsis; }
+.drad .sw { width: 10px; height: 10px; border-radius: 2px; display: inline-block; flex: none; border: 1px solid rgba(127,127,127,.5); margin-right: 4px; }
+.drad .plot { flex: 1; }
+.drad svg { width: 100%; height: auto; }
+.drad .ring { fill: none; stroke: rgba(127,127,127,.25); }
+.drad .spoke { stroke: rgba(127,127,127,.3); }
+.drad .lab { fill: #c3c2b7; font-size: 12px; }
+.drad table { border-collapse: collapse; width: 100%; font-size: 12px; }
+.drad th, .drad td { padding: 3px 6px; border-bottom: 1px solid rgba(127,127,127,.2); text-align: right; white-space: nowrap; }
+.drad thead th { font-weight: 500; opacity: .8; }
+.drad tbody th { text-align: left; font-weight: 400; }
+.drad .note { font-size: 11px; opacity: .6; margin-top: 8px; }
+"""

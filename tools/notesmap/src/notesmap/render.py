@@ -25,7 +25,7 @@ from .parse import Entry, Notes
 from .redact import redact
 from . import tables
 from .source import Source
-from .web import MAP_CSS, PIN_JSX, REACT_CSS, REACT_SRC, SEARCH_CSS, SEARCH_SRC, RADAR_CSS, RADAR_SRC, TABLE_CSS, TABLE_SRC, edit_jsx
+from .web import DETRADAR_CSS, DETRADAR_SRC, MAP_CSS, PIN_JSX, REACT_CSS, REACT_SRC, SEARCH_CSS, SEARCH_SRC, RADAR_CSS, RADAR_SRC, TABLE_CSS, TABLE_SRC, edit_jsx
 
 PITCH, ROW_GAP = PANEL_W + 40, 100
 PIN_D = 38                   # the marker's size, and the room a panel leaves it
@@ -443,6 +443,9 @@ class Board:
             if spec.get("view") == "radar":
                 self._radar(key, spec, data, have)
                 continue
+            if spec.get("view") == "detectors":
+                self._detector_radar(key, spec, data, have)
+                continue
             first = next(iter(data[0]))
             first = next(c for c in data[0] if c != "Set") if first == "Set" else first
             for r in data:
@@ -473,6 +476,26 @@ class Board:
         if have is None:
             x, y, w, _ = spec["at"]
             panel = self.canvas.react(RADAR_SRC, css=RADAR_CSS, name=re.sub(r"\W+", "_", key) + "_radar",
+                                      props=props, w=w, x=x, y=y, frame=False)
+            self.table_panels[key] = (panel, props)
+        elif have[1] != props:
+            have[0].update(**props)
+            self.table_panels[key] = (have[0], props)
+
+    def _detector_radar(self, key: str, spec: dict, data: list[dict], have) -> None:
+        """Rows of a table panel on a radar of chosen "lower is better" columns."""
+        name = next(c for c in data[0] if c != "Set")
+        axes = [{"key": c, "label": l} for c, l in spec["axes"].items()]
+        rows = [{"name": r[name], "detector": r.get("Detector") or "", "set": r["Set"],
+                 "v": {a["key"]: r.get(a["key"]) for a in axes},
+                 "f": {a["key"]: r.get(f"_{spec.get('flag_from', {}).get(a['key'], a['key'])} flag", "")
+                       for a in axes}} for r in data]
+        initial = [i for i, r in enumerate(rows) if r["name"] in spec.get("initial", [])]
+        props = {"axes": axes, "rows": rows, "flags": spec.get("flags", {}), "initial": initial,
+                 "simSet": spec.get("simulated", ""), "scale": self.map_w / 4500 if self.map_mode else 1.0}
+        if have is None:
+            x, y, w, _ = spec["at"]
+            panel = self.canvas.react(DETRADAR_SRC, css=DETRADAR_CSS, name=re.sub(r"\W+", "_", key) + "_radar",
                                       props=props, w=w, x=x, y=y, frame=False)
             self.table_panels[key] = (panel, props)
         elif have[1] != props:

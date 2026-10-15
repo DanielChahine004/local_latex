@@ -94,6 +94,7 @@ edit_label = "Edit these notes"
 [tables.Leaderboard]
 at = [10710, 0, 2700, 1350]
 sets = ["Measured builds", "Simulated detectors"]
+keys = { "β-CUBE" = "Krishnamoorthy2018" }
 plain = "FWHM"
 flags = { p = "pitch", L = "layer width", b = "bin width", f = "flood fit", e = "Gaussian eq.", r = "vs reference", i = "sim input" }
 derive.Type = { from = "Detector", rules = [["semi-monolithic", "semi-monolith", "slabs"], ["layered", "layers"], ["monolithic", "monolith"], ["pixelated"]] }

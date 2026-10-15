@@ -103,8 +103,8 @@ The scaling is exact and worth stating plainly:
 \begin{itemize}
 	\item \textbf{Preclinical / Pisa:} \qtyproduct{25 x 25 x 8}{\milli\metre}
 		LYSO monolith, 64 x \qtyproduct{3 x 3}{\milli\metre} Hamamatsu SiPMs.
-		\mm{0.78} 2D FWHM, \mm{1.2} DOI FWHM, \ps{156} CTR
-		(\ref{note:Carra2022}).
+		\mm{0.78} 2D FWHM, \mm{1.55} DOI FWHM, \ps{156} CTR at one
+		operating point (\ref{note:Carra2022}).
 	\item \textbf{Ghent parallel:} Stockhoff et al.\ 2021 PMB,
 		high-resolution monolithic LYSO with 6-layer DOI for clinical PET.
 		\gap{Block dimensions --- confirm whether this or the Pisa block is
@@ -196,16 +196,21 @@ overlaps Decuyper/van der Laan.}
 Carra et al.\ \cite{Carra2022} train a neural network that estimates event position
 \emph{and} timestamp jointly from a monolithic LYSO block, and --- the actual
 contribution --- run it on a low-cost FPGA inside the detector at more than
-$10^{6}$ events per second. Reported on experimental data:
-\mm{0.78} 2D FWHM in $(x,y)$, \mm{1.2} DOI FWHM, \ps{156} CTR, on a
+$10^{6}$ events per second. Reported on experimental data at a 12 V
+overvoltage (Table 9): \mm{0.78} 2D FWHM in $(x,y)$, \mm{1.55} DOI FWHM,
+\ps{156} CTR, on a
 \qtyproduct{25 x 25 x 8}{\milli\metre} LYSO monolith read out by 64
 \qtyproduct{3 x 3}{\milli\metre} Hamamatsu SiPMs. The paper's stated framing is
 that monolithic crystals plus light networks can rival pixellated performance for
 TOF-PET while retaining better spatial and DOI resolution, with on-line
 characterisation solving the scalability and computational-complexity objection
 that had kept monolithics out of clinical scanners.
-Energy resolution is 11\% at 511 keV at the 12 V overvoltage the timing comes
-from (10\% at lower overvoltages; Table 9 and Fig.\ 11).
+Energy resolution is 11\% at 511 keV at the same overvoltage (10\% lower down;
+Table 9 and Fig.\ 11).
+\aside{The abstract's \mm{1.2} DOI is from 3 V, where the CTR is \ps{290}; its
+\ps{156} is from 12 V, where the DOI is \mm{1.55}. No one setting gives both:
+positioning wants a low overvoltage and timing a high one (their Fig.\ 7). The
+map uses 12 V throughout.}
 The CTR is measured against a pixelated reference of about \ps{130}, removed in
 quadrature and scaled by $\sqrt{2}$ to two identical monoliths, so it is not
 flagged r; and the best figures need simulated events in the training set ---
@@ -4755,7 +4760,7 @@ Zeng 2024 & LYSO 1.5 mm, tapered Prism & single & 20 & 2.25 & 11 & 1.5 p & 8.9 &
 LaBella 2020 & LYSO 1.4 mm, Prism & single & 20 & 2.5 & 13 & 1.4 p & 9 & -- \\
 Zhang 2021 & LYSO 1.37 mm slabs & dual & 20 & 2.60 & 13 & 1.97 & 21.7 & 718 \\
 Zeng 2023 & LYSO 1.5 mm, Prism scanner & single & 20 & 2.85 & 14 & 1.22 & 12.6 & 271 \\
-Carra 2022 & LYSO monolith & single & 8 & 1.2 & 15 & 0.78 & 11 & 156 \\
+Carra 2022 & LYSO monolith & single & 8 & 1.55 & 19 & 0.78 & 11 & 156 \\
 Zhang 2019 & LYSO 1 mm slabs, painted & single & 10 & 1.55 & 16 & 1.07 & 24.9 & 788 r \\
 Gsell 2020 & LYSO monolith, 50 mm & single & 10 & 1.6 f & 16 & -- & 16.6 & -- \\
 Kinyanjui 2025 & LYSO 0.96 mm slabs, XGBoost & single & 10 & 1.67 & 17 & 0.92 & -- & -- \\

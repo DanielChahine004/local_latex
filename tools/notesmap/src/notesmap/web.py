@@ -552,6 +552,7 @@ function Component({ props }) {
   const colour = k => pal[k % pal.length], dashOf = k => k >= pal.length ? "2 3" : "";
   const [sel, setSel] = React.useState(p.initial || []);
   const [q, setQ] = React.useState("");
+  const [showRef, setShowRef] = React.useState(true);
   const keep = { onPointerDown: e => e.stopPropagation(), onMouseDown: e => e.stopPropagation(),
                  onWheel: e => e.stopPropagation() };
   const N = axes.length, R = 150, cx = 230, cy = 185;
@@ -575,9 +576,7 @@ function Component({ props }) {
     const dmax = Math.max(...d), th = -Math.PI / 2 + 2 * Math.PI * i / N, nx = -Math.sin(th), ny = Math.cos(th);
     const side = sg => ts.map((t, j) => { const [x, y] = at(t, i), w = 20 * d[j] / dmax; return [x + sg * w * nx, y + sg * w * ny]; });
     const pts = side(1).concat(side(-1).reverse()).map(x => x.join(",")).join(" ");
-    const sorted = [...f].sort((a, b) => a - b), med = sorted[Math.floor(sorted.length / 2)], [mx, my] = at(med, i);
-    return <g key={"v" + i}><polygon points={pts} className="violin" />
-      <line x1={mx - 22 * nx} y1={my - 22 * ny} x2={mx + 22 * nx} y2={my + 22 * ny} className="median" /></g>;
+    return <polygon key={"v" + i} points={pts} className="violin" />;
   };
   const shown = rows.map((r, i) => [r, i]).filter(([r]) => !q || (r.name + " " + r.detector + " " + r.set).toLowerCase().includes(q.toLowerCase()));
   const shape = (r, colour, dash, fill, key, slot = 0) => {
@@ -599,7 +598,8 @@ function Component({ props }) {
       <div className="cols">
         <div className="pick">
           <div className="row"><input value={q} placeholder="filter detectors" spellCheck={false} onChange={e => setQ(e.target.value)} />
-            <button onClick={() => setSel([])}>clear</button><span className="n">{sel.length} shown</span></div>
+            <button onClick={() => setSel([])}>clear</button>
+            {refs.length ? <label className="refbox"><input type="checkbox" checked={showRef} onChange={e => setShowRef(e.target.checked)} />clinical</label> : null}<span className="n">{sel.length} shown</span></div>
           <div className="list">{shown.map(([r, i]) => { const k = sel.indexOf(i);
             return <label key={i} className={r.set === p.simSet ? "sim" : ""}>
               <input type="checkbox" checked={k >= 0} onChange={() => toggle(i)} />
@@ -617,18 +617,18 @@ function Component({ props }) {
                 <text x={lx} y={ly} className="lab" textAnchor={lx < cx - 5 ? "end" : lx > cx + 5 ? "start" : "middle"}
                       dominantBaseline="middle">{a.label}</text></g>; })}
             {p.violins !== false ? axes.map((_, i) => violin(i)) : null}
-            {refs.map((r, k) => shape(r, "#a8a69e", "2 4", "rgba(168,166,158,.08)", "ref" + k, -1))}
+            {showRef ? refs.map((r, k) => shape(r, "#a8a69e", "2 4", "rgba(168,166,158,.08)", "ref" + k, -1)) : null}
             {sel.map((i, k) => shape(rows[i], colour(k), rows[i].set === p.simSet ? "6 4" : dashOf(k), colour(k) + "22", "s" + i, k % 6))}
           </svg>
           <table><thead><tr><th></th>{axes.map(a => <th key={a.key}>{a.label}</th>)}</tr></thead>
             <tbody>
-              {refs.map((r, k) => <tr key={"r" + k} className="ref"><th><span className="sw" style={{ background: "#a8a69e" }} />{r.name} (clinical)</th>
+              {(showRef ? refs : []).map((r, k) => <tr key={"r" + k} className="ref"><th><span className="sw" style={{ background: "#a8a69e" }} />{r.name} (clinical)</th>
                 {axes.map(a => <td key={a.key}>{fmt(r, a)}</td>)}</tr>)}
               {sel.map((i, k) => <tr key={i}><th><span className="sw" style={{ background: colour(k) }} />{rows[i].name}</th>
                 {axes.map(a => <td key={a.key}>{fmt(rows[i], a)}</td>)}</tr>)}</tbody></table>
         </div>
       </div>
-      <div className="note">Smaller is better: each axis runs in its own units from 0 at the centre to the rim, ticks at half and full scale. A value past the rim is drawn hollow in the band outside it (log-scaled up to 20 times the rim), with its number. Grey dotted: the clinical reference. Shaded on each spoke: how all measured builds spread along it, the bar at their median. Dashed: simulations. A missing value sits at the centre. Letters: {Object.entries(p.flags || {}).map(([a, b]) => a + " " + b).join(", ")}.</div>
+      <div className="note">Smaller is better: each axis runs in its own units from 0 at the centre to the rim, ticks at half and full scale. A value past the rim is drawn hollow in the band outside it (log-scaled up to 20 times the rim), with its number. Grey dotted: the clinical reference. Shaded on each spoke: how all measured builds spread along it. Dashed: simulations. A missing value sits at the centre. Letters: {Object.entries(p.flags || {}).map(([a, b]) => a + " " + b).join(", ")}.</div>
     </div>
   );
 }
@@ -651,7 +651,7 @@ DETRADAR_CSS = """
 .drad .ring { fill: none; stroke: rgba(127,127,127,.25); }
 .drad .ring.overflow { stroke-dasharray: 2 4; }
 .drad .violin { fill: rgba(195,194,183,.13); stroke: rgba(195,194,183,.35); stroke-width: .8; }
-.drad .median { stroke: rgba(240,239,236,.7); stroke-width: 1.5; }
+.drad .refbox { display: flex; align-items: center; gap: 4px; font-size: 12px; white-space: nowrap; cursor: pointer; }
 .drad .pick .row { display: flex; gap: 6px; align-items: center; }
 .drad .pick .row input { flex: 1; }
 .drad .pick button { font: 12px system-ui, sans-serif; color: inherit; background: #1b1f29; border: 1px solid rgba(127,127,127,.5); border-radius: 6px; padding: 3px 8px; cursor: pointer; }

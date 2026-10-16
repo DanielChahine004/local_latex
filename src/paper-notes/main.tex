@@ -4288,6 +4288,43 @@ while leaving the internal one implicit is the failure mode this file exists to
 prevent. \gap{Scope boundary: what is Abraham's lane, explicitly, and where
 does it end? Ask Franklin directly.}
 
+\begin{papernote}{Li et al.\ 2015 -- A new virtual ring-based system matrix generator for iterative image reconstruction in high resolution small volume PET systems}{Li2015}
+\thumb{img/li2015.png}
+Phys.\ Med.\ Biol.\ 60(17):6949--6973, \doi{10.1088/0031-9155/60/17/6949}.
+Li, Safavi-Naeini, Franklin, Han, Rosenfeld, Hutton, Lerch --- Centre for
+Medical Radiation Physics, Wollongong, with UTS and UCL. Filed from the authors'
+accepted manuscript (UTS OPUS).
+
+\paragraph{Summary}
+A very fine detector makes the system matrix too large to hold. The answer here
+is a virtual single-layer detector ring: every physical line of response, from
+any detector element and depth, is mapped to the pair of virtual detectors it
+crosses, and the matrix is built for those. Two ways to fill it are compared ---
+Siddon ray tracing with a detector response, and Monte Carlo --- on PETiPIX, a
+simulated mouse-brain scanner of four edge-on Timepix silicon pixel detectors
+(\um{55} pixels, a \mm{15} field) that detects mostly by tracking recoil
+electrons rather than by photoelectric absorption.
+
+\paragraph{Key Findings}
+\begin{itemize}
+	\item Compression of $5 \times 10^{7}$ (geometric) and
+		$2.5 \times 10^{7}$ (Monte Carlo), leaving 0.5--\qty{1.2}{GB} of
+		matrix in memory.
+	\item The Monte Carlo matrix gives the best images (contrast recovery,
+		noise, structural similarity) at a large one-off cost; MOBY mouse-brain
+		structures resolve below a millimetre.
+	\item A 3D extension, the virtual cylinder, is shown on a small-animal DOI
+		design (\mm{35} across, \mm{30} long).
+\end{itemize}
+
+\paragraph{Why it matters here}
+The virtual-cylinder method \ref{note:EnriquezMieyTeran2024} tests on the
+Sydney mouse scanner, from the same UTS circle as the shell-scanner papers
+above; Enríquez calls its comparison of compressed and full matrices
+inconclusive and makes that comparison directly. PETiPIX's recoil-electron tracking is also a direct-detection
+counterpart to resolving multiple interactions.
+\end{papernote}
+
 \begin{papernote}{Wilson et al.\ 2019 -- Localisation of the lines of response in a continuous cylindrical shell PET scanner}{Wilson2019}
 \thumb{img/wilson2019.png}
 41st IEEE EMBC, Berlin, \doi{10.1109/EMBC.2019.8856676}. Wilson, Alabd,
@@ -4441,7 +4478,8 @@ Phys.\ Med.\ Biol.\ 69:115043, \doi{10.1088/1361-6560/ad4c51} (corrigendum
 
 \paragraph{Why it matters here}
 DOI makes the number of lines of response explode in a non-cylindrical,
-narrow-bore scanner; this is a practical way to reconstruct one, and the
+narrow-bore scanner; this is a practical way to reconstruct one, building on the
+virtual ring of \ref{note:Li2015}, and the
 geometry problem Prism-PET's decagon (\ref{note:Zeng2023}) and the WT-PET panels
 (\ref{prog:WTPET}) share.
 \end{papernote}

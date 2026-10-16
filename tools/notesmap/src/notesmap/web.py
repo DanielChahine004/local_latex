@@ -12,43 +12,29 @@ const DESIGN_W = 880;   // the width the panel is laid out at; any other width z
 
 function Component({ canvas, props }) {
   const p = props;
-  // resizing a panel scales its whole content with the width, so a smaller
-  // panel is a smaller copy rather than a tall narrow column; its height
-  // follows from the scaled content
-  const root = React.useRef(null);
-  const [scale, setScale] = React.useState(1);
-  React.useEffect(() => {
-    const el = root.current;
-    if (!el) return;
+  // Resizing a panel scales its whole content with the width, so a smaller
+  // panel is a smaller copy rather than a tall narrow column. The scale is a
+  // transform (CSS zoom is not honoured everywhere), and scale, box width and box
+  // height are all written straight onto the elements in one layout effect: the
+  // board measures the panel in an effect right after the first render, and in a
+  // background tab nothing measures it again, so the first commit must be right.
+  const root = React.useRef(null), inner = React.useRef(null), box = React.useRef(null);
+  React.useLayoutEffect(() => {
+    const el = root.current, cn = inner.current, bx = box.current;
+    if (!el || !cn || !bx) return;
     const fit = () => {
       const w = el.clientWidth;
-      if (w) setScale(s => {
-        const next = Math.min(3, Math.max(0.25, w / DESIGN_W));
-        return Math.abs(next - s) < 0.002 ? s : next;
-      });
+      if (!w) return;
+      const s = Math.min(3, Math.max(0.25, w / DESIGN_W));
+      cn.style.transform = "scale(" + s + ")";
+      bx.style.width = DESIGN_W * s + "px";
+      bx.style.height = cn.offsetHeight * s + "px";
     };
     fit();
     const ro = new ResizeObserver(fit);
-    ro.observe(el);
+    ro.observe(el); ro.observe(cn);
     return () => ro.disconnect();
   }, []);
-  // scaled by transform, not CSS zoom: a browser without zoom lays the content out
-  // full size, reports that height to the board, and the placement then slides
-  // hand-placed panels off what it takes for overlaps. The box is sized explicitly.
-  // The box's height is written straight onto the element, not through React
-  // state: the board measures the panel in an effect right after the first
-  // render, and in a background tab nothing measures it again, so the height has
-  // to be right in that same commit.
-  const inner = React.useRef(null), box = React.useRef(null);
-  React.useLayoutEffect(() => {
-    const el = inner.current, bx = box.current;
-    if (!el || !bx) return;
-    const measure = () => { bx.style.height = el.offsetHeight * scale + "px"; };
-    measure();
-    const ro = new ResizeObserver(measure);
-    ro.observe(el);
-    return () => ro.disconnect();
-  }, [scale]);
   // a countdown has to move on its own: the board is only redrawn when the notes
   // change, so the panel keeps its own clock rather than asking Python for the time
   const [now, setNow] = React.useState(() => Date.now());
@@ -115,9 +101,9 @@ function Component({ canvas, props }) {
     <div ref={root} className="fit"
          onMouseEnter={() => canvas.send({ event: "focus", on: true })}
          onMouseLeave={() => canvas.send({ event: "focus", on: false })}>
-    <div ref={box} style={{ width: DESIGN_W * scale, overflow: "hidden" }}>
+    <div ref={box} style={{ overflow: "hidden" }}>
     <div ref={inner} className={"prog " + (p.kind || "programme") + (!p.filtered ? "" : hit(p.key) ? " hit" : " miss")}
-         style={{ width: DESIGN_W, transform: "scale(" + scale + ")", transformOrigin: "0 0" }}>
+         style={{ width: DESIGN_W, transformOrigin: "0 0" }}>
       {/* the image sits beside the heading, not above it: a panel is wider than
           it is tall, so the space next to a thumbnail is free */}
       <div className={"top" + (p.figures.length > 0 ? " withfig" : "")}>

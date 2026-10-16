@@ -294,53 +294,6 @@ def edit_jsx(url: str, label: str, scale: float = 1.0) -> str:
 # --- the search box ------------------------------------------------------------------
 
 SEARCH_SRC = r"""
-// Shared by the table and chart panels (one copy rides in each source).
-// Scaled: the panel content laid out at its own width and shrunk by a transform,
-// with the box sized explicitly. CSS zoom is not honoured everywhere, and a
-// browser that ignores it reports a full-size height to the board.
-function Scaled({ scale, className, children, ...rest }) {
-  // sizes written onto the elements in the same commit (see the map panels)
-  const outer = React.useRef(null), inner = React.useRef(null);
-  const s = scale || 1;
-  React.useLayoutEffect(() => {
-    const o = outer.current, i = inner.current;
-    if (!o || !i) return;
-    const m = () => { i.style.width = o.clientWidth / s + "px"; o.style.height = i.offsetHeight * s + "px"; };
-    m();
-    const ro = new ResizeObserver(m);
-    ro.observe(o); ro.observe(i);
-    return () => ro.disconnect();
-  }, [s]);
-  return <div ref={outer} style={{ width: "100%", overflow: "hidden" }}>
-    <div ref={inner} className={className} {...rest}
-         style={{ boxSizing: "border-box", transform: "scale(" + s + ")", transformOrigin: "0 0" }}>
-      {children}</div></div>;
-}
-// useSel: a selection several panels share, by row id, kept on the page so a
-// panel scrolled out of view and remounted finds it again.
-function useSel(bus, initial) {
-  const [, bump] = React.useReducer(x => x + 1, 0);
-  React.useEffect(() => {
-    if (!bus) return;
-    const h = () => bump();
-    window.addEventListener("sel:" + bus, h);
-    return () => window.removeEventListener("sel:" + bus, h);
-  }, [bus]);
-  const all = (window.__sel = window.__sel || {});
-  if (bus && !all[bus]) all[bus] = (initial || []).slice();
-  const set = f => { all[bus] = f(all[bus] || []); window.dispatchEvent(new Event("sel:" + bus)); };
-  return [bus ? all[bus] : [], set];
-}
-const SEL_PAL = ["#3987e5", "#eb6834", "#1baf7a", "#eda100", "#e87ba4", "#9085e9",
-                 "#e34948", "#5ec4e8", "#c9d64a", "#b07a4f", "#f2a7c3", "#8fd694"];
-const SEL_REF = ["#94a3b8", "#d4b483", "#b5838d", "#8a9a5b", "#7d8597", "#c9ada7"];
-// a reference row keeps its own muted colour; the others take the palette in pick order
-function selColour(picked, id, refIds) {
-  const k = refIds.indexOf(id);
-  if (k >= 0) return SEL_REF[k % SEL_REF.length];
-  const j = picked.filter(x => !refIds.includes(x)).indexOf(id);
-  return j < 0 ? null : SEL_PAL[j % SEL_PAL.length];
-}
 function Component({ canvas, props }) {
   const p = props;
   const [q, setQ] = React.useState(p.q || "");
@@ -388,53 +341,6 @@ SEARCH_CSS = """
 # papers. A number's basis letter (p, r, L...) rides beside it, spelt out on
 # hover and filterable from the bar; text columns with few values get a menu.
 TABLE_SRC = r"""
-// Shared by the table and chart panels (one copy rides in each source).
-// Scaled: the panel content laid out at its own width and shrunk by a transform,
-// with the box sized explicitly. CSS zoom is not honoured everywhere, and a
-// browser that ignores it reports a full-size height to the board.
-function Scaled({ scale, className, children, ...rest }) {
-  // sizes written onto the elements in the same commit (see the map panels)
-  const outer = React.useRef(null), inner = React.useRef(null);
-  const s = scale || 1;
-  React.useLayoutEffect(() => {
-    const o = outer.current, i = inner.current;
-    if (!o || !i) return;
-    const m = () => { i.style.width = o.clientWidth / s + "px"; o.style.height = i.offsetHeight * s + "px"; };
-    m();
-    const ro = new ResizeObserver(m);
-    ro.observe(o); ro.observe(i);
-    return () => ro.disconnect();
-  }, [s]);
-  return <div ref={outer} style={{ width: "100%", overflow: "hidden" }}>
-    <div ref={inner} className={className} {...rest}
-         style={{ boxSizing: "border-box", transform: "scale(" + s + ")", transformOrigin: "0 0" }}>
-      {children}</div></div>;
-}
-// useSel: a selection several panels share, by row id, kept on the page so a
-// panel scrolled out of view and remounted finds it again.
-function useSel(bus, initial) {
-  const [, bump] = React.useReducer(x => x + 1, 0);
-  React.useEffect(() => {
-    if (!bus) return;
-    const h = () => bump();
-    window.addEventListener("sel:" + bus, h);
-    return () => window.removeEventListener("sel:" + bus, h);
-  }, [bus]);
-  const all = (window.__sel = window.__sel || {});
-  if (bus && !all[bus]) all[bus] = (initial || []).slice();
-  const set = f => { all[bus] = f(all[bus] || []); window.dispatchEvent(new Event("sel:" + bus)); };
-  return [bus ? all[bus] : [], set];
-}
-const SEL_PAL = ["#3987e5", "#eb6834", "#1baf7a", "#eda100", "#e87ba4", "#9085e9",
-                 "#e34948", "#5ec4e8", "#c9d64a", "#b07a4f", "#f2a7c3", "#8fd694"];
-const SEL_REF = ["#94a3b8", "#d4b483", "#b5838d", "#8a9a5b", "#7d8597", "#c9ada7"];
-// a reference row keeps its own muted colour; the others take the palette in pick order
-function selColour(picked, id, refIds) {
-  const k = refIds.indexOf(id);
-  if (k >= 0) return SEL_REF[k % SEL_REF.length];
-  const j = picked.filter(x => !refIds.includes(x)).indexOf(id);
-  return j < 0 ? null : SEL_PAL[j % SEL_PAL.length];
-}
 function Component({ props }) {
   const p = props;
   const cols = p.columns || [], rows = p.rows || [];
@@ -571,53 +477,6 @@ TABLE_CSS = """
 # Demand against supply on shared axes: one row set rates what each use asks for,
 # another what each design gives. A radar for the chosen pair, a fit grid for all.
 RADAR_SRC = r"""
-// Shared by the table and chart panels (one copy rides in each source).
-// Scaled: the panel content laid out at its own width and shrunk by a transform,
-// with the box sized explicitly. CSS zoom is not honoured everywhere, and a
-// browser that ignores it reports a full-size height to the board.
-function Scaled({ scale, className, children, ...rest }) {
-  // sizes written onto the elements in the same commit (see the map panels)
-  const outer = React.useRef(null), inner = React.useRef(null);
-  const s = scale || 1;
-  React.useLayoutEffect(() => {
-    const o = outer.current, i = inner.current;
-    if (!o || !i) return;
-    const m = () => { i.style.width = o.clientWidth / s + "px"; o.style.height = i.offsetHeight * s + "px"; };
-    m();
-    const ro = new ResizeObserver(m);
-    ro.observe(o); ro.observe(i);
-    return () => ro.disconnect();
-  }, [s]);
-  return <div ref={outer} style={{ width: "100%", overflow: "hidden" }}>
-    <div ref={inner} className={className} {...rest}
-         style={{ boxSizing: "border-box", transform: "scale(" + s + ")", transformOrigin: "0 0" }}>
-      {children}</div></div>;
-}
-// useSel: a selection several panels share, by row id, kept on the page so a
-// panel scrolled out of view and remounted finds it again.
-function useSel(bus, initial) {
-  const [, bump] = React.useReducer(x => x + 1, 0);
-  React.useEffect(() => {
-    if (!bus) return;
-    const h = () => bump();
-    window.addEventListener("sel:" + bus, h);
-    return () => window.removeEventListener("sel:" + bus, h);
-  }, [bus]);
-  const all = (window.__sel = window.__sel || {});
-  if (bus && !all[bus]) all[bus] = (initial || []).slice();
-  const set = f => { all[bus] = f(all[bus] || []); window.dispatchEvent(new Event("sel:" + bus)); };
-  return [bus ? all[bus] : [], set];
-}
-const SEL_PAL = ["#3987e5", "#eb6834", "#1baf7a", "#eda100", "#e87ba4", "#9085e9",
-                 "#e34948", "#5ec4e8", "#c9d64a", "#b07a4f", "#f2a7c3", "#8fd694"];
-const SEL_REF = ["#94a3b8", "#d4b483", "#b5838d", "#8a9a5b", "#7d8597", "#c9ada7"];
-// a reference row keeps its own muted colour; the others take the palette in pick order
-function selColour(picked, id, refIds) {
-  const k = refIds.indexOf(id);
-  if (k >= 0) return SEL_REF[k % SEL_REF.length];
-  const j = picked.filter(x => !refIds.includes(x)).indexOf(id);
-  return j < 0 ? null : SEL_PAL[j % SEL_PAL.length];
-}
 function Component({ props }) {
   const p = props, axes = p.axes || [], dem = p.demand || [], sup = p.supply || [];
   const [a, setA] = React.useState(0), [b, setB] = React.useState(0);
@@ -718,53 +577,6 @@ RADAR_CSS = """
 # Each axis is linear in its own units from 0 at the centre to a fixed maximum,
 # so a smaller polygon is better; a value past the rim is pinned there and labelled.
 DETRADAR_SRC = r"""
-// Shared by the table and chart panels (one copy rides in each source).
-// Scaled: the panel content laid out at its own width and shrunk by a transform,
-// with the box sized explicitly. CSS zoom is not honoured everywhere, and a
-// browser that ignores it reports a full-size height to the board.
-function Scaled({ scale, className, children, ...rest }) {
-  // sizes written onto the elements in the same commit (see the map panels)
-  const outer = React.useRef(null), inner = React.useRef(null);
-  const s = scale || 1;
-  React.useLayoutEffect(() => {
-    const o = outer.current, i = inner.current;
-    if (!o || !i) return;
-    const m = () => { i.style.width = o.clientWidth / s + "px"; o.style.height = i.offsetHeight * s + "px"; };
-    m();
-    const ro = new ResizeObserver(m);
-    ro.observe(o); ro.observe(i);
-    return () => ro.disconnect();
-  }, [s]);
-  return <div ref={outer} style={{ width: "100%", overflow: "hidden" }}>
-    <div ref={inner} className={className} {...rest}
-         style={{ boxSizing: "border-box", transform: "scale(" + s + ")", transformOrigin: "0 0" }}>
-      {children}</div></div>;
-}
-// useSel: a selection several panels share, by row id, kept on the page so a
-// panel scrolled out of view and remounted finds it again.
-function useSel(bus, initial) {
-  const [, bump] = React.useReducer(x => x + 1, 0);
-  React.useEffect(() => {
-    if (!bus) return;
-    const h = () => bump();
-    window.addEventListener("sel:" + bus, h);
-    return () => window.removeEventListener("sel:" + bus, h);
-  }, [bus]);
-  const all = (window.__sel = window.__sel || {});
-  if (bus && !all[bus]) all[bus] = (initial || []).slice();
-  const set = f => { all[bus] = f(all[bus] || []); window.dispatchEvent(new Event("sel:" + bus)); };
-  return [bus ? all[bus] : [], set];
-}
-const SEL_PAL = ["#3987e5", "#eb6834", "#1baf7a", "#eda100", "#e87ba4", "#9085e9",
-                 "#e34948", "#5ec4e8", "#c9d64a", "#b07a4f", "#f2a7c3", "#8fd694"];
-const SEL_REF = ["#94a3b8", "#d4b483", "#b5838d", "#8a9a5b", "#7d8597", "#c9ada7"];
-// a reference row keeps its own muted colour; the others take the palette in pick order
-function selColour(picked, id, refIds) {
-  const k = refIds.indexOf(id);
-  if (k >= 0) return SEL_REF[k % SEL_REF.length];
-  const j = picked.filter(x => !refIds.includes(x)).indexOf(id);
-  return j < 0 ? null : SEL_PAL[j % SEL_PAL.length];
-}
 function Component({ props }) {
   const p = props, rows = p.rows || [], refs = p.reference || [];
   const [alt, setAlt] = React.useState({});      // axis index -> showing its alternate column
@@ -893,8 +705,8 @@ DETRADAR_CSS = """
 .drad .det { opacity: .55; overflow: hidden; text-overflow: ellipsis; }
 .drad .sw { width: 10px; height: 10px; border-radius: 2px; display: inline-block; flex: none; border: 1px solid rgba(127,127,127,.5); margin-right: 4px; }
 .drad .plot { flex: 1; display: flex; gap: 16px; align-items: flex-start; }
-.drad .plot svg { width: 58%; flex: none; }
-.drad .plot table { flex: 1; }
+.drad .plot svg { width: 50%; flex: none; }
+.drad .plot table { flex: 1; width: auto; min-width: 0; }
 .drad svg { height: auto; }
 .drad .ring { fill: none; stroke: rgba(127,127,127,.25); }
 .drad .ring.overflow { stroke-dasharray: 2 4; }
@@ -911,7 +723,64 @@ DETRADAR_CSS = """
 .drad tr.ref th, .drad tr.ref td { opacity: .75; font-style: italic; }
 .drad table { border-collapse: collapse; width: 100%; font-size: 12px; }
 .drad th, .drad td { padding: 3px 6px; border-bottom: 1px solid rgba(127,127,127,.2); text-align: right; white-space: nowrap; }
-.drad thead th { font-weight: 500; opacity: .8; }
+.drad thead th { font-weight: 500; opacity: .8; white-space: normal; }
 .drad tbody th { text-align: left; font-weight: 400; }
 .drad .note { font-size: 11px; opacity: .6; margin-top: 8px; }
 """
+
+# Helpers the table, chart and search panels share, written once here and joined
+# onto each panel's source (HELPERS_JSX). canvas.define() would be the danvas way,
+# but its shared definitions did not reach browsers when served through the
+# danvasd broker (0.8.0). Scaled: content laid out at its own width and shrunk
+# by a transform; useSel: a selection several panels share, per viewer.
+SCALED_JSX = r"""// Scaled: the panel content laid out at its own width and shrunk by a transform,
+// with the box sized explicitly. CSS zoom is not honoured everywhere, and a
+// browser that ignores it reports a full-size height to the board.
+function Scaled({ scale, className, children, ...rest }) {
+  // sizes written onto the elements in the same commit (see the map panels)
+  const outer = React.useRef(null), inner = React.useRef(null);
+  const s = scale || 1;
+  React.useLayoutEffect(() => {
+    const o = outer.current, i = inner.current;
+    if (!o || !i) return;
+    const m = () => { i.style.width = o.clientWidth / s + "px"; o.style.height = i.offsetHeight * s + "px"; };
+    m();
+    const ro = new ResizeObserver(m);
+    ro.observe(o); ro.observe(i);
+    return () => ro.disconnect();
+  }, [s]);
+  return <div ref={outer} style={{ width: "100%", overflow: "hidden" }}>
+    <div ref={inner} className={className} {...rest}
+         style={{ boxSizing: "border-box", transform: "scale(" + s + ")", transformOrigin: "0 0" }}>
+      {children}</div></div>;
+}
+"""
+
+SEL_JSX = r"""// useSel: a selection several panels share, by row id, kept on the page so a
+// panel scrolled out of view and remounted finds it again.
+function useSel(bus, initial) {
+  const [, bump] = React.useReducer(x => x + 1, 0);
+  React.useEffect(() => {
+    if (!bus) return;
+    const h = () => bump();
+    window.addEventListener("sel:" + bus, h);
+    return () => window.removeEventListener("sel:" + bus, h);
+  }, [bus]);
+  const all = (window.__sel = window.__sel || {});
+  if (bus && !all[bus]) all[bus] = (initial || []).slice();
+  const set = f => { all[bus] = f(all[bus] || []); window.dispatchEvent(new Event("sel:" + bus)); };
+  return [bus ? all[bus] : [], set];
+}
+const SEL_PAL = ["#3987e5", "#eb6834", "#1baf7a", "#eda100", "#e87ba4", "#9085e9",
+                 "#e34948", "#5ec4e8", "#c9d64a", "#b07a4f", "#f2a7c3", "#8fd694"];
+const SEL_REF = ["#94a3b8", "#d4b483", "#b5838d", "#8a9a5b", "#7d8597", "#c9ada7"];
+// a reference row keeps its own muted colour; the others take the palette in pick order
+function selColour(picked, id, refIds) {
+  const k = refIds.indexOf(id);
+  if (k >= 0) return SEL_REF[k % SEL_REF.length];
+  const j = picked.filter(x => !refIds.includes(x)).indexOf(id);
+  return j < 0 ? null : SEL_PAL[j % SEL_PAL.length];
+}
+"""
+
+HELPERS_JSX = SCALED_JSX + "\n" + SEL_JSX + "\n"

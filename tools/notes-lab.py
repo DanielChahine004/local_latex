@@ -86,7 +86,8 @@ def editor(env):
 
 def mapper(env, edit_url):
     return spawn(["--project", "tools/notesmap", "notesmap", "serve", "--map", "--no-browser",
-                  "--port", str(MAP_PORT), "--edit-url", f"{edit_url}/lab"], env)
+                  "--port", str(MAP_PORT), "--edit-url", f"{edit_url}/lab",
+                  "--qc", str(REPO / "build" / "notes-qc")], env)
 
 
 def signal_all(p, sig) -> None:

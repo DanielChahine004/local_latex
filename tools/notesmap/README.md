@@ -134,6 +134,24 @@ world rather than wrong with the file — a conference whose deadline has passed
 or anything `--gaps` turns up. Notes never fail a run, so `--strict` stays
 meaningful instead of going permanently red the first time a deadline lapses.
 
+## Checking the board
+
+`serve --qc DIR` (on under `pixi run notes-lab`, with `DIR` = `build/notes-qc`)
+answers requests written to `DIR/request`, so a script or an agent can check the
+board without driving a browser:
+
+```bash
+echo layout > build/notes-qc/request                  # -> layout.json
+echo "shot Leaderboard_Radar_radar" > build/notes-qc/request   # -> layout.json + shot.png
+```
+
+`layout.json` holds every panel's measured box, each map pin, and the leaders that
+cross or run under a panel; `DIR/done` appears when it is written. A shot uses
+danvas's `canvas.screenshot`, which needs a board tab open and in front; frame one
+or two panels, since the whole canvas makes a very large image. The capture
+renders panels without per-viewer browser state (a ticked box, a selection), so
+use it for layout and look, not for that state.
+
 ## Editing together, live
 
 The notes are a file, so any editor works. For several people at once, the

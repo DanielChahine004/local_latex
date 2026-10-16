@@ -25,7 +25,7 @@ from .parse import Entry, Notes
 from .redact import redact
 from . import tables
 from .source import Source
-from .web import DETRADAR_CSS, DETRADAR_SRC, MAP_CSS, PIN_JSX, REACT_CSS, REACT_SRC, SEARCH_CSS, SEARCH_SRC, RADAR_CSS, RADAR_SRC, TABLE_CSS, TABLE_SRC, edit_jsx
+from .web import HELPERS_JSX, DETRADAR_CSS, DETRADAR_SRC, MAP_CSS, PIN_JSX, REACT_CSS, REACT_SRC, SEARCH_CSS, SEARCH_SRC, RADAR_CSS, RADAR_SRC, TABLE_CSS, TABLE_SRC, edit_jsx
 
 PITCH, ROW_GAP = PANEL_W + 40, 100
 PIN_D = 38                   # the marker's size, and the room a panel leaves it
@@ -108,7 +108,7 @@ class Board:
         else:
             scale, w, x, y = 1.0, 520, 40, -120
         self.search_scale = scale
-        self.search_panel = self.canvas.react(SEARCH_SRC, css=SEARCH_CSS, name="find", w=w, x=x, y=y,
+        self.search_panel = self.canvas.react(HELPERS_JSX + SEARCH_SRC, css=SEARCH_CSS, name="find", w=w, x=x, y=y,
                                               frame=False, props={"q": "", "hits": [], "scale": scale})
         self.search_panel.on("search")(lambda msg: self.search(msg.get("q", "")))
 
@@ -485,7 +485,7 @@ class Board:
                                    "axes": [{"key": c, "max": cs["max"][c]} for c in cs["axes"]]}
             if have is None:
                 x, y, w, _ = spec["at"]
-                panel = self.canvas.react(TABLE_SRC, css=TABLE_CSS, name=re.sub(r"\W+", "_", key) + "_table", props=props,
+                panel = self.canvas.react(HELPERS_JSX + TABLE_SRC, css=TABLE_CSS, name=re.sub(r"\W+", "_", key) + "_table", props=props,
                                           w=w, x=x, y=y, frame=False)
                 self.table_panels[key] = (panel, props)
             elif have[1] != props:
@@ -502,7 +502,7 @@ class Board:
                  "scale": self.map_w / 4500 if self.map_mode else 1.0}
         if have is None:
             x, y, w, _ = spec["at"]
-            panel = self.canvas.react(RADAR_SRC, css=RADAR_CSS, name=re.sub(r"\W+", "_", key) + "_radar",
+            panel = self.canvas.react(HELPERS_JSX + RADAR_SRC, css=RADAR_CSS, name=re.sub(r"\W+", "_", key) + "_radar",
                                       props=props, w=w, x=x, y=y, frame=False)
             self.table_panels[key] = (panel, props)
         elif have[1] != props:
@@ -527,12 +527,27 @@ class Board:
                  "simSet": spec.get("simulated", ""), "scale": self.map_w / 4500 if self.map_mode else 1.0}
         if have is None:
             x, y, w, _ = spec["at"]
-            panel = self.canvas.react(DETRADAR_SRC, css=DETRADAR_CSS, name=re.sub(r"\W+", "_", key) + "_radar",
+            panel = self.canvas.react(HELPERS_JSX + DETRADAR_SRC, css=DETRADAR_CSS, name=re.sub(r"\W+", "_", key) + "_radar",
                                       props=props, w=w, x=x, y=y, frame=False)
             self.table_panels[key] = (panel, props)
         elif have[1] != props:
             have[0].update(**props)
             self.table_panels[key] = (have[0], props)
+
+    def layout_report(self) -> dict:
+        """The board as the browsers measured it: every panel's box, each map
+        leader's pin and panel, and which leaders cross or run under a panel."""
+        from .layout import Rect, centre, crosses, through
+        geo = {e["name"]: e for e in self.canvas.describe() if isinstance(e.get("h"), (int, float))}
+        box = lambda e: Rect(e["x"], e["y"], e.get("w") or 0, e["h"])
+        panels = {n: box(e) for n, e in geo.items() if n != "world" and not n.endswith("_pin")}
+        pins = {n[:-4]: centre(box(e)) for n, e in geo.items() if n.endswith("_pin")}
+        seg = {k: (pins[k], centre(panels[k])) for k in pins if k in panels}
+        ks = sorted(seg)
+        return {"panels": {k: [b.x, b.y, b.w, b.h] for k, b in panels.items()},
+                "pins": pins,
+                "crossing": [[a, b] for i, a in enumerate(ks) for b in ks[i + 1:] if crosses(seg[a], seg[b])],
+                "under": [[k, o] for k in ks for o, r in panels.items() if o != k and through(seg[k], r)]}
 
     def _remove(self, key: str) -> None:
         for name in [n for n, (a, b, _) in self.arrows.items() if key in (a, b)]:

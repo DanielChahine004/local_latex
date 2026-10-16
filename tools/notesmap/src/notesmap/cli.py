@@ -211,6 +211,29 @@ def cmd_serve(args) -> int:
     w = cfg.map_width
     view = {"grid": False, "zoom": 0.2, "x": w / 2, "y": w / 4} if args.map else {"grid": True, "zoom": 0.5}
 
+    def qc_loop(folder: Path) -> None:
+        """On demand, for checking the board without driving a browser: write a
+        line "layout" or "shot <keys|all>" to folder/request, and the board
+        answers with folder/layout.json (and folder/shot.png), then deletes it."""
+        folder.mkdir(parents=True, exist_ok=True)
+        req = folder / "request"
+        while True:
+            time.sleep(1.0)
+            if not req.exists():
+                continue
+            words = req.read_text().split()
+            req.unlink()
+            try:
+                (folder / "layout.json").write_text(json.dumps(board.layout_report(), indent=1, default=str))
+                if words and words[0] == "shot":
+                    keys = words[1].split(",") if len(words) > 1 else ["all"]
+                    named = {**board.panels, **{c.name: c for c in canvas.components}}
+                    frame = None if keys == ["all"] else [named[k] for k in keys if k in named]
+                    canvas.screenshot(frame, path=str(folder / "shot.png"), timeout=40.0)
+                (folder / "done").write_text(" ".join(words))
+            except Exception as e:                    # no tab open, or a timeout
+                (folder / "done").write_text(f"error: {e}")
+
     def shoot(suffix: str, wait: float) -> None:
         time.sleep(wait)
         out = Path(args.snapshot)
@@ -224,6 +247,8 @@ def cmd_serve(args) -> int:
         except TimeoutError as e:
             print(f"[snapshot] {path.name} skipped: {e}", flush=True)
 
+    if args.qc:
+        threading.Thread(target=qc_loop, args=(Path(args.qc),), daemon=True).start()
     if not args.snapshot:
         canvas.serve(port=port, view=view, open_browser=not args.no_browser)
         return 0
@@ -249,6 +274,7 @@ def main(argv: list[str] | None = None) -> None:
     s.add_argument("--snapshot", metavar="PNG", help="also write a PNG and layout dump once a browser connects, "
                                                    "and again after every reload")
     s.add_argument("--frame", help="comma-separated panel keys to frame in snapshots, or 'all'")
+    s.add_argument("--qc", metavar="DIR", help="answer layout and screenshot requests written to DIR/request")
     s.add_argument("--map-width", type=int, help="override [map] width, e.g. 2400 to capture the whole map")
     s.add_argument("--edit-url", help="override [server] edit_url: where the map's edit button points, "
                                       "for an address only known at startup such as a tunnel's")

@@ -5379,6 +5379,30 @@ and a gamma-only model missed by \mm{0.3} where light-sharing decoding errors
 dominate (\ref{prog:QST}).
 \end{papernote}
 
+\begin{papernote}{Idea -- surface patterning chosen by depth information}{IdeaSurface}
+\paragraph{The idea}
+Treat the entrance face as a design variable and rank candidate patterns by the
+Fisher information they give on depth, before building any of them: flat,
+retroreflector, engraved prisms, and a scintillating ``prism head'' that
+bridges neighbouring crystals in place of Prism-PET's glass. A pattern helps
+only where it makes the light pattern, or its arrival times, change faster with
+depth; a retroreflected photon also returns delayed by about $2(L-z)/v$, so the
+same face can encode depth in time. Score each pattern too on what it costs in
+resolving two interactions, with the machinery of \ref{note:IdeaBound}.
+
+\paragraph{To beat}
+Prism-PET's glass prisms give \mm{1.84}--\mm{2.5} DOI single-ended
+(\ref{note:LaBella2021}, \ref{note:LaBella2020}) but sit in the beam as dense
+SF10 glass. A retroreflector on the entrance face was the best surface
+treatment of the three i3M tried (\ref{note:Freire2022a}) and is built into a
+scanner (\ref{note:Cucarella2026}). Optical barriers laser-engraved inside one
+crystal already exist (\ref{prog:QST}; Bl\"ackberg et al.\ 2018,
+\cite{Blackberg2018}), so a monolith with a segmented body and a continuous top
+needs no new fabrication. The oTOF depth signal is measured only for single
+interactions, in tapered pixels (\ref{note:Zeng2024}). Nobody on this map
+optimises a surface for depth; the geometry is always an input.
+\end{papernote}
+
 \end{programnote}
 
 \begin{papernote}{Ram, Ward \& Ober 2006 -- Fisher information limits on resolving two point sources}{Ram2006}

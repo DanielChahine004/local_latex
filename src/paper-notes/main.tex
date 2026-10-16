@@ -4364,10 +4364,55 @@ accuracy. The paper that set up the monolithic + NN line.
 UTS, \href{https://opus.lib.uts.edu.au/handle/10453/147336}{OPUS}.
 
 \paragraph{Summary}
-The thesis behind the two papers above: a continuous cylindrical shell of
-nanocomposite or transparent ceramic scintillator as a cheaper route to
-sensitivity, with the material evaluation, the thickness optimisation and the
-localisation method, all in simulation.
+The thesis behind the two papers above, supervised in Franklin's group: a
+continuous cylindrical shell of nanocomposite or transparent ceramic scintillator
+as a cheaper route to sensitivity, read by SiPMs on both its inner and outer
+surfaces, all in GATE with full optical tracking. Chapters 3 and 4 are
+\ref{note:Wilson2020} and \ref{note:Wilson2019}; chapters 5 and 6 are not
+published elsewhere on this map.
+
+\paragraph{Key Findings}
+\begin{itemize}
+	\item \textbf{Materials (ch.\ 3).} Five nanocomposites and four ceramic
+		garnets; ``optimal thickness'' defined as the one that localises the
+		most photons to within a set distance. GLuGAG:Ce is best: about
+		\mm{20} for accuracy (46\% of photons within \mm{1}, 62.5\% within
+		\mm{5}), about \mm{27.5} for sensitivity. LaF\textsubscript{3}:Ce in
+		polystyrene is the best nanocomposite. The position fit needs an extra
+		optical-scattering term these materials demand.
+	\item \textbf{The shell (ch.\ 4).} A polygonal shell \mm{296} long,
+		\mm{233} inner radius, \mm{24.9} thick in GLuGAG:Ce (\mm{42.9} in
+		LaF\textsubscript{3}:Ce-PS), 104 inner and 116--124 outer faces of
+		\mm{14.2}; detection efficiency 67.8\% and 48.8\%. Median LOR error
+		1.27--\mm{1.62} (GLuGAG) and 3.12--\mm{4.13} (nanocomposite) from
+		the centre to 75\% of the radius.
+	\item \textbf{Pile-up (ch.\ 5).} In one continuous shell, events
+		overlap in space and time. Pixels are grouped into regions, each
+		region's light flux is deconvolved by the scintillator's
+		depth-dependent impulse response into an impulse train marking event
+		onsets, and coincidences are pairs of impulses in one timing bin and
+		different regions. Of all annihilations, 32.8\% are geometrically
+		detectable; the algorithm finds 17.4\%, misses 15.4\% (mostly weak
+		signals) and adds 2.1\% randoms. Timing is sampled at \ns{10}, so
+		not TOF.
+	\item \textbf{Images (ch.\ 6).} A brain scanner reconstructed in STIR
+		(2D FBP, 3D FBP with reprojection, OSEM): \mm{2} sources under
+		\mm{4} FWHM in nearly every direction with OSEM --- from only
+		\qty{3}{\second} of simulated data, since full optical tracking is
+		so costly.
+	\item \textbf{Future work:} NEMA testing from a statistical model of the
+		localisation error instead of full optics; sub-nanosecond, TOF-capable
+		timing by joint spatial--temporal pulse analysis; other materials;
+		a truncated spherical shell for the brain.
+\end{itemize}
+
+\paragraph{Why it matters here}
+The group's own starting point for the capstone geometry, and a case of
+separating overlapping events in a monolith using time: chapter 5
+deconvolves the optical flux in space and time to find event onsets. It works
+between events (pile-up), at \ns{10}, not between the interactions of one
+event --- the gap this thesis aims at. Its proposed next step, joint
+spatial--temporal pulse analysis for timing, points the same way.
 
 \end{papernote}
 

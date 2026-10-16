@@ -21,7 +21,7 @@ rows = [
 	["Ideas", "i3M", "AnnPET", "HUST", "Delft", "machinery"],    # the annulus cluster and what it cites
 	["cMiCE", "Ghent", "WTPET", "Molecubes", "Ljubljana", "UTOFPET", "Aachen", "J-PET", "SIAT"],   # neural localisation and its precursors, plus the semi-monolithic branch
 	["Davis", "LBNL", "Seoul", "CrystalClear", "AXPET", "PrismPET", "QST"],        # light transport, light sharing and layered DOI
-	["MODE", "OpenGATE", "UTS", "Penn", "Geneva"],                # tooling stubs and history
+	["MODE", "OpenGATE", "UTS", "USYD", "Penn", "Geneva"],                # tooling stubs and history
 	["NSSMIC2026", "NSSMIC2027"],                       # conferences, with their countdowns
 ]
 # cross-references that are a shared citation, not a relationship
@@ -78,7 +78,7 @@ unplaced = [400, 3250]    # the machinery panel: no institution, so the Southern
                           # (clear of danvas's own buttons at the viewport's lower left)
 # panels at a fixed spot off the map, as [x, y] or [x, y, width]; no pin.
 # The leaderboard sits to the right of the map (which is width wide).
-fixed = { Leaderboard = [9150, 0, 1500], DesignFit = [9150, 3500, 1500], Clinical = [13530, 1100, 900] }
+fixed = { Leaderboard = [9150, 0, 1500], DesignFit = [9150, 3620, 1500], Clinical = [13530, 1100, 900] }
 
 [server]
 port = 8000
@@ -95,20 +95,21 @@ edit_label = "Edit these notes"
 at = [10710, 0, 2760, 1350]
 sets = ["Measured builds", "Simulated detectors", "Clinical reference"]
 plain = "FWHM"
-panel = ["What it is"]   # the programme panel shows only these paragraphs; the row notes stay in the PDF
+panel = ["What it is"]
+keys = { "Enríquez 2025" = "EnriquezMieyTeran2025", "Enríquez 2026" = "EnriquezMieyTeran2026" }   # first cells that do not read as a key   # the programme panel shows only these paragraphs; the row notes stay in the PDF
 flags = { p = "pitch", L = "layer width", b = "bin width", f = "flood fit", e = "Gaussian eq.", r = "vs reference", i = "sim input", m = "modelled here" }
 derive.Type = { from = "Detector", rules = [["semi-monolithic", "semi-monolith", "slabs"], ["layered", "layers"], ["monolithic", "monolith"], ["pixelated"]] }
 derive.Crystal = { from = "Detector", rules = [["LYSO", "LYSO"], ["BGO", "BGO"], ["GAGG", "GAGG"], ["LSO", "LSO"], ["other"]] }
 
 [tables."Leaderboard/Scanners"]
-at = [10710, 2520, 2700, 900]
+at = [10710, 2640, 2700, 900]
 sets = ["Scanners", "Clinical scanners"]
 derive.Type = { from = "Detector", rules = [["semi-monolithic", "semi-monolith", "slabs"], ["layered", "layers"], ["monolithic", "monolith", "annulus"], ["pixelated"]] }
 
 # Demand against supply: what each clinical use asks of a scanner, what each
 # detector design gives, on the same axes; a radar per pair and a fit grid.
 [tables.DesignFit]
-at = [10710, 3500, 2700, 1600]
+at = [10710, 3620, 2700, 1600]
 view = "radar"
 demand = "Application demand"
 supply = "Architecture supply"

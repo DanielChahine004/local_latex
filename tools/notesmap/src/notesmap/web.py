@@ -35,17 +35,20 @@ function Component({ canvas, props }) {
   // scaled by transform, not CSS zoom: a browser without zoom lays the content out
   // full size, reports that height to the board, and the placement then slides
   // hand-placed panels off what it takes for overlaps. The box is sized explicitly.
-  const inner = React.useRef(null);
-  const [contentH, setContentH] = React.useState(0);
-  React.useEffect(() => {
-    const el = inner.current;
-    if (!el) return;
-    const measure = () => setContentH(el.offsetHeight);
+  // The box's height is written straight onto the element, not through React
+  // state: the board measures the panel in an effect right after the first
+  // render, and in a background tab nothing measures it again, so the height has
+  // to be right in that same commit.
+  const inner = React.useRef(null), box = React.useRef(null);
+  React.useLayoutEffect(() => {
+    const el = inner.current, bx = box.current;
+    if (!el || !bx) return;
+    const measure = () => { bx.style.height = el.offsetHeight * scale + "px"; };
     measure();
     const ro = new ResizeObserver(measure);
     ro.observe(el);
     return () => ro.disconnect();
-  }, []);
+  }, [scale]);
   // a countdown has to move on its own: the board is only redrawn when the notes
   // change, so the panel keeps its own clock rather than asking Python for the time
   const [now, setNow] = React.useState(() => Date.now());
@@ -112,7 +115,7 @@ function Component({ canvas, props }) {
     <div ref={root} className="fit"
          onMouseEnter={() => canvas.send({ event: "focus", on: true })}
          onMouseLeave={() => canvas.send({ event: "focus", on: false })}>
-    <div style={{ height: contentH * scale, width: DESIGN_W * scale, overflow: "hidden" }}>
+    <div ref={box} style={{ width: DESIGN_W * scale, overflow: "hidden" }}>
     <div ref={inner} className={"prog " + (p.kind || "programme") + (!p.filtered ? "" : hit(p.key) ? " hit" : " miss")}
          style={{ width: DESIGN_W, transform: "scale(" + scale + ")", transformOrigin: "0 0" }}>
       {/* the image sits beside the heading, not above it: a panel is wider than
@@ -310,21 +313,21 @@ SEARCH_SRC = r"""
 // with the box sized explicitly. CSS zoom is not honoured everywhere, and a
 // browser that ignores it reports a full-size height to the board.
 function Scaled({ scale, className, children, ...rest }) {
+  // sizes written onto the elements in the same commit (see the map panels)
   const outer = React.useRef(null), inner = React.useRef(null);
-  const [W, setW] = React.useState(0), [H, setH] = React.useState(0);
-  React.useEffect(() => {
+  const s = scale || 1;
+  React.useLayoutEffect(() => {
     const o = outer.current, i = inner.current;
     if (!o || !i) return;
-    const m = () => { setW(o.clientWidth); setH(i.offsetHeight); };
+    const m = () => { i.style.width = o.clientWidth / s + "px"; o.style.height = i.offsetHeight * s + "px"; };
     m();
     const ro = new ResizeObserver(m);
     ro.observe(o); ro.observe(i);
     return () => ro.disconnect();
-  }, []);
-  const s = scale || 1;
-  return <div ref={outer} style={{ width: "100%", height: H * s, overflow: "hidden" }}>
+  }, [s]);
+  return <div ref={outer} style={{ width: "100%", overflow: "hidden" }}>
     <div ref={inner} className={className} {...rest}
-         style={{ boxSizing: "border-box", width: W ? W / s : undefined, transform: "scale(" + s + ")", transformOrigin: "0 0" }}>
+         style={{ boxSizing: "border-box", transform: "scale(" + s + ")", transformOrigin: "0 0" }}>
       {children}</div></div>;
 }
 // useSel: a selection several panels share, by row id, kept on the page so a
@@ -404,21 +407,21 @@ TABLE_SRC = r"""
 // with the box sized explicitly. CSS zoom is not honoured everywhere, and a
 // browser that ignores it reports a full-size height to the board.
 function Scaled({ scale, className, children, ...rest }) {
+  // sizes written onto the elements in the same commit (see the map panels)
   const outer = React.useRef(null), inner = React.useRef(null);
-  const [W, setW] = React.useState(0), [H, setH] = React.useState(0);
-  React.useEffect(() => {
+  const s = scale || 1;
+  React.useLayoutEffect(() => {
     const o = outer.current, i = inner.current;
     if (!o || !i) return;
-    const m = () => { setW(o.clientWidth); setH(i.offsetHeight); };
+    const m = () => { i.style.width = o.clientWidth / s + "px"; o.style.height = i.offsetHeight * s + "px"; };
     m();
     const ro = new ResizeObserver(m);
     ro.observe(o); ro.observe(i);
     return () => ro.disconnect();
-  }, []);
-  const s = scale || 1;
-  return <div ref={outer} style={{ width: "100%", height: H * s, overflow: "hidden" }}>
+  }, [s]);
+  return <div ref={outer} style={{ width: "100%", overflow: "hidden" }}>
     <div ref={inner} className={className} {...rest}
-         style={{ boxSizing: "border-box", width: W ? W / s : undefined, transform: "scale(" + s + ")", transformOrigin: "0 0" }}>
+         style={{ boxSizing: "border-box", transform: "scale(" + s + ")", transformOrigin: "0 0" }}>
       {children}</div></div>;
 }
 // useSel: a selection several panels share, by row id, kept on the page so a
@@ -587,21 +590,21 @@ RADAR_SRC = r"""
 // with the box sized explicitly. CSS zoom is not honoured everywhere, and a
 // browser that ignores it reports a full-size height to the board.
 function Scaled({ scale, className, children, ...rest }) {
+  // sizes written onto the elements in the same commit (see the map panels)
   const outer = React.useRef(null), inner = React.useRef(null);
-  const [W, setW] = React.useState(0), [H, setH] = React.useState(0);
-  React.useEffect(() => {
+  const s = scale || 1;
+  React.useLayoutEffect(() => {
     const o = outer.current, i = inner.current;
     if (!o || !i) return;
-    const m = () => { setW(o.clientWidth); setH(i.offsetHeight); };
+    const m = () => { i.style.width = o.clientWidth / s + "px"; o.style.height = i.offsetHeight * s + "px"; };
     m();
     const ro = new ResizeObserver(m);
     ro.observe(o); ro.observe(i);
     return () => ro.disconnect();
-  }, []);
-  const s = scale || 1;
-  return <div ref={outer} style={{ width: "100%", height: H * s, overflow: "hidden" }}>
+  }, [s]);
+  return <div ref={outer} style={{ width: "100%", overflow: "hidden" }}>
     <div ref={inner} className={className} {...rest}
-         style={{ boxSizing: "border-box", width: W ? W / s : undefined, transform: "scale(" + s + ")", transformOrigin: "0 0" }}>
+         style={{ boxSizing: "border-box", transform: "scale(" + s + ")", transformOrigin: "0 0" }}>
       {children}</div></div>;
 }
 // useSel: a selection several panels share, by row id, kept on the page so a
@@ -734,21 +737,21 @@ DETRADAR_SRC = r"""
 // with the box sized explicitly. CSS zoom is not honoured everywhere, and a
 // browser that ignores it reports a full-size height to the board.
 function Scaled({ scale, className, children, ...rest }) {
+  // sizes written onto the elements in the same commit (see the map panels)
   const outer = React.useRef(null), inner = React.useRef(null);
-  const [W, setW] = React.useState(0), [H, setH] = React.useState(0);
-  React.useEffect(() => {
+  const s = scale || 1;
+  React.useLayoutEffect(() => {
     const o = outer.current, i = inner.current;
     if (!o || !i) return;
-    const m = () => { setW(o.clientWidth); setH(i.offsetHeight); };
+    const m = () => { i.style.width = o.clientWidth / s + "px"; o.style.height = i.offsetHeight * s + "px"; };
     m();
     const ro = new ResizeObserver(m);
     ro.observe(o); ro.observe(i);
     return () => ro.disconnect();
-  }, []);
-  const s = scale || 1;
-  return <div ref={outer} style={{ width: "100%", height: H * s, overflow: "hidden" }}>
+  }, [s]);
+  return <div ref={outer} style={{ width: "100%", overflow: "hidden" }}>
     <div ref={inner} className={className} {...rest}
-         style={{ boxSizing: "border-box", width: W ? W / s : undefined, transform: "scale(" + s + ")", transformOrigin: "0 0" }}>
+         style={{ boxSizing: "border-box", transform: "scale(" + s + ")", transformOrigin: "0 0" }}>
       {children}</div></div>;
 }
 // useSel: a selection several panels share, by row id, kept on the page so a

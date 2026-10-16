@@ -3476,8 +3476,10 @@ the most common and hardest case. A uniform light guide, or a monolith, gives
 no fixed pattern to decompose against --- which is the difficulty this thesis
 takes on. Yet both the scanner and the oTOF papers reject inter-crystal
 scatter rather than use it.
-The decomposition is \ref{note:Petersen2020}: it separates the interactions
-and recovers the first, but never orders them.
+The decomposition is \ref{note:Petersen2020}, taken to the whole photopeak in
+\ref{note:Petersen2024}: it separates the interactions and picks the first
+crystal (64.7\% of scattered events, in simulation), but never orders them in
+time.
 \gap{Still unread: LaBella 2020's Supplemental Note 2; Makek et al.\ 2019,
 ``Scintillator pixel detectors for measurement of Compton scattering'',
 Condens.\ Matter 4:24. Petersen cites the Davis layered detector as the
@@ -3720,6 +3722,56 @@ arrival times and a bound earn their place. Within one crystal it also merges
 all hits to one energy-averaged depth, so it cannot see the multi-site events
 inside a crystal that a monolith is made of.
 
+\end{papernote}
+
+\begin{papernote}{Petersen et al.\ 2024 -- Resolving inter-crystal scatter in a light-sharing depth-encoding PET detector}{Petersen2024}
+\thumb{img/petersen2024.png}
+Phys.\ Med.\ Biol.\ 69:035024, \doi{10.1088/1361-6560/ad19f1}. Petersen,
+LaBella, Li, Wang, Goldan --- Stony Brook and Weill Cornell.
+
+\paragraph{Summary}
+The journal follow-up to \ref{note:Petersen2020}, still a simulation: GATE
+(Penelope physics, \mm{0.1} cuts) for the gamma interactions and TracePro for
+the light, with each crystal's light pattern tabulated in 80 depth bins of
+\mm{0.25}, on the 1.4 mm, 4-to-1, \mm{20} Prism-PET module. The simulation is
+checked against measurement: its block DOI of \mm{2.67} and depth-corrected
+energy resolution sit inside the measured 2.50--\mm{3.41} and 8.5--12.6\%
+(\ref{note:Zeng2023}, \ref{note:LaBella2020}). Real sensor data are left to
+future work, which the authors call the major limitation.
+
+\paragraph{Key Findings}
+\begin{itemize}
+	\item \textbf{Two adjacent crystals, decoded.} A Bayesian estimate --- a
+		scatter-absorption prior times a detector-response likelihood ---
+		splits the energy and depth of each crystal to \keV{20.5} and
+		\mm{3.1} FWHM error; a small network matches it (\keV{26.2},
+		\mm{2.9}). Without the prior, maximum likelihood still works with
+		errors about doubled: the response model, that is the light guide,
+		carries the accuracy. Their derived prior differs markedly from plain
+		Klein--Nishina.
+	\item \textbf{Whole photopeak.} A CNN that predicts the first crystal and its
+		depth separately: 83.0\% crystal accuracy overall --- 100\% for
+		photoelectric events, 64.7\% for inter-crystal scatter, falling from
+		65.6\% at the centre to 54.9\% in corners. DOI error \mm{2.4} for
+		photoelectric events, \mm{4.2} for scatter, \mm{3.0} for all.
+		Photoelectric events are 51.8\% of the photopeak.
+	\item \textbf{Image level.} Between two opposed modules \cm{34} apart,
+		spillover into the wrong line of response falls from 63.8\% to 47.0\%
+		(15.6\% for an ideal detector); the coincidence FWHM goes from 0.82 to
+		\mm{0.75} (\mm{0.72} ideal), reported as a 38.9\% improvement on Lee and
+		Lee's metric. Simulated hot-rod images resolve \mm{0.8} rods better.
+	\item Claims the highest crystal-selection accuracy reported for a
+		light-sharing detector, against 73\% in \ref{note:Lee2021}'s comparable
+		module.
+\end{itemize}
+
+\paragraph{Why it matters here}
+The best answer yet to Prism-PET's discarded scatter, and still only a
+simulation. It recovers the first crystal for two of three scattered events from
+light patterns and energies alone, with no timing --- and the miss rate on
+scattered events, about one in three, is the room an arrival-time estimate has
+to work in (\ref{note:IdeaOrdering}). Within a crystal it still keeps one
+energy-weighted depth, so multi-site events inside one crystal stay merged.
 \end{papernote}
 
 \end{programnote}
@@ -5031,6 +5083,7 @@ Razdevšek 2025 & LSO 3 mm pixels, 8 layers & ideal & 20 & 1.7 e & 9 & 3 p & 10 
 Li 2012 & LYSO monolith, cMiCE SES & entrance & 15 & 1.52 & 10 & 0.91 & -- & -- \\
 Decuyper 2021 & LYSO monolith, scattered & single & 16 & 1.80 & 11 & 0.66 & -- & -- \\
 Petersen 2020 & LYSO 1.4 mm, Prism, ICS & single & 20 & 2.1 & 11 & 1.4 p & 10 i & -- \\
+Petersen 2024 & LYSO 1.4 mm, Prism, photopeak & single & 20 & 3.0 & 15 & 1.4 p & -- & -- \\
 Peng 2019 & LYSO monolith, 4 stacked layers & 4 sides & 13.4 & 3.36 L & 25 & 0.40 & 9.3 & -- \\
 \hline
 \end{tabular}
@@ -5042,6 +5095,8 @@ non-Compton FWHM); its scattered events, about 60\% of the total, follow
 further down. Razdevšek's DOI is the 2.5 mm layer as a Gaussian-equivalent
 FWHM; Petersen's is the multi-crystal events of a CNN, 1.0 mm for
 single-crystal ones, and its 10\% energy resolution is set from experiment.
+Petersen 2024's DOI is for every photopeak event, \mm{2.4} for photoelectric
+ones and \mm{4.2} for inter-crystal scatter.
 Decuyper's DOI for all events is \mm{0.99}, transverse \mm{0.46}. Peng 2019
 is the simulation of the layered block measured as Peng 2019a above; its depth
 is the \mm{3.36} layer pitch, reflector included.
@@ -5271,7 +5326,10 @@ backscatter swap for two-layer events (\ref{note:Peng2019}); the experiment
 gave up sequencing for a max-energy rule (\ref{note:Peng2019a}). First crystal
 recovered for 88\% of multi-crystal events by a CNN on the readout pattern, in
 simulation; the analytical decomposition only finds which crystals fired (99\%)
-(\ref{note:Petersen2020}). Both need optical isolation; neither uses time.
+(\ref{note:Petersen2020}); the journal version picks the first crystal of
+64.7\% of inter-crystal-scatter events and 83\% of the photopeak, still
+simulated (\ref{note:Petersen2024}). Both need optical isolation; neither uses
+time.
 Learned crystal-pair selection on plain light sharing falls from 91\% to
 35\% as pitch shrinks (\ref{note:Lee2021}); Klein--Nishina selection did no
 better than random on AX-PET, where including both candidate lines beat
@@ -5292,7 +5350,8 @@ about half of singles Compton-scatter, its authors say; if recovery matures it b
 all-rounder in the Design fit panel (its sensitivity rating 3 to 4 lifts its
 mean fit from 88 to 91\%). Its case is structural: discrete crystals and a
 fixed light guide make a scattered event close to a sum of known patterns,
-so decomposition is tractable (\ref{note:Petersen2020}). Its weakness is the
+so decomposition is tractable (\ref{note:Petersen2020},
+\ref{note:Petersen2024}). Its weakness is the
 same structure at fine pitch, where 4-to-1 patterns overlap and learned
 selection degrades (\ref{note:Lee2021}). The monolith's counter is continuous
 position, more light per channel, and arrival times. Test it directly: same

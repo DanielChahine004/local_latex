@@ -252,3 +252,19 @@ class Converter:
             else:
                 out.append(s)
         return re.sub(r"\n{3,}", "\n\n", "\n".join(out)).strip()
+
+    def to_text(self, tex: str) -> str:
+        """A title or label: plain text, since the board prints it unparsed.
+        Super- and subscripts become Unicode where every character has one
+        (mm³, ²²Na), else ^x and _x; other markup is dropped."""
+        t = self.to_md(tex)
+        for tag, table, mark in (("sup", SUPERSCRIPT, "^"), ("sub", SUBSCRIPT, "_")):
+            t = re.sub(rf"<{tag}>(.*?)</{tag}>",
+                       lambda m: m.group(1).translate(table) if set(map(ord, m.group(1))) <= table.keys()
+                       else mark + m.group(1), t)
+        t = re.sub(r"<[^>]+>", "", t)
+        return re.sub(r"\*\*?([^*]+)\*\*?", r"\1", t)
+
+
+SUPERSCRIPT = str.maketrans("0123456789+-=()n", "⁰¹²³⁴⁵⁶⁷⁸⁹⁺⁻⁼⁽⁾ⁿ")
+SUBSCRIPT = str.maketrans("0123456789+-=()", "₀₁₂₃₄₅₆₇₈₉₊₋₌₍₎")

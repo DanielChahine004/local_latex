@@ -155,7 +155,7 @@ class Board:
     def apply(self, notes: Notes) -> dict:
         # \ref{..:key} reads as the entry's short name, its title up to " -- ",
         # taken before redaction so a reference to a hidden entry still reads well
-        labels = {e.key: self.conv.to_md(e.title).split(" – ")[0].strip() for e in notes.all_entries()}
+        labels = {e.key: self.conv.to_text(e.title).split(" – ")[0].strip() for e in notes.all_entries()}
         notes = redact(notes, self.cfg.hide_sections, self.cfg.hide_gaps, self.cfg.show_loose,
                        self.cfg.hide_programmes)
         with self.lock:
@@ -271,7 +271,7 @@ class Board:
     # --- content ------------------------------------------------------------------
 
     def _groups(self, notes: Notes) -> dict[str, tuple[str, Entry | None, list[Entry]]]:
-        groups = {p.key: (self.conv.to_md(p.title), p, p.papers) for p in notes.programmes}
+        groups = {p.key: (self.conv.to_text(p.title), p, p.papers) for p in notes.programmes}
         if notes.loose:
             groups[self.cfg.loose_key] = (self.cfg.loose_title, None, notes.loose)
         return groups
@@ -396,7 +396,7 @@ class Board:
             "html": self._html(self._own_text(key, node)) if node else "",
             "lead": self._snippet(node) if node else "",
             "link": node.link if node else None,
-            "papers": [{"key": p.key, "title": self.conv.to_md(p.title), "year": str(p.year) if p.year else "",
+            "papers": [{"key": p.key, "title": self.conv.to_text(p.title), "year": str(p.year) if p.year else "",
                         "snippet": self._snippet(p), "thumb": self._image(p.thumb), "link": p.link,
                         "pdf": self.cfg.pdf_url.format(key=p.key) if p.key in pdfs else None,
                         "html": self._html(p.full(self.conv)) or "<p><i>(empty)</i></p>"}

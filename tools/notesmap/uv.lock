@@ -4,19 +4,19 @@ requires-python = ">=3.11"
 
 [[package]]
 name = "danvas"
-version = "0.9.0"
+version = "0.9.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "orjson" },
     { name = "websockets" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/e7/49/cf7072fa8402c68c76b54bca08e4f7e70217c7ba33ef5df2f5a69703e2d5/danvas-0.9.0.tar.gz", hash = "sha256:a2f825c0297594b13e6dcbbd9284d32d07aea07ead067e5cc9347d795e0212ab", size = 2559566, upload-time = "2026-10-16T10:00:36.243Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/1f/3c/c96ad4765ec9cd159bae38012c254f2c317f287529643c17951054960f01/danvas-0.9.1.tar.gz", hash = "sha256:e2d6244c46336cf824185ce69c6e959a7172438acdaad06531825e9b46f9d2c9", size = 2568796, upload-time = "2026-10-20T05:40:28.413Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/d4/fb/58429ecf18c9f6e49a54cde18d67b8e43306e0f9caa729b7c1138c4413ce/danvas-0.9.0-py3-none-any.whl", hash = "sha256:0498684e0972fc4b015159a2e3d5ce6986851191d18267be93b83cad5982f792", size = 2429254, upload-time = "2026-10-16T10:00:26.766Z" },
-    { url = "https://files.pythonhosted.org/packages/58/ce/255114a4b2a34fe94c638c8ca93752ca6889aabb3b574f9e4ee2b00fc778/danvas-0.9.0-py3-none-macosx_11_0_arm64.whl", hash = "sha256:b8d69f90f7f3405bee861bab88df5a72f47eb8e036ff918064e15d10b5ce4143", size = 6290361, upload-time = "2026-10-16T10:00:28.789Z" },
-    { url = "https://files.pythonhosted.org/packages/22/40/f36bbb39c23f9e884268d14d370f7d3c7330da6f214d764b14238ae15131/danvas-0.9.0-py3-none-manylinux2014_aarch64.whl", hash = "sha256:2126b71856719a5e47934be0caa5219a8ccb26f82fa81c363ef5291a47d518fa", size = 6324350, upload-time = "2026-10-16T10:00:30.484Z" },
-    { url = "https://files.pythonhosted.org/packages/cd/df/e82caf4cc4ea49241d942a6712fd92aa7bcb9a631a1571beb6480c6a5e68/danvas-0.9.0-py3-none-manylinux2014_x86_64.whl", hash = "sha256:1e774d75a750fcb4d2c0895fdfb77cef105e2476165bde84ed5ff2fda237efa6", size = 6585883, upload-time = "2026-10-16T10:00:32.825Z" },
-    { url = "https://files.pythonhosted.org/packages/1f/b3/d3c1d16dd35939d1d7858a96b711fa32c63903f7b2a36e8fdd52908e4749/danvas-0.9.0-py3-none-win_amd64.whl", hash = "sha256:c0f6971f7b2a5ae11967a264670431f8522af4e1356cd24c201589d58c9fa4e9", size = 6416298, upload-time = "2026-10-16T10:00:34.521Z" },
+    { url = "https://files.pythonhosted.org/packages/94/9e/0747672dc3cbbd43183441842ea069cdb79e0501bd29fe274cbb1929403d/danvas-0.9.1-py3-none-any.whl", hash = "sha256:7f4172c485c6aca38379d24284ee310b8419eb9ee60eadbee7667803f7aa39a5", size = 2435423, upload-time = "2026-10-20T05:40:16.796Z" },
+    { url = "https://files.pythonhosted.org/packages/2f/6f/fac862494154b7442fae7cddefe2ad82725d0eb9481c38174867710e338d/danvas-0.9.1-py3-none-macosx_11_0_arm64.whl", hash = "sha256:caf6ec04e8749d57a08869de4343ba2701d2888e72a08e34e431f381307e63f0", size = 6303377, upload-time = "2026-10-20T05:40:18.932Z" },
+    { url = "https://files.pythonhosted.org/packages/4a/c8/7918ea651302f0af5ce0c44c1462d628f63858fafb88d87540bc417831a0/danvas-0.9.1-py3-none-manylinux2014_aarch64.whl", hash = "sha256:7980dfd8d866f5e198d8f3b0946502b81d3cc58e8341cdca091b506aa4eb2c83", size = 6337196, upload-time = "2026-10-20T05:40:21.021Z" },
+    { url = "https://files.pythonhosted.org/packages/bf/06/d15e96d3f57fc48041a484eb51ed55a901b4134f63a3a6e099da54c83be6/danvas-0.9.1-py3-none-manylinux2014_x86_64.whl", hash = "sha256:14e09e21eae8c5b1b8b54161c98ca9d081401165928f8284f67b506bde3b653d", size = 6597311, upload-time = "2026-10-20T05:40:23.143Z" },
+    { url = "https://files.pythonhosted.org/packages/b1/5a/0b16d69466afbbe454afa71b87a38afbce37c4fc868cc41e884f16282f37/danvas-0.9.1-py3-none-win_amd64.whl", hash = "sha256:ac3fdbd57c5474cf99352f2012e5205ae936a880cc038dfeea2a63007c28c197", size = 6427607, upload-time = "2026-10-20T05:40:25.397Z" },
 ]
 
 [[package]]

@@ -1690,7 +1690,8 @@ proximity rather than with crystal. Walk-through PET site:
 \qtyproduct{50 x 50 x 16}{\mm} block of \ref{note:Stockhoff2021}, but its
 assumed performance varies by paper: \ref{note:Vandenberghe2023} takes \ps{600}
 for BGO and \ps{300} for LYSO; \ref{note:Dadgar2023} uses \mm{1.3} 2D, \mm{2}
-DOI and \ps{327} cited from Carra 2022; \ref{note:AbiAkl2023} models \ps{200}
+DOI and \ps{327} cited from Carra 2022, as does \ref{note:Vervenne2026};
+\ref{note:AbiAkl2023} models \ps{200}
 with Stockhoff's blurring; only \ref{note:AbiAkl2025} and
 \ref{note:Dhaenens2026} use \mm{1.14}, \mm{2.67} and \ps{300}.
 \gap{Funding and project status. The site reads like a funded project with a
@@ -1703,7 +1704,7 @@ Vandenberghe (PI), Jens Maebe, Maya Abi Akl, Meysam Dadgar, Boris Vervenne,
 Elke Dhaenens, Florence Muller, Christian Vanhove.
 
 \paragraph{Key outputs}
-Six papers, and they are one argument rather than six results:
+Seven papers, and they are one argument rather than seven results:
 \begin{itemize}
 	\item \ref{note:Vandenberghe2020} --- the cost-efficient total-body target the
 		rest inherits, and the group's own case against monolithic readout cost.
@@ -1713,6 +1714,8 @@ Six papers, and they are one argument rather than six results:
 	\item \ref{note:AbiAkl2025} --- panels thinned, gaps closed by moving them
 		vertically.
 	\item \ref{note:Dhaenens2026} --- panels narrowed, swept laterally.
+	\item \ref{note:Vervenne2026} --- the elongation artefact split into
+		parallax and limited angle, and sized.
 	\item Maebe PhD thesis, Ghent 2024 --- ``Timing capabilities and image
 		reconstruction for the walk-through PET''.
 		\gap{Unread. The reconstruction half is where the limited-angle
@@ -1726,12 +1729,17 @@ asking for better timing: \ref{note:Dadgar2023} weighs the panels against a
 closed geometry, \ref{note:AbiAkl2025} reports
 \qtyrange{3}{3.5}{\mm} perpendicular to the panel face, and
 \ref{note:Dhaenens2026} concedes elongation artefacts in both its flat-panel
-builds and asks for better than \ps{300} to suppress them. That is the
-argument for a closed geometry made by the open-geometry camp itself --- an
-annulus has no limited-angle artefact to buy off and no moving part to
-schedule. It is also the reason \ref{note:AbiAkl2023} exists: when the same
-group wrapped the same block into a ring, the comparison stopped being
-rhetorical.
+builds and asks for better than \ps{300} to suppress them. Read alone, that is
+the argument for a closed geometry made by the open-geometry camp itself.
+\ref{note:Vervenne2026} answers it: the limited-angle blur grows with object
+size and time of flight is what shrinks it, and with \mm{2} DOI and about
+\ps{300} the panels match a Quadra-like cylinder on organ shapes and lesions,
+leaving the artefact in large, low-contrast structures. So the panels' weakness
+is real but priced, not fatal, and better timing improves them rather than
+rescues them. What survives for a closed geometry is narrower: no artefact to
+correct at all, and no dependence on the 3D activity outside the plane being
+read. It is also the reason \ref{note:AbiAkl2023} exists: when the same group
+wrapped the same block into a ring, the comparison stopped being rhetorical.
 
 \paragraph{Scope boundary}
 This node is system geometry. Detector physics, including the \mm{1.14} the
@@ -1938,6 +1946,76 @@ timing --- limited-angle elongation is the structural cost of a flat panel, and
 \ps{300} is not enough to hide it. That is the argument for a closed geometry
 stated by the panel camp itself: a monolithic annulus has no limited-angle
 problem to buy off, and no moving part to schedule.
+\ref{note:Vervenne2026} then sizes that artefact and finds \ps{300} enough to
+match the cylinder on organ shapes and lesions, which takes much of the force
+out of that argument.
+
+\end{papernote}
+
+\begin{papernote}{Vervenne et al.\ 2026 -- Untangling the causes of elongation artifacts in dual flat-panel PET: limited angular sampling versus parallax error}{Vervenne2026}
+\thumb{img/vervenne2026.png}
+Phys.\ Med.\ Biol.\ (accepted manuscript, in press), \doi{10.1088/1361-6560/aeb794}.
+Vervenne, Maebe, Abi Akl, Vanhove, Vandenberghe --- Ghent MEDISIP. Open access,
+CC BY 4.0.
+
+\paragraph{Summary}
+The walk-through panels' elongation artefact taken apart. GATE 9.2 without
+optics: the long BGO panels of \ref{note:Dadgar2023} (2 x 20 x 14 blocks of
+\qtyproduct{50 x 50 x 16}{\mm}, \cm{50} apart, \mm{1.3} in-plane, \mm{2} DOI,
+\ps{327}) against a Biograph Vision Quadra-like cylinder (\mm{3.2} LSO pixels,
+\ps{228}, no DOI), both \cm{106} axial. Each detector is a blur applied to the
+energy-weighted interaction point --- a 2D Gaussian for the monolith, a uniform
+draw over the pixel for the cylinder, and a 1D Gaussian in depth or the crystal
+midplane without DOI --- and time of flight is resampled afterwards, so one
+simulation serves every timing. Trues only, MLEM without PSF modelling. Point
+sources, spheres of 1 to \mm{50} radius across the field, sphere grids, NEMA IQ
+and XCAT.
+
+\paragraph{Key Findings}
+\begin{itemize}
+	\item \textbf{Two mechanisms, split by object size.} Parallax, which DOI
+		fixes, blurs by an amount set by crystal thickness and position, not by
+		object size; in the panels it also hits the centre of the field, where
+		the most oblique lines are. Limited angular coverage, which time of
+		flight fixes, grows with object size and dominates above a radius of
+		about 0.5--\cm{1}; the shadow zones it leaves are bounded by lines from
+		the panel edges tangent to the object.
+	\item \textbf{Time of flight sets the large-scale picture.} Spillover of a
+		\mm{50} sphere is about 10--\mm{15} at \ps{327} (FW5M) and nearly gone at
+		\ps{50}. Without time of flight the IQ background and the XCAT body
+		outline are badly distorted; point-source widths barely move with timing.
+	\item \textbf{DOI saturates early.} From none to \mm{2} removes most of the
+		parallax elongation; from \mm{2} to \mm{0.005} gains little, especially
+		in the cylinder. The two smallest IQ spheres are round only with DOI.
+	\item \textbf{Elongation in one plane depends on the whole 3D activity.}
+		Axially oblique lines see into the transverse shadow zones, so a short
+		axial field --- or a long object blocking those lines --- makes it
+		worse; cutting the panels from 20 rows to 1 lets the lateral blur exceed
+		parallax, and even \ps{50} does not remove it at the field's edge.
+		Square panels are preferred to long narrow ones.
+	\item \textbf{The verdict.} With \mm{2} DOI and about \ps{300}, the panels
+		are competitive with the cylinder on organ shapes and lesions; at
+		\ps{50} they beat it on fine detail. The group has moved the walk-through
+		detector from BGO to LYSO, doubting that BGO's \ps{327} holds at system
+		level.
+	\item \textbf{Corrections.} PSF modelling targets parallax, since PSFs are
+		measured with point sources, and so cannot fix the large-scale
+		distortion; learned or prior-based reconstruction is proposed instead.
+\end{itemize}
+
+\paragraph{Why it matters here}
+It answers the campaign's standing question rather than repeating it. Read
+together, \ref{note:Dadgar2023}, \ref{note:AbiAkl2025} and
+\ref{note:Dhaenens2026} look like the panel camp asking for better timing; this
+paper sizes the request and concludes that \ps{300} already matches the
+cylinder, with the remaining artefact in large, low-contrast structures. It also
+sets the DOI target from the system side: about \mm{2}, past which nothing is
+gained --- the same saturation \ref{note:Razdevsek2025} finds for ideal layers.
+Two caveats keep it from settling \ref{note:IdeaPanelDOI}: the monolith is an
+ideal Gaussian on the energy centroid, so multi-site events carry no tails and
+no depth bias (\ref{note:Decuyper2021}), and its detector figures are the BGO
+ones of \ref{note:Dadgar2023}, not the \mm{1.14}, \mm{2.67} and \ps{300} LYSO
+values the later panel papers use.
 
 \end{papernote}
 
@@ -5643,7 +5721,9 @@ tails, at 70 and \ps{300}.
 \paragraph{To beat}
 DOI saturates at \mm{2.5} (8 layers in \mm{20}; about \mm{1.7} as a
 Gaussian FWHM) for \ps{70} panels (\ref{note:Razdevsek2025}); the WT-PET panels assume \mm{2.67} DOI at \ps{300}
-(\ref{prog:WTPET}); a \mm{16} monolith measures 6-layer DOI and
+(\ref{prog:WTPET}), and from \mm{2} to near-exact DOI buys almost nothing there at \ps{327}, with parallax
+dominant only below about \cm{1} radius (\ref{note:Vervenne2026}) --- again for an ideal Gaussian on the
+energy centroid; a \mm{16} monolith measures 6-layer DOI and
 \mm{1.14} intrinsic (\ref{note:Stockhoff2021}). Ideal layers have no decoding error and place multi-site events at their
 energy centroid, so the question is whether a monolith's mean DOI error passes \mm{2.5}
 while its multi-interaction tails (\ref{note:Decuyper2021}) still cost image

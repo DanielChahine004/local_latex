@@ -313,6 +313,10 @@ function Component({ canvas, props }) {
         <span className="count" {...keep}>
           {!q ? "" : p.hits && p.hits.length ? `${p.hits.length} match${p.hits.length > 1 ? "es" : ""}` : "nothing"}
         </span>
+        <button className="clear links" onClick={() => canvas.send({ event: "links", on: !p.links })}
+                title="The grey arrows between programmes; hiding them hides them for everyone" {...keep}>
+          {p.links === false ? "show links" : "hide links"}
+        </button>
       </div>
       {q && p.hits && p.hits.length > 0 && (
         <div className="where" {...keep}>{p.hits.map(h => h.title).join(" · ")}</div>
@@ -332,6 +336,7 @@ SEARCH_CSS = """
 .find .clear { font: 12px system-ui, sans-serif; padding: 4px 10px; border-radius: 999px; cursor: pointer;
                border: 1px solid rgba(127,127,127,.5); color: inherit; background: transparent; }
 .find .count { font-size: 12px; opacity: .7; }
+.find .links { margin-left: auto; white-space: nowrap; }
 .find .where { flex: 1 1 100%; font-size: 12px; opacity: .75; line-height: 1.4; }
 .find { flex-direction: column; align-items: stretch; }
 .find .row { display: flex; align-items: center; gap: 10px; }

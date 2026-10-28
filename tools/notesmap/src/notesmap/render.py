@@ -71,6 +71,7 @@ class Board:
         self.hits: set[str] = set()               # entry keys matching them
         self.search_panel = None
         self.search_scale = 1.0
+        self.links = True                         # the grey arrows between programmes
         self.texts: dict[str, str] = {}           # entry key -> what search reads
         self.map_w = cfg.map_width
         if map_mode:
@@ -109,8 +110,22 @@ class Board:
             scale, w, x, y = 1.0, 520, 40, -120
         self.search_scale = scale
         self.search_panel = self.canvas.react(HELPERS_JSX + SEARCH_SRC, css=SEARCH_CSS, name="find", w=w, x=x, y=y,
-                                              frame=False, props={"q": "", "hits": [], "scale": scale})
+                                              frame=False, props={"q": "", "hits": [], "scale": scale,
+                                                                  "links": self.links})
         self.search_panel.on("search")(lambda msg: self.search(msg.get("q", "")))
+        self.search_panel.on("links")(lambda msg: self.show_links(bool(msg.get("on"))))
+
+    def show_links(self, on: bool) -> None:
+        """Show or hide the grey arrows between programmes. danvas cannot scope an
+        arrow to one viewer, so this is the board's state, seen by everyone."""
+        with self.lock:
+            if on == self.links:
+                return
+            self.links = on
+            if self.notes is not None:
+                self._arrows(self.notes)
+            self._match()                         # the button learns the new state
+            self.settle()
 
     def search(self, q: str) -> None:
         with self.lock:
@@ -131,7 +146,7 @@ class Board:
         hits = [{"key": k, "title": self.conv.labels.get(k, k)}
                 for k in self.texts if k in self.hits]
         if self.search_panel is not None:
-            self.search_panel.update(q=self.query, hits=hits, scale=self.search_scale)
+            self.search_panel.update(q=self.query, hits=hits, scale=self.search_scale, links=self.links)
         self._repaint()
 
     def _members(self) -> dict[str, set[str]]:
@@ -752,6 +767,8 @@ class Board:
                     edges[(src, dst)] = reasons.get(r, "")
         for a, b in self.cfg.prune:
             edges.pop((a, b), None)
+        if not self.links:
+            edges = {}                            # hidden: every arrow below is disconnected
         col = {k: (ri, ci) for ri, row in enumerate(self.rows) for ci, k in enumerate(row)}
         wanted: set[str] = set()
         for (a, b), why in edges.items():

@@ -249,10 +249,14 @@ def cmd_serve(args) -> int:
 
     if args.qc:
         threading.Thread(target=qc_loop, args=(Path(args.qc),), daemon=True).start()
+    # danvas turns its Inspector on for a loopback bind, which this is even when a
+    # tunnel makes the map public; it would hand every visitor a state browser,
+    # and it reopened itself on restarts
+    ui = {"ui_inspector": False}
     if not args.snapshot:
-        canvas.serve(port=port, view=view, open_browser=not args.no_browser)
+        canvas.serve(port=port, view=view, open_browser=not args.no_browser, **ui)
         return 0
-    canvas.serve(port=port, view=view, block=False, open_browser=not args.no_browser)
+    canvas.serve(port=port, view=view, block=False, open_browser=not args.no_browser, **ui)
     for _ in range(240):
         if canvas.viewers:
             break

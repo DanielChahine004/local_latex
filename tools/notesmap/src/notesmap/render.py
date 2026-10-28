@@ -71,7 +71,7 @@ class Board:
         self.hits: set[str] = set()               # entry keys matching them
         self.search_panel = None
         self.search_scale = 1.0
-        self.links = True                         # the grey arrows between programmes
+        self.links = False                        # the grey arrows between programmes; off until asked for
         self.texts: dict[str, str] = {}           # entry key -> what search reads
         self.map_w = cfg.map_width
         if map_mode:

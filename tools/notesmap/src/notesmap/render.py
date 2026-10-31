@@ -319,7 +319,10 @@ class Board:
                 s = s.replace(f"&lt;{tag}&gt;", f"<{tag}>").replace(f"&lt;/{tag}&gt;", f"</{tag}>")
             s = re.sub(r"\*\*(.+?)\*\*", r"<b>\1</b>", s)
             s = re.sub(r"(?<!\*)\*(?!\*)(.+?)(?<!\*)\*(?!\*)", r"<i>\1</i>", s)
-            return re.sub(r"`([^`]+)`", r"<code>\1</code>", s)
+            s = re.sub(r"`([^`]+)`", r"<code>\1</code>", s)
+            # a bare URL (from \url) becomes a link; trailing punctuation stays text
+            return re.sub(r"https?://[^\s<]*[^\s<.,;:)]",
+                          lambda m: f'<a href="{m[0]}" target="_blank" rel="noopener noreferrer">{m[0]}</a>', s)
         out, items, rows = [], [], []
 
         def flush():

@@ -4719,6 +4719,45 @@ The abstract deadline passed on 12 May 2026, so this edition is a reading
 target rather than a submission one: the monolithic sessions say who is
 still active and what \ref{prog:AnnPET}, \ref{prog:i3M} and \ref{prog:Ghent}
 are claiming now.
+
+\paragraph{Programme and abstracts}
+Searchable online programme with abstracts (find a contribution by typing \#\textit{id} in its search box): \url{https://ieee2026.eventclass.it/online-program}.
+Full abstract booklet (PDF): \url{https://www.eventclass.org/contxt_ieee2026/upload/IEEE2026_abstractBooklet.pdf}.
+Times are CET.
+
+\paragraph{Must address or cite}
+\begin{itemize}
+	\item \textbf{\#1047} Katz et al.\ (UC Berkeley / Penn State), ``Position-Sensitive and Energy-Constrained Characterization of an Opaque Scintillation Detector'' (LiquidO); NSS-16-06, Wed 11 Nov 16:15.
+		A short optical scattering length confines the light, so separate interaction sites resolve.
+		This cuts against paper~3's hypothesis; the difference is in-volume WLS-fibre readout against face readout.
+	\item \textbf{\#1437} Kratochwil, Lee, Cates, Ariño-Estrada (UC Davis / LBNL), ``Cramér--Rao--Efficient Timing with Photon Counting: Theory and Proof-of-Concept Demonstration for Cherenkov TOF-PET''; MIC-13-01, Fri 13 Nov 11:30.
+		An MLE reaches the timing CRLB (\ps{35} against \ps{158} for first-photon).
+		Close to paper~2; cite.
+	\item \textbf{\#3067} ``Detector Geometry Optimization of a Sensing Collimation Imager (SCI)''; MIC-10-467 poster, Thu 12 Nov 17:30.
+		Fisher-information-based detector design optimisation; related work.
+\end{itemize}
+
+\paragraph{Context and potential partners}
+\begin{itemize}
+	\item \textbf{\#1379} Naunheim, \ldots, Roncali (UC Davis), ``Decomposing Optical Photon Transport in PET Detectors: Geometric Priors and Generative Models of Residual Stochasticity''; MIC-15-051 poster, Fri 13 Nov 15:00.
+		A generative optical model, an optiGAN successor; the reason the emulator idea was dropped.
+	\item \textbf{\#2663} Piera-Sapiña, Freire, \ldots, A.~J. Gonzalez (I3M Valencia), ``3D Photon Position Estimation Using Neural Networks in Monolithic-Based PET Systems''; M-LT-03-10, Thu 12 Nov 13:03.
+		Networks trained only on GATE simulation, validated on a real preclinical scanner.
+		The best candidate partner for a measured-data benchmark.
+	\item \textbf{\#2163} Luck et al.\ (Nalu Scientific / MGH), ``Deep Learning Depth-of-Interaction Estimation from Full-Waveform Single-Ended PET Readout: Spatial Resolution Limits''; MIC-05-022 poster, Wed 11 Nov 17:30.
+		They call the SNR gap an open problem, which bounds could answer.
+	\item \textbf{\#1581} Pagano, Loignon-Houle, \ldots, A.~J. Gonzalez (I3M), ``Inter-Crystal Scattering Recovery in Semi-Monolithic Crystals: an Experimental and Simulation Study''; MIC-09-02, Thu 12 Nov 15:15.
+	\item \textbf{\#2993} Hashemi, Zhang, Sabet, ``Intercrystal Compton Scattering Detection in Pixelated LYSO Detectors via Quantum Localization''; M-LT-04-03, Thu 12 Nov 12:49.
+		The nearest work to paper~3's multi-site question, but for pixelated crystals.
+	\item \textbf{\#1486, \#1493} Thull, \ldots, Schulz (RWTH Aachen): differentiable in-system calibration, and detector-wise timing calibration.
+	\item \textbf{\#3052} Zabloudil, \ldots, Auffray (CERN), wavelength-shifting nanocrystal layers and nanocomposites; NSS-07-08, Tue 10 Nov 10:45.
+	\item \textbf{\#2064} Polo et al.\ (Trento / Padova), a 3D-printable perovskite--polysiloxane nanocomposite scintillator; NSS-27-08, Thu 12 Nov 16:45.
+	\item Also: \#2111 (I3M classification MLP, semi-monolithic), \#1583 (I3M 4$\times$4 to 8$\times$8 SiPM upsampling), \#1769 (Stony Brook monolith with integrated corner reflectors), \#2563 (Konstantinou and Lecoq, metascintillator brain PET), \#2723 (ANNA v2 analog NN ASIC, Politecnico di Milano).
+\end{itemize}
+
+\paragraph{Gaps}
+Nothing on the programme covers bounds on multi-site resolvability against scattering length (paper~3), the bound-based split of edge bias, or Bhattacharyya or Ziv--Zakai bounds in detectors.
+The search covered about 1,240 abstracts across 63 sessions, so it may not be complete.
 \end{confnote}
  
 \begin{confnote}{IEEE NSS/MIC/RTSD 2027 -- Pasadena}{NSSMIC2027}

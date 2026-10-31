@@ -231,7 +231,7 @@ class Converter:
         t = re.sub(r"\\(\s)", r"\1", t)                        # "et al.\ " and "al.\" before a line break
         t = re.sub(r"\\[,;:!]", " ", t)
         t = t.replace("---", "—").replace("--", "–").replace("``", "“").replace("''", "”")
-        t = t.replace("\\%", "%").replace("\\&", "&").replace("\\$", "$").replace("\\_", "_")
+        t = t.replace("\\%", "%").replace("\\#", "#").replace("\\&", "&").replace("\\$", "$").replace("\\_", "_")
         t = t.replace("\\S", "§").replace("\\textdegree", "°").replace("{,}", ",")
         for k in sorted(MATH, key=len, reverse=True):          # \pm and friends outside $...$,
             t = re.sub(re.escape(k) + r"(?![A-Za-z])", MATH[k], t)   # as in \mm{1.4 \pm 0.2}

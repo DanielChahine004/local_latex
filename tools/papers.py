@@ -1,6 +1,7 @@
 """The paper PDFs: a clone of the private thesis-papers repo in papers/.
 
-    pixi run papers-pull     clone it on first use, then pull
+    pixi run papers-pull     clone it on first use, then pull, and copy Zotero's
+                             references.bib into src/thesis/
     pixi run papers-push     commit what was added to papers/ and push it
     pixi run papers-status   which bibliography keys have a PDF and which lack one
     pixi run papers-fetch    download the open-access copy of each missing one
@@ -15,6 +16,10 @@ public thesis repo or Overleaf. Collaborators are added on GitHub
 fetch asks OpenAlex for each DOI's open-access locations and keeps only a
 response that is actually a PDF; publishers often answer a script with an HTML
 page instead. What it cannot get stays listed as missing.
+
+Zotero owns the bibliography: Better BibTeX keeps papers/references.bib
+exported and the laptop pushes it (papers/zotero/README.md). pull copies it
+over src/thesis/references.bib, so edit references in Zotero, never here.
 """
 import json
 import re
@@ -28,6 +33,8 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parent.parent
 PAPERS = REPO / "papers"
 BIB = REPO / "src" / "thesis" / "references.bib"
+EXPORT = PAPERS / "references.bib"
+HEADER = "% Exported by Zotero (Better BibLaTeX) via thesis-papers; edit in Zotero, not here.\n\n"
 REMOTE = "https://github.com/DanielChahine004/thesis-papers.git"
 UA = "Mozilla/5.0 (thesis-papers fetch)"
 
@@ -42,6 +49,11 @@ def pull():
     else:
         git("pull", "--rebase", "--quiet")
     print(f"{len(pdfs())} PDFs in papers/")
+    if EXPORT.exists():
+        new = HEADER + EXPORT.read_text(encoding="utf-8").replace("\r\n", "\n")
+        if BIB.read_text(encoding="utf-8").replace("\r\n", "\n") != new:
+            BIB.write_text(new, encoding="utf-8", newline="\r\n")
+            print("references.bib updated from Zotero")
 
 
 def push():

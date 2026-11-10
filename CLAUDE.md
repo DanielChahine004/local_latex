@@ -76,8 +76,8 @@ demand, and measurements copied into a comment go stale the moment a label moves
   em-dash, ``` ``…'' ``` for quotes, and a `~` before every cross-reference
   (`Figure~\ref{...}`, `part~1`).
 - **Bibliography keys are `AuthorYear`** — `Casey1986`, `Moskal2014`. The style
-  is `numeric`, so keys never reach the page; normalise what a publisher export
-  dumps in rather than live with it.
+  is `numeric`, so keys never reach the page. Better BibTeX in Zotero makes them
+  (`auth + year`) and pins them.
 
 ## Figures
 
@@ -107,6 +107,15 @@ pixi exec --spec poppler -- pdftoppm -r 130 -f <page> -l <page> -png build/thesi
 ```
 
 ## Paper PDFs
+
+Zotero owns the bibliography and the PDFs. On the user's laptop it files each
+PDF into a clone of `thesis-papers` as `<BibKey>.pdf` and keeps
+`references.bib` exported there (Better BibLaTeX); a scheduled script pushes
+both. `pixi run papers-pull` pulls the clone and copies that export over
+`src/thesis/references.bib`. **Never edit `src/thesis/references.bib`:** the
+next pull overwrites it. Ask the user to change the item in Zotero; a field
+Zotero has no slot for goes in its Extra as `tex.<field>: value`
+(`tex.nopdf: reason`, `tex.note: ...`). Setup: `papers/zotero/README.md`.
 
 `papers/<BibKey>.pdf`, a git-ignored clone of the private `thesis-papers` repo;
 `pixi run papers-pull` fetches it. Read a paper there before asking for it, and

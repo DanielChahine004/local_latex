@@ -100,7 +100,11 @@ cmd = "uv run --quiet --python 3.12 --no-project python tools/papers.py pull"
 cmd = "uv run --quiet --python 3.12 --no-project python tools/papers.py push"
 
 [tasks.papers-status]
-cmd = "uv run --quiet --python 3.12 --no-project python tools/papers.py status"
+cmd = "uv tool run --quiet --python 3.12 --from git+https://github.com/DanielChahine004/paperstore paperstore --store papers check"
+
+# the paperstore CLI on papers/, e.g. pixi run papers search "CTR of [0-9]+ ps"
+[tasks.papers]
+cmd = "uv tool run --quiet --python 3.12 --from git+https://github.com/DanielChahine004/paperstore paperstore --store papers"
 
 [tasks.papers-fetch]
 cmd = "uv run --quiet --python 3.12 --no-project python tools/papers.py fetch"

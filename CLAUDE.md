@@ -76,8 +76,9 @@ demand, and measurements copied into a comment go stale the moment a label moves
   em-dash, ``` ``…'' ``` for quotes, and a `~` before every cross-reference
   (`Figure~\ref{...}`, `part~1`).
 - **Bibliography keys are `AuthorYear`** — `Casey1986`, `Moskal2014`. The style
-  is `numeric`, so keys never reach the page. Better BibTeX in Zotero makes them
-  (`auth + year`) and pins them.
+  is `numeric`, so keys never reach the page. `paperstore add` makes them from
+  the DOI record, and `paperstore check` holds each key to its record's first
+  author and year.
 
 ## Figures
 
@@ -108,23 +109,35 @@ pixi exec --spec poppler -- pdftoppm -r 130 -f <page> -l <page> -png build/thesi
 
 ## Paper PDFs
 
-Zotero owns the bibliography and the PDFs. On the user's laptop it files each
-PDF into a clone of `thesis-papers` as `<BibKey>.pdf` and keeps
-`references.bib` exported there (Better BibLaTeX); a scheduled script pushes
-both. `pixi run papers-pull` pulls the clone and copies that export over
-`src/thesis/references.bib`. **Never edit `src/thesis/references.bib`:** the
-next pull overwrites it. Ask the user to change the item in Zotero; a field
-Zotero has no slot for goes in its Extra as `tex.<field>: value`
-(`tex.nopdf: reason`, `tex.note: ...`). Setup: `papers/zotero/README.md`.
+`papers/` is a git-ignored clone of the private `thesis-papers` repo, a
+[paperstore](https://github.com/DanielChahine004/paperstore) store:
+`references.bib` (the bibliography), `<BibKey>.pdf`, `records.json` (each
+DOI's doi.org record) and `annotations/<BibKey>.json`. `pixi run papers-pull`
+pulls it and copies its bib over `src/thesis/references.bib`. **Never edit
+`src/thesis/references.bib`:** edit `papers/references.bib`, then
+`pixi run papers check`, `papers-push` and `papers-pull`. Never copy a PDF into
+this repo, which is public.
 
-`papers/<BibKey>.pdf`, a git-ignored clone of the private `thesis-papers` repo;
-`pixi run papers-pull` fetches it. Read a paper there before asking for it, and
-file any PDF you are given under its bibliography key, then `papers-push`.
-Every entry in `references.bib` should have its PDF in the store, for checking
-citations against the source; `pixi run papers-status` lists the gaps. Books
-are exempt (edition, publisher and ISBN are enough), and so is any entry
-carrying `nopdf = {reason}`, for sources no library holds online.
-Never copy a PDF into this repo, which is public.
+`pixi run papers <command>` runs the CLI on `papers/`:
+
+- `add <doi> --pdf <file>` makes the key and entry from the record and files the
+  PDF, refusing one whose first pages show neither that DOI nor that title.
+- `check` must pass before a push (CI runs it too): keys and fields agree with
+  their records, every entry has its PDF, every quote is still on its page. A
+  field the record gets wrong for a reason is excused on the entry,
+  `nocheck = {field: reason}`; books and `nopdf = {reason}` need no PDF.
+- `search <regex>`, `text <Key> [-p N]`: read a paper there before asking for it.
+- `annotate <Key> "<exact quote>" [-p N] [--value 214 --unit ps --what CTR]
+  [-t tag] -n "<note>" --by claude`: **every number or claim taken from a paper
+  goes in as an annotation**, with the quote that says it. The quote must be
+  found on its page or the command fails, so check facts by searching the PDF
+  before writing them, and never paraphrase into the quote. Notes say what the
+  paper says; a reading of it is flagged as one. `--figure N -p P` boxes a figure.
+- `notes [-k Key] [-t tag] [--status unchecked] --json` lists them; `link <Key> <id>`
+  gives the viewer URL that opens the PDF at that quote.
+
+The user reads and annotates in the viewer (danielchahine004.github.io/paperstore);
+their annotations arrive as commits, so `papers-pull` before relying on them.
 
 For a paywalled paper, use the UTS Library through Claude in Chrome. Open each
 paper in its own tab through the EZproxy prefix, e.g.
@@ -136,4 +149,4 @@ user's machine, not this server, so pre-opened tabs beat scripted downloads.
 Resolve each DOI to its publisher URL first (`curl -sI https://doi.org/<doi>`):
 a bare doi.org link leaves the proxy. IOP sometimes shows a CAPTCHA, which is
 the user's to tick; J Nucl Med is not on the proxy but is free on its own site.
-Check each returned PDF against its DOI before filing it.
+`paperstore add` checks each returned PDF against its DOI as it files it.

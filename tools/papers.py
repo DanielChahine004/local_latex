@@ -1,10 +1,11 @@
 """The paper PDFs: a clone of the private thesis-papers repo in papers/.
 
-    pixi run papers-pull     clone it on first use, then pull, and copy Zotero's
+    pixi run papers-pull     clone it on first use, then pull, and copy its
                              references.bib into src/thesis/
-    pixi run papers-push     commit what was added to papers/ and push it
-    pixi run papers-status   which bibliography keys have a PDF and which lack one
-    pixi run papers-fetch    download the open-access copy of each missing one
+    pixi run papers-push     commit what changed in papers/ and push it
+    pixi run papers-fetch    download the open-access copy of each missing PDF
+    pixi run papers ...      the paperstore CLI on papers/: add, check, search,
+                             text, annotate, notes (pixi run papers --help)
 
 One file per paper, named by its key in src/thesis/references.bib:
 papers/Freire2026.pdf. The key is the index, so a \\cite or a note's key finds
@@ -17,9 +18,10 @@ fetch asks OpenAlex for each DOI's open-access locations and keeps only a
 response that is actually a PDF; publishers often answer a script with an HTML
 page instead. What it cannot get stays listed as missing.
 
-Zotero owns the bibliography: Better BibTeX keeps papers/references.bib
-exported and the laptop pushes it (papers/zotero/README.md). pull copies it
-over src/thesis/references.bib, so edit references in Zotero, never here.
+papers/ is a paperstore store (github.com/DanielChahine004/paperstore): its
+references.bib is the bibliography, checked against each DOI's record, and
+annotations/ holds notes anchored to quotes in the PDFs. pull copies the bib
+over src/thesis/references.bib, so edit it in papers/, never here.
 """
 import json
 import re
@@ -34,7 +36,7 @@ REPO = Path(__file__).resolve().parent.parent
 PAPERS = REPO / "papers"
 BIB = REPO / "src" / "thesis" / "references.bib"
 EXPORT = PAPERS / "references.bib"
-HEADER = "% Exported by Zotero (Better BibLaTeX) via thesis-papers; edit in Zotero, not here.\n\n"
+HEADER = "% Copied from thesis-papers/references.bib by pixi run papers-pull; edit it there, not here.\n\n"
 REMOTE = "https://github.com/DanielChahine004/thesis-papers.git"
 UA = "Mozilla/5.0 (thesis-papers fetch)"
 
@@ -53,7 +55,7 @@ def pull():
         new = HEADER + EXPORT.read_text(encoding="utf-8").replace("\r\n", "\n")
         if BIB.read_text(encoding="utf-8").replace("\r\n", "\n") != new:
             BIB.write_text(new, encoding="utf-8", newline="\r\n")
-            print("references.bib updated from Zotero")
+            print("src/thesis/references.bib updated from papers/")
 
 
 def push():
@@ -87,16 +89,6 @@ def bib_entries(books=False):
 def pdfs():
     return {p.stem for p in PAPERS.glob("*.pdf")} if PAPERS.exists() else set()
 
-
-def status():
-    entries, have = bib_entries(), pdfs()
-    missing = [k for k in entries if k not in have]
-    stray = sorted(have - bib_entries(books=True).keys())
-    print(f"{len(entries) - len(missing)} of {len(entries)} bibliography entries have a PDF")
-    for k in missing:
-        print(f"  missing  {k}" + ("" if entries[k] else "  (no DOI)"))
-    for k in stray:
-        print(f"  no bib entry for papers/{k}.pdf")
 
 
 def get(url, accept="*/*"):
@@ -155,7 +147,7 @@ def fetch():
 
 
 if __name__ == "__main__":
-    commands = {"pull": pull, "push": push, "status": status, "fetch": fetch}
+    commands = {"pull": pull, "push": push, "fetch": fetch}
     if len(sys.argv) != 2 or sys.argv[1] not in commands:
         sys.exit("usage: papers.py " + "|".join(commands))
     commands[sys.argv[1]]()

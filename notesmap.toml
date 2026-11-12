@@ -37,10 +37,11 @@ loose_title = "Machinery (no programme)"
 [pdfs]
 # a paper card links to its PDF when papers/<Key>.pdf exists. papers/ is a clone
 # of the private thesis-papers repo (pixi run papers-pull), and the link opens
-# GitHub's viewer: readable by the repo's collaborators, a 404 for anyone else,
-# so the public board publishes no paper
+# the paperstore viewer, which reads the PDF and its annotations from that repo
+# after a GitHub sign-in: the repo's collaborators see the paper, anyone else is
+# refused, so the public board publishes no paper
 dir = "papers"
-url = "https://github.com/DanielChahine004/thesis-papers/blob/main/{key}.pdf"
+url = "https://danielchahine004.github.io/paperstore/#/{key}"
 
 [publish]
 # the board is public and states what the papers and programmes say; these are
@@ -96,7 +97,7 @@ at = [10710, 0, 2760, 1350]
 sets = ["Measured builds", "Simulated detectors", "Clinical reference"]
 plain = "FWHM"
 panel = ["What it is"]
-keys = { "Enríquez 2025" = "EnriquezMieyTeran2025", "Enríquez 2026" = "EnriquezMieyTeran2026" }   # first cells that do not read as a key   # the programme panel shows only these paragraphs; the row notes stay in the PDF
+keys = { "Enríquez 2025" = "EnriquezMierYTeran2025", "Enríquez 2026" = "EnriquezMierYTeran2026" }   # first cells that do not read as a key   # the programme panel shows only these paragraphs; the row notes stay in the PDF
 flags = { p = "pitch", L = "layer width", b = "bin width", f = "flood fit", e = "Gaussian eq.", r = "vs reference", i = "sim input", m = "modelled here" }
 derive.Type = { from = "Detector", rules = [["semi-monolithic", "semi-monolith", "slabs"], ["layered", "layers"], ["monolithic", "monolith"], ["pixelated"]] }
 derive.Crystal = { from = "Detector", rules = [["LYSO", "LYSO"], ["BGO", "BGO"], ["GAGG", "GAGG"], ["LSO", "LSO"], ["other"]] }

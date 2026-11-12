@@ -22,10 +22,11 @@ force a redo.
 
 ## Overleaf
 
-The thesis lives on a paid Overleaf plan linked to the GitHub repo via
-Overleaf's GitHub Sync (Overleaf Menu → GitHub → pull/push). Everything flows
-local ⇄ GitHub ⇄ Overleaf: run `pixi run sync` locally, then pull from within
-Overleaf, and vice versa. Live TikZ compiles fine within the paid timeout.
+The thesis lives on a paid Overleaf plan, reached through Overleaf's git
+integration: the remote `overleaf` in this clone. `pixi run sync` merges its
+edits (a merge, never a rebase) and pushes to it and to GitHub; a conflict
+stops the sync for a local fix. Overleaf's GitHub Sync is still linked but
+unused. Live TikZ compiles fine within the paid timeout.
 
 Only `src/thesis/` is set up as the Overleaf project root.
 

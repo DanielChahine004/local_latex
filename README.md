@@ -1,8 +1,8 @@
 # phd-thesis
 
 PhD thesis in LaTeX, built with [Tectonic](https://tectonic-typesetting.github.io/)
-via [pixi](https://pixi.sh/). The thesis is also on Overleaf, synced through this
-GitHub repo. The paper notes and their map are in
+via [pixi](https://pixi.sh/). The thesis is also on Overleaf, kept in step by
+`pixi run sync` through Overleaf's git integration. The paper notes and their map are in
 [paper-notes](https://github.com/DanielChahine004/paper-notes); the meeting log is
 in the private [meetings](https://github.com/DanielChahine004/meetings) repo.
 
@@ -75,9 +75,13 @@ bibliography, merged both ways on every sync: an entry added or edited here
 thesis-papers' own changes come here. An entry changed in both places stops the
 sync with both versions shown, before anything is pushed.
 
-The thesis is on a paid Overleaf plan linked to this repo through Overleaf's
-GitHub Sync. Everything flows local ⇄ GitHub ⇄ Overleaf: run `pixi run sync`
-here, then pull from within Overleaf, and vice versa.
+The thesis is on a paid Overleaf plan, reached through its git integration: the
+clone has the Overleaf project as a second remote, `overleaf`
+(`git remote add overleaf https://git@git.overleaf.com/<project id>`, signed in
+with an Overleaf git token). `pixi run sync` merges Overleaf's edits and pushes
+to it as well as to GitHub, so there is nothing to press in Overleaf. Overleaf's
+own GitHub Sync is still linked (Overleaf cannot unlink it) but is not used:
+never press its GitHub buttons, or the two routes will diverge.
 
 
 ## Paper PDFs

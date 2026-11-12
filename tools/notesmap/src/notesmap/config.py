@@ -48,6 +48,9 @@ class Config:
     # [pdfs]
     pdf_dir: str = ""                            # folder of <key>.pdf; empty: no PDF links
     pdf_url: str = ""                            # where a card's PDF link points, with {key}
+    # [claims]
+    claim_dir: str = ""                          # folder of <Key>.json annotation files (a paperstore's annotations/)
+    claim_url: str = ""                          # where \claim{Key/id} links, with {key} and {id}
     # [server]
     port: int = 8000
     title: str = "notesmap"
@@ -63,6 +66,18 @@ class Config:
             return frozenset()
         folder = self.resolve(self.pdf_dir)
         return frozenset(p.stem for p in folder.glob("*.pdf")) if folder.is_dir() else frozenset()
+
+    def claims(self) -> dict[str, dict]:
+        """{"Key/id": annotation} from [claims] dir; empty when none is configured."""
+        import json
+        folder = self.resolve(self.claim_dir) if self.claim_dir else None
+        if not folder or not folder.is_dir():
+            return {}
+        out = {}
+        for f in folder.glob("*.json"):
+            for n in json.loads(f.read_text(encoding="utf-8")).get("annotations", []):
+                out[f"{f.stem}/{n['id']}"] = n
+        return out
 
     @property
     def is_url(self) -> bool:
@@ -81,6 +96,7 @@ _SECTIONS = {
                 "hide_programmes": "hide_programmes"},
     "check": {"bib": "bib"},
     "pdfs": {"dir": "pdf_dir", "url": "pdf_url"},
+    "claims": {"dir": "claim_dir", "url": "claim_url"},
     "map": {"image": "map_image", "width": "map_width", "unplaced": "unplaced", "fixed": "map_fixed"},
     "server": {"port": "port", "title": "title", "edit_url": "edit_url",
                "edit_label": "edit_label"},

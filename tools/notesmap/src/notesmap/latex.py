@@ -132,6 +132,8 @@ class Converter:
         self.units = dict(UNITS, **(units or {}))
         self.labels: dict[str, str] = {}    # key -> readable name, for \ref (set by the renderer)
         self.macros: dict[str, tuple[int, Handler]] = {}   # insertion order is application order
+        self.claims: dict[str, dict] = {}       # "Key/id" -> annotation, for \\claim (set from [claims])
+        self.claim_url = ""
         u = self.unit
         self.add("gap", 1, lambda a: f"**[gap: {self.to_md(a)}]**")
         self.add("aside", 1, lambda a: a)               # shown unless redacted (redact.py)
@@ -155,7 +157,8 @@ class Converter:
         self.add("dates", 2, lambda a, b: "")             # read by Entry.dates
         self.add("deadline", 1, lambda a: "")             # ditto, with its [what]
         self.add("doi", 1, lambda a: f"doi:{a}")
-        self.add("href", 2, lambda url, a: a)
+        self.add("href", 2, lambda url, a: f"[{a}]({url.strip()})")
+        self.add("claim", 1, self._claim)
         self.add("url", 1, lambda a: a)
 
     # --- extension points -------------------------------------------------------
@@ -189,6 +192,16 @@ class Converter:
     def unit(self, s: str) -> str:
         s = s.strip()
         return self.units.get(s, s.lstrip("\\"))
+
+    def _claim(self, ref: str) -> str:
+        """\\claim{Key/id}: a link to the annotation that backs the sentence, labelled by its page."""
+        ref = ref.strip()
+        key, _, cid = ref.partition("/")
+        if not self.claim_url:
+            return ""
+        n = self.claims.get(ref)
+        label = f"p.{n['page']}" if n and n.get("page") else "source"
+        return f" [{label} ↗]({self.claim_url.format(key=key, id=cid)})"
 
     def _ref(self, target: str) -> str:
         key = target.split(":", 1)[-1]

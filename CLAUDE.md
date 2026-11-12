@@ -135,8 +135,13 @@ this repo, which is public.
   paper says; a reading of it is flagged as one. `--figure N -p P` boxes a figure.
 - `notes [-k Key] [-t tag] [--status unchecked] --json` lists them; `link <Key> <id>`
   gives the viewer URL that opens the PDF at that quote.
+- In `src/paper-notes`, a sentence stating a number or finding from a paper ends
+  with `\claim{Key/id}`, naming the annotation that quotes it: the map shows a
+  page chip that opens the PDF at the quote, and `notes-check` fails on a claim
+  with no annotation. Annotate first, then cite it.
 
-The user reads and annotates in the viewer (danielchahine004.github.io/paperstore);
+The user reads and annotates in the viewer (danielchahine004.github.io/paperstore),
+which shows first-page thumbnails from `papers/thumbs/` (`papers check --fix` makes them);
 their annotations arrive as commits, so `papers-pull` before relying on them.
 
 For a paywalled paper, use the UTS Library through Claude in Chrome. Open each

@@ -32,6 +32,7 @@ def _setup(args):
     for name, template in cfg.macros.items():
         conv.add_template(name, template)
     conv.load_plugins(cfg.plugins, cfg.root)
+    conv.claims, conv.claim_url = cfg.claims(), cfg.claim_url
     parser = load_parser(cfg.parser, cfg.root)
     return cfg, src, conv, parser
 
@@ -116,6 +117,10 @@ def cmd_check(args) -> int:
         for r in e.refs(cfg.ref_prefixes):
             if r not in keys:
                 problems.append(f"{e.file}:{e.line}: {e.key}: \\ref to unknown key {r!r}")
+        if cfg.claim_dir:
+            for c in re.findall(r"\\claim\{([^}]*)\}", "\n".join(e.body)):
+                if c.strip() not in conv.claims:
+                    problems.append(f"{e.file}:{e.line}: {e.key}: \\claim{{{c}}}: no such annotation in {cfg.claim_dir}")
     for p in notes.programmes:
         if p.location is None and p.key not in cfg.map_fixed:
             problems.append(f"{p.file}:{p.line}: {p.key}: no \\location (shelved on the map)")

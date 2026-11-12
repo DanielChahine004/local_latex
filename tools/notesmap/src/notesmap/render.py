@@ -320,9 +320,18 @@ class Board:
             s = re.sub(r"\*\*(.+?)\*\*", r"<b>\1</b>", s)
             s = re.sub(r"(?<!\*)\*(?!\*)(.+?)(?<!\*)\*(?!\*)", r"<i>\1</i>", s)
             s = re.sub(r"`([^`]+)`", r"<code>\1</code>", s)
-            # a bare URL (from \url) becomes a link; trailing punctuation stays text
-            return re.sub(r"https?://[^\s<]*[^\s<.,;:)]",
-                          lambda m: f'<a href="{m[0]}" target="_blank" rel="noopener noreferrer">{m[0]}</a>', s)
+            # [text](url) (from \href and \claim) becomes a link, then a bare URL (from \url)
+            # does; links are parked while the bare ones are found, so neither links the other
+            links: list[str] = []
+
+            def park(m: re.Match) -> str:
+                cls = ' class="claim"' if "↗" in m[1] else ""
+                links.append(f'<a{cls} href="{m[2]}" target="_blank" rel="noopener noreferrer">{m[1]}</a>')
+                return f"\x00{len(links) - 1}\x00"
+            s = re.sub(r"(?<!!)\[([^\]]+)\]\((https?://[^)\s]+)\)", park, s)
+            s = re.sub(r"https?://[^\s<\x00]*[^\s<.,;:)\x00]",
+                       lambda m: f'<a href="{m[0]}" target="_blank" rel="noopener noreferrer">{m[0]}</a>', s)
+            return re.sub("\x00(\\d+)\x00", lambda m: links[int(m[1])], s)
         out, items, rows = [], [], []
 
         def flush():

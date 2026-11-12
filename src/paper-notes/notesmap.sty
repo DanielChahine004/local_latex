@@ -12,6 +12,9 @@
 %   \doi{10.xxxx/...}                   the entry's link (\href and \url work too)
 %   \aside{...}                         your own remark: in the PDF, not on the map
 %   \gap{...}                           something not yet verified
+%   \claim{Key/id}                      the annotation in a paperstore that backs this
+%                                       sentence: a link on the map, and in the PDF
+%                                       once \claimurl is set
 %   \ref{prog:key}, \ref{note:key}      a cross-reference, drawn as an arrow
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesPackage{notesmap}[2026/09/17 notesmap note environments]
@@ -58,6 +61,9 @@
 \newcommand{\aside}[1]{#1}
 
 % something not yet verified against the source; breakable space after the tag
+% \renewcommand*{\claimurl}{https://you.github.io/paperstore/\#/} to link from the PDF too
+\newcommand*{\claimurl}{}
+\newcommand{\claim}[1]{\ifx\claimurl\empty\else\textsuperscript{\href{\claimurl #1}{$\nearrow$}}\fi}
 \newcommand{\gap}[1]{\textcolor{red}{\textbf{[gap:} #1\textbf{]}}}
 
 \endinput

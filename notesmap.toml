@@ -43,6 +43,13 @@ loose_title = "Machinery (no programme)"
 dir = "papers"
 url = "https://danielchahine004.github.io/paperstore/#/{key}"
 
+[claims]
+# \claim{Key/id} after a sentence links it to the annotation in papers/ (a
+# paperstore) that quotes the paper saying it; notes-check fails on one that
+# does not exist, and the map's link opens the PDF at that quote
+dir = "papers/annotations"
+url = "https://danielchahine004.github.io/paperstore/#/{key}/{id}"
+
 [publish]
 # the board is public and states what the papers and programmes say; these are
 # this thesis's own working, kept in the PDF and left off the board, along with

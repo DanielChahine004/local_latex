@@ -233,6 +233,9 @@ a.chip { text-decoration: none; }
 .card .y { font-size: 11px; opacity: .8; margin-top: 6px; display: flex; gap: 8px; align-items: center; }
 .card .y > span:first-child { margin-right: auto; }   /* the year left, the links right */
 .card .y a { color: var(--pc-accent, #3b82f6); text-decoration: none; font-weight: 600; }
+/* a claim (the \\claim macro): a chip that opens the paper at the quote backing the sentence */
+a.claim { font-size: .8em; font-weight: 600; padding: 0 5px; border-radius: 6px; white-space: nowrap; text-decoration: none;
+          color: var(--pc-accent, #3b82f6); background: color-mix(in srgb, var(--pc-accent, #3b82f6) 14%, transparent); }
 /* a search underway: what matches keeps its colour and gains a green edge, what
    does not fades, so the eye lands on the hits without anything moving */
 .prog.hit { border-color: #4caf78; box-shadow: 0 0 0 2px rgba(76,175,120,.45); }

@@ -6,13 +6,9 @@ and sync; this file is the conventions.
 ## Build
 
 `pixi run build` → `build/thesis/main.pdf`. Nothing else compiles the thesis.
-Three standalone documents, one folder each under `src/` (`thesis/`,
-`paper-notes/`, `meetings/`), every root named `main.tex`; `pixi run build-notes`
-and `pixi run build-meetings` build the other two.
-
-`units.tex` and `references.bib` live in `src/thesis/` and are the only copies.
-`build-notes` passes `-Z search-path=src/thesis` so paper-notes reads them in
-place.
+The paper notes (and their map) and the meeting log are separate repos,
+`paper-notes` and `meetings`; the notes keep their own copies of `units.tex` and
+the bibliography.
 
 TikZ is externalised (`\tikzexternalize` in `main.tex`): each `tikzpicture`
 becomes `build/thesis/main-figureN.pdf`, remade only when its source changes.
@@ -31,8 +27,7 @@ Overleaf's GitHub Sync (Overleaf Menu → GitHub → pull/push). Everything flow
 local ⇄ GitHub ⇄ Overleaf: run `pixi run sync` locally, then pull from within
 Overleaf, and vice versa. Live TikZ compiles fine within the paid timeout.
 
-Only `src/thesis/` is set up as the Overleaf project root. `paper-notes` needs
-the search-path flag, so it builds locally, not on Overleaf.
+Only `src/thesis/` is set up as the Overleaf project root.
 
 ## Source formatting
 
@@ -42,10 +37,6 @@ the search-path flag, so it builds locally, not on Overleaf.
   full stop.
 - **UTF-8 without a BOM, CRLF endings.** `.editorconfig` and `.gitattributes`
   both enforce it. A BOM on an `\input` file reaches the page as a character.
-  One exception, in `.gitattributes`: `src/paper-notes/**.tex` is LF, because it
-  is edited live in JupyterLab (`pixi run notes-edit`), which always writes LF
-  and would otherwise mark the whole file changed on every save. Those files
-  never go to Overleaf, so the rule buys nothing there.
 - **`% !TeX root = <path>/main.tex` heads every file that is not a root**, so a
   build triggered from a chapter or a figure finds the right document.
 
@@ -112,11 +103,13 @@ pixi exec --spec poppler -- pdftoppm -r 130 -f <page> -l <page> -png build/thesi
 `papers/` is a git-ignored clone of the private `thesis-papers` repo, a
 [paperstore](https://github.com/DanielChahine004/paperstore) store:
 `references.bib` (the bibliography), `<BibKey>.pdf`, `records.json` (each
-DOI's doi.org record) and `annotations/<BibKey>.json`. `pixi run papers-pull`
-pulls it and copies its bib over `src/thesis/references.bib`. **Never edit
-`src/thesis/references.bib`:** edit `papers/references.bib`, then
-`pixi run papers check`, `papers-push` and `papers-pull`. Never copy a PDF into
-this repo, which is public.
+DOI's doi.org record) and `annotations/<BibKey>.json`.
+`src/thesis/references.bib` is a copy of its bib, merged both ways by
+`pixi run papers-pull` and by every `pixi run sync`: an entry added or edited
+in the copy (the user may do it on Overleaf) is committed to thesis-papers, and
+one changed in both places stops the sync with both versions shown. Add a paper
+with `pixi run papers add` (it checks the entry and files the PDF) rather than
+by hand. Never copy a PDF into this repo, which is public.
 
 `pixi run papers <command>` runs the CLI on `papers/`:
 
@@ -135,10 +128,6 @@ this repo, which is public.
   paper says; a reading of it is flagged as one. `--figure N -p P` boxes a figure.
 - `notes [-k Key] [-t tag] [--status unchecked] --json` lists them; `link <Key> <id>`
   gives the viewer URL that opens the PDF at that quote.
-- In `src/paper-notes`, a sentence stating a number or finding from a paper ends
-  with `\claim{Key/id}`, naming the annotation that quotes it: the map shows a
-  page chip that opens the PDF at the quote, and `notes-check` fails on a claim
-  with no annotation. Annotate first, then cite it.
 
 The user reads and annotates in the viewer (danielchahine004.github.io/paperstore),
 which shows first-page thumbnails from `papers/thumbs/` (`papers check --fix` makes them);

@@ -1,12 +1,12 @@
-# Lint the paper notes, and build the three documents so a current PDF is
-# downloadable from anywhere without a local toolchain.
+# Build the thesis so a current PDF is downloadable from anywhere without a
+# local toolchain.
 #
-# Both jobs install the environment from pixi.lock, so CI uses the same
+# The job installs the environment from pixi.lock, so CI uses the same
 # Tectonic as a laptop does. `frozen: true` installs the lock as written and
 # never re-solves; swap it for `locked: true` if you would rather CI failed
 # when pixi.lock has drifted from pixi.toml.
 
-name: notes and PDFs
+name: thesis PDF
 
 on:
   push:
@@ -23,28 +23,8 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  notes:
-    name: lint the paper notes
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    steps:
-      - uses: actions/checkout@v7
-
-      - uses: prefix-dev/setup-pixi@v0.11.0
-        with:
-          frozen: true
-          cache: true
-
-      # --strict fails on a defect in the notes -- a missing image, a \ref to a
-      # key nothing defines, a programme with no \location, a conference with
-      # no \dates, a key used twice, a \doi that reaches no references.bib
-      # entry. --gaps additionally lists unfinished notes, which print as
-      # `note:` and never fail the run.
-      - name: notesmap check
-        run: pixi run notes-check --gaps --strict
-
   pdfs:
-    name: build the three documents
+    name: build the thesis
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
@@ -85,18 +65,10 @@ jobs:
       - name: thesis
         run: pixi run build
 
-      - name: paper notes
-        run: pixi run build-notes
-
-      - name: meeting log
-        run: pixi run build-meetings
-
       - name: collect
         run: |
           mkdir -p out
           cp build/thesis/main.pdf      out/thesis.pdf
-          cp build/paper-notes/main.pdf out/paper-notes.pdf
-          cp build/meetings/main.pdf    out/meetings.pdf
           ls -lh out
 
       - uses: actions/upload-artifact@v7

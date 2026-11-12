@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# Sync with GitHub: commit local work, pull --rebase, push. The Linux twin of
+# Sync with GitHub: commit local work, pull --rebase, merge the bibliography
+# with thesis-papers (tools/papers.py), push. The Linux twin of
 # sync.ps1. `pixi run sync [message]`. Committing first keeps uncommitted work
 # out of the rebase; safe to run when there is nothing to do.
 set -euo pipefail
@@ -8,6 +9,7 @@ abort() { printf '\nsync aborted: %s\n' "$1" >&2; exit 1; }
 
 root="$(cd "$(dirname "$0")/.." && pwd)"
 g() { git -C "$root" "$@" || abort "git $* failed"; }
+bib='src/thesis/references.bib'   # this repo's copy of thesis-papers' bibliography
 
 # --- 1. commit local work ------------------------------------------------
 
@@ -39,7 +41,19 @@ fi
 git -C "$root" pull --rebase \
 	|| abort 'pull --rebase failed - resolve the conflict, run `git rebase --continue`, then `pixi run sync` again'
 
-# --- 3. push -------------------------------------------------------------
+# --- 3. the bibliography: merge with thesis-papers -------------------------
+
+# entries added or edited here (on Overleaf, say) go to thesis-papers, and its
+# own changes come here; a clash stops the sync before anything is pushed
+uv run --quiet --python 3.12 --no-project python "$root/tools/papers.py" pull \
+	|| abort 'the bibliography merge stopped - see above'
+g add -- "$bib"
+if [ -n "$(g diff --cached --name-only)" ]; then
+	g commit -q -m 'references.bib from thesis-papers'
+	echo 'committed: references.bib from thesis-papers'
+fi
+
+# --- 4. push -------------------------------------------------------------
 
 ahead="$(g rev-list --count '@{u}..HEAD')"
 if [ "$ahead" -gt 0 ]; then

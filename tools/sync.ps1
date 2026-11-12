@@ -1,4 +1,5 @@
-# Sync with GitHub: commit local work, pull --rebase, push.
+# Sync with GitHub: commit local work, pull --rebase, merge the bibliography
+# with thesis-papers (tools/papers.py), push.
 # `pixi run sync [message]`. Committing first keeps uncommitted work out of
 # the rebase; safe to run when there is nothing to do.
 
@@ -17,6 +18,7 @@ trap {
 }
 
 $root = Split-Path -Parent $PSScriptRoot
+$BibPath = 'src/thesis/references.bib'   # this repo's copy of thesis-papers' bibliography
 
 function Invoke-Git {
 	$out = git -C $root @args
@@ -61,7 +63,19 @@ if ($LASTEXITCODE -ne 0) {
 	throw 'pull --rebase failed - resolve the conflict, run `git rebase --continue`, then `pixi run sync` again'
 }
 
-# --- 3. push -------------------------------------------------------------
+# --- 3. the bibliography: merge with thesis-papers -------------------------
+
+# entries added or edited here (on Overleaf, say) go to thesis-papers, and its
+# own changes come here; a clash stops the sync before anything is pushed
+uv run --quiet --python 3.12 --no-project python (Join-Path $root 'tools\papers.py') pull
+if ($LASTEXITCODE -ne 0) { throw 'the bibliography merge stopped - see above' }
+Invoke-Git add -- $BibPath | Out-Null
+if (Invoke-Git diff --cached --name-only) {
+	Invoke-Git commit -m 'references.bib from thesis-papers' | Out-Null
+	Write-Host 'committed: references.bib from thesis-papers'
+}
+
+# --- 4. push -------------------------------------------------------------
 
 $ahead = Invoke-Git rev-list --count '@{u}..HEAD'
 if ([int]$ahead -gt 0) {

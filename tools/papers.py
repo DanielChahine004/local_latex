@@ -20,8 +20,9 @@ page instead. What it cannot get stays listed as missing.
 
 papers/ is a paperstore store (github.com/DanielChahine004/paperstore): its
 references.bib is the bibliography, checked against each DOI's record, and
-annotations/ holds notes anchored to quotes in the PDFs. pull copies the bib
-over src/thesis/references.bib, so edit it in papers/, never here.
+annotations/ holds notes anchored to quotes in the PDFs. pull keeps
+src/thesis/references.bib a copy of that bib, merged both ways (merge_bib), so
+an entry added on Overleaf reaches thesis-papers instead of being overwritten.
 """
 import json
 import re
@@ -36,7 +37,8 @@ REPO = Path(__file__).resolve().parent.parent
 PAPERS = REPO / "papers"
 BIB = REPO / "src" / "thesis" / "references.bib"
 EXPORT = PAPERS / "references.bib"
-HEADER = "% Copied from thesis-papers/references.bib by pixi run papers-pull; edit it there, not here.\n\n"
+HEADER = ("% Copied from thesis-papers/references.bib by pixi run papers-pull (and sync). An entry added or"
+          " edited here goes back to thesis-papers on the next sync.\n\n")
 REMOTE = "https://github.com/DanielChahine004/thesis-papers.git"
 UA = "Mozilla/5.0 (thesis-papers fetch)"
 
@@ -49,13 +51,102 @@ def pull():
     if not (PAPERS / ".git").exists():
         subprocess.run(["git", "clone", REMOTE, str(PAPERS)], check=True)
     else:
-        git("pull", "--rebase", "--quiet")
+        git("pull", "--rebase", "--autostash", "--quiet")
     print(f"{len(pdfs())} PDFs in papers/")
     if EXPORT.exists():
-        new = HEADER + EXPORT.read_text(encoding="utf-8").replace("\r\n", "\n")
-        if BIB.read_text(encoding="utf-8").replace("\r\n", "\n") != new:
-            BIB.write_text(new, encoding="utf-8", newline="\r\n")
-            print("src/thesis/references.bib updated from papers/")
+        merge_bib()
+
+
+# --- the bibliography copy ---------------------------------------------------
+# BIB is a copy of papers/references.bib, headed by the thesis-papers commit it
+# came from. An entry changed only in the copy (added or edited on Overleaf, say)
+# goes back to thesis-papers; one changed only there comes here; one changed in
+# both stops the sync with both versions shown, so neither is lost.
+
+HEAD_RE = re.compile(r"\A% Copied from thesis-papers/references\.bib(?:@([0-9a-f]{7,40}))?[^\n]*\n(?:\n)?")
+
+
+def norm(text):
+    return text.replace("\r\n", "\n")
+
+
+def entries(text):
+    """{key: entry text} for every @type{key, ...} in a .bib, braces matched."""
+    out = {}
+    pos = 0
+    for m in re.finditer(r"@(\w+)\s*\{\s*([^,\s{}]+)\s*,", text):
+        if m.start() < pos or m.group(1).lower() in ("comment", "string", "preamble"):
+            continue
+        depth, i = 0, text.index("{", m.start())
+        for i in range(i, len(text)):
+            depth += {"{": 1, "}": -1}.get(text[i], 0)
+            if depth == 0:
+                break
+        pos = i + 1
+        out[m.group(2)] = text[m.start():pos].strip()
+    return out
+
+
+def merge_bib():
+    copy = norm(BIB.read_text(encoding="utf-8")) if BIB.exists() else ""
+    head = HEAD_RE.match(copy)
+    base_sha = head.group(1) if head else None
+    mine = entries(copy)
+    raw = EXPORT.read_text(encoding="utf-8")
+    store_text = norm(raw)
+    store = entries(store_text)
+    if base_sha:
+        shown = subprocess.run(["git", "-C", str(PAPERS), "show", f"{base_sha}:references.bib"],
+                               capture_output=True, text=True, encoding="utf-8")
+        base = entries(norm(shown.stdout)) if shown.returncode == 0 else dict(mine)
+    else:
+        base = dict(mine)   # no record of where the copy came from: thesis-papers wins
+
+    back, conflicts, dropped = {}, [], []
+    for key in sorted(set(mine) | set(store) | set(base)):
+        b, s, m = base.get(key), store.get(key), mine.get(key)
+        if m == s or m == b:
+            continue                       # same, or changed only in thesis-papers
+        if s == b:
+            if m is None:
+                dropped.append(key)        # deleted here only: thesis-papers keeps it
+            else:
+                back[key] = m              # added or edited here only
+        else:
+            conflicts.append((key, s, m))
+
+    if conflicts:
+        here = BIB.relative_to(REPO).as_posix()
+        for key, s, m in conflicts:
+            print(f"\n{key} differs in thesis-papers and in {here}:")
+            print("--- thesis-papers\n" + (s or "(deleted)") + f"\n--- {here}\n" + (m or "(deleted)"))
+        sys.exit(f"\n{len(conflicts)} conflicting entr{'y' if len(conflicts) == 1 else 'ies'}, nothing changed: "
+                 f"make the two versions agree (if you edit papers/references.bib, `pixi run papers-push` it), "
+                 f"then sync again")
+
+    if back:
+        for key, text in back.items():
+            if key in store:
+                store_text = store_text.replace(store[key], text, 1)
+            else:
+                store_text = store_text.rstrip("\n") + "\n\n" + text + "\n"
+        EXPORT.write_text(store_text, encoding="utf-8", newline="\r\n" if "\r\n" in raw else "\n")
+        git("commit", "--quiet", "-m", "references.bib: " + ", ".join(back) + " from the thesis", "--", "references.bib")
+        git("push", "--quiet")
+        print("sent to thesis-papers:", ", ".join(back))
+        new_keys = [k for k in back if k not in store and k not in pdfs()]
+        if new_keys:
+            print("  no PDF yet for", ", ".join(new_keys), "- add one with: pixi run papers add <doi> --pdf <file>,"
+                  " or mark it nopdf = {why}")
+    if dropped:
+        print("deleted only in the copy, so kept in thesis-papers:", ", ".join(dropped))
+
+    sha = subprocess.run(["git", "-C", str(PAPERS), "rev-parse", "HEAD"],
+                         capture_output=True, text=True, check=True).stdout.strip()
+    new = HEADER.replace("references.bib", f"references.bib@{sha[:12]}", 1) + store_text
+    if copy != new:
+        BIB.write_text(new, encoding="utf-8", newline="\r\n")
+        print(f"{BIB.relative_to(REPO).as_posix()} updated from papers/")
 
 
 def push():

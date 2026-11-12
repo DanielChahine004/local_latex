@@ -1,23 +1,17 @@
 # local_latex
 
-**▶ [Open the paper-notes map](https://danielchahine004.github.io/danvas/?repo=DanielChahine004/local_latex)** (runs in your browser, no server)
-
 PhD thesis in LaTeX, built with [Tectonic](https://tectonic-typesetting.github.io/)
 via [pixi](https://pixi.sh/). The thesis is also on Overleaf, synced through this
-GitHub repo.
+GitHub repo. The paper notes and their map are in
+[paper-notes](https://github.com/DanielChahine004/paper-notes); the meeting log is
+in the private [meetings](https://github.com/DanielChahine004/meetings) repo.
 
 ## Layout
 
-Three standalone documents, one folder each, every root named `main.tex`.
-
 - `src/thesis/` — the thesis: `main.tex`, `chapters/` (one `.tex` per chapter),
   `figures/<NN-name>/` (one subfolder per chapter), `references.bib`
-  (biblatex + biber), `acronyms.tex`, `units.tex`
-- `src/paper-notes/` — working notes on papers (`pixi run build-notes`). Reads
-  the thesis's `units.tex` and `references.bib` in place, via a search path the
-  build task passes — there are no copies to keep in sync
-- `src/meetings/` — supervisor-meeting log (`pixi run build-meetings`),
-  self-contained
+  (biblatex + biber; a copy of thesis-papers' bibliography, see Sync),
+  `acronyms.tex`, `units.tex`
 - `build/` — compiled output, not committed
 - `tools/` — standalone `biber.exe` 2.17 (matches biblatex 3.17 in Tectonic's
   bundle; not on conda-forge for Windows) and a wrapper batch file for the
@@ -44,59 +38,8 @@ Nothing else to set up. In VS Code, open this folder (the one containing
 ## Build
 
 ```
-pixi run build            # thesis      -> build/thesis/main.pdf
-pixi run build-notes      # paper notes -> build/paper-notes/main.pdf
-pixi run build-meetings   # meeting log -> build/meetings/main.pdf
+pixi run build            # -> build/thesis/main.pdf
 ```
-
-The paper notes also render as a live board, and as a world map pinned by
-institution. The tool is `tools/notesmap`, configured by `notesmap.toml`, and
-it follows edits to the notes without a restart:
-
-```
-pixi run notes-map        # world map, http://127.0.0.1:8000
-pixi run notes-canvas     # the same notes as clustered rows
-pixi run notes-check      # lint: missing images, dangling refs, unplaced programmes,
-                          # and every \doi{} in the notes against src/thesis/references.bib
-pixi run notes-check --gaps --strict   # also unfinished notes; non-zero exit, for CI
-pixi run notes-edit       # shared live editor, http://127.0.0.1:8891/lab
-```
-
-`notes-edit` serves `src/paper-notes` as JupyterLab with real-time
-collaboration: several people type in the notes at once, images arrive by
-dropping them in the file tree, and every keystroke is written to the file, so
-the map follows without a save or a push. The map carries a link to it.
-Its password is `NOTES_EDIT_TOKEN`, which falls back to the placeholder
-`change-me` in `tools/jupyter-notes-config.py` when unset — change it before sharing
-the link, because anyone holding it can edit the notes.
-
-To share just the map, nothing needs to run: it is published from this
-repository at
-[danielchahine004.github.io/danvas/?repo=DanielChahine004/local_latex](https://danielchahine004.github.io/danvas/?repo=DanielChahine004/local_latex),
-built in each reader's browser (`danvas.toml` says how) and redrawn within a
-minute of a push.
-
-To share both the map and the live editor with a lab, one command does the lot:
-
-```
-NOTES_EDIT_TOKEN=<a password> pixi run notes-lab
-```
-
-It opens a public HTTPS tunnel for each (danvas bundles the tunnel binary, so
-there is nothing to install), starts the editor and the map, points the map's
-button at the editor's public address, and prints the two links. The tunnels are
-held by detached keeper processes, so **the addresses survive a restart** — stop
-them deliberately with `python -m danvas.tunnel --stop --port 8000`. Set
-`NOTES_MAP_URL` and `NOTES_EDIT_URL` to skip tunnelling, for a domain of your
-own or to run the pair locally.
-
-The map has no password: anyone with the link can read it, and can also scribble
-on the canvas and drag panels, which a restart clears. The editor's password is
-the only thing protecting the notes, so treat the two links differently.
-
-`tools/notesmap/README.md` explains the note macros, the lab-sharing setup
-(one file per programme, lock files, bucket or URL sources), and how another
-lab adapts it.
 
 In VS Code, Ctrl+Alt+B (LaTeX Workshop) builds the document the open file
 belongs to (chapter files declare `% !TeX root = ../main.tex`).
@@ -109,17 +52,10 @@ redo.
 
 ## CI
 
-`.github/workflows/build.yml` runs on every push. One job lints the notes
-(`notesmap check --gaps --strict`); the other builds all three documents with
-the same Tectonic the lockfile pins and uploads `thesis.pdf`,
-`paper-notes.pdf` and `meetings.pdf` as a run artefact, so a current PDF is
-downloadable from any machine without a local toolchain. Tectonic's bundle,
+`.github/workflows/build.yml` runs on every push. It builds the thesis with
+the same Tectonic the lockfile pins and uploads `thesis.pdf` as a run artefact,
+so a current PDF is downloadable from any machine without a local toolchain. Tectonic's bundle,
 biber and the externalised TikZ figures are cached between runs.
-
-`--strict` fails on a defect in the notes — a missing image, a `\ref` to a key
-nothing defines, a programme with no `\location`, a `\doi` that reaches no
-`references.bib` entry. Unfinished notes and a conference whose deadline has
-passed print as `note:` and never fail the run.
 
 ## Sync
 
@@ -128,8 +64,16 @@ pixi run sync                    # message defaults to "wip: <today's date>"
 pixi run sync "drafted 3.2"      # or give your own commit message
 ```
 
-Commits every source change (`git add -A`), pulls with `--rebase`, then pushes.
-It refuses to run on a detached HEAD or with an unfinished merge or rebase.
+Commits every source change (`git add -A`), pulls with `--rebase`, merges the
+bibliography with thesis-papers, then pushes. It refuses to run on a detached
+HEAD or with an unfinished merge or rebase.
+
+`src/thesis/references.bib` is a copy of
+[thesis-papers](https://github.com/DanielChahine004/thesis-papers)'
+bibliography, merged both ways on every sync: an entry added or edited here
+(on Overleaf, say) is sent to thesis-papers, which then asks for its PDF, and
+thesis-papers' own changes come here. An entry changed in both places stops the
+sync with both versions shown, before anything is pushed.
 
 The thesis is on a paid Overleaf plan linked to this repo through Overleaf's
 GitHub Sync. Everything flows local ⇄ GitHub ⇄ Overleaf: run `pixi run sync`

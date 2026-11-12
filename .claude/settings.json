@@ -2,8 +2,6 @@
   "permissions": {
     "allow": [
       "Bash(pixi run build)",
-      "Bash(pixi run build-notes)",
-      "Bash(pixi run build-meetings)",
       "Bash(git status:*)",
       "Bash(git diff:*)",
       "Bash(git log:*)"

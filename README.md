@@ -1,4 +1,4 @@
-# local_latex
+# phd-thesis
 
 PhD thesis in LaTeX, built with [Tectonic](https://tectonic-typesetting.github.io/)
 via [pixi](https://pixi.sh/). The thesis is also on Overleaf, synced through this

@@ -1,7 +1,7 @@
 [workspace]
 authors = ["DanielChahine004 <daniel.chahine004@gmail.com>"]
 channels = ["conda-forge"]
-name = "local_latex"
+name = "phd-thesis"
 platforms = ["win-64", "linux-64"]
 version = "0.1.0"
 

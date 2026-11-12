@@ -1,5 +1,7 @@
 # local_latex
 
+**▶ [Open the paper-notes map](https://danielchahine004.github.io/danvas/?repo=DanielChahine004/local_latex)** (runs in your browser, no server)
+
 PhD thesis in LaTeX, built with [Tectonic](https://tectonic-typesetting.github.io/)
 via [pixi](https://pixi.sh/). The thesis is also on Overleaf, synced through this
 GitHub repo.

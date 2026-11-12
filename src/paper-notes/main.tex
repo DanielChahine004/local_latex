@@ -194,37 +194,37 @@ Method proceeds in two stages: an event timestamping algorithm based on neural
 networks, which is then integrated into a second network performing simultaneous
 position and timestamp estimation. Validated first in simulation, then on
 experimentally acquired data. The abstract says both algorithms are
-implemented in a low-cost FPGA; the body names no FPGA and reports no measured
-resources or latency, only an estimate (10--90\% of a medium-sized FPGA) and
-training on a GPU. The simulation is in-house, on Geant4 with the LUT Davis
-reflection model and custom SiPM Monte Carlo --- not GATE.
+implemented in a low-cost FPGA\claim{Carra2022/b0623d}; the body names no FPGA and reports no measured
+resources or latency, only an estimate (10--90\% of a medium-sized FPGA\claim{Carra2022/9e58a8}) and
+training on a GPU\claim{Carra2022/f4a4e0}. The simulation is in-house, on Geant4 with the LUT Davis
+reflection model\claim{Carra2022/136cfe} and custom SiPM Monte Carlo\claim{Carra2022/954836} --- not GATE.
 
 \paragraph{Capsule}
 Carra et al.\ \cite{Carra2022} train a neural network that estimates event position
 \emph{and} timestamp jointly from a monolithic LYSO block, and --- the actual
 contribution --- design it light enough to run on a low-cost FPGA inside the
-detector at more than $10^{6}$ events per second (claimed, not demonstrated in
+detector at more than $10^{6}$ events per second\claim{Carra2022/801187} (claimed, not demonstrated in
 the body). Reported on experimental data at a 12 V
 overvoltage (Table 9, in the crystal corners by §3.4, though the same section
-also calls the 2D figure an average): \mm{0.78} 2D FWHM in $(x,y)$, \mm{1.55}
+also calls the 2D figure an average): \mm{0.78} 2D FWHM in $(x,y)$\claim{Carra2022/bbef76}, \mm{1.55}\claim{Carra2022/d4f48e}
 DOI FWHM,
-\ps{156} CTR, on a
+\ps{156} CTR\claim{Carra2022/84da8c}, on a
 \qtyproduct{25.6 x 25.6 x 8}{\milli\metre} LYSO monolith read out by 64
-\qtyproduct{3 x 3}{\milli\metre} Hamamatsu SiPMs. The paper's stated framing is
+\qtyproduct{3 x 3}{\milli\metre} Hamamatsu SiPMs\claim{Carra2022/cb4ad5}. The paper's stated framing is
 that monolithic crystals plus light networks can rival pixellated performance for
-TOF-PET while retaining better spatial and DOI resolution, with on-line
+TOF-PET while retaining better spatial and DOI resolution\claim{Carra2022/285b54}, with on-line
 characterisation solving the scalability and computational-complexity objection
 that had kept monolithics out of clinical scanners.
-Energy resolution is 11\% at 511 keV at the same overvoltage (10\% lower down;
+Energy resolution is 11\% at 511 keV at the same overvoltage\claim{Carra2022/b226c4} (10\% lower down;
 Table 9 and Fig.\ 11).
-\aside{The abstract's \mm{1.2} DOI is from 3 V, where the CTR is \ps{290}; its
+\aside{The abstract's \mm{1.2} DOI\claim{Carra2022/093e39} is from 3 V, where the CTR is \ps{290}\claim{Carra2022/010fde}; its
 \ps{156} is from 12 V, where the DOI is \mm{1.55}. No one setting gives both:
-positioning wants a low overvoltage and timing a high one (their Fig.\ 7). The
+positioning wants a low overvoltage and timing a high one\claim{Carra2022/29b2f8} (their Fig.\ 7). The
 map uses 12 V throughout.}
-The CTR is measured against a pixelated reference of about \ps{130}, removed in
-quadrature and scaled by $\sqrt{2}$ to two identical monoliths, so it is not
+The CTR is measured against a pixelated reference of about \ps{130}\claim{Carra2022/dd4a0c}, removed in
+quadrature and scaled by $\sqrt{2}$ to two identical monoliths\claim{Carra2022/d23700}, so it is not
 flagged r; and the best figures need simulated events in the training set ---
-on experimental data alone, \ps{194} and \mm{0.88} at the same overvoltage.
+on experimental data alone, \ps{194}\claim{Carra2022/a3a3f1} and \mm{0.88}\claim{Carra2022/7a9cfc} at the same overvoltage.
 
 Two things matter here beyond the numbers. First, the WT-PET paper cites this
 as the UTOFPET detector development behind its clinical block (see
@@ -235,44 +235,44 @@ time together,'' and it argues for deployment, not just the algorithm.
 
 \paragraph{Key Findings}
 \begin{itemize}
-	\item \textbf{Performance (12 V):} \mm{0.78} 2D FWHM in the $(x,y)$ plane,
-		\mm{1.55} FWHM in DOI, \ps{156} coincidence time resolution.
-		\textbf{Caveat: the crystal is \mm{8} thick.} \aside{These figures do not
+	\item \textbf{Performance (12 V):} \mm{0.78} 2D FWHM in the $(x,y)$ plane\claim{Carra2022/bbef76},
+		\mm{1.55} FWHM in DOI\claim{Carra2022/d4f48e}, \ps{156} coincidence time resolution\claim{Carra2022/84da8c}.
+		\textbf{Caveat: the crystal is \mm{8} thick\claim{Carra2022/f694c3}.} \aside{These figures do not
 		transfer to the thicknesses relevant to this thesis, and }\mm{1.55} DOI
 		FWHM on an \mm{8} block is a large fraction of the available depth.
-		A check at 100 random points gives \ps{155}, \mm{0.80} and \mm{1.52}.
-	\item \textbf{Readout:} 64 Hamamatsu S14160-3050 SiPMs of
+		A check at 100 random points gives \ps{155}, \mm{0.80} and \mm{1.52}\claim{Carra2022/2a2281}.
+	\item \textbf{Readout:} 64 Hamamatsu S14160-3050 SiPMs\claim{Carra2022/cb4ad5} of
 		\qtyproduct{3 x 3}{\milli\metre} at \mm{3.2} pitch --- an 8 x 8 grid
 		\mm{25.6} across, matching the block.
 	\item \textbf{Light enough for real-time inference.} The stated motivation
 		is that the best monolithic positioning algorithms could not run in
-		real time in a detector. The position network has six layers
-		(128/40/30/15/10/3 neurons, about 8000 parameters, 16-bit weights), the
-		first locally connected over 2 x 2 SiPM patches; the joint stage is one
-		20-neuron layer with outputs $(x, y, z, t)$. The \num{e6} events/s is
-		a target; the HRFlexToT ASIC used tops out at \qty{750}{\kilo\hertz}.
+		real time in a detector\claim{Carra2022/ab297f}. The position network has six layers
+		(128/40/30/15/10/3 neurons, about 8000 parameters\claim{Carra2022/a9d34d}, 16-bit weights\claim{Carra2022/3dd750}), the
+		first locally connected over 2 x 2 SiPM patches\claim{Carra2022/04845b}; the joint stage is one
+		20-neuron layer with outputs $(x, y, z, t)$\claim{Carra2022/ba7283}. The \num{e6} events/s is
+		a target; the HRFlexToT ASIC used tops out at \qty{750}{\kilo\hertz}\claim{Carra2022/438528}.
 	\item \textbf{Information flows both ways.} The position and timestamp
-		networks are trained, frozen, then joined; the joining layer refines
+		networks are trained, frozen, then joined\claim{Carra2022/8713e0}; the joining layer refines
 		position and time from both. Timing helps position: Table 8 shows 10--20\%
-		better 2D FWHM and over 30\% better DOI at low overvoltage. So this is
+		better 2D FWHM\claim{Carra2022/4410dd} and over 30\% better DOI at low overvoltage\claim{Carra2022/1c05c0}. So this is
 		already a time-informs-position instance in a 64-channel monolith (see
 		\ref{note:Thull2026}).
 \end{itemize}
 
 \paragraph{Methods Worth Noting}
 \begin{itemize}
-	\item \textbf{Engineered features.} Two are injected at the last layer:
+	\item \textbf{Engineered features.} Two are injected at the last layer\claim{Carra2022/d246a7}:
 		the number of SiPMs reading over 5\% of the charge, and the variance of
-		the charge across the matrix, both for DOI. Inputs are the 8 x 8
-		charges normalised to sum to one, plus per-SiPM timestamps for timing.
+		the charge across the matrix, both for DOI\claim{Carra2022/91dab5}. Inputs are the 8 x 8
+		charges normalised to sum to one\claim{Carra2022/c80b37}, plus per-SiPM timestamps for timing.
 	\item \textbf{Calibration.} Collimator-based: coincidence with a
 		\qtyproduct{3 x 3 x 5}{\mm} LYSO crystal, run perpendicular and then at
-		\ang{45} to label depth; 4000 events at each of 400 points on a
-		\mm{1.2} grid, split 80/20. With about 20\,000 simulated events at each
-		of 2500 points added, 64 measured points suffice. Compare the
+		\ang{45} to label depth\claim{Carra2022/5ccd91}; 4000 events at each of 400 points on a
+		\mm{1.2} grid\claim{Carra2022/0bf69a}, split 80/20\claim{Carra2022/a58c68}. With about 20\,000 simulated events at each
+		of 2500 points\claim{Carra2022/253092} added, 64 measured points suffice\claim{Carra2022/0d0ab8}. Compare the
 		several-weeks fan-beam burden in \ref{note:Thull2026}.
 	\item \textbf{Point estimates only.} No per-event uncertainty; the loss
-		is Euclidean distance. Thull's heteroscedastic $\sigma$ is separable
+		is Euclidean distance\claim{Carra2022/966d8e}. Thull's heteroscedastic $\sigma$ is separable
 		from this on that axis.
 \end{itemize}
 
@@ -294,7 +294,7 @@ What it does \emph{not} do (checked against the PDF):
 		events, or interaction ordering. The temporal-axis question --- can the
 		joint distribution of per-channel arrival times resolve \emph{how many}
 		interactions occurred and in what order --- is not addressed. Compton
-		scatter is in the simulation; pile-up is listed as future work.
+		scatter is in the simulation\claim{Carra2022/0b8618}; pile-up is listed as future work\claim{Carra2022/3f1f56}.
 	\item \textbf{Thin crystal.} \mm{8}. The regime where DOI is hard and
 		multi-vertex events are common is not sampled.
 	\item \textbf{Detector fixed.} Geometry, pitch and thickness are inputs, not
@@ -752,50 +752,50 @@ Med.\ Phys.\ 39(9):5393--5404, \doi{10.1118/1.4742850}.
 
 \paragraph{Summary}
 i3M's first monolithic breast ring, built with Oncovision and announced as a
-product (MAMMI PET, Oncovision GEM-Imaging): a dedicated breast PET for a
+product (MAMMI PET, Oncovision GEM-Imaging)\claim{Moliner2012/ab6045}: a dedicated breast PET for a
 prone patient, the breast hanging into the ring.
 
 \paragraph{Detector}
-Twelve removable modules in a dodecagon with a \mm{186} aperture, each one
-LYSO crystal \mm{10} thick cut as a truncated pyramid, \qtyproduct{40 x 40}{\mm}
-front face and \qtyproduct{50 x 50}{\mm} back, so the blocks tile the polygon
+Twelve removable modules in a dodecagon with a \mm{186} aperture\claim{Moliner2012/51bb41}, each one
+LYSO crystal \mm{10} thick\claim{Moliner2012/d3bbab} cut as a truncated pyramid, \qtyproduct{40 x 40}{\mm}
+front face and \qtyproduct{50 x 50}{\mm} back\claim{Moliner2012/683d18}, so the blocks tile the polygon
 with little dead space. The shape is the edge-effect fix of its day: it
-reduces the compression of positions towards the crystal border. Every face
-but the exit is roughened and painted black. Each crystal sits on a
-Hamamatsu H8500 PSPMT with optical grease; a modified Anger resistor network
-reduces the 64 anodes to five signals, the zeroth, first and second moments
+reduces the compression of positions towards the crystal border\claim{Moliner2012/d713b4}. Every face
+but the exit is roughened and painted black\claim{Moliner2012/ed0b2d}. Each crystal sits on a
+Hamamatsu H8500 PSPMT with optical grease\claim{Moliner2012/25b729}; a modified Anger resistor network
+reduces the 64 anodes to five signals\claim{Moliner2012/0ba27e}, the zeroth, first and second moments
 of the light distribution --- energy, centroid $(x,y)$, and spread, which
-gives depth. Detector level: 18\% energy resolution, \mm{1.6} intrinsic, DOI
-\mm{4}. Each module in coincidence with its seven opposite ones, \ns{5}
-window, transaxial FOV \mm{170}. Axial FOV \mm{40} per frame; the whole ring
-steps \mm{34} on an elevator (\mm{6} overlap) to cover \mm{170}.
+gives depth\claim{Moliner2012/e1ea91}. Detector level: 18\% energy resolution\claim{Moliner2012/a5be1e}, \mm{1.6} intrinsic\claim{Moliner2012/3f0443}, DOI
+\mm{4}\claim{Moliner2012/d661d2}. Each module in coincidence with its seven opposite ones\claim{Moliner2012/54ba56}, \ns{5}
+window\claim{Moliner2012/dbe164}, transaxial FOV \mm{170}. Axial FOV \mm{40} per frame\claim{Moliner2012/e094c5}; the whole ring
+steps \mm{34} on an elevator (\mm{6} overlap)\claim{Moliner2012/5de6fc} to cover \mm{170}\claim{Moliner2012/c426be}.
 
 \paragraph{Method}
-3D MLEM, \qty{1}{\mm} voxels, 12 iterations, a solid-angle system matrix, and
-crystals binned into \qtyproduct{2 x 2}{\mm} pixels. Dead time, scatter and
-randoms corrected in reconstruction. Attenuation from segmenting the PET
-image into breast and air, so no transmission scan. \textbf{DOI is measured
-but not used}: the paper's resolution figures exclude it ``due to computing
+3D MLEM, \qty{1}{\mm} voxels\claim{Moliner2012/abe689}, 12 iterations, a solid-angle system matrix\claim{Moliner2012/761a90}, and
+crystals binned into \qtyproduct{2 x 2}{\mm} pixels\claim{Moliner2012/e0319c}. Dead time, scatter and
+randoms corrected in reconstruction\claim{Moliner2012/b43f91}. Attenuation from segmenting the PET
+image into breast and air, so no transmission scan\claim{Moliner2012/554195}. \textbf{DOI is measured
+but not used}\claim{Moliner2012/6f5cfe}: the paper's resolution figures exclude it ``due to computing
 limitations''.
 
 \paragraph{Key Findings}
 \begin{itemize}
 	\item \textbf{Spatial resolution} (MLEM, no DOI): \mm{1.8} radial,
-		\mm{1.9} tangential, \mm{1.6} axial FWHM at the centre. The radial
-		component passes \mm{3} beyond \mm{60} radius and reaches about
-		\mm{6} at the FOV edge; axial and tangential stay under \mm{3}.
+		\mm{1.9} tangential, \mm{1.6} axial FWHM at the centre\claim{Moliner2012/34ee5d}. The radial
+		component passes \mm{3} beyond \mm{60} radius\claim{Moliner2012/bbce81} and reaches about
+		\mm{6} at the FOV edge\claim{Moliner2012/1ba4f6}; axial and tangential stay under \mm{3}\claim{Moliner2012/a3a1b8}.
 	\item \textbf{Sensitivity:} peak 1.6\% at the centre for
-		\qtyrange{350}{650}{\kilo\electronvolt} (the clinical window), 1.8\%
-		for \qtyrange{250}{750}{\kilo\electronvolt}; normalised total 0.8\% and
-		1.0\%; 0.7\% by the NU 2 line-source method.
+		\qtyrange{350}{650}{\kilo\electronvolt} (the clinical window)\claim{Moliner2012/7a8b5c}, 1.8\%
+		for \qtyrange{250}{750}{\kilo\electronvolt}\claim{Moliner2012/83c860}; normalised total 0.8\% and
+		1.0\%\claim{Moliner2012/0b5b10}; 0.7\% by the NU 2 line-source method\claim{Moliner2012/76f1c6}.
 	\item \textbf{Count rate:} scatter fraction 18.2\% (350--650) and 20.8\%
-		(250--750); NEC peak 18 kcps at 38 MBq and 25 kcps at 44 MBq
-		respectively, falling from about 60 MBq as the PMTs saturate. A
-		breast holds about 4 MBq.
+		(250--750)\claim{Moliner2012/a26a4d}; NEC peak 18 kcps at 38 MBq and 25 kcps at 44 MBq
+		respectively\claim{Moliner2012/4146a1}, falling from about 60 MBq as the PMTs saturate\claim{Moliner2012/83ea0d}. A
+		breast holds about 4 MBq\claim{Moliner2012/b3613c}.
 	\item \textbf{Image quality:} contrast 83 $\pm$ 11\% for a \mm{20}
-		hot lesion and 17 $\pm$ 4\% for \mm{4.5} after 12 iterations.
-	\item \textbf{Next version planned:} two rings, \mm{94} axial, LYSO
-		\mm{12} thick.
+		hot lesion\claim{Moliner2012/ed2651} and 17 $\pm$ 4\% for \mm{4.5} after 12 iterations\claim{Moliner2012/2b5ae1}.
+	\item \textbf{Next version planned:} two rings, \mm{94} axial\claim{Moliner2012/e77d77}, LYSO
+		\mm{12} thick\claim{Moliner2012/bc846d}.
 \end{itemize}
 Authors: Moliner, González, Soriano, Sánchez, Correcher, Orero, Carles, Vidal,
 Barberá, Caballero, Seimetz, Vázquez, Benlloch --- i3M and Oncovision.
@@ -825,15 +825,15 @@ Front.\ Med.\ 5:328, \doi{10.3389/fmed.2018.00328}.
 \paragraph{Summary}
 The single-tube idea before it was built: a single monolithic annulus-like
 LYSO scintillator in place of a ring of modules, motivated by removing
-detector gaps and edge effects. The 25\% is experimental and indirect: on
-Bruker's 3-ring insert of trapezoid blocks, \mm{1} Derenzo rods fit at
-\mm{1.45} with all events against \mm{1.19} keeping only the inner 60\% of each
-block. The simulation (GATE, the full tube at 26 and \mm{52} axial, nuclear
-hits only, plus a separate light-only study) gives sensitivity, not resolution:
-5.3\% against 3.7\% for a point source, about 30\% more. A ten-face tube, about
-\mm{60} inside and \mm{80} outside (about \mm{10} thick), ten \mm{26}-wide facets,
+detector gaps and edge effects\claim{Gonzalez2018/7a2230}. The 25\%\claim{Gonzalez2018/d62d27} is experimental and indirect: on
+Bruker's 3-ring insert of trapezoid blocks\claim{Gonzalez2018/5819b7}, \mm{1} Derenzo rods fit at
+\mm{1.45} with all events against \mm{1.19}\claim{Gonzalez2018/9a0ab6} keeping only the inner 60\% of each
+block\claim{Gonzalez2018/fd10ec}. The simulation (GATE\claim{Gonzalez2018/cd495b}, the full tube at 26 and \mm{52} axial\claim{Gonzalez2018/a66b75}, nuclear
+hits only\claim{Gonzalez2018/0ba95c}, plus a separate light-only study) gives sensitivity, not resolution:
+5.3\%\claim{Gonzalez2018/cc8400} against 3.7\%\claim{Gonzalez2018/741c1d} for a point source, about 30\% more. A ten-face tube\claim{Gonzalez2018/b3f0db}, about
+\mm{60} inside\claim{Gonzalez2018/948a35} and \mm{80} outside\claim{Gonzalez2018/b0793d} (about \mm{10} thick), ten \mm{26}-wide facets\claim{Gonzalez2018/7d7be2},
 photosensors on the outer faces; positioning by centroid of row and column
-projections, depth from the axial projection.
+projections, depth from the axial projection\claim{Gonzalez2018/adc898}.
 Authors: González, Berr, Cañizares, González-Montoro, Orero, Correcher,
 Rezaei, Nuyts, Sánchez, Majewski, Benlloch --- i3M, Bruker NMI, KU Leuven
 (Nuyts, Rezaei: reconstruction) and the University of Virginia (Berr, Majewski).
@@ -851,14 +851,14 @@ IEEE Trans.\ Radiat.\ Plasma Med.\ Sci.\ 6(6):697--706, \doi{10.1109/trpms.2021.
 
 \paragraph{Summary}
 The single-tube insert of \ref{note:Gonzalez2018} built and characterised:
-one LYSO:Ce annulus, \mm{62} inner diameter, ten outer facets of
-\qtyproduct{26 x 52}{\milli\metre} each carrying an SiPM array (the figure
-gives a maximum diameter of \mm{84.1}, across the corners, and \mm{52} axial). Readout is a
-row--column projection of the SiPM signals, which also yields depth of
-interaction; positioning is centre of gravity on raised signals, calibrated
-with Voronoi diagrams that absorb the depth dependence. Average spatial
-resolution \mm{1.4 \pm 0.2} radial and \mm{1.3 \pm 0.4} axial FWHM; peak
-sensitivity 3.8\% at the centre. Authors: Freire, González-Montoro,
+one LYSO:Ce annulus\claim{Freire2022/3e60f4}, \mm{62} inner diameter\claim{Freire2022/801ad8}, ten outer facets of
+\qtyproduct{26 x 52}{\milli\metre}\claim{Freire2022/f1853e} each carrying an SiPM array\claim{Freire2022/099574} (the figure
+gives a maximum diameter of \mm{84.1}\claim{Freire2022/9d926b}, across the corners, and \mm{52} axial\claim{Freire2022/12d153}). Readout is a
+row--column projection of the SiPM signals\claim{Freire2022/d684ec}, which also yields depth of
+interaction\claim{Freire2022/8eef9c}; positioning is centre of gravity on raised signals\claim{Freire2022/d5e01a}, calibrated
+with Voronoi diagrams\claim{Freire2022/dded5a} that absorb the depth dependence\claim{Freire2022/2a74f7}. Average spatial
+resolution \mm{1.4 \pm 0.2} radial and \mm{1.3 \pm 0.4} axial FWHM\claim{Freire2022/ba5be1}; peak
+sensitivity 3.8\% at the centre\claim{Freire2022/5bf387}. Authors: Freire, González-Montoro,
 Cañizares, Rezaei, Nuyts, Berr, Williams, Benlloch, González --- i3M, KU
 Leuven and the University of Virginia (Berr, Williams); Majewski is not on
 this one.
@@ -871,7 +871,7 @@ The other annular monolithic scanner, and the direct comparison for
 \ref{prog:AnnPET}: both are single faceted tubes of similar bore, and both
 land at about \mm{1.4} FWHM --- AnnPET with a deep network and SSRB-FBP
 images, this one with centre of gravity and Voronoi calibration, but from
-sinogram profiles (``not reconstructed images'') with the source width removed.
+sinogram profiles (``not reconstructed images''\claim{Freire2022/a1abb0}) with the source width removed\claim{Freire2022/f3cfe8}.
 The two numbers are not like for like, so the coincidence is weaker than it
 looks.
 
@@ -883,22 +883,22 @@ Phys.\ Med.\ Biol.\ 67(24):245011, \doi{10.1088/1361-6560/aca389}.
 
 \paragraph{Summary}
 i3M's second 2022 paper, and a different detector line from the single-crystal
-tube of \ref{note:Freire2022}: a flat semi-monolithic detector for total-body PET
+tube of \ref{note:Freire2022}: a flat semi-monolithic detector for total-body PET\claim{Freire2022a/c5f3c6}
 rather than an annulus for rodents. One array of 1 x 8 LYSO slabs of
-\qtyproduct{25.8 x 3.1 x 20}{\milli\metre}, separated by Enhanced Specular
+\qtyproduct{25.8 x 3.1 x 20}{\milli\metre}\claim{Freire2022a/d865a7}, separated by Enhanced Specular
 Reflector and coupled to an 8 x 8 SiPM array. A neural network estimates the
-impact position along the monolithic length and in depth; the slab itself
+impact position along the monolithic length and in depth\claim{Freire2022a/b5b545}; the slab itself
 fixes the third coordinate. The variables are the surfaces and the sensor,
-not the algorithm: three crystal treatments (lateral faces black painted with
+not the algorithm: three crystal treatments\claim{Freire2022a/909daf} (lateral faces black painted with
 a retroreflector on top, ESR on the lateral faces with a retroreflector on
 top, and ESR everywhere) crossed with two Hamamatsu arrays, S13361-3050AE-08
-and S14161-3050AS-08. Measured with a $^{22}$Na point source through a
+and S14161-3050AS-08\claim{Freire2022a/f4816b}. Measured with a $^{22}$Na point source through a
 pinhole collimator against a reference detector, stepping the detector by
-\mm{1}. Energy resolution lands between 11\% and 16\%, and the mean absolute
-positioning error between \mm{1.1 \pm 0.5} and \mm{1.3 \pm 0.5} on one
-estimated axis and between \mm{1.7 \pm 0.8} and \mm{2.2 \pm 1.0} on the
-other, with the black-painted and retroreflector combination best on both and
-the SiPM model making no difference to position. Authors: Freire, Barrio,
+\mm{1}\claim{Freire2022a/7854f5}. Energy resolution lands between 11\% and 16\%\claim{Freire2022a/2f5cef}, and the mean absolute
+positioning error between \mm{1.1 \pm 0.5} and \mm{1.3 \pm 0.5}\claim{Freire2022a/95da0b} on one
+estimated axis and between \mm{1.7 \pm 0.8} and \mm{2.2 \pm 1.0}\claim{Freire2022a/760d38} on the
+other, with the black-painted and retroreflector combination best on both\claim{Freire2022a/45cd35} and
+the SiPM model making no difference to position\claim{Freire2022a/62be4c}. Authors: Freire, Barrio,
 Cucarella, Valladares, González-Montoro, de Alfonso, Benlloch, González ---
 all i3M. Neural positioning on semi-monolithic LYSO is the same technique
 \ref{prog:Aachen} applies four years later on a built scanner
@@ -924,22 +924,22 @@ EJNMMI Phys.\ 13:54, \doi{10.1186/s40658-026-00869-1}.
 
 \paragraph{Summary}
 The annulus at organ scale: a dedicated breast PET ring of 14 curved LYSO
-monolithic crystals, \mm{12.5} thick, glued side by side with Meltmount
-($n = 1.7$, against $n = 1.8$ for LYSO) into one optically continuous ring,
-\mm{200} inner and \mm{225} outer diameter, \mm{50} axial, useful transaxial
-FOV \mm{160}. All faces polished; inner, top and bottom faces black painted.
+monolithic crystals, \mm{12.5} thick\claim{Freire2026/87937f}, glued side by side with Meltmount
+($n = 1.7$\claim{Freire2026/c3c5f4}, against $n = 1.8$ for LYSO\claim{Freire2026/94f9ac}) into one optically continuous ring,
+\mm{200} inner and \mm{225} outer diameter\claim{Freire2026/545593}, \mm{50} axial\claim{Freire2026/7efb0a}, useful transaxial
+FOV \mm{160}\claim{Freire2026/76a529}. All faces polished; inner, top and bottom faces black painted\claim{Freire2026/f6dc68}.
 Fourteen bent PCBs, each a 12 x 12 array of onsemi J-series SiPMs at
-\mm{4.36} pitch, read out as row and column sums (24 signals per board). The
+\mm{4.36} pitch\claim{Freire2026/412fa0}, read out as row and column sums (24 signals per board\claim{Freire2026/befc2c}). The
 glue lets light cross crystal boundaries, so an event is positioned from the
-rows of all 14 modules (168 signals) plus the columns of the three nearest:
-two MLPs (64--128--32) give the transaxial and axial coordinates, trained on
-the assembled ring with a rotating tungsten fan-beam collimator, which cuts
-calibration from 11 days to 3.6. Depth from $E/I_{\max}$ and energy are
-calibrated with Voronoi regions, as in \ref{note:Freire2022}. Scatter is
+rows of all 14 modules (168 signals\claim{Freire2026/dddba6}) plus the columns of the three nearest\claim{Freire2026/304299}:
+two MLPs (64--128--32)\claim{Freire2026/984e9f} give the transaxial and axial coordinates, trained on
+the assembled ring with a rotating tungsten fan-beam collimator\claim{Freire2026/50df92}, which cuts
+calibration from 11 days to 3.6\claim{Freire2026/cd4432}. Depth from $E/I_{\max}$\claim{Freire2026/dac2de} and energy are
+calibrated with Voronoi regions\claim{Freire2026/1de84a}, as in \ref{note:Freire2022}. Scatter is
 corrected in the image by dual energy window (\qtyrange{358}{409}{\kilo\electronvolt}
-scatter, \qtyrange{408}{613}{\kilo\electronvolt} trues), attenuation from a
-synthetic map, normalisation from a 6-hour ring-phantom scan; randoms, dead
-time and quantification are not corrected, and pileup is not mentioned.
+scatter, \qtyrange{408}{613}{\kilo\electronvolt} trues)\claim{Freire2026/9cc990}, attenuation from a
+synthetic map\claim{Freire2026/ae7977}, normalisation from a 6-hour ring-phantom scan\claim{Freire2026/f07105}; randoms, dead
+time and quantification are not corrected\claim{Freire2026/7fbd62}, and pileup is not mentioned.
 Authors: Freire, Jiménez-Serrano, González-Montoro,
 García, Toledo, Barberá, Álamo, Torres-Espallardo, Vidal, Loignon-Houle,
 de Alfonso, Echegoyen, Rodríguez-Álvarez, Sánchez, González --- i3M, with
@@ -954,29 +954,29 @@ gluing study, Freire et al.\ Med.\ Phys.\ 49:5616 (2022), are unread.}
 		useful FOV \mm{160} transaxial; LYSO \mm{12.5} thick.
 	\item \textbf{Spatial resolution} (OSEM, $^{22}$Na point source):
 		\mm{1.7} radial, \mm{1.7} tangential, \mm{1.3} axial FWHM at the
-		centre; \mm{1.9 \pm 0.1}, \mm{1.9 \pm 0.1}, \mm{1.7 \pm 0.1} averaged
-		over 0--\mm{80} radius, within 10\% across the FOV. Derenzo rods
-		resolved down to \mm{2.4}.
-	\item \textbf{DOI resolution:} \mm{3.6 \pm 0.1} FWHM, detector level,
+		centre\claim{Freire2026/a098f8}; \mm{1.9 \pm 0.1}, \mm{1.9 \pm 0.1}, \mm{1.7 \pm 0.1} averaged
+		over 0--\mm{80} radius\claim{Freire2026/13d827}, within 10\% across the FOV\claim{Freire2026/705bd2}. Derenzo rods
+		resolved down to \mm{2.4}\claim{Freire2026/f741fd}.
+	\item \textbf{DOI resolution:} \mm{3.6 \pm 0.1} FWHM, detector level\claim{Freire2026/d0bc9d},
 		about 29\% of the \mm{12.5} depth.
-	\item \textbf{Energy resolution:} 19 $\pm$ 2\%, blamed on the black
+	\item \textbf{Energy resolution:} 19 $\pm$ 2\%\claim{Freire2026/7396d3}, blamed on the black
 		paint.
-	\item \textbf{Sensitivity:} 2.0\% peak at centre,
+	\item \textbf{Sensitivity:} 2.0\% peak at centre\claim{Freire2026/d3df4d},
 		\qtyrange{408}{613}{\kilo\electronvolt}. Gapless ring estimated at
-		about 21\% more efficient than modules with \mm{5} gaps (theory, not
+		about 21\% more efficient than modules with \mm{5} gaps\claim{Freire2026/6e7970} (theory, not
 		measured).
-	\item \textbf{Count rate:} NECR peak 15 kcps at 13.4 MBq (NU 4 rat
-		phantom); linear below about 7 MBq, readout saturating from about
+	\item \textbf{Count rate:} NECR peak 15 kcps at 13.4 MBq\claim{Freire2026/a8944b} (NU 4 rat
+		phantom); linear below about 7 MBq\claim{Freire2026/bdfbdc}, readout saturating from about
 		20 MBq.
-	\item \textbf{Timing:} none --- no TOF, no CTR reported; \ns{5}
-		coincidence window, \ns{250} integration.
-	\item \textbf{Image quality:} NU 4 IQ uniformity 5\%, spill-over 6\% air
-		and 23\% water. Dedicated IQ (5:1) contrast 27.9, 28.8, 56.8, 72.5,
-		87.2 and 84.2\% for inserts of 4.5 to \mm{20}.
+	\item \textbf{Timing:} none --- no TOF\claim{Freire2026/3a8f1b}, no CTR reported; \ns{5}
+		coincidence window\claim{Freire2026/9313fe}, \ns{250} integration\claim{Freire2026/96be06}.
+	\item \textbf{Image quality:} NU 4 IQ uniformity 5\%\claim{Freire2026/da92ce}, spill-over 6\% air
+		and 23\% water\claim{Freire2026/a27b29}. Dedicated IQ (5:1) contrast 27.9, 28.8, 56.8, 72.5,
+		87.2 and 84.2\% for inserts of 4.5 to \mm{20}\claim{Freire2026/528814}.
 	\item \textbf{Against other breast rings} (their Table~2): MAMMI
-		(monolithic LYSO) 1.6\% and \qtyrange{1.8}{7.0}{\milli\metre} across
+		(monolithic LYSO) 1.6\% and \qtyrange{1.8}{7.0}{\milli\metre}\claim{Freire2026/79c987} across
 		the FOV; Elmammo (pixelated, four-layer DOI) 11.2\% and
-		\qtyrange{1.6}{2.7}{\milli\metre}. DeepBreast holds resolution flat
+		\qtyrange{1.6}{2.7}{\milli\metre}\claim{Freire2026/dac0a5}. DeepBreast holds resolution flat
 		but gives up sensitivity. MAMMI's 1.6\% is its
 		\qtyrange{350}{650}{\kilo\electronvolt} figure, and its resolution
 		was measured without DOI (\ref{note:Moliner2012}).
@@ -990,7 +990,7 @@ gluing study, Freire et al.\ Med.\ Phys.\ 49:5616 (2022), are unread.}
 Three things. First, the reason the tube was not scaled: the authors say the
 single-crystal approach of \ref{note:Freire2022} ``could not be applied'' at
 \mm{200} bore ``because of limitations in the scintillation crystal growth
-process of LYSO'', citing a 2013 J.\ Cryst.\ Growth paper. That is a stated
+process of LYSO''\claim{Freire2026/93f708}, citing a 2013 J.\ Cryst.\ Growth paper. That is a stated
 physical ceiling on the one-crystal annulus, and a reason any clinical-scale
 annulus becomes segments optically joined. It also implies the rodent tube
 was one grown piece. \gap{Confirm against \ref{note:Freire2022} and the cited
@@ -998,7 +998,7 @@ growth paper; what bore does LYSO growth allow?}
 Second, it takes i3M's annular geometry past preclinical scale and couples it
 to neural positioning (\ref{note:Freire2022a}), so the two detector lines
 noted above have met in one scanner. Third, it names its own open items: no
-TOF (they estimate about \ps{100} CTR would be needed to matter at this
+TOF (they estimate about \ps{100} CTR\claim{Freire2026/29110b} would be needed to matter at this
 bore), no randoms, dead-time or quantitative corrections, a short axial
 length.
 
@@ -1022,35 +1022,35 @@ Gonzalez-Montoro, Jiménez-Serrano, Loignon-Houle, Moliner, Valladares,
 Bruyndonckx, Correcher, Benlloch --- i3M with Bruker BioSpin. Open access.
 
 \paragraph{Detector}
-Two rings of 14 blocks, \mm{106} bore, \mm{52} axial, \mm{1.26} between the
-rings. Each block is 22 LYSO slabs of \qtyproduct{0.97 x 25.6 x 12}{\mm}, the
-long side axial, with a retroreflector on the entrance face, ESR between the
-slabs and the narrow faces rough and black; glued to an 8 x 8 Hamamatsu array
-at \mm{3.2} pitch, every one of the 1792 channels read by PETsys TOFPET2. Slab
-from the centroid; position along the slab by one small network on the eight
-summed signals, trained on a slit scan of a single module and used unchanged on
-all 28; depth from $E/I_{\max}$, converted to mm by fitting its distribution in
+Two rings of 14 blocks\claim{Cucarella2026/e5f7aa}, \mm{106} bore, \mm{52} axial\claim{Cucarella2026/d8fd17}, \mm{1.26} between the
+rings\claim{Cucarella2026/6d3fbc}. Each block is 22 LYSO slabs of \qtyproduct{0.97 x 25.6 x 12}{\mm}\claim{Cucarella2026/c4160b}, the
+long side axial\claim{Cucarella2026/d0852e}, with a retroreflector on the entrance face\claim{Cucarella2026/212ffb}, ESR between the
+slabs and the narrow faces rough and black\claim{Cucarella2026/b2ba81}; glued to an 8 x 8 Hamamatsu array
+at \mm{3.2} pitch\claim{Cucarella2026/ff91ea}, every one of the 1792 channels read by PETsys TOFPET2\claim{Cucarella2026/6d9394}. Slab
+from the centroid\claim{Cucarella2026/5d749c}; position along the slab by one small network on the eight
+summed signals\claim{Cucarella2026/b55cec}, trained on a slit scan of a single module and used unchanged on
+all 28\claim{Cucarella2026/5ba9b8}; depth from $E/I_{\max}$\claim{Cucarella2026/b6bad8}, converted to mm by fitting its distribution in
 flood data --- so only the network needs a collimated scan, and only once.
 
 \paragraph{Key Findings}
 \begin{itemize}
-	\item Detector: \mm{1.7} FWHM along the slab, DOI \mm{3.08} at \mm{12}
-		thick (side slit), slabs resolved with peak-to-valley 4.64; energy
-		16.4\% (13.5\% centre) before a saturation correction they estimate
-		would worsen it by about 30\%; CTR \ps{252} at detector level, but no
-		system time-skew correction yet, so no TOF in the images.
-	\item System, NEMA NU 4: \mm{1.61} mean at the centre (1.2/0.95/2.7
-		radial/tangential/axial --- the gap between rings spoils the axial),
-		\mm{1.0} at a quarter of the axial field; peak sensitivity 3.5\%
-		(358--\keV{664}); NECR 106.9 kcps at \MBq{11.7}; CRC 0.20--0.85 for
-		1--\mm{5} rods; \mm{1} Derenzo rods resolved.
-	\item DOI correction improves radial resolution off centre, with residual
-		degradation the authors put down to the DOI calibration.
+	\item Detector: \mm{1.7} FWHM along the slab\claim{Cucarella2026/d0b6b0}, DOI \mm{3.08}\claim{Cucarella2026/6efc56} at \mm{12}
+		thick (side slit), slabs resolved with peak-to-valley 4.64\claim{Cucarella2026/6dc8c5}; energy
+		16.4\% (13.5\% centre)\claim{Cucarella2026/d2643b} before a saturation correction they estimate
+		would worsen it by about 30\%\claim{Cucarella2026/2742e0}; CTR \ps{252} at detector level\claim{Cucarella2026/bada52}, but no
+		system time-skew correction yet\claim{Cucarella2026/007108}, so no TOF in the images.
+	\item System, NEMA NU 4: \mm{1.61} mean at the centre\claim{Cucarella2026/6d4e3d} (1.2/0.95/2.7
+		radial/tangential/axial\claim{Cucarella2026/1ff422} --- the gap between rings spoils the axial\claim{Cucarella2026/5c2103}),
+		\mm{1.0} at a quarter of the axial field\claim{Cucarella2026/f4a117}; peak sensitivity 3.5\%\claim{Cucarella2026/88f16b}
+		(358--\keV{664}); NECR 106.9 kcps at \MBq{11.7}\claim{Cucarella2026/47bd12}; CRC 0.20--0.85 for
+		1--\mm{5} rods\claim{Cucarella2026/b1916a}; \mm{1} Derenzo rods resolved\claim{Cucarella2026/f6b29e}.
+	\item DOI correction improves radial resolution off centre\claim{Cucarella2026/abeda5}, with residual
+		degradation the authors put down to the DOI calibration\claim{Cucarella2026/73fc68}.
 	\item Table IV sets it against 17 preclinical scanners; it sits in the
 		lower half (about 12th of 18 at \mm{1.61}); the authors call it
-		``equivalent to other systems''.
+		``equivalent to other systems''\claim{Cucarella2026/fc3d2a}.
 \end{itemize}
-\aside{The paper calls itself the first semi-monolithic preclinical scanner;
+\aside{The paper calls itself the first semi-monolithic preclinical scanner\claim{Cucarella2026/717998};
 Aachen's 24-block one in \ref{note:Thull2026} contests that.}
 
 \paragraph{Table IV against this map}
@@ -1069,7 +1069,7 @@ The measured semi-monolithic preclinical system whose full ring
 prototype), and a lower one: 3.5\% against 5.45\% simulated, \mm{1.6} against
 about 1.1--\mm{1.4} without PSF modelling (sub-\mm{1} with it). Two things carry over. One network for every module is the
 calibration economy a monolithic annulus needs. And the scanner is built as the
-absorber of a Compton-PET with a thin scatter ring inside it
+absorber of a Compton-PET with a thin scatter ring inside it\claim{Cucarella2026/c64465}
 (\ref{note:Valladares2024}, on the plan of \ref{note:Ilisie2018}) --- i3M
 taking the multi-interaction problem to two layers, where this thesis takes it
 into one thick bulk.
@@ -1084,26 +1084,26 @@ Glasgow, with Oncovision, i3M and Bruker. Open access (CC BY-NC).
 
 \paragraph{Summary}
 An independent NEMA evaluation of the first commercial monolithic PET. Two
-octagonal rings of eight blocks, each one LYSO crystal shaped as a truncated
+octagonal rings of eight blocks\claim{Pajak2016/80038a}, each one LYSO crystal shaped as a truncated
 pyramid (\qtyproduct{50 x 50}{\mm} at the base, \qtyproduct{40 x 40}{\mm} at
-the face, \mm{10} deep), on multi-anode PMTs with shared readout; \mm{111}
-ring, \mm{94.4} axial. The tapering leaves a \mm{14.4} gap between the rings
-at the front, right at the axial centre. Nothing is said about how position,
-depth or energy are estimated beyond real-time continuous DOI, parallax
-correction and a 300 x 300 virtual pixelation; it cites earlier papers.
+the face, \mm{10} deep)\claim{Pajak2016/edd88a}, on multi-anode PMTs with shared readout; \mm{111}
+ring\claim{Pajak2016/a0c0d4}, \mm{94.4} axial\claim{Pajak2016/ecf38f}. The tapering leaves a \mm{14.4} gap\claim{Pajak2016/c5e929} between the rings
+at the front, right at the axial centre\claim{Pajak2016/985948}. Nothing is said about how position,
+depth or energy are estimated beyond real-time continuous DOI\claim{Pajak2016/dcdea3}, parallax
+correction and a 300 x 300 virtual pixelation\claim{Pajak2016/189e8c}; it cites earlier papers.
 
 \paragraph{Key Findings}
 \begin{itemize}
 	\item Resolution (MLEM, 30\% window): 1.72/1.70/\mm{2.45} radial/tangential/
-		axial at the centre; 1.52/1.69/\mm{1.45} at a quarter of the axial field.
-		Filtered back-projection cannot be done at the centre, in the gap.
-	\item Peak sensitivity 5.3\% (255--\keV{767}), 4.2\% (358--\keV{664}).
-	\item NECR 72 kcps at \MBq{7.1} (mouse), peaking early because the
-		shared readout saturates; scatter fraction 9.8\%.
-	\item Image quality: uniformity 4.9\%, RC 0.05--0.90 for 1--\mm{5} rods,
-		spill-over 0.22 water, 0.14 air.
+		axial at the centre\claim{Pajak2016/dbb749}; 1.52/1.69/\mm{1.45} at a quarter of the axial field.
+		Filtered back-projection cannot be done at the centre, in the gap\claim{Pajak2016/efcea5}.
+	\item Peak sensitivity 5.3\% (255--\keV{767})\claim{Pajak2016/9c088f}, 4.2\% (358--\keV{664})\claim{Pajak2016/0a413b}.
+	\item NECR 72 kcps\claim{Pajak2016/c2fd98} at \MBq{7.1}\claim{Pajak2016/2f1d3f} (mouse), peaking early because the
+		shared readout saturates\claim{Pajak2016/b377e5}; scatter fraction 9.8\%\claim{Pajak2016/e0c235}.
+	\item Image quality: uniformity 4.9\%\claim{Pajak2016/b0cb27}, RC 0.05--0.90 for 1--\mm{5} rods\claim{Pajak2016/193514},
+		spill-over 0.22 water\claim{Pajak2016/bc62c2}, 0.14 air\claim{Pajak2016/72c63b}.
 	\item The authors argue NEMA NU 4 penalises such geometries: the best
-		resolution sits at the centre of each ring, not of the scanner.
+		resolution sits at the centre of each ring, not of the scanner\claim{Pajak2016/0c16de}.
 \end{itemize}
 
 \paragraph{Why it matters here}
@@ -1123,24 +1123,24 @@ KU Leuven with Bruker and i3M.
 
 \paragraph{Summary}
 The Bruker PET insert for a 7\,T MRI, the Albira line moved to SiPMs: three
-rings of eight \qtyproduct{50 x 50 x 10}{\mm} monolithic LYSO blocks on 12 x 12
-SiPM arrays at \mm{4.2} pitch, row-and-column readout; \mm{80} transaxial and
-\mm{150} axial field. Mostly an MR-compatibility study, run under five MRI
+rings of eight \qtyproduct{50 x 50 x 10}{\mm} monolithic LYSO blocks\claim{Gsell2020/97000c} on 12 x 12
+SiPM arrays at \mm{4.2} pitch, row-and-column readout\claim{Gsell2020/f206e3}; \mm{80} transaxial and
+\mm{150} axial field\claim{Gsell2020/5f6fae}. Mostly an MR-compatibility study, run under five MRI
 sequences; positioning and DOI estimation are not described (refers to
 González et al.\ 2016).
 
 \paragraph{Key Findings}
 \begin{itemize}
 	\item Resolution (MLEM): 0.68/0.86/\mm{1.10} radial/tangential/axial at the
-		centre and about \mm{0.92} on average out to \mm{35} off centre --- flat,
-		which the authors credit to DOI.
-	\item DOI about \mm{1.6} FWHM at \mm{10} thick, but fitted from flood data
+		centre and about \mm{0.92} on average out to \mm{35} off centre\claim{Gsell2020/c34cc4} --- flat,
+		which the authors credit to DOI\claim{Gsell2020/8995ea}.
+	\item DOI about \mm{1.6} FWHM\claim{Gsell2020/e2bd7a} at \mm{10} thick, but fitted from flood data\claim{Gsell2020/a4e811}
 		with no collimated beam; energy 16.6\% at low activity, 18.5\% at high,
-		blamed on pile-up. No timing.
-	\item Peak sensitivity 11.0\% (window not stated); NECR 486 kcps (mouse);
-		\mm{0.7} Derenzo rods resolved; RC 0.14--0.95, uniformity 6.5\%.
+		blamed on pile-up\claim{Gsell2020/777d71}. No timing.
+	\item Peak sensitivity 11.0\%\claim{Gsell2020/634d6d} (window not stated); NECR 486 kcps (mouse)\claim{Gsell2020/d0413e};
+		\mm{0.7} Derenzo rods resolved\claim{Gsell2020/5212d1}; RC 0.14--0.95\claim{Gsell2020/c225f1}, uniformity 6.5\%\claim{Gsell2020/7311f2}.
 	\item The MRI sequences change almost nothing: DOI worsens to 2.2 and
-		\mm{2.1} (modules 0 and 10) only under FLASH.
+		\mm{2.1} (modules 0 and 10) only under FLASH\claim{Gsell2020/9862d9}.
 \end{itemize}
 
 \paragraph{Why it matters here}
@@ -2313,48 +2313,48 @@ Hunter, Lewellen, Miyaoka. An NIH author manuscript is free in PubMed Central
 \paragraph{Detectors}
 \begin{itemize}
 	\item \textbf{Conventional:} \qtyproduct{50 x 50 x 15}{\milli\metre} LYSO on a
-		Hamamatsu H8500 64-channel PMT at the exit surface; entrance face painted
-		white, sides black. QE 22.5\%.
-	\item \textbf{SES (simulated):} \qtyproduct{49.2 x 49.2 x 15}{\milli\metre}
+		Hamamatsu H8500 64-channel PMT at the exit surface\claim{Li2012/7a41e0}; entrance face painted
+		white, sides black\claim{Li2012/4303a9}. QE 22.5\%\claim{Li2012/21c5d9}.
+	\item \textbf{SES (simulated):} \qtyproduct{49.2 x 49.2 x 15}{\milli\metre}\claim{Li2012/0befac}
 		LYSO with a 12 x 12 array of \qtyproduct{3.8 x 3.8}{\milli\metre} FBK SiPMs
-		at \mm{4.1} pitch on the \emph{entrance} surface; exit face white (0.98),
-		sides black (0.10). PDE 16\%.
+		at \mm{4.1} pitch\claim{Li2012/10d948} on the \emph{entrance} surface; exit face white (0.98\claim{Li2012/de3f44}),
+		sides black (0.10\claim{Li2012/4e5bf4}). PDE 16\%\claim{Li2012/81ca7d}.
 \end{itemize}
 
 \paragraph{Method}
 SBP treats each channel as an independent Gaussian whose mean and standard
 deviation are tabulated per $(x, y, \text{DOI})$; the event estimate is the ML
 minimiser over the table. DOI calibration is by ML clustering: events at one
-$(x, y)$ are split into seven depth groups by peak-channel pulse height, then
+$(x, y)$ are split into seven depth groups by peak-channel pulse height\claim{Li2012/80fad7}, then
 regrouped by likelihood until stable; a third-order polynomial fit expands the
-7-depth tables to 15. Calibration grid \mm{1.013}, interpolated to \mm{0.254}
+7-depth tables to 15\claim{Li2012/6a7f5a}. Calibration grid \mm{1.013}\claim{Li2012/9ebeb7}, interpolated to \mm{0.254}\claim{Li2012/4810c4}
 bins. Two contour masks (Anger, then SBP) strip Compton-scattered events from the
-calibration data; test data keep them.
+calibration data; test data keep them\claim{Li2012/0c334e}.
 
 \paragraph{The numbers to take}
 \begin{itemize}
 	\item \textbf{Experimental, conventional, 64 channels:} X/Y resolution
-		\mm{1.55}/\mm{1.50} FWHM against CRLB \mm{1.21}/\mm{1.22}; DOI \mm{3.69}
-		(\mm{3.29} after beam and reference corrections) against CRLB \mm{1.46}.
-	\item \textbf{Simulated SES, ML-clustered LUTs:} X/Y \mm{0.91}, DOI \mm{1.52}
-		against CRLB \mm{0.73}/\mm{0.88}. With true-DOI LUTs: \mm{0.86}/\mm{1.19}
-		against CRLB \mm{0.76}/\mm{1.06}; photoelectric-only test events reach
-		\mm{0.80}/\mm{1.05}, essentially at the bound.
+		\mm{1.55}\claim{Li2012/c975e6}/\mm{1.50}\claim{Li2012/e9c229} FWHM against CRLB \mm{1.21}\claim{Li2012/f9cdc3}/\mm{1.22}\claim{Li2012/b0c458}; DOI \mm{3.69}\claim{Li2012/24336a}
+		(\mm{3.29}\claim{Li2012/98bf23} after beam and reference corrections) against CRLB \mm{1.46}\claim{Li2012/c26d5e}.
+	\item \textbf{Simulated SES, ML-clustered LUTs:} X/Y \mm{0.91}\claim{Li2012/dcab59}, DOI \mm{1.52}\claim{Li2012/0dbe6f}
+		against CRLB \mm{0.73}\claim{Li2012/8c522b}/\mm{0.88}\claim{Li2012/b9dc84}. With true-DOI LUTs: \mm{0.86}\claim{Li2012/db40fb}/\mm{1.19}\claim{Li2012/e2213e}
+		against CRLB \mm{0.76}\claim{Li2012/70154a}/\mm{1.06}\claim{Li2012/fc56e5}; photoelectric-only test events reach
+		\mm{0.80}\claim{Li2012/9de2a2}/\mm{1.05}\claim{Li2012/c746e6}, essentially at the bound.
 \end{itemize}
-X/Y sits 15--25\% above the bound; DOI is over double it experimentally and
+X/Y sits 15--25\% above the bound\claim{Li2012/091a03}; DOI is over double it experimentally\claim{Li2012/a2c1c9} and
 about 1.7x in simulation for the SES detector (1.5x for the simulated
 conventional one). Two causes are isolated by simulation: Compton scatter in the
-crystal (removing it improves X/Y by 8\% and DOI by 16\%, DOI worse because
-small-angle scatter dominates) and the ML clustering itself (true-DOI tables
-improve DOI by 22\% and X/Y by 5\%). The clustering also \emph{underestimates} table variance,
-so the CRLB it yields is artificially good --- a bound computed from clustered
+crystal (removing it improves X/Y by 8\% and DOI by 16\%\claim{Li2012/4eb1b8}, DOI worse because
+small-angle scatter dominates\claim{Li2012/d2134a}) and the ML clustering itself (true-DOI tables
+improve DOI by 22\%\claim{Li2012/cc1249} and X/Y by 5\%\claim{Li2012/dbac40}). The clustering also \emph{underestimates} table variance,
+so the CRLB it yields is artificially good\claim{Li2012/b93287} --- a bound computed from clustered
 calibration is not a bound on the detector.
 
 \paragraph{Verdict, in their words}
-The CRLB does not represent the detector's resolution; it requires a
+The CRLB does not represent the detector's resolution\claim{Li2012/7ee1af}; it requires a
 systematic-error-free response model, an ML or WLS estimator and a
-linear-Gaussian problem, none strictly met. It does rank-order detector designs
-and is a quick guide when comparing geometries. \aside{That is exactly the use the
+linear-Gaussian problem, none strictly met\claim{Li2012/c4de91}. It does rank-order detector designs
+and is a quick guide when comparing geometries\claim{Li2012/b2a2ac}. \aside{That is exactly the use the
 thesis makes of it, and the caveats are the ones the CRLB chapter has to carry.}
 
 \paragraph{Why it matters here}
@@ -2408,38 +2408,38 @@ Zhang, Tao, Yang, Zhao, Weng, Huang, Yi, Peng --- HUST, Shanghai Jiao Tong and
 LBNL.
 
 \paragraph{Detector}
-One LYSO ring core-drilled from a single boule: \mm{48.5} inner and \mm{58.5}
-outer diameter (a \mm{5} wall), \mm{25.1} long, inner and outer faces polished
-under ESR. Each end is air-coupled to a ring of 46 SiPMs
-(\qtyproduct{3 x 3}{\mm}, \degs{7.83} apart), all 92 channels read
-individually; the SiPMs cover only 63\% of the \mm{5} end face. Angle by centre
-of gravity over the nine SiPMs around the peak at each end, the two ends
-averaged; axial position by a small neural network (27 inputs, one hidden
-layer of 20) trained on a slit scan in \mm{1} steps. No depth: at \mm{5} the
-authors judge it unnecessary.
+One LYSO ring core-drilled from a single boule: \mm{48.5} inner and \mm{58.5}\claim{Xu2019/c6be8f}
+outer diameter (a \mm{5} wall), \mm{25.1} long\claim{Xu2019/8c7709}, inner and outer faces polished
+under ESR\claim{Xu2019/a3971a}. Each end is air-coupled to a ring of 46 SiPMs\claim{Xu2019/bc096b}
+(\qtyproduct{3 x 3}{\mm}, \degs{7.83} apart\claim{Xu2019/44863e}), all 92 channels read
+individually\claim{Xu2019/136f24}; the SiPMs cover only 63\% of the \mm{5} end face\claim{Xu2019/239b74}. Angle by centre
+of gravity over the nine SiPMs around the peak at each end\claim{Xu2019/56f085}, the two ends
+averaged\claim{Xu2019/9710fd}; axial position by a small neural network (27 inputs, one hidden
+layer of 20\claim{Xu2019/65dcc2}) trained on a slit scan in \mm{1} steps\claim{Xu2019/bd07eb}. No depth: at \mm{5} the
+authors judge it unnecessary\claim{Xu2019/40b2e3}.
 
 \paragraph{Key Findings}
 \begin{itemize}
-	\item Angle: the averaged position measures \mm{1.44} FWHM (MAE \mm{0.65})
-		with a \mm{0.5} slit not subtracted. The headline \mm{0.94}
-		``intrinsic'' is half the difference between the two ends' angles, which
-		assumes their errors are independent and so cancels anything both ends
+	\item Angle: the averaged position measures \mm{1.44} FWHM (MAE \mm{0.65})\claim{Xu2019/714bad}
+		with a \mm{0.5} slit\claim{Xu2019/50d2cb} not subtracted. The headline \mm{0.94}\claim{Xu2019/8ae94e}
+		``intrinsic'' is half the difference between the two ends' angles\claim{Xu2019/a1b436}, which
+		assumes their errors are independent\claim{Xu2019/8b54ff} and so cancels anything both ends
 		share --- including where scattered light really lands.
-	\item Axial: \mm{2.45} FWHM (MAE \mm{1.08}), linear to within \mm{0.8}.
-	\item Energy: 10.7\% at \keV{511}; 12.3\% in the phantom, and 11.4\% for
-		the \keV{1022} peak of coincidences caught whole inside the one ring.
+	\item Axial: \mm{2.45} FWHM (MAE \mm{1.08})\claim{Xu2019/24f9e6}, linear to within \mm{0.8}\claim{Xu2019/7a743b}.
+	\item Energy: 10.7\% at \keV{511}\claim{Xu2019/fcff4f}; 12.3\% in the phantom, and 11.4\% for
+		the \keV{1022} peak of coincidences caught whole inside the one ring\claim{Xu2019/9f31c1}.
 	\item Both photons of a pair can land in the ring at once, and their light
-		overlaps. Simulated by adding two measured single events: below a
-		\degs{70} separation the line of response is visibly wrong; above it
-		the overlap still adds \mm{0.65} in quadrature, taking the intrinsic \mm{0.94}
-		to \mm{1.14}.
-	\item Derenzo rods of \mm{1.2} resolved, \mm{1.0} barely, reconstructed from
-		the \keV{1022} coincidence peak (950--\keV{1300}) with no correction for
+		overlaps. Simulated by adding two measured single events\claim{Xu2019/4da189}: below a
+		\degs{70} separation the line of response is visibly wrong\claim{Xu2019/ab5752}; above it
+		the overlap still adds \mm{0.65}\claim{Xu2019/6da9ad} in quadrature, taking the intrinsic \mm{0.94}
+		to \mm{1.14}\claim{Xu2019/f3ae44}.
+	\item Derenzo rods of \mm{1.2} resolved\claim{Xu2019/b70d2d}, \mm{1.0} barely\claim{Xu2019/b837c4}, reconstructed from
+		the \keV{1022} coincidence peak (950--\keV{1300})\claim{Xu2019/f427ef} with no correction for\claim{Xu2019/2a0682}
 		the overlap.
 	\item Limits the authors name: a LYSO boule allows a ring of at most about
-		\mm{80} by \mm{240} at \mm{10} thick; one shared crystal lowers the
-		maximum count rate by $N/2$ against $N$ blocks; overlapping light also
-		corrupts timing.
+		\mm{80} by \mm{240} at \mm{10} thick\claim{Xu2019/0755cf}; one shared crystal lowers the
+		maximum count rate by $N/2$ against $N$ blocks\claim{Xu2019/c13978}; overlapping light also
+		corrupts timing\claim{Xu2019/86b785}.
 \end{itemize}
 
 \paragraph{Why it matters here}
@@ -2458,15 +2458,15 @@ IEEE NSS/MIC 2019, \doi{10.1109/NSS/MIC42101.2019.9059816}. Zhang, Ye, Xie,
 Xie, Huang, Xu, Peng. Two-page proceedings.
 
 \paragraph{Summary}
-The second-generation ring: twelve LYSO slices, each the \mm{5} wall of
+The second-generation ring: twelve LYSO slices\claim{Zhang2019a/1b52de}, each the \mm{5} wall of
 \ref{note:Xu2019} but only \mm{1} long, glued with \mm{0.1} of BaSO$_4$ in
-optical glue, so the ring is now segmented axially. Read on the \emph{outer}
-surface instead of the ends, by 25 arrays of 2 x 4 SiPMs (98 channels after
-row-and-column summing); inner surface and ends under aluminium foil. Light
-spreads 9.5--\mm{12.6} around the ring, as before, and stays within one or two
-SiPMs axially. Energy 10.6\% for a test crystal. The twelve slices do not
-resolve in the flood map, worst at the ends, put down to uneven SiPM assembly
-and too little light spread; a light guide is the proposed fix.
+optical glue\claim{Zhang2019a/7b76e2}, so the ring is now segmented axially. Read on the \emph{outer}
+surface instead of the ends, by 25 arrays of 2 x 4 SiPMs\claim{Zhang2019a/9751e7} (98 channels after
+row-and-column summing\claim{Zhang2019a/222500}); inner surface and ends under aluminium foil\claim{Zhang2019a/050aad}. Light
+spreads 9.5--\mm{12.6} around the ring, as before\claim{Zhang2019a/1e95ec}, and stays within one or two
+SiPMs axially\claim{Zhang2019a/63c90d}. Energy 10.6\% for a test crystal\claim{Zhang2019a/e3cef3}. The twelve slices do not
+resolve in the flood map, worst at the ends\claim{Zhang2019a/d0e5f5}, put down to uneven SiPM assembly\claim{Zhang2019a/a211ed}
+and too little light spread\claim{Zhang2019a/80d2eb}; a light guide is the proposed fix\claim{Zhang2019a/8afbc7}.
 
 \paragraph{Why it matters here}
 Reading the outer surface is how a ring could get depth, but this paper never
@@ -2483,15 +2483,15 @@ IEEE NSS/MIC 2018, \doi{10.1109/NSSMIC.2018.8824577}. Xie, Zhang, Peng, Yang,
 Zhao, Huang, Xu, Peng. Proceedings.
 
 \paragraph{Summary}
-The conference version of \ref{note:Xu2019}, with the same figures (\mm{0.94}
-and \mm{2.45} FWHM, 10.7\%), plus two things the journal paper leaves out. How
-the ring is made: turned from the boule with two core drills, milled, then
-polished with a polyurethane pad and CeO$_2$ to a roughness of \qty{1.5}{\nm}
-on the end face and \qty{2.6}{\nm} on the outer wall (atomic force
-microscopy) --- the brittle hollow ring needs it. And the second generation:
-twelve \mm{1} slices of the same ring, BaSO$_4$ between them, read on the outer
-surface (built in \ref{note:Zhang2019a}). A Derenzo phantom here resolves
-\mm{1.4} rods (this phantom has no \mm{1.2} sector).
+The conference version of \ref{note:Xu2019}, with the same figures (\mm{0.94}\claim{Xie2018/1ef096}
+and \mm{2.45} FWHM\claim{Xie2018/f5f3da}, 10.7\%\claim{Xie2018/d998b0}), plus two things the journal paper leaves out. How
+the ring is made: turned from the boule with two core drills\claim{Xie2018/8cae36}, milled, then
+polished with a polyurethane pad and CeO$_2$\claim{Xie2018/7e0ccf} to a roughness of \qty{1.5}{\nm}
+on the end face and \qty{2.6}{\nm} on the outer wall\claim{Xie2018/af5868} (atomic force
+microscopy\claim{Xie2018/5d847b}) --- the brittle hollow ring needs it\claim{Xie2018/1658ee}. And the second generation:
+twelve \mm{1} slices of the same ring, BaSO$_4$ between them\claim{Xie2018/e8b12c}, read on the outer
+surface\claim{Xie2018/ee18f3} (built in \ref{note:Zhang2019a}). A Derenzo phantom here resolves
+\mm{1.4} rods\claim{Xie2018/b38141} (this phantom has no \mm{1.2} sector\claim{Xie2018/248471}).
 
 \paragraph{Why it matters here}
 A rare measured surface finish on a monolith, in the units \ref{prog:Davis}
@@ -2506,16 +2506,16 @@ IEEE NSS/MIC 2020, \doi{10.1109/NSS/MIC42677.2020.9508071}. Yang, Xie, Xie,
 Zhang, Peng, Xu, Xie. Proceedings; simulation only.
 
 \paragraph{Summary}
-GATE with optical transport, the ring of \ref{note:Xu2019} read two ways:
-46 SiPMs on each end (as built), or eight rings of 46 on the inner surface.
+GATE with optical transport\claim{Yang2020/6dd117}, the ring of \ref{note:Xu2019} read two ways:
+46 SiPMs on each end\claim{Yang2020/2ae03b} (as built), or eight rings of 46 on the inner surface\claim{Yang2020/e0e7a3}.
 Angle by centre of gravity in both; axial position by a small network for the
-ends, by centre of gravity across the eight rings for the inner surface.
+ends, by centre of gravity across the eight rings for the inner surface\claim{Yang2020/e01ee2}.
 \begin{itemize}
-	\item Angle: \mm{1.02} FWHM with the ends, \mm{0.61} with the inner surface.
-	\item Axial: \mm{0.68} against \mm{0.38} --- the text does not say whether
+	\item Angle: \mm{1.02} FWHM with the ends, \mm{0.61} with the inner surface\claim{Yang2020/c2d78b}.
+	\item Axial: \mm{0.68} against \mm{0.38}\claim{Yang2020/0e1b68} --- the text does not say whether
 		these are FWHM or MAE.
-	\item A simulated Derenzo resolves \mm{0.5} rods (550 million lines).
-	\item The authors pick end readout anyway, for cost and assembly.
+	\item A simulated Derenzo resolves \mm{0.5} rods\claim{Yang2020/8476da} (550 million lines\claim{Yang2020/8c541d}).
+	\item The authors pick end readout anyway, for cost and assembly\claim{Yang2020/088d5a}.
 \end{itemize}
 
 \paragraph{Why it matters here}
@@ -2586,45 +2586,45 @@ Phys.\ Med.\ Biol.\ 62(19):7889--7904, \doi{10.1088/1361-6560/aa898a}. Zhang,
 Wang, Ren, Kuang, Deng, Fu, Wu, Sang, Hu, Liang, Liu, Zheng, Yang.
 
 \paragraph{Detector}
-Eleven polished LYSO slices of \qtyproduct{1 x 11.6 x 10}{\mm}, glued with
-enhanced specular reflector between and outside them, on a 4 x 4 SiPM array
-through a \mm{1} light guide. Nothing reflects on the top and the two open
-sides --- deliberately, to suppress the reflections that confuse position. The
-16 signals are summed into four rows and four columns: columns identify the
+Eleven polished LYSO slices of \qtyproduct{1 x 11.6 x 10}{\mm}\claim{Zhang2017/85e083}, glued with
+enhanced specular reflector between and outside them\claim{Zhang2017/b84c53}, on a 4 x 4 SiPM array
+through a \mm{1} light guide\claim{Zhang2017/9aa882}. Nothing reflects on the top and the two open
+sides --- deliberately, to suppress the reflections that confuse position\claim{Zhang2017/93a9fd}. The
+16 signals are summed into four rows and four columns\claim{Zhang2017/c2c73f}: columns identify the
 slice, rows give $y$ from the centre of gravity of the light and $z$ from its
-width. Scanned at \mm{1} intervals in $y$ and $z$ by electronic collimation (a
+width\claim{Zhang2017/ebdb6b}. Scanned at \mm{1} intervals in $y$ and $z$ by electronic collimation\claim{Zhang2017/130959} (a
 \mm{0.25} $^{22}$Na source against a \qtyproduct{1 x 1 x 20}{\mm} LYSO
 crystal).
 
 \paragraph{Key Findings}
-All \mm{1} slices resolve, with slice-based energy resolution
-\qty{14.9}{\percent} and \ps{575} timing against a reference PMT. Positioning is quoted as mean
-absolute error, not FWHM: \mm{1.15} in both $y$ and $z$, falling to \mm{0.7}
-once multiple-scatter events are rejected. Centre of gravity gives a different
-$y$ for the same $y$ at different depths --- a depth-dependent edge effect ---
-and both a least-squares and a maximum-likelihood estimator fix part of it at
+All \mm{1} slices resolve\claim{Zhang2017/b22af0}, with slice-based energy resolution
+\qty{14.9}{\percent}\claim{Zhang2017/826c65} and \ps{575} timing\claim{Zhang2017/675622} against a reference PMT\claim{Zhang2017/351142}. Positioning is quoted as mean
+absolute error, not FWHM\claim{Zhang2017/d1001e}: \mm{1.15} in both $y$ and $z$\claim{Zhang2017/501097}, falling to \mm{0.7}
+once multiple-scatter events are rejected\claim{Zhang2017/5657f6}. Centre of gravity gives a different
+$y$ for the same $y$ at different depths --- a depth-dependent edge effect\claim{Zhang2017/c4d2d4} ---
+and both a least-squares and a maximum-likelihood estimator fix part of it at\claim{Zhang2017/30aa21}
 the slab edges.
 By estimator, mean absolute error without and with the rejection: least
-squares \mm{1.10}/\mm{1.14} to \mm{0.69}/\mm{0.70} in $y$/$z$, maximum
-likelihood \mm{1.13}/\mm{1.17} to \mm{0.68}/\mm{0.67}. The authors note that
+squares \mm{1.10}/\mm{1.14} to \mm{0.69}/\mm{0.70} in $y$/$z$\claim{Zhang2017/2f4bb8}, maximum
+likelihood \mm{1.13}/\mm{1.17} to \mm{0.68}/\mm{0.67}\claim{Zhang2017/55fab2}. The authors note that
 multiple scatter barely moves the FWHM but strongly moves the mean absolute
-error --- the tails carry it, which is why the two measures disagree.
+error\claim{Zhang2017/b9a8e3} --- the tails carry it, which is why the two measures disagree.
 
 How the multiple-scatter events are found: for each calibration position, a
 2D histogram of the light's centroid against its spread (standard
-deviation), and events outside a contour at 40\% of the peak are called
-multiple scatter and dropped --- Ling et al.'s 2007 method for monoliths.
+deviation), and events outside a contour at 40\% of the peak\claim{Zhang2017/13d2e8} are called
+multiple scatter and dropped --- Ling et al.'s 2007 method for monoliths\claim{Zhang2017/028c8c}.
 The mask is built per known beam position, so it needs the true position;
 it is a bench cut, not a classifier a scanner could run on unknown events.
 The fraction it removes is not reported (the paper's 70\% is the
-calibration/test split, not the survivors).
+calibration/test split\claim{Zhang2017/0d0bcb}, not the survivors).
 \aside{Mean absolute error is not FWHM, so \mm{0.7} here and the FWHM figures
 of the later papers are not the same quantity, and \mm{0.7} is conditional on
 an unreported cut.}
 
 \paragraph{Why it matters here}
 The programme's first paper, and it names its own next three: longer slabs to
-reduce the edge effect, \mm{20} thickness, better positioning algorithms. Each
+reduce the edge effect, \mm{20} thickness, better positioning algorithms\claim{Zhang2017/730b78}. Each
 became \ref{note:Zhang2019}, \ref{note:Zhang2021} and
 \ref{note:Kinyanjui2025} --- a stated plan carried out over eight years, which
 is worth more as evidence of what the geometry can and cannot reach than any
@@ -2639,28 +2639,28 @@ Ding, Kuang, Wu, Sang, Hu, Du, Liang, Liu, Zheng, Yang. SIAT with Lanzhou
 University.
 
 \paragraph{Detector}
-Eleven polished LYSO slabs of \qtyproduct{1 x 37.6 x 10}{\mm} with enhanced
-specular reflector glued between them, read out from the bottom face by a
-4 x 12 SiPM array through a \mm{1.5} light guide, grouped into 4 row signals
-(slice identity) and 12 column signals ($y$ and depth). Two detectors: one
-with the top and both end faces painted black, one bare. Scanned with an
-electronically collimated \keV{511} beam about \mm{0.5} wide.
+Eleven polished LYSO slabs of \qtyproduct{1 x 37.6 x 10}{\mm}\claim{Zhang2019/08bffa} with enhanced
+specular reflector glued between them\claim{Zhang2019/8cf14c}, read out from the bottom face by a
+4 x 12 SiPM array through a \mm{1.5} light guide\claim{Zhang2019/973ce8}, grouped into 4 row signals
+(slice identity) and 12 column signals ($y$ and depth)\claim{Zhang2019/c4a713}. Two detectors: one
+with the top and both end faces painted black\claim{Zhang2019/417e23}, one bare\claim{Zhang2019/ee3235}. Scanned with an
+electronically collimated \keV{511} beam about \mm{0.5} wide\claim{Zhang2019/10fb1f}.
 
 \paragraph{Key Findings}
-Black paint on the front and both end surfaces gives \mm{1.07} FWHM in the
-monolithic direction and \mm{1.55} DOI, at the cost of \qty{24.9}{\percent}
-energy resolution and \ps{788} coincidence timing. The trade is the whole
+Black paint on the front and both end surfaces gives \mm{1.07}\claim{Zhang2019/0fc383} FWHM in the
+monolithic direction and \mm{1.55} DOI\claim{Zhang2019/25be96}, at the cost of \qty{24.9}{\percent}
+energy resolution\claim{Zhang2019/c89ef1} and \ps{788} coincidence timing\claim{Zhang2019/005c9d}. The trade is the whole
 result: painting the surfaces kills the reflections that smear position, and
 with them the light the energy and timing need.
-Unpainted, the same detector gives \mm{1.77} in $y$ (squared centroid),
-\mm{2.71} in depth (standard deviation), 15.8\% energy and \ps{596}
+Unpainted, the same detector gives \mm{1.77} in $y$ (squared centroid)\claim{Zhang2019/0fc383},
+\mm{2.71} in depth (standard deviation)\claim{Zhang2019/25be96}, 15.8\% energy\claim{Zhang2019/c89ef1} and \ps{596}\claim{Zhang2019/005c9d}
 timing. The \ps{788} is against a reference --- a \qtyproduct{20 x 12 x
-10}{\mm} LYSO block on a single-channel PMT, NIM electronics --- not the
+10}{\mm} LYSO block on a single-channel PMT\claim{Zhang2019/5fca50}, NIM electronics\claim{Zhang2019/88f809} --- not the
 detector against itself. Resolutions are quoted only for positions more than
-\mm{5} from the slab ends, where $y$ is still linear; the ends are left out.
-By estimator (painted): $y$ \mm{1.44} by plain centroid, \mm{1.07} squared;
+\mm{5} from the slab ends\claim{Zhang2019/231428}, where $y$ is still linear\claim{Zhang2019/7aa530}; the ends are left out.
+By estimator (painted): $y$ \mm{1.44} by plain centroid, \mm{1.07} squared\claim{Zhang2019/295a97};
 depth \mm{1.55} by standard deviation, \mm{1.86} by max-to-sum, \mm{1.69} by
-sum of squares. \ref{note:Zhang2021}'s comparison quotes the \mm{1.44}.
+sum of squares\claim{Zhang2019/295a97}. \ref{note:Zhang2021}'s comparison quotes the \mm{1.44}.
 
 \paragraph{Why it matters here}
 The baseline the later papers move: analytic positioning, one slab thickness,
@@ -2676,13 +2676,13 @@ Wang, Ren, Wu, Gao, Zeng, Gao, Zhang, Sang, Hu, Du, Liang, Liu, Zheng, Yang.
 
 \paragraph{Summary}
 The group's pixelated scanner, beside the slab line rather than in it: 48
-modules of 23 x 23 polished LYSO crystals \qtyproduct{1 x 1 x 20}{\mm}, read at
-both ends by 8 x 8 SiPM arrays, each end multiplexed to four signals; \mm{111}
-ring, \mm{105.6} axial. Depth from the ratio of the two ends' energies.
-Detector: DOI \mm{1.96}, energy 19.1\%, timing \ns{1.2} against a reference.
-System: \mm{0.82} averaged out to \mm{30} off centre (OSEM with a PSF model,
-1\% warm background), flat with radius; sensitivity 16.0\% at 250--\keV{750}
-(11.9\% at 350--\keV{750}); NECR 324 kcps; \mm{1.0} rods resolved. Inter-crystal
+modules\claim{Kuang2020/f37a54} of 23 x 23 polished LYSO crystals \qtyproduct{1 x 1 x 20}{\mm}\claim{Kuang2020/d20afd}, read at
+both ends by 8 x 8 SiPM arrays\claim{Kuang2020/fc8d8e}, each end multiplexed to four signals\claim{Kuang2020/965e3d}; \mm{111}
+ring, \mm{105.6} axial\claim{Kuang2020/d16c97}. Depth from the ratio of the two ends' energies\claim{Kuang2020/1c3f78}.
+Detector: DOI \mm{1.96}, energy 19.1\%, timing \ns{1.2}\claim{Kuang2020/835194} against a reference\claim{Kuang2020/ae455f}.
+System: \mm{0.82} averaged out to \mm{30} off centre\claim{Kuang2020/e9884a} (OSEM with a PSF model\claim{Kuang2020/01296c},
+1\% warm background), flat with radius\claim{Kuang2020/4c565c}; sensitivity 16.0\% at 250--\keV{750}\claim{Kuang2020/bdc53b}
+(11.9\% at 350--\keV{750}); NECR 324 kcps\claim{Kuang2020/f31f20}; \mm{1.0} rods resolved\claim{Kuang2020/c61455}. Inter-crystal
 scatter is not discussed.
 
 \paragraph{Why it matters here}
@@ -3037,25 +3037,25 @@ compared against measurements of the same crystals.
 \paragraph{Detector}
 Single LSO elements, \qtyproduct{2 x 2 x 20}{\milli\metre} and
 \qtyproduct{5 x 5 x 20}{\milli\metre}, each either mechanically polished or
-coarse ground (saw cut, then \um{30} grit), simulated and measured with and
+coarse ground (saw cut, then \um{30} grit\claim{Roncali2013/6dd942}), simulated and measured with and
 without a Teflon reflector, not attached, modelled as diffuse with
-$R = 0.97$. Only the \mm{2} crystals were scanned; the \mm{5} crystals
+$R = 0.97$\claim{Roncali2013/fd8d27}. Only the \mm{2} crystals were scanned\claim{Roncali2013/b7d1cb}; the \mm{5} crystals
 reuse their tables.
 
 \paragraph{Method}
-AFM in contact mode over \qtyproduct{90 x 90}{\micro\metre} patches,
-\um{0.175} pixels (about \qty{100}{\nano\metre} resolution), two
-patches per ground crystal --- four ground patches in all, plus two polished; the patches agree closely, so a
-patch that small stands for the whole face. Each table is built by ray
+AFM in contact mode over \qtyproduct{90 x 90}{\micro\metre} patches\claim{Roncali2013/aa51d2},
+\um{0.175} pixels\claim{Roncali2013/6129ed} (about \qty{100}{\nano\metre} resolution\claim{Roncali2013/38d441}), two
+patches per ground crystal --- four ground patches in all, plus two polished\claim{Roncali2013/718fc0}; the patches agree closely, so a
+patch that small stands for the whole face\claim{Roncali2013/86999c}. Each table is built by ray
 tracing on the measured height map: incidence $\theta$ from \degs{0} to
-\degs{90} in \degs{2.25} steps, azimuth in \degs{9} steps pooled, about
-2000 photons per beam, Fresnel reflection off the local normal (LSO
-$n = 1.82$ against air, or grease at 1.5 on the readout face), and repeat
+\degs{90} in \degs{2.25} steps\claim{Roncali2013/ecaf6a}, azimuth in \degs{9} steps pooled\claim{Roncali2013/0ab16f}, about
+2000 photons per beam\claim{Roncali2013/29f8d6}, Fresnel reflection off the local normal (LSO
+$n = 1.82$\claim{Roncali2013/bbde5c} against air, or grease at 1.5 on the readout face\claim{Roncali2013/bc62a7}), and repeat
 reflections followed until the photon leaves. Two tables per surface: the
 probability of reflection, and the distribution of reflected directions,
 sampled per photon during transport. The paper describes no interpolation
 between the tabulated angles. The model runs no slower than UNIFIED, and
-\qty{10}{\percent} faster for the bare \mm{2} crystal.
+\qty{10}{\percent} faster for the bare \mm{2} crystal\claim{Roncali2013/57c9a3}.
 \aside{Those are the numbers a bulk-scattering equivalent would have to
 match: a \um{90} patch, sub-micrometre pixels, \degs{2.25} in incidence,
 and a table pair per surface finish.}
@@ -3063,21 +3063,21 @@ and a table pair per surface finish.}
 \paragraph{Key findings}
 \begin{itemize}
 	\item AFM gives the ground finish a height variation of roughly
-		\qtyrange{-3}{3}{\micro\metre} and a mean surface slope near \degs{18},
-		rising towards \degs{35} at high incidence --- a distribution the
+		\qtyrange{-3}{3}{\micro\metre}\claim{Roncali2013/6fc435} and a mean surface slope near \degs{18},
+		rising towards \degs{35} at high incidence\claim{Roncali2013/8d7f79} --- a distribution the
 		single-parameter micro-facet model cannot represent.
 	\item Without reflector the UNIFIED model overestimates maximum light
-		output by \qty{38}{\percent} for the ground
+		output by \qty{38}{\percent}\claim{Roncali2013/9c1603} for the ground
 		\qtyproduct{2 x 2 x 20}{\milli\metre} crystals and \qty{20}{\percent}
-		for the ground \qtyproduct{5 x 5 x 20}{\milli\metre} crystals.
+		for the ground \qtyproduct{5 x 5 x 20}{\milli\metre} crystals\claim{Roncali2013/c5ea9b}.
 	\item With reflector the LUT simulations agree with experiment to within
 		about \qty{10}{\percent} for \qtyproduct{5 x 5 x 20}{\milli\metre} and
-		better than \qty{2}{\percent} for
+		better than \qty{2}{\percent}\claim{Roncali2013/ea7905} for
 		\qtyproduct{2 x 2 x 20}{\milli\metre}, where UNIFIED is still out by
-		about \qty{10}{\percent} and \qty{30}{\percent} respectively.
+		about \qty{10}{\percent} and \qty{30}{\percent} respectively\claim{Roncali2013/f0c8b6}.
 	\item Energy resolution for the ground
 		\qtyproduct{2 x 2 x 20}{\milli\metre} crystals was \qty{24}{\percent}
-		measured against \qty{22}{\percent} from the LUT simulation.
+		measured against \qty{22}{\percent} from the LUT simulation\claim{Roncali2013/5fad8a}.
 \end{itemize}
 
 \paragraph{The number to take}
@@ -3100,36 +3100,36 @@ both ends by position-sensitive avalanche photodiodes and compared on flood
 histogram, energy resolution and DOI resolution.
 
 \paragraph{Detector}
-Five LSO arrays of 5 x 5 crystals, \qtyproduct{1.5 x 1.5 x 20}{\mm}, read at
-both ends by position-sensitive avalanche photodiodes (PSAPDs): unpolished
-(saw-cut, about \um{4} peak to valley by AFM) or polished (about \um{0.1}),
-with ESR, Toray Lumirror E60 or Crystal Wrap (ePTFE) between crystals. Depth
-is measured with a slab-collimated \mm{0.6} beam at five depths. The two
-polished arrays were also read single-ended for comparison.
+Five LSO arrays of 5 x 5 crystals, \qtyproduct{1.5 x 1.5 x 20}{\mm}\claim{Ren2014/67460f}, read at
+both ends by position-sensitive avalanche photodiodes (PSAPDs)\claim{Ren2014/f756f2}: unpolished
+(saw-cut, about \um{4} peak to valley by AFM\claim{Ren2014/cb609b}) or polished (about \um{0.1}\claim{Ren2014/504162}),
+with ESR, Toray Lumirror E60\claim{Ren2014/40ba58} or Crystal Wrap (ePTFE)\claim{Ren2014/e1aa31} between crystals. Depth
+is measured with a slab-collimated \mm{0.6} beam\claim{Ren2014/3cbd1f} at five depths\claim{Ren2014/9f5cbe}. The two
+polished arrays were also read single-ended for comparison\claim{Ren2014/519e00}.
 
 \paragraph{Key findings}
 \begin{itemize}
 	\item Every array except the polished-ESR one gave DOI resolution in
-		\qtyrange{1.9}{2.9}{\milli\metre}; the polished ESR array was the
-		outlier at \mm{16.4}, essentially no depth information, its GLCED
-		(change in the end-to-end signal ratio per cm of depth) only 0.023.
-	\item GLCED and DOI resolution by array: unpolished ESR 0.172 and
-		\mm{2.9}; polished Toray 0.231 and \mm{2.3}; unpolished Toray 0.328
-		and \mm{1.9}; unpolished Crystal Wrap 0.470 and \mm{1.9}.
+		\qtyrange{1.9}{2.9}{\milli\metre}\claim{Ren2014/c9d711}; the polished ESR array was the
+		outlier at \mm{16.4}\claim{Ren2014/2f47d4}, essentially no depth information, its GLCED
+		(change in the end-to-end signal ratio per cm of depth) only 0.023\claim{Ren2014/72bec9}.
+	\item GLCED and DOI resolution by array: unpolished ESR 0.172\claim{Ren2014/d056ad} and
+		\mm{2.9}\claim{Ren2014/2e1b6d}; polished Toray 0.231\claim{Ren2014/ed0962} and \mm{2.3}\claim{Ren2014/c7a4bf}; unpolished Toray 0.328\claim{Ren2014/e101e6}
+		and \mm{1.9}\claim{Ren2014/ed56a5}; unpolished Crystal Wrap 0.470\claim{Ren2014/57ff0f} and \mm{1.9}\claim{Ren2014/2f3136}.
 	\item DOI resolution improved as the gradient in light collection
-		efficiency with depth (GLCED) increased --- the paper's own
+		efficiency with depth (GLCED) increased\claim{Ren2014/d85910} --- the paper's own
 		single-figure explanation of why surface finish controls DOI.
-	\item The ESR arrays gave the best energy resolution and Crystal Wrap the
-		worst, with ESR and Toray giving comparable flood histograms: summed
-		energy 16.5\% polished ESR, 19.4\% unpolished ESR, about 30\% with
-		Toray and 54.6\% with Crystal Wrap. The price of depth is light.
+	\item The ESR arrays gave the best energy resolution\claim{Ren2014/ca9093} and Crystal Wrap the
+		worst\claim{Ren2014/5bb468}, with ESR and Toray giving comparable flood histograms\claim{Ren2014/b1ec16}: summed
+		energy 16.5\% polished ESR, 19.4\% unpolished ESR\claim{Ren2014/2970f5}, about 30\%\claim{Ren2014/33e684} with
+		Toray and 54.6\% with Crystal Wrap\claim{Ren2014/6af0af}. The price of depth is light.
 	\item The geometric mean of the two end energies gives a more uniform
 		photopeak position with depth than the conventional sum, so a
-		depth-independent energy window becomes possible; with Toray it
-		brings the energy resolution from about 30\% to about 21\%.
-	\item Their recommendations: unpolished Toray for small-animal scanners,
+		depth-independent energy window becomes possible\claim{Ren2014/4d3e9c}; with Toray it
+		brings the energy resolution from about 30\% to about 21\%\claim{Ren2014/d38076}.
+	\item Their recommendations: unpolished Toray for small-animal scanners\claim{Ren2014/62605c},
 		where energy resolution matters less; unpolished ESR for breast and
-		brain, where it matters more; polished ESR for single-ended readout.
+		brain, where it matters more\claim{Ren2014/09500f}; polished ESR for single-ended readout\claim{Ren2014/45e898}.
 \end{itemize}
 
 \paragraph{Why it matters here}
@@ -3152,35 +3152,35 @@ available for scintillation detectors, their respective limitations, and their
 applications across nuclear medicine, diagnostic and radiotherapy imaging. The
 review's framing argument is that the community has invested heavily in
 modelling ionising radiation transport while light transport is often ignored
-or modelled coarsely, and that the complexity of the tools plus the spread of
-private user codes has kept optical studies from being fully exploited.
+or modelled coarsely\claim{Roncali2017/b74d2e}, and that the complexity of the tools plus the spread of
+private user codes has kept optical studies from being fully exploited\claim{Roncali2017/4965c8}.
 
 \paragraph{Key findings}
 \begin{itemize}
 	\item \textbf{Bulk scattering as a loss:} ``Self-absorption and bulk
-		scattering should be limited to ensure high light output. Bulk
+		scattering should be limited to ensure high light output.\claim{Roncali2017/922ebb} Bulk
 		scattering is mainly due to changes in refractive index created by
-		impurities. Other types such as Rayleigh scattering \ldots\ are
-		typically negligible.'' The field's default view, stated plainly.
+		impurities.\claim{Roncali2017/537b88} Other types such as Rayleigh scattering \ldots\ are
+		typically negligible.''\claim{Roncali2017/e32e23} The field's default view, stated plainly.
 	\item \textbf{Where scattering is the physics:} granular phosphor screens
-		for X-ray imaging, whose light transport is ``largely dominated'' by
-		the grains and modelled with Mie theory --- the nearest existing
+		for X-ray imaging, whose light transport is ``largely dominated''\claim{Roncali2017/1a1ea1} by
+		the grains and modelled with Mie theory\claim{Roncali2017/8b82a4} --- the nearest existing
 		treatment of a deliberately scattering scintillator.
 	\item \textbf{Package table} (its Table 2, the open-source codes):
 		MANTIS, hybridMANTIS, cartesianDETECT2 and GEANT4 all model bulk
 		absorption, surface reflection and roughness, but only MANTIS and
 		GEANT4 model Rayleigh scattering, wavelength effects and
-		polarisation; the GPU code that buys a 627-fold speed-up drops them.
-		GATE inherits GEANT4's optics and adds the measured-surface LUTs
+		polarisation\claim{Roncali2017/ece12b}; the GPU code that buys a 627-fold speed-up\claim{Roncali2017/d294ae} drops them.
+		GATE inherits GEANT4's optics and adds the measured-surface LUTs\claim{Roncali2017/117a59}
 		(\ref{note:Roncali2013}).
 	\item \textbf{Validation is the weak point:} for scintillators the
-		measurable quantities are few --- light output for given sizes,
-		finishes and reflectors, and timing. (The warning that models with
+		measurable quantities are few\claim{Roncali2017/25ddd1} --- light output for given sizes,
+		finishes and reflectors\claim{Roncali2017/66cfc7}, and timing\claim{Roncali2017/36a3e8}. (The warning that models with
 		adjustable parameters are easy to fit and hard to test is made for the
-		X-ray section.)
+		X-ray section\claim{Roncali2017/a2414f}.)
 	\item \textbf{Outlook:} folding optical codes into GEANT4 and GATE is
-		the most promising route to a common tool, with shared formats for
-		geometry and output.
+		the most promising route to a common tool\claim{Roncali2017/2035c1}, with shared formats for
+		geometry and output\claim{Roncali2017/8dedb9}.
 \end{itemize}
 \aside{The first two points are the framing: this thesis treats as signal
 the bulk scattering the review treats as a loss, and the nearest model for
@@ -3318,40 +3318,40 @@ carry on.
 A Cramér--Rao lower bound on coincidence timing resolution for long crystals,
 derived with an analytical probability density function for the optical transit
 time inside the crystal rather than a Monte Carlo photon transport
-distribution. The point is that in a high-aspect-ratio element the spread in
-optical path length is no longer negligible against the other terms, so the
+distribution\claim{Cates2015/7cb6fc}. The point is that in a high-aspect-ratio element the spread in
+optical path length is no longer negligible against the other terms\claim{Cates2015/8151d2}, so the
 bound has to carry the optics explicitly.
 
 \paragraph{Detector}
 LYSO:Ce pairs, \qtyproduct{3 x 3 x 5}{\milli\metre} (Teflon) and
-\qtyproduct{3 x 3 x 20}{\milli\metre} (ESR or Teflon), on Hamamatsu
-S12572-50C analogue SiPMs, leading-edge timing. The bound takes the
-manufacturer's single-photon time resolution, \ps{250} FWHM.
+\qtyproduct{3 x 3 x 20}{\milli\metre} (ESR or Teflon)\claim{Cates2015/0f9688}, on Hamamatsu
+S12572-50C analogue SiPMs\claim{Cates2015/f1d5df}, leading-edge timing\claim{Cates2015/298be1}. The bound takes the
+manufacturer's single-photon time resolution, \ps{250} FWHM\claim{Cates2015/311c86}.
 
 \paragraph{Key findings}
 \begin{itemize}
-	\item Calculated bound \ps{152 \pm 8} for the
+	\item Calculated bound \ps{152 \pm 8}\claim{Cates2015/66c1ca} for the
 		\qtyproduct{3 x 3 x 20}{\milli\metre} crystals and
-		\ps{125 \pm 8} for \qtyproduct{3 x 3 x 5}{\milli\metre}.
-	\item Measured CTR \ps{162 \pm 1} FWHM (ESR) and
-		\ps{165 \pm 1} (Teflon) at \mm{20}, and
-		\ps{135 \pm 1} at \mm{5} --- within \qty{6.5}{\percent}
-		of the bound for ESR and \qty{8.6}{\percent} for Teflon.
+		\ps{125 \pm 8}\claim{Cates2015/5667ed} for \qtyproduct{3 x 3 x 5}{\milli\metre}.
+	\item Measured CTR \ps{162 \pm 1}\claim{Cates2015/0db8a7} FWHM (ESR) and
+		\ps{165 \pm 1}\claim{Cates2015/c9b52c} (Teflon) at \mm{20}, and
+		\ps{135 \pm 1}\claim{Cates2015/cc862d} at \mm{5} --- within \qty{6.5}{\percent}
+		of the bound for ESR and \qty{8.6}{\percent} for Teflon\claim{Cates2015/4aa58c}.
 	\item The analytically calculated optical transport PDF agreed well with
-		detailed light transport simulation, so the analytical route avoids the
+		detailed light transport simulation\claim{Cates2015/90459f}, so the analytical route avoids the
 		Monte Carlo step entirely.
 	\item The arrival-time variance is largest for interactions close to the
-		photosensor and decreases with distance from it: light reflected back
+		photosensor and decreases with distance from it\claim{Cates2015/667062}: light reflected back
 		from the far end arrives late and thins out the early photons.
 	\item The bound falls linearly as the crystal shortens from \mm{20} to
-		\mm{5}, then flattens where the photosensor dominates; at \mm{5} it
-		matches Seifert's bound without optical transport to within 1\%.
+		\mm{5}, then flattens where the photosensor dominates\claim{Cates2015/176c25}; at \mm{5} it
+		matches Seifert's bound without optical transport to within 1\%\claim{Cates2015/d204ae}.
 	\item Photon statistics still dominate: scaling the photon count by
-		0.05--2 moves the bound by up to \ps{600}, while lengths of
-		3--\mm{40} move it by about \ps{20}. A 20--30\% change in
-		the assumed single-photon resolution moves it by 10--\ps{15}.
+		0.05--2 moves the bound by up to \ps{600}\claim{Cates2015/59a3dd}, while lengths of
+		3--\mm{40} move it by about \ps{20}\claim{Cates2015/9629d2}. A 20--30\% change in
+		the assumed single-photon resolution moves it by 10--\ps{15}\claim{Cates2015/4e01a6}.
 	\item With better light extraction and 50\% PDE, about \ps{100} CTR
-		is within the bound for \mm{20} LYSO read from one end.
+		is within the bound for \mm{20} LYSO read from one end\claim{Cates2015/d7c334}.
 \end{itemize}
 
 \paragraph{Why it stays in the file}
@@ -3365,12 +3365,12 @@ which is why a single scalar ``timing resolution'' for a long crystal is
 already an approximation.
 It is the clear precursor of \ref{note:LoignonHoule2021}, which takes the same idea
 from a bound on timing to a bound on depth.
-The near-constant excess over the bound, \ps{10} at both lengths (\ps{13}
+The near-constant excess over the bound, \ps{10} at both lengths\claim{Cates2015/f8b907} (\ps{13}
 with Teflon at \mm{20}), is one they do comment on: they take the equal
-margin as evidence the optical transport is modelled right, and put the
-margin itself down to noise and to the bound's assumption that every
+margin as evidence the optical transport is modelled right\claim{Cates2015/0b4a2d}, and put the
+margin itself down to noise\claim{Cates2015/7929fe} and to the bound's assumption that every
 detected photon is timestamped, which analogue SiPMs with one leading-edge
-trigger do not provide. That assumption is the one \ref{note:Cates2024}
+trigger do not provide\claim{Cates2015/8f305d}. That assumption is the one \ref{note:Cates2024}
 sets out to meet in hardware, a photon-counting monolith on analogue SiPMs.
 
 \end{papernote}
@@ -4380,19 +4380,19 @@ is a virtual single-layer detector ring: every physical line of response, from
 any detector element and depth, is mapped to the pair of virtual detectors it
 crosses, and the matrix is built for those. Two ways to fill it are compared ---
 Siddon ray tracing with a detector response, and Monte Carlo --- on PETiPIX, a
-simulated mouse-brain scanner of four edge-on Timepix silicon pixel detectors
-(\um{55} pixels, a \mm{15} field) that detects mostly by tracking recoil
-electrons rather than by photoelectric absorption.
+simulated mouse-brain scanner of four edge-on Timepix silicon pixel detectors\claim{Li2015/1d123f}
+(\um{55} pixels\claim{Li2015/581643}, a \mm{15} field\claim{Li2015/8d8431}) that detects mostly by tracking recoil
+electrons rather than by photoelectric absorption\claim{Li2015/3ba363}.
 
 \paragraph{Key Findings}
 \begin{itemize}
 	\item Compression of $5 \times 10^{7}$ (geometric) and
-		$2.5 \times 10^{7}$ (Monte Carlo), leaving 0.5--\qty{1.2}{GB} of
+		$2.5 \times 10^{7}$ (Monte Carlo)\claim{Li2015/85e9a2}, leaving 0.5--\qty{1.2}{GB}\claim{Li2015/56b49b} of
 		matrix in memory.
 	\item The Monte Carlo matrix gives the best images (contrast recovery,
-		noise, structural similarity) at a large one-off cost; MOBY mouse-brain
-		structures resolve below a millimetre.
-	\item A 3D extension, the virtual cylinder, is shown on a small-animal DOI
+		noise, structural similarity) at a large one-off cost\claim{Li2015/bfab13}; MOBY mouse-brain
+		structures resolve below a millimetre\claim{Li2015/48402a}.
+	\item A 3D extension, the virtual cylinder\claim{Li2015/1cc519}, is shown on a small-animal DOI
 		design (\mm{35} across, \mm{30} long).
 \end{itemize}
 
@@ -4414,13 +4414,13 @@ A technique for localising LOR endpoints in a PET scanner built from a
 continuous cylindrical shell scintillator, demonstrated on a simulated
 sensitivity-optimised shell in two materials, the ceramic garnet GLuGAG:Ce and
 a LaF\textsubscript{3}:Ce--polystyrene nanocomposite (the abstract says
-LuF\textsubscript{3}; the body and Table I say LaF\textsubscript{3}).
+LuF\textsubscript{3}\claim{Wilson2019/2e471e}; the body and Table I say LaF\textsubscript{3}\claim{Wilson2019/4a9f2e}).
 \aside{The co-supervisor's own prior art on the capstone geometry.}
-Positioning extends Li et al.'s analytic method to a cylindrical shell: a model
-of the optical photon distribution, with total-internal-reflection cut-offs, is
-fitted jointly to the inner and outer photon maps by Levenberg--Marquardt (GATE
-8.1, full optical tracking). Median LOR placement error 1.27--\mm{1.62} for
-GLuGAG:Ce and 3.12--\mm{4.13} for LaF\textsubscript{3}:Ce--PS, from the centre
+Positioning extends Li et al.'s analytic method to a cylindrical shell\claim{Wilson2019/08506b}: a model
+of the optical photon distribution, with total-internal-reflection cut-offs\claim{Wilson2019/e136b6}, is
+fitted jointly to the inner and outer photon maps by Levenberg--Marquardt\claim{Wilson2019/b03f16} (GATE
+8.1, full optical tracking\claim{Wilson2019/595421}). Median LOR placement error 1.27--\mm{1.62}\claim{Wilson2019/ec61dd} for
+GLuGAG:Ce and 3.12--\mm{4.13}\claim{Wilson2019/097d21} for LaF\textsubscript{3}:Ce--PS, from the centre
 to 75\% of the inner radius.
 
 \end{papernote}
@@ -4432,9 +4432,9 @@ Sci.\ Rep.\ 10:1409, \doi{10.1038/s41598-020-58208-y}.
 \paragraph{Summary}
 A Monte Carlo method for choosing the thickness of a monolithic slab by
 maximising the probability of detecting and localising a \keV{511}
-interaction, run over five nanocomposites and four ceramics; LaF\textsubscript{3}:Ce--polystyrene
+interaction\claim{Wilson2020/ad805c}, run over five nanocomposites\claim{Wilson2020/f249e7} and four ceramics\claim{Wilson2020/4de9c9}; LaF\textsubscript{3}:Ce--polystyrene
 and GLuGAG:Ce reach 48.8\% and 67.8\% sensitivity at the stated localisation
-accuracy. The paper that set up the monolithic + NN line.
+accuracy\claim{Wilson2020/6fd5e9}. The paper that set up the monolithic + NN line.
 
 \end{papernote}
 
@@ -4454,35 +4454,35 @@ published elsewhere on this map.
 \begin{itemize}
 	\item \textbf{Materials (ch.\ 3).} Five nanocomposites and four ceramic
 		garnets; ``optimal thickness'' defined as the one that localises the
-		most photons to within a set distance. GLuGAG:Ce is best: about
-		\mm{20} for accuracy (46\% of photons within \mm{1}, 62.5\% within
-		\mm{5}), about \mm{27.5} for sensitivity. LaF\textsubscript{3}:Ce in
-		polystyrene is the best nanocomposite. The position fit needs an extra
-		optical-scattering term these materials demand.
-	\item \textbf{The shell (ch.\ 4).} A polygonal shell \mm{296} long,
+		most photons to within a set distance\claim{Wilson2020a/bdb52c}. GLuGAG:Ce is best\claim{Wilson2020a/56706e}: about
+		\mm{20} for accuracy (46\% of photons within \mm{1}\claim{Wilson2020a/6c6aeb}, 62.5\% within
+		\mm{5}\claim{Wilson2020a/56a430}), about \mm{27.5} for sensitivity\claim{Wilson2020a/21dc05}. LaF\textsubscript{3}:Ce in
+		polystyrene is the best nanocomposite\claim{Wilson2020a/5b9776}. The position fit needs an extra
+		optical-scattering term these materials demand\claim{Wilson2020a/7d0e8d}.
+	\item \textbf{The shell (ch.\ 4).} A polygonal shell \mm{296} long\claim{Wilson2020a/cd8ebb},
 		\mm{233} inner radius, \mm{24.9} thick in GLuGAG:Ce (\mm{42.9} in
-		LaF\textsubscript{3}:Ce-PS), 104 inner and 116--124 outer faces of
-		\mm{14.2}; detection efficiency 67.8\% and 48.8\%. Median LOR error
-		1.27--\mm{1.62} (GLuGAG) and 3.12--\mm{4.13} (nanocomposite) from
+		LaF\textsubscript{3}:Ce-PS)\claim{Wilson2020a/7cc922}, 104 inner and 116--124 outer faces of
+		\mm{14.2}\claim{Wilson2020a/7d6792}; detection efficiency 67.8\% and 48.8\%\claim{Wilson2020a/8b689b}. Median LOR error
+		1.27--\mm{1.62} (GLuGAG)\claim{Wilson2020a/09faba} and 3.12--\mm{4.13} (nanocomposite)\claim{Wilson2020a/c409bd} from
 		the centre to 75\% of the radius.
 	\item \textbf{Pile-up (ch.\ 5).} In one continuous shell, events
-		overlap in space and time. Pixels are grouped into regions, each
+		overlap in space and time. Pixels are grouped into regions\claim{Wilson2020a/e7bc2f}, each
 		region's light flux is deconvolved by the scintillator's
 		depth-dependent impulse response into an impulse train marking event
-		onsets, and coincidences are pairs of impulses in one timing bin and
-		different regions. Of all annihilations, 32.8\% are geometrically
-		detectable; the algorithm finds 17.4\%, misses 15.4\% (mostly weak
-		signals) and adds 2.1\% randoms. Timing is sampled at \ns{10}, so
+		onsets\claim{Wilson2020a/0c0d12}, and coincidences are pairs of impulses in one timing bin and
+		different regions\claim{Wilson2020a/4cf433}. Of all annihilations, 32.8\% are geometrically
+		detectable\claim{Wilson2020a/d40ce2}; the algorithm finds 17.4\%\claim{Wilson2020a/6f8e0f}, misses 15.4\% (mostly weak
+		signals)\claim{Wilson2020a/e09976} and adds 2.1\% randoms\claim{Wilson2020a/4b95b4}. Timing is sampled at \ns{10}\claim{Wilson2020a/3139ea}, so
 		not TOF.
 	\item \textbf{Images (ch.\ 6).} A brain scanner reconstructed in STIR
-		(2D FBP, 3D FBP with reprojection, OSEM): \mm{2} sources under
-		\mm{4} FWHM in nearly every direction with OSEM --- from only
-		\qty{3}{\second} of simulated data, since full optical tracking is
+		(2D FBP, 3D FBP with reprojection, OSEM)\claim{Wilson2020a/894103}: \mm{2} sources under
+		\mm{4} FWHM in nearly every direction with OSEM\claim{Wilson2020a/db408d} --- from only
+		\qty{3}{\second} of simulated data\claim{Wilson2020a/08a12c}, since full optical tracking is
 		so costly.
 	\item \textbf{Future work:} NEMA testing from a statistical model of the
-		localisation error instead of full optics; sub-nanosecond, TOF-capable
-		timing by joint spatial--temporal pulse analysis; other materials;
-		a truncated spherical shell for the brain.
+		localisation error instead of full optics\claim{Wilson2020a/04352c}; sub-nanosecond, TOF-capable
+		timing by joint spatial--temporal pulse analysis\claim{Wilson2020a/dc105b}; other materials\claim{Wilson2020a/c2ee45};
+		a truncated spherical shell for the brain\claim{Wilson2020a/9e41d1}.
 \end{itemize}
 
 \paragraph{Why it matters here}

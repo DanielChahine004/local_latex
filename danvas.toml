@@ -1,0 +1,9 @@
+# The paper-notes map as a link, built in the reader's browser by danvas's
+# static page from this repository (no server):
+#   https://danielchahine004.github.io/danvas/?repo=DanielChahine004/local_latex
+# It redraws within a minute of a push. The board is what notes-map shows, with
+# [publish] applied; the editor link is dropped (it points at this machine).
+[app]
+entry = "notesmap.static:app"
+requires = ["github:DanielChahine004/notesmap@main"]   # pin a tag or commit to hold a version
+files = ["notesmap.toml"]                              # notesmap.static reads the rest from it

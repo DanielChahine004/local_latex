@@ -68,7 +68,13 @@ Its password is `NOTES_EDIT_TOKEN`, which falls back to the placeholder
 `change-me` in `tools/jupyter-notes-config.py` when unset — change it before sharing
 the link, because anyone holding it can edit the notes.
 
-To share both with a lab, one command does the lot:
+To share just the map, nothing needs to run: it is published from this
+repository at
+[danielchahine004.github.io/danvas/?repo=DanielChahine004/local_latex](https://danielchahine004.github.io/danvas/?repo=DanielChahine004/local_latex),
+built in each reader's browser (`danvas.toml` says how) and redrawn within a
+minute of a push.
+
+To share both the map and the live editor with a lab, one command does the lot:
 
 ```
 NOTES_EDIT_TOKEN=<a password> pixi run notes-lab

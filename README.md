@@ -96,7 +96,7 @@ pixi run papers-fetch      # download the open-access copies of those
 The PDFs live in a private repo,
 [thesis-papers](https://github.com/DanielChahine004/thesis-papers), cloned into
 the git-ignored `papers/`: one file per key in `references.bib`
-(`papers/Freire2026.pdf`). It is private, and kept out of this public repo and
+(`papers/pdfs/Freire2026.pdf`). It is private, and kept out of this public repo and
 Overleaf, because most of the papers are under publisher copyright. A
 collaborator needs an invite (Settings → Collaborators on that repo), then can
 pull and push here or upload through its web page, named by the key.

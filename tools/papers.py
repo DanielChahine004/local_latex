@@ -8,7 +8,7 @@
                              text, annotate, notes (pixi run papers --help)
 
 One file per paper, named by its key in src/thesis/references.bib:
-papers/Freire2026.pdf. The key is the index, so a \\cite or a note's key finds
+papers/pdfs/Freire2026.pdf. The key is the index, so a \\cite or a note's key finds
 its PDF with no lookup. The repo is private because most of these are under
 publisher copyright; papers/ is git-ignored here so none of it reaches the
 public thesis repo or Overleaf. Collaborators are added on GitHub
@@ -35,6 +35,7 @@ from pathlib import Path
 
 REPO = Path(__file__).resolve().parent.parent
 PAPERS = REPO / "papers"
+PDFS = PAPERS / "pdfs"                    # thesis-papers keeps its PDFs here (paperstore.toml pdfs)
 BIB = REPO / "src" / "thesis" / "references.bib"
 EXPORT = PAPERS / "references.bib"
 HEADER = ("% Copied from thesis-papers/references.bib by pixi run papers-pull (and sync). An entry added or"
@@ -178,7 +179,7 @@ def bib_entries(books=False):
 
 
 def pdfs():
-    return {p.stem for p in PAPERS.glob("*.pdf")} if PAPERS.exists() else set()
+    return {p.stem for p in PDFS.glob("*.pdf")} if PDFS.exists() else set()
 
 
 
@@ -216,7 +217,7 @@ def candidates(doi):
 
 
 def fetch():
-    PAPERS.mkdir(exist_ok=True)
+    PDFS.mkdir(parents=True, exist_ok=True)
     entries, have = bib_entries(), pdfs()
     got = 0
     for key, doi in entries.items():
@@ -228,7 +229,7 @@ def fetch():
             except (urllib.error.URLError, TimeoutError, ValueError):
                 continue
             if data.startswith(b"%PDF"):
-                (PAPERS / f"{key}.pdf").write_bytes(data)
+                (PDFS / f"{key}.pdf").write_bytes(data)
                 print(f"  fetched  {key}")
                 got += 1
                 break
